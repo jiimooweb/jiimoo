@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 use App\Admin\Controllers\Controller;
+use App\Models\AdminUser;
+
 class LoginController extends Controller
 {
     //登录
@@ -20,12 +22,15 @@ class LoginController extends Controller
         $userEmailAttempt=compact('email','password');
         if(\Auth::guard('admins')->attempt($userNameAttempt)||
             \Auth::guard('admins')->attempt($userEmailAttempt)){
-            return "登陆成功";
+            return "成功";
         }
         return "用户或密码错误";
     }
     public function logout(){
-        \Auth::guard('admin')->logout();
+        $user_ip=request()->getClientIp();
+        $now=now();
+        $user=AdminUser::where('id',\Auth::id())->update(['last_time'=>$now,'last_ip'=>$user_ip]);
+        \Auth::guard('admins')->logout();
         return "登出";
     }
 }
