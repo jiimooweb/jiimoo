@@ -1,6 +1,8 @@
 <?php
 
-require_once('admin.php');
+include_once('admin.php');
+
+include_once('display.php');
 /*
 |--------------------------------------------------------------------------
 | Web Routes

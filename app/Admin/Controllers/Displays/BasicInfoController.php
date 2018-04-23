@@ -12,12 +12,12 @@ class BasicInfoController extends Controller
     public function index() 
     {
         $info = BasicInfo::first();
-        return view('admin.displays.index', compact('info'));
+        return view('admin.displays.basic_info.index', compact('info'));
     }
 
     public function create() 
     {
-        return view('admin.displays.create');
+        return view('admin.displays..basic_info.create');
     }
 
     public function store() 
@@ -33,7 +33,7 @@ class BasicInfoController extends Controller
             'name', 'tel', 'address', 'intro', 'desc'
         ]);
 
-        $data['logo'] = 'storage/'.request()->file('logo')->storePublicly(md5(time()));
+        $data['logo'] = '/storage/'.request()->file('logo')->storePublicly(md5(time()));
         
         BasicInfo::create($data);
 
@@ -42,12 +42,18 @@ class BasicInfoController extends Controller
 
     public function show(BasicInfo $info)
     {
-        
-        return view('admin.displays.show',compact('info'));
+        return view('admin.displays.basic_info.show',compact('info'));        
     }
 
     public function edit(BasicInfo $info) 
     {
+        return view('admin.displays.basic_info.edit',compact('info'));        
+    }
+
+    public function update(BasicInfo $info) 
+    {
+        // TODO:判断更新权限
+        
         $this->validate(request(),[
             'name' => 'required',
             'tel' => 'required',
@@ -59,7 +65,7 @@ class BasicInfoController extends Controller
             'name', 'tel', 'address', 'intro', 'desc'
         ]);
 
-        $data['logo'] = 'storage/'.request()->file('logo')->storePublicly(md5(time()));
+        $data['logo'] = '/storage/'.request()->file('logo')->storePublicly(md5(time()));
         
         BasicInfo::where('id', $info->id)->update($data);
 
@@ -68,7 +74,8 @@ class BasicInfoController extends Controller
 
     public function delete(BasicInfo $info)
     {
+        // TODO:判断删除权限
         $info->delete();
-        return redirect('admin.displays.index');
+        return redirect('admin/displays/infos');
     }
 }
