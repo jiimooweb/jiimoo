@@ -1,6 +1,8 @@
 <?php
 
-require_once('admin.php');
+include_once('admins.php');
+
+include_once('display.php');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,5 +17,3 @@ require_once('admin.php');
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::any('/wechat', 'MiniProgramController@index');
