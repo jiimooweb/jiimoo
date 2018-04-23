@@ -10,12 +10,12 @@ namespace App\Admin\Controllers;
 
 
 use App\Http\Controllers\Controller;
-use App\Models\Commons\CommunalUser;
+use App\Models\Commons\AdminUser;
 class UserController extends Controller
 {
         // 只出现用户
         public function userLits(){
-            $users=CommunalUser::where('identity','User')->paginate(15);
+            $users=AdminUser::where('identity','User')->paginate(15);
             dd($users);
         }
         //用户自行修改自己信息
@@ -24,7 +24,7 @@ class UserController extends Controller
                 'password'=>'required',
             ]);
             $password=request('password');
-            $update=CommunalUser::where('id',\Auth::id())->update(['password'=>$password]);
+            $update=AdminUser::where('id',\Auth::id())->update(['password'=>$password]);
             return $update;
         }
         //添加用户
@@ -39,7 +39,7 @@ class UserController extends Controller
             $password=bcrypt(request('password'));
             $status='Y';
             $identity='User';
-            $user=CommunalUser::create(compact('username','password','email','identity','status'));
+            $user=AdminUser::create(compact('username','password','email','identity','status'));
             dd($user);
         }
         public function registerIndex(){
@@ -71,8 +71,8 @@ class UserController extends Controller
         }
 
         //删除用户
-        public function deleteUser(CommunalUser $communalUser){
-            $delete=CommunalUser::destroy($communalUser->id);
+        public function deleteUser(AdminUser $adminUser){
+            $delete=AdminUser::destroy($adminUser->id);
             return "删除";
         }
 }
