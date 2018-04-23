@@ -12,7 +12,7 @@ class Token
     public static function generateToken() : string
     {
         $randChar = getRandChar(32);
-        $timestamp = $_SERVER['REQUEST_TIME_FLOAT'];
+        $timestamp = time();
         $tokenSalt = config('token.token_salt');
         return md5($randChar . $timestamp . $tokenSalt);
     }

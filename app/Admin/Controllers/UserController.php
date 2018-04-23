@@ -65,6 +65,7 @@ class UserController extends Controller
             }
             return "用户或密码错误";
         }
+        
         public function logout(){
             \Auth::guard('admin')->logout();
             return "登出";

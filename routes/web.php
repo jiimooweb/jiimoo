@@ -1,6 +1,6 @@
 <?php
 
-include_once('admins.php');
+include_once('admin.php');
 
 include_once('display.php');
 /*
@@ -17,3 +17,5 @@ include_once('display.php');
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/token', 'TokenController@getToken');
