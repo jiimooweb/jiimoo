@@ -1,6 +1,6 @@
 <?php
 
-include_once('admins.php');
+include_once('admin.php');
 
 include_once('display.php');
 /*
