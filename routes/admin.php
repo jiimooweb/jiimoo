@@ -6,3 +6,6 @@ Route::post('admin/displays/infos', '\App\Admin\Controllers\Displays\BasicInfoCo
 Route::get('admin/displays/infos/{info}/show', '\App\Admin\Controllers\Displays\BasicInfoController@show')->name('displays_basic_info_show');
 Route::get('admin/displays/infos/{info}/edit', '\App\Admin\Controllers\Displays\BasicInfoController@edit')->name('displays_basic_info_edit');
 Route::get('admin/displays/infos/{info}/delete', '\App\Admin\Controllers\Displays\BasicInfoController@delete')->name('displays_basic_info_delete');
+
+
+Route::resource('admin/reservations', '\App\Admin\Controllers\Resertvations\ResertvationController');
