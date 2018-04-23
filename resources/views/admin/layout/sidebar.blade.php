@@ -10,26 +10,47 @@
                     <span class="pull-right-container"></span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{route('displays_basic_info_index')}}"><i class="fa fa-circle-o"></i> 基本信息</a></li>
-                    <li><a href="{{env('APP_URL')}}/admin/users"><i class="fa fa-circle-o"></i> 用户管理</a></li>
-                    <li><a href="{{env('APP_URL')}}/admin/roles"><i class="fa fa-circle-o"></i> 角色管理</a></li>
+                    <li><a href="{{env('APP_URL')}}/admin/displays/infos"><i class="fa fa-circle-o"></i> 基本信息</a></li>
                 </ul>
             </li>   
             <li class="active treeview">
-                <a href="{{env('APP_URL')}}/admin/posts">
+                <a href="{{env('APP_URL')}}/admin/displays/articles">
                     <i class="fa fa-dashboard"></i> <span>文章管理</span>
                 </a>
-            </li>          
+                <ul class="treeview-menu">
+                    <li><a href="{{env('APP_URL')}}/admin/displays/articles"><i class="fa fa-circle-o"></i> 文章列表</a></li>
+                    <li><a href="{{env('APP_URL')}}/admin/displays/article_cates"><i class="fa fa-circle-o"></i> 分类管理</a></li>
+                    <li><a href="{{env('APP_URL')}}/admin/displays/comments"><i class="fa fa-circle-o"></i> 评论管理</a></li>
+                </ul>
+            </li> 
             <li class="active treeview">
-                <a href="{{env('APP_URL')}}/admin/topics">
-                    <i class="fa fa-dashboard"></i> <span>专题管理</span>
+                <a href="{{env('APP_URL')}}/admin/displays/products">
+                    <i class="fa fa-dashboard"></i> <span>产品管理</span>
                 </a>
-            </li>
+                <ul class="treeview-menu">
+                    <li><a href="{{env('APP_URL')}}/admin/displays/products"><i class="fa fa-circle-o"></i> 产品列表</a></li>
+                    <li><a href="{{env('APP_URL')}}/admin/displays/product_cates"><i class="fa fa-circle-o"></i> 分类管理</a></li>
+                </ul>
+            </li>  
             <li class="active treeview">
-                <a href="{{env('APP_URL')}}/admin/notices">
-                    <i class="fa fa-dashboard"></i> <span>通知管理</span>
+                <a href="{{env('APP_URL')}}/admin/displays/activitys">
+                    <i class="fa fa-dashboard"></i> <span>活动管理</span>
                 </a>
-            </li>
+                <ul class="treeview-menu">
+                    <li><a href="{{env('APP_URL')}}/admin/displays/activitys"><i class="fa fa-circle-o"></i> 活动列表</a></li>
+                </ul>
+            </li>           
+            <li class="active treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>其他</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{env('APP_URL')}}/admin/displays/colunms"><i class="fa fa-circle-o"></i> 专栏管理</a></li>
+                    <li><a href="{{env('APP_URL')}}/admin/displays/swipers"><i class="fa fa-circle-o"></i> 轮播图管理</a></li>
+                    <li><a href="{{env('APP_URL')}}/admin/displays/suggests"><i class="fa fa-circle-o"></i> 建议列表</a></li>
+                    
+                </ul>
+            </li>      
             
         </ul>
     </section>
