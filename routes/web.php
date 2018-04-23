@@ -15,3 +15,5 @@ require_once('admin.php');
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::any('/wechat', 'MiniProgramController@index');

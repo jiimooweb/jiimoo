@@ -9,7 +9,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">基本资料管理</h3>
                 </div>
-                <a type="button" class="btn " href="{{route('displays_basic_info_create')}}" >添加信息</a>
+                <a type="button" class="btn " href="infos/create" >添加信息</a>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <table class="table table-bordered">
@@ -28,8 +28,8 @@
                                 <th>{{$info->tel}}</th>
                                 <th>{{$info->address}}</th>    
                                 <th>
-                                    <a type="button" class="btn" href="{{route('displays_basic_info_show',['info' => $info->id])}}" >编辑</a>
-                                    <a type="button" class="btn" href="{{route('displays_basic_info_delete',['info' => $info->id])}}" >删除</a>
+                                    <a type="button" class="btn" href="infos/{{$info->id}}/edit" >编辑</a>
+                                    <a type="button" class="btn" href="infos/{{$info->id}}/delete" >删除</a>
                                 </th>
                             </tr>
                             @endif

@@ -14,34 +14,34 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form" action="{{route('displays_basic_info_edit',['id' => $info->id])}}" method="GET" enctype="multipart/form-data">
+                    <form role="form" action="../infos" method="POST" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">名称</label>
-                                <input type="text" class="form-control" name="name" value="{{$info->name}}">
+                                <input type="text" class="form-control" name="name">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">logo</label>
-                                <input type="file" class="form-control" name="logo" value="{{$info->logon}}">
+                                <input type="file" class="form-control" name="logo">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">联系电话</label>
-                                <input type="number" class="form-control" name="tel" value="{{$info->tel}}">
+                                <input type="text" class="form-control" name="tel">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">地址</label>
-                                <input type="text" class="form-control" name="address" value="{{$info->address}}">
+                                <input type="text" class="form-control" name="address">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">简介</label>
-                                <input type="text" class="form-control" name="intro" value="{{$info->intro}}">
+                                <input type="text" class="form-control" name="intro">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">详情</label>
                                 <div>
                                 @component('admin.layout.ueditor',['name' => 'desc'])
-                                    {!! $info->desc !!}
+
                                 @endcomponent
                                 </div>
                             </div>
