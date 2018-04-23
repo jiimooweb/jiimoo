@@ -1,5 +1,7 @@
 <?php
+
 return [
+
     'unique'               => ':attribute 已存在',
     'accepted'             => ':attribute 是被接受的',
     'active_url'           => ':attribute 必须是一个合法的 URL',
@@ -60,6 +62,7 @@ return [
     ],
     'url'                  => ':attribute 无效的格式',
     'timezone'             => ':attribute 必须个有效的时区',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -75,6 +78,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
@@ -87,7 +91,6 @@ return [
     */
     'attributes'           => [
         'username' => '用户名',
-        'name' => '名字',
         'account'  => '账号',
         'captcha'  => '验证码',
         'mobile'   => '手机号',
@@ -95,8 +98,6 @@ return [
         'content'  => '内容',
         'identity' => '手机号/用户名',
         'title' => '标题',
-        'description' => '描述',
-        'author' => '作者',
-        
     ],
+
 ];

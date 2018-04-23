@@ -42,4 +42,7 @@ Route::group(['prefix'=>'admin'],function (){
             //是管理员
         });
     });
+  
+    Route::resource('reservations', '\App\Admin\Controllers\Resertvations\ResertvationController');
 });
+
