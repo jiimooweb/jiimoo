@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 29673
- * Date: 2018/4/20
- * Time: 9:10
- */
-Route::group(['prefix'=>'admins'],function (){
+
+
+Route::group(['prefix'=>'admin'],function (){
 
     Route::group(['prefix'=>'user'],function (){
         //登陆
-        Route::get('//login','\App\Admin\Controllers\UserController@loginIndex');
+        Route::get('/login','\App\Admin\Controllers\UserController@loginIndex');
         Route::post('/login','\App\Admin\Controllers\UserController@login');
         Route::get('/logout','\App\Admin\Controllers\UserController@logout');
         //添加用户
@@ -21,7 +17,7 @@ Route::group(['prefix'=>'admins'],function (){
         Route::post('/update','\App\Admin\Controllers\UserController@userUpdate');
     });
     Route::group(['prefix'=>'xcx'],function (){
-        Route::get('/{communalUser}/list','\App\Admin\Controllers\XcxController@xcxList');
+        Route::get('/{adminUser}/list','\App\Admin\Controllers\XcxController@xcxList');
         Route::get('/create','\App\Admin\Controllers\XcxController@createIndex');
         Route::post('/create','\App\Admin\Controllers\XcxController@create');
         Route::get('/{xcx}/check','\App\Admin\Controllers\XcxController@checkCombo');
@@ -46,4 +42,7 @@ Route::group(['prefix'=>'admins'],function (){
             //是管理员
         });
     });
+  
+    Route::resource('reservations', '\App\Admin\Controllers\Resertvations\ResertvationController');
 });
+

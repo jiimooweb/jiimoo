@@ -4,16 +4,16 @@ namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Commons\Xcx;
-use App\Models\Commons\CommunalUser;
+use App\Models\Commons\AdminUser;
 use App\Models\Commons\XcxHasCombo;
 use App\Models\Commons\Combo;
 class XcxController extends Controller{
         //用户所有小程序
-        public function xcxList(CommunalUser $communalUser){
-            if($communalUser->identity=='Admin'){
+        public function xcxList(AdminUser $adminUser){
+            if($adminUser->identity=='Admin'){
                 $xcxlist=Xcx::all();
             }else{
-                $xcxs=$communalUser->xcxs;
+                $xcxs=$adminUser->xcxs;
                 $xcxlist=Xcx::find($xcxs);
             }
             return $xcxlist;
@@ -31,7 +31,7 @@ class XcxController extends Controller{
             ]);
             $save=Xcx::create(request(['name','appid']));
             if ($save){
-                $user=CommunalUser::find(request('userid'));
+                $user=AdminUser::find(request('userid'));
                 $assgin=$user->assignXcx($save);
             }
             return $save;

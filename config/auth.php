@@ -74,7 +74,7 @@ return [
         ],
         'admins'=>[
             'driver' => 'eloquent',
-            'model' => App\Models\Commons\CommunalUser::class,
+            'model' => App\Models\Commons\AdminUser::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

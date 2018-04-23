@@ -5,11 +5,11 @@ namespace App\Models\Commons;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Commons\Xcx;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-class CommunalUser extends Authenticatable
+class AdminUser extends Authenticatable
 {
     //
     protected $guarded=[];
-    protected $table = 'communal_users';
+    protected $table = 'admin_users';
     protected $rememberTokenName='';
 
     public function xcxs(){
