@@ -1,5 +1,6 @@
 <?php
 
+
 Route::group(['prefix'=>'admin'],function (){
 
     Route::group(['prefix'=>'user'],function (){
@@ -41,3 +42,4 @@ Route::group(['prefix'=>'admin'],function (){
             //是管理员
         });
     });
+});
