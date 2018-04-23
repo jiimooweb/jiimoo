@@ -1,4 +1,4 @@
-<form action="/jiimoo/public/admins/xcx/create" method="POST">
+<form action="/jiimoo/public/admin/xcx/create" method="POST">
     {{csrf_field()}}
     <label>name</label>
     <input name="name" type="text" >

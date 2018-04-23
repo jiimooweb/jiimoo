@@ -1,4 +1,4 @@
-<form action="/jiimoo/public/admins/user/login" method="POST">
+<form action="/jiimoo/public/admin/user/login" method="POST">
     {{csrf_field()}}
     <label>nameoremail</label>
     <input name="account" type="text" >

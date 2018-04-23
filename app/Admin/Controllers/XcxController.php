@@ -2,14 +2,14 @@
 namespace App\Admin\Controllers;
 
 
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Models\Commons\Xcx;
 use App\Models\Commons\AdminUser;
 use App\Models\Commons\XcxHasCombo;
 use App\Models\Commons\Combo;
 class XcxController extends Controller{
         //用户所有小程序
-        public function xcxList(AdminUser $adminUser){
+        public function index(AdminUser $adminUser){
             if($adminUser->identity=='Admin'){
                 $xcxlist=Xcx::all();
             }else{
@@ -19,11 +19,11 @@ class XcxController extends Controller{
             return $xcxlist;
         }
 
-        public function createIndex(){
+        public function create(){
             return view('admin/xcx/create');
         }
         //创建小程序并指定用户关系
-        public function create(){
+        public function store(){
             $this->validate(request(),[
                 'userid'=>'required',
                 'name'=>'required|unique:xcxs,name',
