@@ -20,7 +20,7 @@ class AdminUser extends Authenticatable
     public function assignXcx($xcx){
         return $this->xcxs()->save($xcx);
     }
-    public  function  detachXcx($xcx){
+    public function detachXcx($xcx){
         return $this->detachXcx()->detach($xcx);
     }
 }

@@ -17,3 +17,5 @@ include_once('display.php');
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/token', 'TokenController@getToken');
