@@ -46,4 +46,11 @@ class ComboControlle extends Controller
         }
         return compact('save');
     }
+    public function delete(Combo $combo){
+        $hasModules=$combo->module;
+        foreach($hasModules as $hasModule){
+            $combo->deleteModule($hasModule);
+        }
+        $combo->delete();
+    }
 }

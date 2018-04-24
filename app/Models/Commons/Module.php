@@ -14,4 +14,8 @@ class Module extends Model
             'module_id','combo_id')->
              withPivot(['module_id','combo_id']);
     }
+    public function deleteCombo($combo)
+    {
+        return $this->combo()->delete($combo);
+    }
 }

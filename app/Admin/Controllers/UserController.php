@@ -22,12 +22,12 @@ class UserController extends Controller
         return view('',compact('adminUser'));
     }
     //用户自行修改自己信息
-    public function update(){
+    public function update(AdminUser $adminUser){
         $this->validate(request(),[
             'password'=>'required',
         ]);
         $password=request('password');
-        $update=AdminUser::where('id',\Auth::id())->update(['password'=>$password]);
+        $update=$adminUser->update(['password'=>$password]);
         return $update;
     }
     //添加用户

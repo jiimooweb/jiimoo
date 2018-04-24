@@ -26,4 +26,11 @@ class ModuleController extends Controller
      public function create(){
          return view('admin/module/create');
      }
+     public function delete(Module $module){
+            $combos=$module->combo;
+            foreach ($combos as $combo){
+                $module->deleteCombo($combo);
+            }
+            $module->delete();
+     }
 }
