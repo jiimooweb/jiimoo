@@ -12,8 +12,13 @@ class SwiperController extends Controller
     
     public function index() 
     {
-        $swipers = Swiper::orderBy('created_at','desc')->paginate(10);
-        return view('admin.displays.swiper.index', compact('swipers'));
+        $swipers = Swiper::where('display', 1)->orderBy('created_at','asc')->get();
+        // return view('admin.displays.swiper.index', compact('swipers'));
+
+        foreach($swipers as &$swiper) {
+            $swiper['image'] = env('APP_URL').$swiper['image'];
+        }
+        return response()->json($swipers);
     }
 
     public function create() 

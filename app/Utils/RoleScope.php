@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Units;
+namespace App\Utils;
 
 /**
  * 接口访问权限枚举

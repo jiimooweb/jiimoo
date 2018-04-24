@@ -12,11 +12,10 @@ class TokenController extends Controller
             'password' => 'required',
         ]);
 
-        dd(bcrypt(request('password')));
         $client = new \App\Services\ClientToken();
 
         $token = $client->getToken(request('username'), request('password'));
-
-        return response()->json(['data' => $token]);
+        
+        return response()->json(['token' => $token]);
     }
 }

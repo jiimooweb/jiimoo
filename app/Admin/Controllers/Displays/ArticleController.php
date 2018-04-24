@@ -12,9 +12,12 @@ class ArticleController extends Controller
     
     public function index() 
     {
-        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(6);
+        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->get();
         $articles->load('category');                
         // return view('admin.displays.article.index', compact('articles'));
+        foreach($articles as &$article) {
+            $article['thumb'] = env('APP_URL').$article['thumb'];
+        }
         return response()->json($articles);
     }
 
@@ -28,6 +31,7 @@ class ArticleController extends Controller
     {   
         $this->validate(request(),[
             'title' => 'required',
+            'thumb' => 'required',
             'cate_id' => 'required',
             'author' => 'required',
             'content' => 'required',
@@ -36,6 +40,8 @@ class ArticleController extends Controller
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content'
         ]);
+
+        $data['thumb'] = '/storage/'.request()->file('thumb')->storePublicly(md5(time()));
         
         Article::create($data);
 
@@ -60,6 +66,7 @@ class ArticleController extends Controller
     {
         $this->validate(request(),[
             'title' => 'required',
+            'thumb' => 'required',
             'cate_id' => 'required',
             'author' => 'required',
             'content' => 'required',
@@ -68,6 +75,8 @@ class ArticleController extends Controller
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content'
         ]);
+        
+        $data['thumb'] = '/storage/'.request()->file('thumb')->storePublicly(md5(time()));
         
         Article::where('id', $article->id)->update($data);
 

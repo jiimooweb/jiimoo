@@ -2,26 +2,42 @@
 
 namespace App\Services;
 
-use App\Units\RoleScope;
+use Exception;
+use App\Utils\RoleScope;
 use Illuminate\Support\Facades\Cache;
 
 class Token
 {
 
     // 生成令牌
-    public static function generateToken() : string
+    public static function generateToken() 
     {
-        $randChar = getRandChar(32);
+        $randChar = self::getRandChar(32);
         $timestamp = time();
         $tokenSalt = config('token.token_salt');
         return md5($randChar . $timestamp . $tokenSalt);
+    }
+
+    public static function getRandChar($length)
+    {
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol) - 1;
+
+        for ($i = 0;
+            $i < $length;
+            $i++) {
+            $str .= $strPol[rand(0, $max)];
+        }
+
+        return $str;
     }
 
     //验证token是否合法或者是否过期
     //验证器验证只是token验证的一种方式
     //另外一种方式是使用行为拦截token，根本不让非法token
     //进入控制器
-    public static function needPrimaryScope() : boolean
+    public static function needPrimaryScope() 
     {
         $scope = self::getCurrentTokenVar('scope');
         if ($scope) {
@@ -32,15 +48,12 @@ class Token
                 throw new ForbiddenException();
             }
         } else {
-            throw new Exception([
-                'msg' => 'Token信息错误!',
-                'errcode' => 10001
-            ]);
+            throw new Exception('Token信息错误!',10001);
         }
     }
 
     // 用户专有权限
-    public static function needUserScope() : boolean
+    public static function needUserScope() 
     {
         $scope = self::getCurrentTokenVar('scope');
         if ($scope){
@@ -50,15 +63,12 @@ class Token
                 throw new ForbiddenException();
             }
         } else {
-            throw new Exception([
-                'msg' => 'Token信息错误!',
-                'errcode' => 10001
-            ]);
+            throw new Exception('Token信息错误!',10001);
         }
     }
 
     //管理员
-    public static function needAdminScope() : boolean
+    public static function needAdminScope() 
     {
         $scope = self::getCurrentTokenVar('scope');
         if ($scope){
@@ -68,10 +78,7 @@ class Token
                 throw new ForbiddenException();
             }
         } else {
-            throw new Exception([
-                'msg' => 'Token信息错误!',
-                'errcode' => 10001
-            ]);
+            throw new Exception('Token信息错误!',10001);
         }
     }
 
@@ -81,17 +88,14 @@ class Token
      * @return void result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentTokenVar(string $key) : string
+    public static function getCurrentTokenVar($key) 
     {
         $token = Request::instance()
             ->header('token');
         $vars = Cache::get($token);
         if (!$vars)
         {
-            throw new Exception([
-                'msg' => 'Token信息错误!',
-                'errcode' => 10001
-            ]);
+            throw new Exception('Token信息错误!',10001);
         }
         else {
             if(!is_array($vars))
@@ -102,10 +106,7 @@ class Token
                 return $vars[$key];
             }
             else{
-                throw new Exception([
-                    'msg' => '尝试获取的Token变量并不存在!',
-                    'errcode' => 10002
-                ]);
+                throw new Exception('尝试获取的Token变量并不存在!',10002);
             }
         }
     }
@@ -117,17 +118,14 @@ class Token
      * @return array result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentIdentity(array $keys) : array
+    public static function getCurrentIdentity(array $keys)
     {
         $token = Request::instance()
             ->header('token');
         $identities = Cache::get($token);
         if (!$identities)
         {
-            throw new Exception([
-                'msg' => 'Token信息错误!',
-                'errcode' => 10001
-            ]);
+            throw new Exception('Token信息错误!',10001);
         }
         else
         {
@@ -150,7 +148,7 @@ class Token
      *而不应当自己解析UID
      *
      */
-    public static function getCurrentUid() : int
+    public static function getCurrentUid() 
     {
         $uid = self::getCurrentTokenVar('uid');
         $scope = self::getCurrentTokenVar('scope');
@@ -161,10 +159,7 @@ class Token
             $userID = request()->input('uid');
             if (!$userID)
             {
-                throw new Exception([
-                    'msg' => '用户UID无效!',
-                    'errcode' => 10007
-                ]);
+                throw new Exception('用户UID无效!',10007);          
             }
             return $userID;
         }
@@ -180,13 +175,10 @@ class Token
      * @return bool
      * @throws Exception
      */
-    public static function isValidOperate(int $checkedUID) : boolean
+    public static function isValidOperate($checkedUID)
     {
         if(!$checkedUID){
-            throw new Exception([
-                'msg' => '检查UID时必须传入一个被检查的UID!',
-                'errcode' => 10006
-            ]);
+            throw new Exception('检查UID时必须传入一个被检查的UID!',10006);
         }
         $currentOperateUID = self::getCurrentUid();
         if($currentOperateUID == $checkedUID){
@@ -201,7 +193,7 @@ class Token
      * @param $token 
      * @return bool
      */
-    public static function verifyToken(string $token) : boolean
+    public static function verifyToken($token)
     {
         $exist = Cache::get($token);
         if($exist){

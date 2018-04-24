@@ -23,4 +23,16 @@ class AdminUser extends Authenticatable
     public function detachXcx($xcx){
         return $this->detachXcx()->detach($xcx);
     }
+
+    public static function check($username, $password) 
+    {
+        $email=	$username;
+        $userNameAttempt=compact('username','password');
+        $userEmailAttempt=compact('email','password');
+        if(\Auth::guard('admins')->attempt($userNameAttempt)||
+            \Auth::guard('admins')->attempt($userEmailAttempt)){
+                return Auth::guard('admins')->user();
+        }
+        return false;
+    }
 }

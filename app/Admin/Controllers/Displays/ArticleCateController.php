@@ -13,6 +13,8 @@ class ArticleCateController extends Controller
     {
         $articleCates = ArticleCate::get();
         return view('admin.displays.article_cate.index', compact('articleCates'));
+
+        
     }
 
     public function create() 

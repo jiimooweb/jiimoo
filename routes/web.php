@@ -19,3 +19,8 @@ Route::get('/', function () {
 });
 
 Route::post('/token', 'TokenController@getToken');
+
+
+Route::post('/wechat/token/getToken', 'MiniProgramController@getToken');
+Route::post('/wechat/token/verifyToken', 'MiniProgramController@verifyToken');
+Route::post('/wechat/saveInfo', 'MiniProgramController@saveInfo')->middleware('token');

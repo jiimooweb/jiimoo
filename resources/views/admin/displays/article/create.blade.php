@@ -22,6 +22,10 @@
                                 <input type="text" class="form-control" name="title">
                             </div>
                             <div class="form-group">
+                                <label for="exampleInputEmail1">封面</label>
+                                <input type="file" name="thumb">
+                            </div>
+                            <div class="form-group">
                                 <label for="exampleInputEmail1">分类</label>
                                 <select name="cate_id">
                                     @foreach($cates as $cate)
