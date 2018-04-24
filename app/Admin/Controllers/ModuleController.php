@@ -7,15 +7,15 @@
  */
 
 namespace App\Admin\Controllers;
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Models\Commons\Module;
 class ModuleController extends Controller
 {
-     public function query(){
+     public function index(){
          $module=Module::all();
          return $module;
      }
-     public function create(){
+     public function store(){
          $this->validate(request(),[
              'name'=>'required',
              'desc'=>'required',
@@ -23,7 +23,14 @@ class ModuleController extends Controller
          $save=Module::create(request(['name','desc']));
          return $save;
      }
-     public function createIndex(){
+     public function create(){
          return view('admin/module/create');
+     }
+     public function delete(Module $module){
+            $combos=$module->combo;
+            foreach ($combos as $combo){
+                $module->deleteCombo($combo);
+            }
+            $module->delete();
      }
 }

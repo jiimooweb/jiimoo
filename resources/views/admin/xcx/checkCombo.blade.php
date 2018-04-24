@@ -1,4 +1,4 @@
-<form action="/jiimoo/public/admins/xcx/{{$xcx->id}}/check" method="POST">
+<form action="/jiimoo/public/admin/xcx/{{$xcx->id}}/check" method="POST">
     {{csrf_field()}}
     @foreach($combos as $combo)
         <div class="checkbox">

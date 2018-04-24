@@ -22,6 +22,9 @@ class Combo extends Model
     public  function  detachModule($module){
         return $this->module()->detach($module);
     }
+    public function deleteModule($module){
+        return $this->module()->delete($module);
+    }
     public function hasModule($module){
         return $this->module->contains($module);
     }

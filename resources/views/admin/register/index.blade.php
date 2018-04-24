@@ -1,4 +1,4 @@
-<form action="/jiimoo/public/admins/user/register" method="POST">
+<form action="/jiimoo/public/admin/user/register" method="POST">
     {{csrf_field()}}
     <label>name</label>
     <input name="username" type="text" >

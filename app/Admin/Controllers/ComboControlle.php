@@ -7,12 +7,16 @@
  */
 
 namespace App\Admin\Controllers;
-use App\Http\Controllers\Controller;
+use App\Admin\Controllers\Controller;
 use App\Models\Commons\Combo;
 use App\Models\Commons\Module;
 class ComboControlle extends Controller
 {
-    public function create(){
+    public function index(){
+        $combo=Combo::all();
+        return view('',compact('combo'));
+    }
+    public function store(){
         $this->validate(request(),[
             'name'=>'required',
             'desc'=>'required',
@@ -25,7 +29,7 @@ class ComboControlle extends Controller
         }
         return "失败";
     }
-    public function createIndex(){
+    public function create(){
         $modules=Module::all();
         return view('admin/Combo/create',compact('modules'));
     }
@@ -41,5 +45,12 @@ class ComboControlle extends Controller
            $delete=$combo->detachModule($detach);
         }
         return compact('save');
+    }
+    public function delete(Combo $combo){
+        $hasModules=$combo->module;
+        foreach($hasModules as $hasModule){
+            $combo->deleteModule($hasModule);
+        }
+        $combo->delete();
     }
 }
