@@ -16,7 +16,7 @@ class XcxController extends Controller{
                 $xcxs=$adminUser->xcxs;
                 $xcxlist=Xcx::find($xcxs);
             }
-            return $xcxlist;
+            return response()->json(["date"=>$xcxlist]);
         }
 
         public function create(){
@@ -33,8 +33,9 @@ class XcxController extends Controller{
             if ($save){
                 $user=AdminUser::find(request('userid'));
                 $assgin=$user->assignXcx($save);
+                return response()->json(["date"=>$assgin]);
             }
-            return $save;
+            return response()->json(["date"=>false]);
         }
         //选择所需套餐
         public function checkCombo(Xcx $xcx){
@@ -42,9 +43,9 @@ class XcxController extends Controller{
             $hasCombo=XcxHasCombo::find($xcx->id);
             if ($hasCombo){
                 $hasCombo=json_decode($hasCombo->modules);
-                return view('admin/xcx/checkCombo',compact('combos','hasCombo','xcx'));
+                return response()->json(["date"=>compact('combos','hasCombo','xcx')]);
             }
-            return view('admin/xcx/checkCombo',compact('combos','xcx'));
+            return response()->json(["date"=>compact('combos','xcx')]);
         }
         //保存小程序套餐关系
         public function storeCombo(Xcx $xcx){
@@ -55,6 +56,6 @@ class XcxController extends Controller{
             $modules=json_encode($modules);
             $xcx_id=$xcx->id;
             $save=XcxHasCombo::create(compact('xcx_id','modules'));
-            return $save;
+            return response()->json(["date"=>$save]);
         }
 }

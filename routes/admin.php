@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['prefix'=>'admin'],function (){
+Route::group(['prefix'=>'admin', 'middleware' => 'token'],function (){
     Route::group(['middleware'=>'auth:admins'],function (){
         //登陆后访问
         Route::get('/user/logout','\App\Admin\Controllers\LoginController@logout');
@@ -43,7 +43,7 @@ Route::group(['prefix'=>'admin'],function (){
     });
 
 
-  
+
     Route::resource('reservations', '\App\Admin\Controllers\Resertvations\ResertvationController');
 });
 

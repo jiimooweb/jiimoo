@@ -24,10 +24,10 @@ class ComboControlle extends Controller
         ]);
         $saveCombo=Combo::create(request(['name','desc']));
         if ($saveCombo){
-            $sss=$this->storeMoudle(request('modules'),$saveCombo);
-            return $sss;
+            $store=$this->storeMoudle(request('modules'),$saveCombo);
+            return response()->json(["date"=>$store]);
         }
-        return "失败";
+        return response()->json(["date"=>false]);
     }
     public function create(){
         $modules=Module::all();
@@ -51,6 +51,7 @@ class ComboControlle extends Controller
         foreach($hasModules as $hasModule){
             $combo->deleteModule($hasModule);
         }
-        $combo->delete();
+        $delete=$combo->delete();
+        return response()->json(["date"=>$delete]);
     }
 }

@@ -15,11 +15,11 @@ class UserController extends Controller
 {
     // 只出现用户
     public function index(){
-        $users=AdminUser::where('identity','User')->paginate(15);
-        dd($users);
+        $users=AdminUser::where('identity','User');
+        return response()->json(["date"=>$users]);
     }
     public function edit(AdminUser $adminUser){
-        return view('',compact('adminUser'));
+        return response()->json(["date"=>compact('adminUser')]);
     }
     //用户自行修改自己信息
     public function update(AdminUser $adminUser){
@@ -28,7 +28,7 @@ class UserController extends Controller
         ]);
         $password=request('password');
         $update=$adminUser->update(['password'=>$password]);
-        return $update;
+        return response()->json(["date"=>$update]);
     }
     //添加用户
     public function store(){
@@ -43,7 +43,7 @@ class UserController extends Controller
         $status='Y';
         $identity='User';
         $user=AdminUser::create(compact('username','password','email','identity','status'));
-        dd($user);
+        return response()->json(["date"=>$user]);
     }
     public function create(){
         return view('admin/register/index');
@@ -51,6 +51,6 @@ class UserController extends Controller
     //删除用户
     public function delete(AdminUser $adminUser){
         $delete=AdminUser::destroy($adminUser->id);
-        return "删除";
+        return response()->json(["date"=>$delete]);
     }
 }
