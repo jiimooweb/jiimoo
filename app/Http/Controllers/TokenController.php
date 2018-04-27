@@ -16,6 +16,6 @@ class TokenController extends Controller
 
         $token = $client->getToken(request('username'), request('password'));
         
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token, 'msg' => '登录成功！']);
     }
 }

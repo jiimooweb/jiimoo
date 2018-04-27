@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Services\Token;
 use EasyWeChat\Factory;
-use App\Models\Commons\Fans;
+use App\Models\Commons\Fan;
 use Illuminate\Http\Request;
 use App\Services\MiniProgramToken;
 use Illuminate\Support\Facades\Cache;
@@ -50,7 +50,7 @@ class MiniProgramController extends Controller
 
         $userInfo = request('userInfo');
         
-        if(Fans::where('id', $data['uid'])->update($userInfo)){
+        if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
         }
 

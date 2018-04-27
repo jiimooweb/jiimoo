@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Exception;
-use App\Models\Commons\Fans;
+use App\Models\Commons\Fan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -14,7 +14,7 @@ class MiniProgramToken extends Token
     public function getToken($data)
     {
         $openid = $data['openid'];
-        $fans = Fans::getByOpenID($openid);
+        $fans = Fan::getByOpenID($openid);
         if (!$fans)
         {
             $uid = $this->newUser($openid);
@@ -50,7 +50,7 @@ class MiniProgramToken extends Token
     // 创建新用户
     private function newUser($openid)
     {
-        $user = Fans::create(['openid' => $openid]);
+        $user = Fan::create(['openid' => $openid]);
         return $user->id;
     }
 }

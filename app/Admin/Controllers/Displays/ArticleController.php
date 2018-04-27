@@ -12,7 +12,7 @@ class ArticleController extends Controller
     
     public function index() 
     {
-        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->get();
+        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(10);
         $articles->load('category');                
         // return view('admin.displays.article.index', compact('articles'));
         foreach($articles as &$article) {

@@ -11,14 +11,16 @@ class ActivityController extends Controller
     
     public function index() 
     {
-        $activitys = Activity::orderBy('created_at','desc')->withCount(['signlists'])->paginate(6);         
-        return view('admin.displays.activity.index', compact('activitys'));
+        $activitys = Activity::orderBy('created_at','desc')->withCount(['signlists'])->paginate(10);   
+
+        return response()->json(['data' => $activity]);
+        
     
     }
 
     public function create() 
     {
-        return view('admin.displays.activity.create');
+        // return view('admin.displays.activity.create');
     }
 
     public function store() 
@@ -43,20 +45,23 @@ class ActivityController extends Controller
         $activity_time = explode('~',request('activity_time'));
         $data['start_time'] =trim($activity_time[0]);
         $data['end_time'] =trim($activity_time[1]);
-        Activity::create($data);
+        $activity = Activity::create($data);
 
-        return back();
+        return response()->json(['data' => $activity]);
     }
 
     public function show(Activity $activity)
     {
         // TODO: 待开发      
-        return view('admin.displays.activity.show',compact('activity'));
+        // return view('admin.displays.activity.show',compact('activity'));
+        return response()->json(['data' => $activity]);
+        
     }
 
     public function edit(Activity $activity) 
     {      
-        return view('admin.displays.activity.edit',compact('activity'));
+        return response()->json(['data' => $activity]);
+        
     }
 
     public function update(Activity $activity)
@@ -81,9 +86,10 @@ class ActivityController extends Controller
         $data['start_time'] =trim($activity_time[0]);
         $data['end_time'] =trim($activity_time[1]);
         
-        Activity::where('id', $activity->id)->update($data);
+        $activity = Activity::where('id', $activity->id)->update($data);
 
-        return back();
+        return response()->json(['data' => $activity]);
+        
 
     }
 
@@ -91,7 +97,9 @@ class ActivityController extends Controller
     {
         // TODO:判断删除权限
         $activity->delete();
-        return redirect('admin/displays/activitys');
+        // return redirect('admin/displays/activitys');
+        return response()->json(['data' => $activity]);
+        
     }
 
 }
