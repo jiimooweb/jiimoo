@@ -15,7 +15,7 @@ class ClientToken extends Token
         
         if(!$app)
         {
-            throw new Exception('授权失败', 1003);
+            return response()->json(['msg' => '授权失败']);
         }
         else{
             $values = [
@@ -33,7 +33,7 @@ class ClientToken extends Token
         $expire_in = config('token.token_expire_in');
         Cache::put($token, json_encode($values), $expire_in);
         if(!Cache::get($token)){
-            throw new Exception('服务器缓存异常',10005);
+            return response()->json(['msg' => '服务器缓存异常']);
         }
         return $token;
     }

@@ -48,7 +48,8 @@ class Token
                 throw new ForbiddenException();
             }
         } else {
-            throw new Exception('Token信息错误!',10001);
+            return response()->json(['msg' => 'Token信息错误']);
+            
         }
     }
 
@@ -63,7 +64,8 @@ class Token
                 throw new ForbiddenException();
             }
         } else {
-            throw new Exception('Token信息错误!',10001);
+            return response()->json(['msg' => 'Token信息错误']);
+            
         }
     }
 
@@ -78,7 +80,8 @@ class Token
                 throw new ForbiddenException();
             }
         } else {
-            throw new Exception('Token信息错误!',10001);
+            return response()->json(['msg' => 'Token信息错误']);
+            
         }
     }
 
@@ -95,7 +98,7 @@ class Token
         $vars = Cache::get($token);
         if (!$vars)
         {
-            throw new Exception('Token信息错误!',10001);
+            return response()->json(['msg' => 'Token信息错误']);
         }
         else {
             if(!is_array($vars))
@@ -106,7 +109,7 @@ class Token
                 return $vars[$key];
             }
             else{
-                throw new Exception('尝试获取的Token变量并不存在!',10002);
+                return response()->json(['msg' => '尝试获取的Token变量并不存在']);
             }
         }
     }
@@ -125,7 +128,7 @@ class Token
         $identities = Cache::get($token);
         if (!$identities)
         {
-            throw new Exception('Token信息错误!',10001);
+            return response()->json(['msg' => 'Token信息错误']);
         }
         else
         {
@@ -159,7 +162,7 @@ class Token
             $userID = request()->input('uid');
             if (!$userID)
             {
-                throw new Exception('用户UID无效!',10007);          
+                return response()->json(['msg' => '用户UID无效']);
             }
             return $userID;
         }
@@ -178,7 +181,7 @@ class Token
     public static function isValidOperate($checkedUID)
     {
         if(!$checkedUID){
-            throw new Exception('检查UID时必须传入一个被检查的UID!',10006);
+            return response()->json(['msg' => '检查UID时必须传入一个被检查的UID']);
         }
         $currentOperateUID = self::getCurrentUid();
         if($currentOperateUID == $checkedUID){
