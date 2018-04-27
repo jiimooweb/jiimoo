@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'admin/displays', 'middleware' => 'token'], function () {
+Route::group(['prefix' => 'admin/displays', 'middleware' => ['token', 'cors']], function () {
     //基本信息
     Route::resource('/infos', '\App\Admin\Controllers\Displays\BasicInfoController', ['names' => ['destroy' => 'infos.delete']]);
     Route::get('/infos/{info}/delete', '\App\Admin\Controllers\Displays\BasicInfoController@delete')->name('infos.delete');

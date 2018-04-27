@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/token', 'TokenController@getToken');
+Route::post('/token', 'TokenController@getToken')->middleware(['token', 'cors']);
 
 
 Route::post('/wechat/token/getToken', 'MiniProgramController@getToken');
