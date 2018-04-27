@@ -7,6 +7,11 @@ class TokenController extends Controller
 {
     public function getToken()
     {
+
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: token,Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: POST,GET');
+
         $this->validate(request(), [
             'username' => 'required',
             'password' => 'required',
