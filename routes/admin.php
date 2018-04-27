@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['prefix'=>'admin', 'middleware' => ['token', 'cors']],function (){
+Route::group(['prefix'=>'admin', 'middleware' => ['cors', 'token']],function (){
     Route::group(['middleware'=>'auth:admins'],function (){
         //登陆后访问
         Route::get('/user/logout','\App\Admin\Controllers\LoginController@logout');
