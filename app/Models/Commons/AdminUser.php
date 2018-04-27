@@ -31,7 +31,7 @@ class AdminUser extends Authenticatable
         $userEmailAttempt=compact('email','password');
         if(\Auth::guard('admins')->attempt($userNameAttempt)||
             \Auth::guard('admins')->attempt($userEmailAttempt)){
-                return Auth::guard('admins')->user();
+                return \Auth::guard('admins')->user();
         }
         return false;
     }
