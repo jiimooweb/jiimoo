@@ -17,6 +17,7 @@ class VerifyToken
      */
     public function handle($request, Closure $next)
     {
+
         $token = $request->header('token');
         if(Token::verifyToken($token)){
             return $next($request);

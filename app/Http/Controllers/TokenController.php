@@ -7,6 +7,7 @@ class TokenController extends Controller
 {
     public function getToken()
     {
+
         $this->validate(request(), [
             'username' => 'required',
             'password' => 'required',
