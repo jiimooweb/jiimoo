@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 use App\Admin\Controllers\Controller;
-use App\Models\AdminUser;
+use App\Models\Commons\AdminUser;
 
 class LoginController extends Controller
 {
