@@ -13,10 +13,6 @@ Route::group(['prefix'=>'admin'],function (){
     Route::group(['prefix'=>'user'],function (){
         //登陆
 
-        //添加用户
-        Route::get('/register','\App\Admin\Controllers\UserController@create');
-        Route::post('/register','\App\Admin\Controllers\UserController@store');
-
         Route::get('/index','\App\Admin\Controllers\UserController@index');
         Route::post('/update','\App\Admin\Controllers\UserController@edit');
         Route::post('/update','\App\Admin\Controllers\UserController@update');

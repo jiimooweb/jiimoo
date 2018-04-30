@@ -12,12 +12,13 @@ class BasicInfoController extends Controller
     public function index() 
     {
         $info = BasicInfo::first();
-        return view('admin.displays.basic_info.index', compact('info'));
+        // return view('admin.displays.basic_info.index', compact('info'));
+        return response()->json(['status' => 'success', 'data' => $info]);
     }
 
     public function create() 
     {
-        return view('admin.displays..basic_info.create');
+        return;
     }
 
     public function store() 
@@ -37,17 +38,17 @@ class BasicInfoController extends Controller
         
         BasicInfo::create($data);
 
-        return back();
+        return response()->json(['status' => 'success', 'msg' => '新增成功！']);
     }
 
     public function show(BasicInfo $info)
     {
-        return view('admin.displays.basic_info.show',compact('info'));        
+        return response()->json(['status' => 'success', 'data' => $info]);     
     }
 
     public function edit(BasicInfo $info) 
     {
-        return view('admin.displays.basic_info.edit',compact('info'));        
+        return response()->json(['status' => 'success', 'data' => $info]);   
     }
 
     public function update(BasicInfo $info) 
@@ -69,13 +70,13 @@ class BasicInfoController extends Controller
         
         BasicInfo::where('id', $info->id)->update($data);
 
-        return back();
+        return response()->json(['status' => 'success', 'msg' => '更新成功！']);
     }
 
     public function destroy(BasicInfo $info)
     {
         // TODO:判断删除权限
         $info->delete();
-        return redirect('admin/displays/infos');
+        return response()->json(['status' => 'success','msg' => '删除成功']);
     }
 }

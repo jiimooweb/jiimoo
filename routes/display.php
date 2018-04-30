@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'admin/displays', 'middleware' => ['cors', 'token']], function () {
+Route::group(['prefix' => 'admin/displays'], function () {
     //基本信息
     Route::resource('/infos', '\App\Admin\Controllers\Displays\BasicInfoController');
     //文章
