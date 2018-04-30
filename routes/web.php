@@ -24,3 +24,8 @@ Route::post('/token', 'TokenController@getToken')->middleware(['cors']);
 Route::post('/wechat/token/getToken', 'MiniProgramController@getToken');
 Route::post('/wechat/token/verifyToken', 'MiniProgramController@verifyToken');
 Route::post('/wechat/saveInfo', 'MiniProgramController@saveInfo')->middleware('token');
+
+
+Route::get('/hello', function () {
+    return view('hello');
+});
