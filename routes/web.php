@@ -14,14 +14,17 @@
 |
 */
 
-Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware' => ['client','cors','token']],function () {
+Route::group(['prefix' => '{client_type}/{xcx_flag}'],function () {
     include_once('admin.php');
     include_once('answer.php');
     include_once('display.php');
 });
 
-Route::get('admin/user','\App\Admin\Controllers\LoginController@index');
-Route::post('admin/user/login','\App\Admin\Controllers\LoginController@login');
+Route::get('admin/user','\App\Admin\Controllers\LoginController@index')->middleware(['cors']);
+Route::post('admin/user/login','\App\Admin\Controllers\LoginController@login')->middleware(['cors']);
+
+Route::get('admin/user/register','\App\Admin\Controllers\UserController@create');
+Route::post('admin/user/register','\App\Admin\Controllers\UserController@store');
 
 Route::post('admin/token', 'TokenController@getToken')->middleware(['cors']);
 
