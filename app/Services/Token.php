@@ -10,7 +10,7 @@ class Token
 {
 
     // 生成令牌
-    public static function generateToken() 
+    public static function generateToken()
     {
         $randChar = self::getRandChar(32);
         $timestamp = time();
@@ -24,9 +24,7 @@ class Token
         $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
         $max = strlen($strPol) - 1;
 
-        for ($i = 0;
-            $i < $length;
-            $i++) {
+        for ($i = 0; $i < $length; $i++) {
             $str .= $strPol[rand(0, $max)];
         }
 
@@ -37,27 +35,26 @@ class Token
     //验证器验证只是token验证的一种方式
     //另外一种方式是使用行为拦截token，根本不让非法token
     //进入控制器
-    public static function needPrimaryScope() 
+    public static function needPrimaryScope()
     {
         $scope = self::getCurrentTokenVar('scope');
         if ($scope) {
             if ($scope >= RoleScope::User) {
                 return true;
-            }
-            else{
+            } else {
                 throw new ForbiddenException();
             }
         } else {
             return response()->json(['msg' => 'Token信息错误']);
-            
+
         }
     }
 
     // 用户专有权限
-    public static function needUserScope() 
+    public static function needUserScope()
     {
         $scope = self::getCurrentTokenVar('scope');
-        if ($scope){
+        if ($scope) {
             if ($scope == RoleScope::User) {
                 return true;
             } else {
@@ -65,15 +62,15 @@ class Token
             }
         } else {
             return response()->json(['msg' => 'Token信息错误']);
-            
+
         }
     }
 
     //管理员
-    public static function needAdminScope() 
+    public static function needAdminScope()
     {
         $scope = self::getCurrentTokenVar('scope');
-        if ($scope){
+        if ($scope) {
             if ($scope == RoleScope::Admin) {
                 return true;
             } else {
@@ -81,7 +78,7 @@ class Token
             }
         } else {
             return response()->json(['msg' => 'Token信息错误']);
-            
+
         }
     }
 
@@ -91,24 +88,20 @@ class Token
      * @return void result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentTokenVar($key) 
+    public static function getCurrentTokenVar($key)
     {
         $token = Request::instance()
             ->header('token');
         $vars = Cache::get($token);
-        if (!$vars)
-        {
+        if (!$vars) {
             return response()->json(['msg' => 'Token信息错误']);
-        }
-        else {
-            if(!is_array($vars))
-            {
+        } else {
+            if (!is_array($vars)) {
                 $vars = json_decode($vars, true);
             }
             if (array_key_exists($key, $vars)) {
                 return $vars[$key];
-            }
-            else{
+            } else {
                 return response()->json(['msg' => '尝试获取的Token变量并不存在']);
             }
         }
@@ -126,48 +119,39 @@ class Token
         $token = Request::instance()
             ->header('token');
         $identities = Cache::get($token);
-        if (!$identities)
-        {
+        if (!$identities) {
             return response()->json(['msg' => 'Token信息错误']);
-        }
-        else
-        {
+        } else {
             $identities = json_decode($identities, true);
             $result = [];
-            foreach ($keys as $key)
-            {
-                if (array_key_exists($key, $identities))
-                {
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $identities)) {
                     $result[$key] = $identities[$key];
                 }
             }
             return $result;
         }
     }
-    
+
 
     /**
      * 当需要获取全局UID时，应当调用此方法
      *而不应当自己解析UID
      *
      */
-    public static function getCurrentUid() 
+    public static function getCurrentUid()
     {
         $uid = self::getCurrentTokenVar('uid');
         $scope = self::getCurrentTokenVar('scope');
-        if ($scope == RoleScope::Admin)
-        {
+        if ($scope == RoleScope::Admin) {
             // 只有Super权限才可以自己传入uid
             // 且必须在get参数中，post不接受任何uid字段
             $userID = request()->input('uid');
-            if (!$userID)
-            {
+            if (!$userID) {
                 return response()->json(['msg' => '用户UID无效']);
             }
             return $userID;
-        }
-        else
-        {
+        } else {
             return $uid;
         }
     }
@@ -180,11 +164,11 @@ class Token
      */
     public static function isValidOperate($checkedUID)
     {
-        if(!$checkedUID){
+        if (!$checkedUID) {
             return response()->json(['msg' => '检查UID时必须传入一个被检查的UID']);
         }
         $currentOperateUID = self::getCurrentUid();
-        if($currentOperateUID == $checkedUID){
+        if ($currentOperateUID == $checkedUID) {
             return true;
         }
         return false;
@@ -199,10 +183,9 @@ class Token
     public static function verifyToken($token)
     {
         $exist = Cache::get($token);
-        if($exist){
+        if ($exist) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

@@ -93,7 +93,7 @@ class ActivityController extends Controller
 
     }
 
-    public function delete(Activity $activity)
+    public function destroy(Activity $activity)
     {
         // TODO:判断删除权限
         $activity->delete();

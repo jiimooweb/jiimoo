@@ -1,8 +1,8 @@
 <?php
 
-include_once('admin.php');
-include_once('answer.php');
-include_once('display.php');
+// include_once('admin.php');
+// include_once('answer.php');
+// include_once('display.php');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,13 +14,19 @@ include_once('display.php');
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware' => ['client','cors','token']],function () {
+    include_once('admin.php');
+    include_once('answer.php');
+    include_once('display.php');
 });
 
-Route::post('/token', 'TokenController@getToken')->middleware(['cors']);
+Route::get('admin/user','\App\Admin\Controllers\LoginController@index');
+Route::post('admin/user/login','\App\Admin\Controllers\LoginController@login');
 
+Route::post('admin/token', 'TokenController@getToken')->middleware(['cors']);
 
-Route::post('/wechat/token/getToken', 'MiniProgramController@getToken');
-Route::post('/wechat/token/verifyToken', 'MiniProgramController@verifyToken');
-Route::post('/wechat/saveInfo', 'MiniProgramController@saveInfo')->middleware('token');
+Route::group(['prefix' => 'wechat'], function() {
+    Route::post('token/getToken', 'MiniProgramController@getToken');
+    Route::post('token/verifyToken', 'MiniProgramController@verifyToken');
+    Route::post('saveInfo', 'MiniProgramController@saveInfo')->middleware('token');
+});

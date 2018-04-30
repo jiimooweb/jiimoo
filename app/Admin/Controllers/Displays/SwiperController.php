@@ -63,7 +63,7 @@ class SwiperController extends Controller
         
         $this->validate(request(),[
             'image' => 'required',
-            // 'url' => 'required',
+            'url' => 'required',
             'remake' => 'required',
             'display' => 'required|integer'
         ]);
@@ -79,7 +79,7 @@ class SwiperController extends Controller
         return back();
     }
 
-    public function delete(Swiper $swiper)
+    public function destroy(Swiper $swiper)
     {
         // TODO:判断删除权限
         $swiper->delete();
