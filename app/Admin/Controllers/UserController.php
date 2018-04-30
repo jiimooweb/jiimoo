@@ -41,7 +41,6 @@ class UserController extends Controller
             'password'=>'required',
         ]);
         $random=str_random(5);
-        if(AdminUser::where('xxx',$random)->get()){}
         $username=request('username');
         $email=	request('email');
         $password=bcrypt(request('password'));
