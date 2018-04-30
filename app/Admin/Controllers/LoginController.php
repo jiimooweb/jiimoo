@@ -18,9 +18,9 @@ class LoginController extends Controller
         $client = new \App\Services\ClientToken();
         $token = $client->getToken(request('username'), request('password'));
         if(is_string($token)){
-            return response()->json(['token' => $token, 'msg' => '登录成功！']);    
+            return response()->json(['token' => $token, 'msg' => '登录成功！']);
         }else {
-            return response()->json(['error' => $token, 'msg' => '用户名或者密码错误！']);    
+            return response()->json(['error' => $token, 'msg' => '用户名或者密码错误！']);
         }
     }
     public function logout(){

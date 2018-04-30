@@ -21,7 +21,7 @@ class ModuleController extends Controller
              'desc'=>'required',
          ]);
          $save=Module::create(request(['name','desc']));
-         return response()->json(["date"=>$save]);
+         return response()->json(["data"=>$save]);
      }
      public function create(){
          return view('admin/module/create');
@@ -32,6 +32,6 @@ class ModuleController extends Controller
                 $module->deleteCombo($combo->id);
             }
             $delete=$module->delete();
-         return response()->json(["date"=>$delete]);
+         return response()->json(["data"=>$delete]);
      }
 }

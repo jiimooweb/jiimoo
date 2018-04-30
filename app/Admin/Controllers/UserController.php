@@ -13,24 +13,26 @@ use App\Admin\Controllers\Controller;
 use App\Models\Commons\AdminUser;
 class UserController extends Controller
 {
-
     // 只出现用户
     public function index(){
         $users=AdminUser::where('identity','User');
-        return response()->json(["date"=>$users]);
+        return response()->json(["data"=>$users]);
     }
-    public function edit(AdminUser $adminUser){
-        return response()->json(["date"=>compact('adminUser')]);
+    public function edit(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
+        return response()->json(["data"=>compact('adminUser')]);
     }
     //用户自行修改自己信息
-    public function update(AdminUser $adminUser){
+    public function update(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         $this->validate(request(),[
             'password'=>'required',
         ]);
         $password=request('password');
         $update=$adminUser->update(['password'=>$password]);
-        return response()->json(["date"=>$update]);
+        return response()->json(["data"=>$update]);
     }
+
     //添加用户
     public function store(){
         $this->validate(request(),[
@@ -38,29 +40,32 @@ class UserController extends Controller
             'email'=>'required|email|unique:admin_users,email',
             'password'=>'required',
         ]);
+        $random=str_random(5);
         $username=request('username');
         $email=	request('email');
         $password=bcrypt(request('password'));
         $status='Y';
         $identity='User';
         $user=AdminUser::create(compact('username','password','email','identity','status'));
-        return response()->json(["date"=>$user]);
+        return response()->json(["data"=>$user]);
     }
     public function create(){
         return view('admin/register/index');
     }
     //删除用户
-    public function delete(AdminUser $adminUser){
+    public function delete(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         $xcxs=$adminUser->xcxs;
         foreach ($xcxs as $xcx){
             $adminUser->detachXcx($xcx->id);
         }
         $delete=AdminUser::destroy($adminUser->id);
-        return response()->json(["date"=>$delete]);
+        return response()->json(["data"=>$delete]);
     }
 
     //给用户添加小程序
-    public function addXcx(AdminUser $adminUser){
+    public function addXcx(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         $this->validate(request(),[
             'xcxs'=>'required|array',
         ]);
@@ -75,9 +80,10 @@ class UserController extends Controller
             $delete=$adminUser->detachXcx($detach);
         }
         if($save&&$delete){
-            return response()->json(["date"=>true]);
+            return response()->json(["data"=>true]);
         }else{
-            return response()->json(["date"=>false]);
+
+            return response()->json(["data"=>false]);
         }
     }
 }
