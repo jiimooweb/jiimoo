@@ -23,8 +23,7 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware' => ['client','
 Route::get('admin/user','\App\Admin\Controllers\LoginController@index');
 Route::post('admin/user/login','\App\Admin\Controllers\LoginController@login');
 
-
-Route::post('/token', 'TokenController@getToken')->middleware(['cors']);
+Route::post('admin/token', 'TokenController@getToken')->middleware(['cors']);
 
 Route::group(['prefix' => 'wechat'], function() {
     Route::post('token/getToken', 'MiniProgramController@getToken');

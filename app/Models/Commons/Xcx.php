@@ -20,4 +20,11 @@ class Xcx extends Model
     public function hasUser($id) {
         return $this->user()->where('user_id', $id)->count();
     }
+    public function assignUser($user){
+        return $this->xcxs()->save($user);
+    }
+    public function detachUser($user){
+        return $this->detachXcx()->detach($user);
+    }
+
 }
