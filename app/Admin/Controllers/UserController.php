@@ -13,6 +13,7 @@ use App\Admin\Controllers\Controller;
 use App\Models\Commons\AdminUser;
 class UserController extends Controller
 {
+
     // 只出现用户
     public function index(){
         $users=AdminUser::where('identity','User');
@@ -50,7 +51,33 @@ class UserController extends Controller
     }
     //删除用户
     public function delete(AdminUser $adminUser){
+        $xcxs=$adminUser->xcxs;
+        foreach ($xcxs as $xcx){
+            $adminUser->detachXcx($xcx->id);
+        }
         $delete=AdminUser::destroy($adminUser->id);
         return response()->json(["date"=>$delete]);
+    }
+
+    //给用户添加小程序
+    public function addXcx(AdminUser $adminUser){
+        $this->validate(request(),[
+            'xcxs'=>'required|array',
+        ]);
+        $xcxs=request('xcxs');
+        $hasXcxs=$adminUser->xcxs;
+        $adds=$xcxs->diff($hasXcxs);
+        foreach ($adds as $add){
+            $save=$adminUser->assignXcx($add);
+        }
+        $detachs=$hasXcxs->diff($xcxs);
+        foreach ($detachs as $detach){
+            $delete=$adminUser->detachXcx($detach);
+        }
+        if($save&&$delete){
+            return response()->json(["date"=>true]);
+        }else{
+            return response()->json(["date"=>false]);
+        }
     }
 }

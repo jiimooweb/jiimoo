@@ -29,7 +29,7 @@ class ModuleController extends Controller
      public function delete(Module $module){
             $combos=$module->combo;
             foreach ($combos as $combo){
-                $module->deleteCombo($combo);
+                $module->deleteCombo($combo->id);
             }
             $delete=$module->delete();
          return response()->json(["date"=>$delete]);
