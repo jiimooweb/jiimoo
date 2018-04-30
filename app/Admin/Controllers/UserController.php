@@ -18,11 +18,13 @@ class UserController extends Controller
         $users=AdminUser::where('identity','User');
         return response()->json(["data"=>$users]);
     }
-    public function edit(AdminUser $adminUser){
+    public function edit(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         return response()->json(["data"=>compact('adminUser')]);
     }
     //用户自行修改自己信息
-    public function update(AdminUser $adminUser){
+    public function update(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         $this->validate(request(),[
             'password'=>'required',
         ]);
@@ -52,7 +54,8 @@ class UserController extends Controller
         return view('admin/register/index');
     }
     //删除用户
-    public function delete(AdminUser $adminUser){
+    public function delete(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         $xcxs=$adminUser->xcxs;
         foreach ($xcxs as $xcx){
             $adminUser->detachXcx($xcx->id);
@@ -62,7 +65,8 @@ class UserController extends Controller
     }
 
     //给用户添加小程序
-    public function addXcx(AdminUser $adminUser){
+    public function addXcx(){
+        $adminUser=AdminUser::where('id',\Auth::id())->first();
         $this->validate(request(),[
             'xcxs'=>'required|array',
         ]);
