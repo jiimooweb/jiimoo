@@ -16,4 +16,8 @@ class Xcx extends Model
             'xcx_id','user_id')->
             withPivot(['xcx_id','user_id']);
     }
+
+    public function hasUser($id) {
+        return $this->user()->where('user_id', $id)->count();
+    }
 }

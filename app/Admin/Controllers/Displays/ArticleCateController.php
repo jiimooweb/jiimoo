@@ -49,7 +49,7 @@ class ArticleCateController extends Controller
         return back();
     }
 
-    public function delete(ArticleCate $articleCate)
+    public function destroy(ArticleCate $articleCate)
     {   
         // TODO:判断删除权限
         $articleCate->delete();

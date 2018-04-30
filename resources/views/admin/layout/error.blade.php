@@ -5,3 +5,9 @@
         @endforeach
     </div>
 @endif
+
+@if(session('mgs'))
+    <div class="alert alert-danger" role="alert">
+        <li>{{session('mgs')}}</li>
+    </div>
+@endif

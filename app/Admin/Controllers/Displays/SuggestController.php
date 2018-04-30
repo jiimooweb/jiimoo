@@ -16,7 +16,7 @@ class SuggestController extends Controller
     }
 
 
-    public function delete(Suggest $suggest)
+    public function destroy(Suggest $suggest)
     {
         // TODO:判断删除权限
         $suggest->delete();

@@ -17,7 +17,7 @@ class CommentController extends Controller
     }
 
 
-    public function delete(Article $article)
+    public function destroy(Article $article)
     {
         // TODO:判断删除权限
         $article->delete();

@@ -47,7 +47,7 @@ class ProductCateController extends Controller
         return back();
     }
 
-    public function delete(ProductCate $productCate)
+    public function destroy(ProductCate $productCate)
     {   
         // TODO:判断删除权限
         $productCate->delete();

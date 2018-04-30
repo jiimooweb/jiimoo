@@ -72,7 +72,7 @@ class BasicInfoController extends Controller
         return back();
     }
 
-    public function delete(BasicInfo $info)
+    public function destroy(BasicInfo $info)
     {
         // TODO:判断删除权限
         $info->delete();
