@@ -15,7 +15,7 @@ class AdminUser extends Authenticatable
     public function xcxs(){
         return $this->belongsToMany(Xcx::class,'users_xcxs',
             'user_id','xcx_id')->
-        withPivot(['xcx_id','user_id']);
+        withPivot(['xcx_id','user_id','sort']);
     }
     public function assignXcx($xcx){
         return $this->xcxs()->save($xcx);

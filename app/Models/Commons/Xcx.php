@@ -16,4 +16,11 @@ class Xcx extends Model
             'xcx_id','user_id')->
             withPivot(['xcx_id','user_id']);
     }
+    public function assignUser($user){
+        return $this->xcxs()->save($user);
+    }
+    public function detachUser($user){
+        return $this->detachXcx()->detach($user);
+    }
+
 }
