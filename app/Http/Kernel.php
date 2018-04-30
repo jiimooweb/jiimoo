@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'token' => \App\Http\Middleware\VerifyToken::class,
         'cors' => \App\Http\Middleware\Cors::class,
+        'client' => \App\Http\Middleware\VerifyClientInfo::class,
     ];
 }

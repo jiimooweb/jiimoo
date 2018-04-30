@@ -73,7 +73,7 @@ class ProductController extends Controller
         return back();
     }
 
-    public function delete(Product $product)
+    public function destroy(Product $product)
     {
         // TODO:判断删除权限
         $product->delete();
