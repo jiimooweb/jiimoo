@@ -44,7 +44,7 @@ class UserController extends Controller
         $username=request('username');
         $email=	request('email');
         $password=bcrypt(request('password'));
-        $state='Y';
+        $state='1';
         $identity='User';
         $user=AdminUser::create(compact('username','password','email','identity','state'));
         return response()->json(["data"=>$user]);
