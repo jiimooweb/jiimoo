@@ -9,18 +9,14 @@ use App\Models\Commons\XcxHasCombo;
 use App\Models\Commons\Combo;
 class XcxController extends Controller{
         //用户所有小程序
-        public function index(AdminUser $adminUser){
-//            if($adminUser->identity=='Admin'){
-//                $xcxlist=Xcx::all();
-//            }else{
-//                $xcxs=$adminUser->xcxs;
-//                $xcxlist=Xcx::find($xcxs);
-//            }
+        public function index(){
+            $adminUser_id=\Auth::id();
+            $adminUser=AdminUser::where('id',$adminUser_id)->first();
             $xcxs=$adminUser->xcxs;
             $xcxlist=$xcxs->sortByDesc( function ($product, $key) {
                 return $product['pivot']['sort'];
             });
-            return response()->json(["date"=>$xcxlist]);
+            return response()->json(["data"=>$xcxlist]);
         }
 
         public function create(){
@@ -41,38 +37,42 @@ class XcxController extends Controller{
                     $assgin=$user->assignXcx($save);
                     return response()->json(["date"=>$assgin]);
                 }
-                return response()->json(["date"=>$save]);
+                return response()->json(["data"=>$save]);
             }
-            return response()->json(["date"=>false]);
+            return response()->json(["data"=>false]);
         }
         //选择所需套餐
-        public function checkCombo(Xcx $xcx){
+        public function checkCombo(){
+            $xcx_id=session('xcx_id');
+            $xcx=Xcx::find($xcx_id);
             $combos=Combo::all();
-            $hasCombo=XcxHasCombo::find($xcx->id);
+            $hasCombo=XcxHasCombo::where('xcx_id', $xcx_id);
             if ($hasCombo){
                 $hasCombo=json_decode($hasCombo->modules);
-                return response()->json(["date"=>compact('combos','hasCombo','xcx')]);
+                return response()->json(["data"=>compact('combos','hasCombo','xcx')]);
             }
-            return response()->json(["date"=>compact('combos','xcx')]);
+            return response()->json(["data"=>compact('combos','xcx')]);
         }
         //保存小程序套餐关系
-        public function storeCombo(Xcx $xcx){
-
+        public function storeCombo(){
+            $xcx_id=session('xcx_id');
+            $xcx=Xcx::find($xcx_id);
             $reCombos=request('combos');
             $reModules=request('modules');
             $modules=["parent"=>$reCombos,'sub'=>$reModules];
             $modules=json_encode($modules);
-            $xcx_id=$xcx->id;
             $save=XcxHasCombo::create(compact('xcx_id','modules'));
-            return response()->json(["date"=>$save]);
+            return response()->json(["data"=>$save]);
         }
-        public function delete(Xcx $xcx){
+        public function delete(){
+            $xcx_id=session('xcx_id');
+            $xcx=Xcx::find($xcx_id);
             $users=$xcx->user;
             foreach ($users as $user){
                 $xcx->detachUser($user->id);
             }
             $deletehas=XcxHasCombo::where('xcx_id',$xcx->id)->delete();
             $delete=Xcx::destroy($xcx->id);
-            return response()->json(["date"=>$delete]);
+            return response()->json(["data"=>$delete]);
         }
 }

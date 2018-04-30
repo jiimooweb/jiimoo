@@ -17,13 +17,7 @@ class LoginController extends Controller
         ]);
         $client = new \App\Services\ClientToken();
         $token = $client->getToken(request('username'), request('password'));
-        return response()->json(["date"=>true]);
+        return response()->json(["data"=>$token]);
     }
-    public function logout(){
-        $user_ip=request()->getClientIp();
-        $now=now();
-        $user=AdminUser::where('id',\Auth::id())->update(['last_time'=>$now,'last_ip'=>$user_ip]);
-        \Auth::guard('admins')->logout();
-        return response()->json(["date"=>true]);
-    }
+
 }
