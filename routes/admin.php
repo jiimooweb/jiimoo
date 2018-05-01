@@ -14,11 +14,11 @@ Route::group(['prefix'=>'admin'],function (){
         //登陆
 
         Route::get('/index','\App\Admin\Controllers\UserController@index');
-        Route::post('/update','\App\Admin\Controllers\UserController@edit');
+        Route::post('/delete','\App\Admin\Controllers\UserController@delete');
         Route::post('/update','\App\Admin\Controllers\UserController@update');
     });
     Route::group(['prefix'=>'xcx'],function (){
-        Route::get('/{adminUser}/xcxs','\App\Admin\Controllers\XcxController@index');
+        Route::get('/show','\App\Admin\Controllers\XcxController@index');
         Route::get('/create','\App\Admin\Controllers\XcxController@create');
         Route::post('/create','\App\Admin\Controllers\XcxController@store');
         Route::get('/{xcx}/check','\App\Admin\Controllers\XcxController@checkCombo');
