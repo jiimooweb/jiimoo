@@ -12,15 +12,9 @@ class ProductController extends Controller
     
     public function index() 
     {
-        $products = Product::orderBy('created_at','desc')->paginate(6);
+        $products = Product::orderBy('created_at','desc')->paginate(config('common.pagesize'));
         $products->load('category');                
-        return view('admin.displays.product.index', compact('products'));
-    }
-
-    public function create() 
-    {
-        $cates = ProductCate::all();
-        return view('admin.displays.product.create', compact('cates'));
+        return response()->json(['status' => 'success', 'data' => $products]);
     }
 
     public function store() 
@@ -36,24 +30,22 @@ class ProductController extends Controller
             'name', 'cate_id', 'price', 'display', 'desc'
         ]);
         
-        Product::create($data);
+        if(Product::create($data)) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);   
     }
 
-    public function show(Product $product)
+    public function show()
     {
-        // TODO: 待开发
+        $product = Product::where('id', request()->product)->first();
+        $status = $product ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $products]);
     }
 
-    public function edit(Product $product) 
-    {
-        $cates = ProductCate::all();
-        return view('admin.displays.product.edit', compact('cates', 'product'));
-        
-    }
 
-    public function update(Product $product) 
+    public function update() 
     {
         // TODO:判断更新权限
         
@@ -68,15 +60,20 @@ class ProductController extends Controller
             'name', 'cate_id', 'price', 'display', 'desc'
         ]);
         
-        Product::where('id', $product->id)->update($data);
+        if(Product::where('id', request()->product)->update($data)) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']); 
     }
 
-    public function destroy(Product $product)
+    public function destroy()
     {
         // TODO:判断删除权限
-        $product->delete();
-        return redirect('admin/displays/products');
+        if(Product::where('id', request()->product)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
 }

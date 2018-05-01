@@ -11,15 +11,18 @@ class SuggestController extends Controller
     
     public function index() 
     {
-        $suggests = Suggest::orderBy('created_at','desc')->paginate(20);          
-        return view('admin.displays.suggest.index', compact('suggests'));
+        $suggests = Suggest::orderBy('created_at','desc')->paginate(config('common.pagesize'));      
+        return response()->json(['status' => 'success', 'data' => $suggests]);
     }
 
 
-    public function destroy(Suggest $suggest)
+    public function destroy()
     {
         // TODO:判断删除权限
-        $suggest->delete();
-        return redirect('admin/displays/suggests');
+        if(Suggest::where('id', request()->suggest)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
 }

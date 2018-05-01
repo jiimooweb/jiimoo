@@ -13,17 +13,12 @@ class SwiperController extends Controller
     public function index() 
     {
         $swipers = Swiper::where('display', 1)->orderBy('created_at','asc')->get();
-        // return view('admin.displays.swiper.index', compact('swipers'));
 
         foreach($swipers as &$swiper) {
             $swiper['image'] = env('APP_URL').$swiper['image'];
         }
-        return response()->json($swipers);
-    }
 
-    public function create() 
-    {
-        return view('admin.displays.swiper.create');
+        return response()->json(['status' => 'success', 'data' => $swipers]);
     }
 
     public function store() 
@@ -41,23 +36,20 @@ class SwiperController extends Controller
 
         $data['image'] = '/storage/'.request()->file('image')->storePublicly(md5(time()));
         
-        
-        Swiper::create($data);
+        if(Swiper::create($data)) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);   
     }
 
-    public function show(Swiper $swiper)
+    public function show()
     {
-        // TODO: 待开发
+        $swiper = Swiper::find('id', request()->swiper);
+        return response()->json(['status' => 'success', 'data' => $swiper]);
     }
 
-    public function edit(Swiper $swiper) 
-    {
-        return view('admin.displays.swiper.edit', compact('swiper'));
-    }
-
-    public function update(Swiper $swiper) 
+    public function update() 
     {
         // TODO:判断更新权限
         
@@ -74,15 +66,20 @@ class SwiperController extends Controller
 
         $data['image'] = '/storage/'.request()->file('image')->storePublicly(md5(time()));
         
-        Swiper::where('id', $swiper->id)->update($data);
+        if(Swiper::where('id', request()->swiper)->update($data)) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);   
     }
 
     public function destroy(Swiper $swiper)
     {
         // TODO:判断删除权限
-        $swiper->delete();
-        return redirect('admin/displays/swipers');
+        if(Swiper::where('id', request()->swiper)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);   
     }
 }
