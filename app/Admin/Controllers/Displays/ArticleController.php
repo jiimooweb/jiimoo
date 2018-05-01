@@ -12,7 +12,7 @@ class ArticleController extends Controller
     
     public function index() 
     {
-        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(10);
+        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(20);
         $articles->load('category');                
         foreach($articles as &$article) {
             $article['thumb'] = env('APP_URL').$article['thumb'];

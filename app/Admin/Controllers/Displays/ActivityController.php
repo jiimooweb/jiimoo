@@ -11,16 +11,8 @@ class ActivityController extends Controller
     
     public function index() 
     {
-        $activitys = Activity::orderBy('created_at','desc')->withCount(['signlists'])->paginate(10);   
-
-        return response()->json(['data' => $activity]);
-        
-    
-    }
-
-    public function create() 
-    {
-        // return view('admin.displays.activity.create');
+        $activitys = Activity::orderBy('created_at','desc')->withCount(['signlists'])->paginate(config('common.pagesize'));   
+        return response()->json(['status' => 'success', 'data' => $activitys]);
     }
 
     public function store() 
@@ -45,26 +37,22 @@ class ActivityController extends Controller
         $activity_time = explode('~',request('activity_time'));
         $data['start_time'] =trim($activity_time[0]);
         $data['end_time'] =trim($activity_time[1]);
-        $activity = Activity::create($data);
+        if(Activity::create($data)) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);                             
+        }
 
-        return response()->json(['data' => $activity]);
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);                           
+        
     }
 
-    public function show(Activity $activity)
+    public function show()
     {
-        // TODO: 待开发      
-        // return view('admin.displays.activity.show',compact('activity'));
-        return response()->json(['data' => $activity]);
-        
+        $activity = Activity::find('id', requset()->activity);
+        $status = $activity ? 'success' : 'error';
+        return response()->json(['status' => 'success', 'data' => $activity]);   
     }
 
-    public function edit(Activity $activity) 
-    {      
-        return response()->json(['data' => $activity]);
-        
-    }
-
-    public function update(Activity $activity)
+    public function update()
     {
         $this->validate(request(),[
             'name' => 'required',
@@ -86,20 +74,22 @@ class ActivityController extends Controller
         $data['start_time'] =trim($activity_time[0]);
         $data['end_time'] =trim($activity_time[1]);
         
-        $activity = Activity::where('id', $activity->id)->update($data);
+        if(Activity::where('id', request()->activity)->update($data)) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);                              
+        }
 
-        return response()->json(['data' => $activity]);
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);                           
+        
         
 
     }
 
     public function destroy(Activity $activity)
     {
-        // TODO:判断删除权限
-        $activity->delete();
-        // return redirect('admin/displays/activitys');
-        return response()->json(['data' => $activity]);
-        
+        if(Activity::where('id', request()->activity)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);                              
+        }
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
 
 }

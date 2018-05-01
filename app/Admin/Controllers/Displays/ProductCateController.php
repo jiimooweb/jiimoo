@@ -11,13 +11,9 @@ class ProductCateController extends Controller
     
     public function index() 
     {
-        $productCates = ProductCate::paginate(20);
-        return view('admin.displays.product_cate.index', compact('productCates'));
-    }
-
-    public function create() 
-    {
-        return view('admin.displays.product_cate.create');
+        $productCates = ProductCate::get();
+        return response()->json(['status' => 'success', 'data' => $productCates]);
+        
     }
 
     public function store() 
@@ -26,31 +22,33 @@ class ProductCateController extends Controller
             'name' => 'required|min:2|max:6',
         ]);
         
-        ProductCate::create(request(['name']));
+        if(ProductCate::create(request(['name']))) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);                           
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);                           
     }
 
-    public function edit(ProductCate $productCate) 
-    {
-        return view('admin.displays.product_cate.edit', compact('productCate'));
-    }
-
-    public function update(ProductCate $productCate) 
+    public function update() 
     {
         $this->validate(request(),[
             'name' => 'required|min:2|max:6',
         ]);
         
-        ProductCate::where('id', $productCate->id)->update(request(['name']));
+        if(ProductCate::where('id', request()->productCate)->update(request(['name']))) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);                           
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);                           
     }
 
-    public function destroy(ProductCate $productCate)
+    public function destroy()
     {   
         // TODO:判断删除权限
-        $productCate->delete();
-        return redirect('admin/displays/product_cates');
+        if(ProductCate::where('id', request()->productCate)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);                           
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
 }

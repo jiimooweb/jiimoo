@@ -8,8 +8,7 @@ Route::group(['prefix' => 'admin/displays'], function () {
     //文章分类
     Route::apiResource('/article_cates', '\App\Admin\Controllers\Displays\ArticleCateController', ['except' => ['show']]);
     //评论
-    Route::get('/comments', '\App\Admin\Controllers\Displays\CommentController@index');
-    Route::delete('/comments/{comment}/destroy', '\App\Admin\Controllers\Displays\CommentController@destroy');
+    Route::apiResource('/comments', '\App\Admin\Controllers\Displays\CommentController', ['only' =>['index', 'destroy']]);
     //产品分类
     Route::apiResource('/product_cates', '\App\Admin\Controllers\Displays\ProductCateController', ['except' => ['show']]);
     //产品
@@ -17,8 +16,7 @@ Route::group(['prefix' => 'admin/displays'], function () {
     //活动
     Route::apiResource('/activitys', '\App\Admin\Controllers\Displays\ActivityController');
     //其他::建议
-    Route::get('/suggests', '\App\Admin\Controllers\Displays\SuggestController@index');    
-    Route::delete('/suggests/{suggest}/destroy', '\App\Admin\Controllers\Displays\SuggestController@destroy');
+    Route::apiResource('/suggests', '\App\Admin\Controllers\Displays\SuggestController', ['only' =>['index', 'destroy']]);    
     //其他::轮播图
     Route::apiResource('/swipers', '\App\Admin\Controllers\Displays\SwiperController');   
     
