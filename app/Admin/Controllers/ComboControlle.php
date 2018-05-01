@@ -14,7 +14,7 @@ class ComboControlle extends Controller
 {
     public function index(){
         $combo=Combo::all();
-        return view('',compact('combo'));
+        return response()->json(["status"=>"success","data"=>$combo]);
     }
     public function store(){
         $this->validate(request(),[
@@ -25,13 +25,15 @@ class ComboControlle extends Controller
         $saveCombo=Combo::create(request(['name','desc']));
         if ($saveCombo){
             $store=$this->storeMoudle(request('modules'),$saveCombo);
-            return response()->json(["data"=>$store ]);
+            return response()->json(["status"=>"success","msg"=>"保存成功" ]);
+        }else{
+            return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
-        return response()->json(["data"=>$saveCombo]);
     }
     public function create(){
         $modules=Module::all();
-        return view('admin/Combo/create',compact('modules'));
+        return view("admin/combo/create",compact('modules'));
+        return response()->json(["status"=>"success","data"=>$modules]);
     }
     public function storeMoudle($modules,$combo){
         $modules=Module::findMany($modules);
@@ -46,12 +48,18 @@ class ComboControlle extends Controller
         }
         return compact('save');
     }
-    public function delete(Combo $combo){
+    public function delete(){
+        $combo_id=request('combo_id');
+        $combo=Combo::find($combo_id);
         $hasModules=$combo->module;
         foreach($hasModules as $hasModule){
             $combo->deleteModule($hasModule->id);
         }
         $delete=$combo->delete();
-        return response()->json(["data"=>$delete]);
+        if ($delete){
+            return response()->json(["status"=>"success","msg"=>"删除成功！"]);
+        }else{
+            return response()->json(["status"=>"error","msg"=>"删除失败！"]);
+        }
     }
 }

@@ -16,7 +16,7 @@ class XcxController extends Controller{
             $xcxlist=$xcxs->sortByDesc( function ($product, $key) {
                 return $product['pivot']['sort'];
             });
-            return response()->json(["data"=>$xcxlist]);
+            return response()->json(["status"=>"success","data"=>$xcxlist]);
         }
 
         public function create(){
@@ -37,9 +37,9 @@ class XcxController extends Controller{
                     $assgin=$user->assignXcx($save);
                     return response()->json(["date"=>$assgin]);
                 }
-                return response()->json(["data"=>$save]);
+                return response()->json(["status"=>"success","msg"=>"保存成功！"]);
             }
-            return response()->json(["data"=>false]);
+            return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
         //选择所需套餐
         public function checkCombo(){
@@ -49,9 +49,9 @@ class XcxController extends Controller{
             $hasCombo=XcxHasCombo::where('xcx_id', $xcx_id);
             if ($hasCombo){
                 $hasCombo=json_decode($hasCombo->modules);
-                return response()->json(["data"=>compact('combos','hasCombo','xcx')]);
+                return response()->json(["status"=>"success","data"=>compact('combos','hasCombo','xcx')]);
             }
-            return response()->json(["data"=>compact('combos','xcx')]);
+            return response()->json(["status"=>"success","data"=>compact('combos','xcx')]);
         }
         //保存小程序套餐关系
         public function storeCombo(){
@@ -62,7 +62,11 @@ class XcxController extends Controller{
             $modules=["parent"=>$reCombos,'sub'=>$reModules];
             $modules=json_encode($modules);
             $save=XcxHasCombo::create(compact('xcx_id','modules'));
-            return response()->json(["data"=>$save]);
+            if ($save){
+                return response()->json(["status"=>"success","msg"=>"保存成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"保存失败！"]);
+            }
         }
         public function delete(){
             $xcx_id=session('xcx_id');
@@ -73,6 +77,10 @@ class XcxController extends Controller{
             }
             $deletehas=XcxHasCombo::where('xcx_id',$xcx->id)->delete();
             $delete=Xcx::destroy($xcx->id);
-            return response()->json(["data"=>$delete]);
+            if($delete){
+                return response()->json(["status"=>"success","msg"=>"删除成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"删除失败！"]);
+            }
         }
 }

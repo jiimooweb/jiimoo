@@ -13,7 +13,7 @@ class ModuleController extends Controller
 {
      public function index(){
          $module=Module::all();
-         return $module;
+         return response()->json(["status"=>"success","data"=>$module]);
      }
      public function store(){
          $this->validate(request(),[
@@ -21,17 +21,27 @@ class ModuleController extends Controller
              'desc'=>'required',
          ]);
          $save=Module::create(request(['name','desc']));
-         return response()->json(["data"=>$save]);
+         if ($save){
+             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
+         }else{
+             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
+         }
      }
      public function create(){
          return view('admin/module/create');
      }
-     public function delete(Module $module){
+     public function delete(){
+            $module_id=request('module_id');
+            $module=Module::find($module_id);
             $combos=$module->combo;
             foreach ($combos as $combo){
                 $module->deleteCombo($combo->id);
             }
             $delete=$module->delete();
-         return response()->json(["data"=>$delete]);
+             if ($delete){
+                 return response()->json(["status"=>"success","msg"=>"删除成功！"]);
+             }else{
+                 return response()->json(["status"=>"error","msg"=>"删除失败！"]);
+             }
      }
 }
