@@ -12,14 +12,7 @@ class ArticleCateController extends Controller
     public function index() 
     {
         $articleCates = ArticleCate::get();
-        return view('admin.displays.article_cate.index', compact('articleCates'));
-
-        
-    }
-
-    public function create() 
-    {
-        return view('admin.displays.article_cate.create');
+        return response()->json(['status' => 'success', 'data' => $articleCates]);
     }
 
     public function store() 
@@ -28,31 +21,33 @@ class ArticleCateController extends Controller
             'name' => 'required|min:2|max:6',
         ]);
         
-        ArticleCate::create(request(['name']));
+        if(ArticleCate::create(request(['name']))) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);               
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
     }
 
-    public function edit(ArticleCate $articleCate) 
-    {
-        return view('admin.displays.article_cate.edit', compact('articleCate'));
-    }
-
-    public function update(ArticleCate $articleCate) 
+    public function update() 
     {
         $this->validate(request(),[
             'name' => 'required|min:2|max:6',
         ]);
         
-        ArticleCate::where('id', $articleCate->id)->update(request(['name']));
+        if(ArticleCate::where('id', request()->articleCate)->update(request(['name']))) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
+        }
 
-        return back();
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);           
     }
 
-    public function destroy(ArticleCate $articleCate)
+    public function destroy()
     {   
         // TODO:判断删除权限
-        $articleCate->delete();
-        return redirect('admin/displays/article_cates');
+        if(ArticleCate::where('id', request()->articleCate)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
+        }
+        
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);         
     }
 }

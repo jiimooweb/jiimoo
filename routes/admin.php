@@ -12,7 +12,6 @@ Route::group(['prefix'=>'admin'],function (){
     });
     Route::group(['prefix'=>'user'],function (){
         //登陆
-
         Route::get('/index','\App\Admin\Controllers\UserController@index');
         Route::post('/update','\App\Admin\Controllers\UserController@edit');
         Route::post('/update','\App\Admin\Controllers\UserController@update');
