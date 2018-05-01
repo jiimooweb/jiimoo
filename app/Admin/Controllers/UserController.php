@@ -44,9 +44,9 @@ class UserController extends Controller
         $username=request('username');
         $email=	request('email');
         $password=bcrypt(request('password'));
-        $status='Y';
+        $state='1';
         $identity='User';
-        $user=AdminUser::create(compact('username','password','email','identity','status'));
+        $user=AdminUser::create(compact('username','password','email','identity','state'));
         return response()->json(["data"=>$user]);
     }
     public function create(){
@@ -54,7 +54,8 @@ class UserController extends Controller
     }
     //删除用户
     public function delete(){
-        $adminUser=AdminUser::where('id',\Auth::id())->first();
+        $adminUser_id=request('user_id');
+        $adminUser=AdminUser::where('id',$adminUser_id)->first();
         $xcxs=$adminUser->xcxs;
         foreach ($xcxs as $xcx){
             $adminUser->detachXcx($xcx->id);
