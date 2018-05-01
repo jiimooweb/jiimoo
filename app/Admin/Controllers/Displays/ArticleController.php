@@ -14,18 +14,13 @@ class ArticleController extends Controller
     {
         $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(10);
         $articles->load('category');                
-        // return view('admin.displays.article.index', compact('articles'));
         foreach($articles as &$article) {
             $article['thumb'] = env('APP_URL').$article['thumb'];
         }
-        return response()->json($articles);
+
+        return response()->json(['status' => 'success', 'data' => $articles]);
     }
 
-    public function create() 
-    {
-        $cates = ArticleCate::all();
-        return view('admin.displays.article.create', compact('cates'));
-    }
 
     public function store() 
     {   
@@ -43,26 +38,23 @@ class ArticleController extends Controller
 
         $data['thumb'] = '/storage/'.request()->file('thumb')->storePublicly(md5(time()));
         
-        Article::create($data);
-
-        // return back();
+        if(Article::create($data)) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);                            
+        }
+            
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);                              
     }
 
-    public function show(Article $article)
+    public function show()
     {
         // TODO: 待开发      
+        $article = Article::find(request()->article);
         $article->load('category');                
-        
-        return response()->json($article);
+        $status = $article ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $article]);
     }
 
-    public function edit(Article $article) 
-    {
-        $cates = ArticleCate::all();        
-        return view('admin.displays.article.edit',compact('article', 'cates'));
-    }
-
-    public function update(Article $article)
+    public function update()
     {
         $this->validate(request(),[
             'title' => 'required',
@@ -71,25 +63,27 @@ class ArticleController extends Controller
             'author' => 'required',
             'content' => 'required',
         ]);
-
+        
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content'
         ]);
         
         $data['thumb'] = '/storage/'.request()->file('thumb')->storePublicly(md5(time()));
         
-        Article::where('id', $article->id)->update($data);
+        if(Article::where('id', request()->article)->update($data)) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);                
+        }
 
-        return back();
-
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);                  
     }
 
-    public function destroy(Article $article)
+    public function destroy()
     {
         // TODO:判断删除权限
-        $article->delete();
-        // return redirect('admin/displays/articles');
-        return response()->json($article);
-        
+        if(Article::where('id', request()->article)->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']);                        
     }
 }

@@ -11,7 +11,7 @@ $(function(){
             return;
         }
         var params={
-            url:'token',
+            url:'admin/user/login',
             type:'post',
             data:{username:$userName.val(),password:$pwd.val()},
             sCallback:function(res){

@@ -15,9 +15,10 @@
 */
 
 Route::group(['prefix' => '{client_type}/{xcx_flag}'],function () {
+    include_once('display.php');
     include_once('admin.php');
     include_once('answer.php');
-    include_once('display.php');
+    
 });
 
 Route::get('admin/user','\App\Admin\Controllers\LoginController@index')->middleware(['cors']);
