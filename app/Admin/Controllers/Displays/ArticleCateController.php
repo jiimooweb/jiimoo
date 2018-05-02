@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Displays;
 use Illuminate\Http\Request;
 use App\Models\Displays\ArticleCate;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\ActivityCateRequest;
 
 class ArticleCateController extends Controller
 {
@@ -15,12 +16,8 @@ class ArticleCateController extends Controller
         return response()->json(['status' => 'success', 'data' => $articleCates]);
     }
 
-    public function store() 
+    public function store(ActivityCateRequest $requset) 
     {   
-        $this->validate(request(),[
-            'name' => 'required|min:2|max:6',
-        ]);
-        
         if(ArticleCate::create(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);               
         }
@@ -28,12 +25,8 @@ class ArticleCateController extends Controller
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
     }
 
-    public function update() 
+    public function update(ActivityCateRequest $requset) 
     {
-        $this->validate(request(),[
-            'name' => 'required|min:2|max:6',
-        ]);
-        
         if(ArticleCate::where('id', request()->articleCate)->update(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }

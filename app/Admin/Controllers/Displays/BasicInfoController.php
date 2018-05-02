@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Displays;
 use Illuminate\Http\Request;
 use App\Models\Displays\BasicInfo;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\BasicInfoRequest;
 
 class BasicInfoController extends Controller
 {
@@ -15,15 +16,8 @@ class BasicInfoController extends Controller
         return response()->json(['status' => 'success', 'data' => $info]);
     }
 
-    public function store() 
+    public function store(BasicInfoRequest $request) 
     {   
-        $this->validate(request(),[
-            'name' => 'required',
-            'tel' => 'required',
-            'address' => 'required',
-            'logo' => 'required|file'
-        ]);
-
         $data = request([
             'name', 'tel', 'address', 'intro', 'desc'
         ]);
@@ -45,22 +39,14 @@ class BasicInfoController extends Controller
         return response()->json(['status' => $status, 'data' => $info]);     
     }
 
-    public function update() 
+    public function update(BasicInfoRequest $request) 
     {
         // TODO:判断更新权限
-        
-        $this->validate(request(),[
-            'name' => 'required',
-            'tel' => 'required',
-            'address' => 'required',
-            'logo' => 'required|file'
-        ]);
-
         $data = request([
             'name', 'tel', 'address', 'intro', 'desc'
         ]);
 
-        // $data['logo'] = '/storage/'.request()->file('logo')->storePublicly(md5(time()));
+        $data['logo'] = '/storage/'.request()->file('logo')->storePublicly(md5(time()));
         
         if(BasicInfo::where('id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    

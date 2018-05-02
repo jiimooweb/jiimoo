@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Displays\Product;
 use App\Models\Displays\ProductCate;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -17,15 +18,8 @@ class ProductController extends Controller
         return response()->json(['status' => 'success', 'data' => $products]);
     }
 
-    public function store() 
+    public function store(ProductRequest $request) 
     {   
-        $this->validate(request(),[
-            'name' => 'required',
-            'cate_id' => 'required',
-            'display' => 'integer',
-            'desc' => 'required'
-        ]);
-
         $data = request([
             'name', 'cate_id', 'price', 'display', 'desc'
         ]);
@@ -45,17 +39,9 @@ class ProductController extends Controller
     }
 
 
-    public function update() 
+    public function update(ProductRequest $request) 
     {
         // TODO:判断更新权限
-        
-        $this->validate(request(),[
-            'name' => 'required',
-            'cate_id' => 'required',
-            'display' => 'integer',
-            'desc' => 'required'
-        ]);
-
         $data = request([
             'name', 'cate_id', 'price', 'display', 'desc'
         ]);

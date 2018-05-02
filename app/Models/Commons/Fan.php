@@ -9,4 +9,9 @@ class Fan extends Model
     public static function getByOpenID($openid) {
         return self::where('openid', $openid)->first();
     }
+
+    public function couponRecords() 
+    {
+        return $this->hasMany(\App\Models\Coupons\CouponRecord::class);
+    }
 }

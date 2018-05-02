@@ -21,17 +21,10 @@ class SwiperController extends Controller
         return response()->json(['status' => 'success', 'data' => $swipers]);
     }
 
-    public function store() 
+    public function store(SwiperRequest $request) 
     {   
-        $this->validate(request(),[
-            'image' => 'required',
-            // 'url' => 'required',
-            'remake' => 'required',
-            'display' => 'required|integer'
-        ]);
-
         $data = request([
-            'remake', 'display'
+            'url', 'remake', 'display'
         ]);
 
         $data['image'] = '/storage/'.request()->file('image')->storePublicly(md5(time()));
@@ -46,22 +39,16 @@ class SwiperController extends Controller
     public function show()
     {
         $swiper = Swiper::find('id', request()->swiper);
-        return response()->json(['status' => 'success', 'data' => $swiper]);
+        $status = $swiper ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $swiper]);
     }
 
-    public function update() 
+    public function update(SwiperRequest $request) 
     {
         // TODO:判断更新权限
         
-        $this->validate(request(),[
-            'image' => 'required',
-            'url' => 'required',
-            'remake' => 'required',
-            'display' => 'required|integer'
-        ]);
-
         $data = request([
-            'remake', 'display'
+            'url', 'remake', 'display'
         ]);
 
         $data['image'] = '/storage/'.request()->file('image')->storePublicly(md5(time()));
@@ -73,7 +60,7 @@ class SwiperController extends Controller
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);   
     }
 
-    public function destroy(Swiper $swiper)
+    public function destroy()
     {
         // TODO:判断删除权限
         if(Swiper::where('id', request()->swiper)->delete()) {

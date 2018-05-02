@@ -10,7 +10,7 @@ class Activity extends Model
 
     public function signlists()
     {
-        return $this->hasMany(\App\Models\Displays\Sign::class)->orderBy('created_at','desc');    
+        return $this->hasMany(Sign::class)->orderBy('created_at','desc');    
     }
 
 }

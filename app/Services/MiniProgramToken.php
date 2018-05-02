@@ -11,7 +11,7 @@ class MiniProgramToken extends Token
 {
 
     
-    public function getToken($data)
+    public function getToken(array $data) : string
     {
         $openid = $data['openid'];
         $fans = Fan::getByOpenID($openid);
@@ -28,7 +28,7 @@ class MiniProgramToken extends Token
     }
 
 
-    private function prepareCachedValue($data, $uid)
+    private function prepareCachedValue(array $data, int $uid) : array
     {
         $cachedValue = $data;
         $cachedValue['uid'] = $uid;
@@ -36,7 +36,8 @@ class MiniProgramToken extends Token
         return $cachedValue;
     }
 
-    private function saveToCache($values){
+    private function saveToCache(array $values) : string
+    {
 
         $token = self::generateToken();
         $expire_in = config('token.token_expire_in');
@@ -48,7 +49,7 @@ class MiniProgramToken extends Token
     }
 
     // 创建新用户
-    private function newUser($openid)
+    private function newUser(string $openid) : int
     {
         $user = Fan::create(['openid' => $openid]);
         return $user->id;

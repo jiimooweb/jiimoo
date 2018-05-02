@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Displays;
 use Illuminate\Http\Request;
 use App\Models\Displays\Suggest;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\SuggestRequest;
 
 class SuggestController extends Controller
 {
@@ -13,6 +14,25 @@ class SuggestController extends Controller
     {
         $suggests = Suggest::orderBy('created_at','desc')->paginate(config('common.pagesize'));      
         return response()->json(['status' => 'success', 'data' => $suggests]);
+    }
+
+    public function store(SuggestRequest $request) 
+    {
+        if(Suggest::create(request()->all())){
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);                  
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);               
+    }
+
+
+    public function update(SuggestRequest $request) 
+    {
+        if(Suggest::where('id', request()->comment)->update(request()->all())){
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);                  
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);               
     }
 
 

@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Displays\Article;
 use App\Models\Displays\ArticleCate;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\ArticleRequest;
 
 class ArticleController extends Controller
 {
     
     public function index() 
     {
-        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(20);
+        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(config('common.pagesize'));
         $articles->load('category');                
         foreach($articles as &$article) {
             $article['thumb'] = env('APP_URL').$article['thumb'];
@@ -22,16 +23,8 @@ class ArticleController extends Controller
     }
 
 
-    public function store() 
+    public function store(ArticleRequest $request) 
     {   
-        $this->validate(request(),[
-            'title' => 'required',
-            'thumb' => 'required',
-            'cate_id' => 'required',
-            'author' => 'required',
-            'content' => 'required',
-        ]);
-
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content'
         ]);
@@ -54,16 +47,8 @@ class ArticleController extends Controller
         return response()->json(['status' => $status, 'data' => $article]);
     }
 
-    public function update()
+    public function update(ArticleRequest $request)
     {
-        $this->validate(request(),[
-            'title' => 'required',
-            'thumb' => 'required',
-            'cate_id' => 'required',
-            'author' => 'required',
-            'content' => 'required',
-        ]);
-        
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content'
         ]);
