@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Displays;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\CommonRequest;
 
-class SwiperRequest extends FormRequest
+class SwiperRequest extends CommonRequest
 {
     /**
      * Get the validation rules that apply to the request.

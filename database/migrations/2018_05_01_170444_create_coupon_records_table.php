@@ -18,8 +18,9 @@ class CreateCouponRecordsTable extends Migration
             $table->integer('xcx_id')->default(0)->comment('小程序ID');
             $table->integer('fan_id')->default(0)->comment('粉丝ID');
             $table->integer('coupon_id')->default(0)->comment('优惠券ID');
-            $table->date('start_time')->coment('开始时间');
-            $table->date('end_time')->coment('结束时间');
+            $table->date('start_time')->nullable()->comment('开始时间');
+            $table->date('end_time')->nullable()->comment('结束时间');
+            $table->date('use_time')->nullable()->comment('使用时间');
             $table->tinyInteger('status')->default(0)->comment('是否使用，0：未使用，-1：已过期，1：已使用');
             $table->timestamps();
         });

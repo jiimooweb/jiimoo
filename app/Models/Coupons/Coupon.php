@@ -12,4 +12,20 @@ class Coupon extends Model
         return $this->hasMany(CouponRecord::class);
     }
 
+
+    public static function getTime($id) {
+        $time = [];
+        $coupon = self::find($id);
+        if($coupon->all()) {
+            if($coupon->time_type) {
+                $time['start'] = date('Y-m-d',strtotime('+'.$coupon->startat.' day'));
+                $time['end'] = date('Y-m-d', strtotime('+'.($coupon->startat+$coupon->time_limit).' day'));
+            }else {
+                $time['start'] = $coupon->start_time;
+                $time['end'] = $coupon->end_time;
+            }
+        }
+        return $time;
+    }
+
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Displays;
+namespace App\Http\Requests\Coupons;
 
 use App\Http\Requests\CommonRequest;
 
-class SuggestRequest extends CommonRequest
+class RecordRequest extends CommonRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,8 @@ class SuggestRequest extends CommonRequest
     public function rules()
     {
         return [
-            'content' => 'required',
+            'fan_id' => 'required|integer',
+            'coupon_id' => 'required|integer'
         ];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Displays;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\CommonRequest;
 
-class ProductCateRequest extends FormRequest
+class ProductCateRequest extends CommonRequest
 {
 
 
