@@ -2,7 +2,6 @@
 
 namespace App\Models\Coupons;
 
-use App\Models\Commons\AdminUser;
 use App\Models\Model;
 
 class CouponRecord extends Model
