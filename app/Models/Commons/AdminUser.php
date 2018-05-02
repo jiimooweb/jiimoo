@@ -21,7 +21,7 @@ class AdminUser extends Authenticatable
         return $this->xcxs()->save($xcx);
     }
     public function detachXcx($xcx){
-        return $this->detachXcx()->detach($xcx);
+        return $this->xcxs()->detach($xcx);
     }
 
     public static function check($username, $password) 

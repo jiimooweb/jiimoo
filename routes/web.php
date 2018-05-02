@@ -22,6 +22,15 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}'],function () {
     
 });
 
+Route::group(['prefix'=>'user','middleware'=>['token']],function (){
+    //登陆
+    Route::get('/index','\App\Admin\Controllers\UserController@index');
+    Route::post('/delete','\App\Admin\Controllers\UserController@delete');
+    Route::post('/update','\App\Admin\Controllers\UserController@update');
+    Route::get('/check_xcxs','\App\Admin\Controllers\UserController@checkXcx');
+    Route::post('/update_xcxs','\App\Admin\Controllers\UserController@addXcx');
+});
+
 Route::get('admin/user','\App\Admin\Controllers\LoginController@index')->middleware(['cors']);
 Route::post('admin/user/login','\App\Admin\Controllers\LoginController@login')->middleware(['cors']);
 

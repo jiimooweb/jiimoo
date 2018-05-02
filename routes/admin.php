@@ -4,24 +4,13 @@
 Route::group(['prefix'=>'admin'],function (){
 
     Route::group(['middleware'=>'auth:admins'],function (){
-        //登陆后访问
-        Route::get('/user/logout','\App\Admin\Controllers\LoginController@logout');
-        Route::group(['middleware'=>'can:Admin'],function (){
-            //是管理员
-        });
-    });
-    Route::group(['prefix'=>'user'],function (){
-        //登陆
-        Route::get('/index','\App\Admin\Controllers\UserController@index');
-        Route::post('/update','\App\Admin\Controllers\UserController@edit');
-        Route::post('/update','\App\Admin\Controllers\UserController@update');
     });
     Route::group(['prefix'=>'xcx'],function (){
-        Route::get('/{adminUser}/xcxs','\App\Admin\Controllers\XcxController@index');
+        Route::get('/show','\App\Admin\Controllers\XcxController@index');
         Route::get('/create','\App\Admin\Controllers\XcxController@create');
         Route::post('/create','\App\Admin\Controllers\XcxController@store');
-        Route::get('/{xcx}/check','\App\Admin\Controllers\XcxController@checkCombo');
-        Route::post('/{xcx}/check','\App\Admin\Controllers\XcxController@storeCombo');
+        Route::get('/check','\App\Admin\Controllers\XcxController@checkCombo');
+        Route::post('/check','\App\Admin\Controllers\XcxController@storeCombo');
     });
 
     Route::group(['prefix'=>'module'],function (){
