@@ -15,7 +15,7 @@ class RecordController extends Controller
     public function index() 
     {
         $records = CouponRecord::orderBy('created_at','desc')->paginate(config('common.pagesize')); 
-        $records->load(['fan','coupon']);  
+        $records->load('fan','coupon');  
         return response()->json(['status' => 'success', 'data' => $records]);   
     }
 
@@ -42,30 +42,11 @@ class RecordController extends Controller
 
     public function update(RecordRequest $request)
     {
-        $validator = Validator::make(request()->all(), [
-            'name' => 'required',
-            'module' => 'required',
-            'use_price' => 'required',
-            'price' => 'required',
-            'thumb' => 'required',
-            'desc' => 'required',
-            'receive_num' => 'required',
-            'display' => 'required|integer',
-            'time_type' => 'required|integer',
-            'limit' => 'required|integer',
-            'total' => 'required|integer',
-        ]);
-        $validator->sometimes(['start_time', 'end_time'], 'required|date', function ($input) {
-            return $input->time_type == 0;
-        });
-        $validator->sometimes(['startat', 'time_limit'], 'required|integer', function ($input) {
-            return $input->time_type == 1;
-        });
-        if($validator->errors()->count()) {
-            return response()->json(['status' => 'error', 'data' => $validator->errors()]);                       
-        }
-
-        if(CouponRecord::where('id', request()->record)->update(request()->all())) {
+        $data = request()->all();        
+        $time = Coupon::getTime($request->coupon_id);
+        $data['start_time'] = $time['start'];
+        $data['end_time'] = $time['end'];
+        if(CouponRecord::where('id', request()->record)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                             
         }
 
@@ -77,6 +58,7 @@ class RecordController extends Controller
         if(CouponRecord::where('id', request()->record)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);                              
         }
+
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
 

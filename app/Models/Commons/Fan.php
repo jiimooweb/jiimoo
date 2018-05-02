@@ -14,4 +14,9 @@ class Fan extends Model
     {
         return $this->hasMany(\App\Models\Coupons\CouponRecord::class);
     }
+
+    public function scopeCouponRecords($query)
+    {
+        return $query->where('module', session('module'));
+    }
 }
