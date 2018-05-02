@@ -12,7 +12,7 @@ class LoginController extends Controller
     }
     public function login(){
         $this->validate(request(),[
-            'account'=>'required',
+            'username'=>'required',
             'password'=>'required',
         ]);
         $client = new \App\Services\ClientToken();
