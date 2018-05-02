@@ -21,13 +21,26 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}'],function () {
     
 });
 
-Route::group(['prefix'=>'user','middleware'=>['token']],function (){
+Route::group(['prefix'=>'admin/user','middleware'=>['token']],function (){
     //登陆
     Route::get('/index','\App\Admin\Controllers\UserController@index');
     Route::post('/delete','\App\Admin\Controllers\UserController@delete');
     Route::post('/update','\App\Admin\Controllers\UserController@update');
     Route::get('/check_xcxs','\App\Admin\Controllers\UserController@checkXcx');
     Route::post('/update_xcxs','\App\Admin\Controllers\UserController@addXcx');
+
+    Route::group(['prefix'=>'module'],function (){
+        Route::get('/index','\App\Admin\Controllers\ModuleController@index');
+        Route::post('/create','\App\Admin\Controllers\ModuleController@store');
+        Route::post('/delete','\App\Admin\Controllers\ModuleController@delete');
+    });
+
+    Route::group(['prefix'=>'combo'],function (){
+        Route::get('/index','\App\Admin\Controllers\ComboControlle@index');
+        Route::post('/create','\App\Admin\Controllers\ComboControlle@store');
+        Route::post('/update','\App\Admin\Controllers\ComboControlle@update');
+        Route::post('/delete','\App\Admin\Controllers\ComboControlle@delete');
+    });
 });
 
 Route::get('admin/user','\App\Admin\Controllers\LoginController@index')->middleware(['cors']);
