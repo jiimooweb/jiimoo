@@ -10,7 +10,7 @@ class Sign extends Model
 
     public function activity()
     {
-        return $this->belongsTo(\App\Models\Displays\Activity::class);
+        return $this->belongsTo(Activity::class);
     }
 
 

@@ -1,46 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Admin\Controllers;
 
 use Exception;
 use App\Services\Token;
-use EasyWeChat\Factory;
 use App\Models\Commons\Fan;
+use App\Models\Commons\Xcx;
 use Illuminate\Http\Request;
 use App\Services\MiniProgramToken;
 use Illuminate\Support\Facades\Cache;
 
 class MiniProgramController extends Controller
 {
+
     public function getToken()
     {
-        $config = [
-            'app_id' => 'wx136ee103dff0857e',
-            'secret' => '486e6adb1a75460f1308ee442be8cfa4',
-        
-            // 下面为可选项
-            // 指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
-            'response_type' => 'array',
-        
-            // 'log' => [
-            //     'level' => 'debug',
-            //     'file' => __DIR__.'/wechat.log',
-            // ],
-        ];
-        
-        $app = Factory::miniProgram($config);
+        $app = Xcx::getApp(sesion('xcx_id'));
 
         $user = $app->auth->session(request('code'));
 
         $miniToken = new MiniProgramToken();
         
         $token = $miniToken->getToken($user);
-        // $user = $app->auth->get($user['openid']);
 
         return response()->json(['token' => $token]);
     }
 
-    public function saveInfo() {
+    public function saveInfo() 
+    {
 
         $token = request()->header('token');
 
@@ -58,8 +45,30 @@ class MiniProgramController extends Controller
         
     }
 
-    public function verifyToken() {
-        
+    public function verifyToken() 
+    {
         return response()->json(['isValid' => Token::verifyToken(request()->header('token'))]);
+    }
+
+    public function getMiniCode() 
+    {
+        $app = Xcx::getApp(1);
+        $response = $app->app_code->get('path/to/page');
+        $filename = $response->save('wechat/miniprogram/','minicode.png');
+        return $filename;
+    }
+
+    public function getQrCode() 
+    {
+        $app = Xcx::getApp(1);
+        $response = $app->app_code->getQrCode('/path/to/page');
+        $filename = $response->save('wechat/miniprogram/','appcode.png');
+        return $filename;
+    }
+
+    public function test() {
+        $app = Xcx::getApp(1);
+        
+        dd($app->server);
     }
 }

@@ -10,7 +10,7 @@ class ProductCate extends Model
 
     public function products() 
     {
-        return $this->hasMany(\App\Models\Displays\Product::class, 'cate_id', 'id')->orderBy('created_at','desc');
+        return $this->hasMany(Product::class, 'cate_id', 'id')->orderBy('created_at','desc');
     }
     
 }

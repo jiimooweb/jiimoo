@@ -18,7 +18,7 @@ class Token
         return md5($randChar . $timestamp . $tokenSalt);
     }
 
-    public static function getRandChar($length)
+    public static function getRandChar(int $length) : string
     {
         $str = null;
         $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
@@ -88,7 +88,7 @@ class Token
      * @return void result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentTokenVar($key)
+    public static function getCurrentTokenVar(string $key)
     {
         $token = Request::instance()
             ->header('token');
@@ -180,7 +180,7 @@ class Token
      * @param $token 
      * @return bool
      */
-    public static function verifyToken($token)
+    public static function verifyToken(string $token)
     {
         $exist = Cache::get($token);
         if ($exist) {

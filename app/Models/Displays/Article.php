@@ -10,12 +10,12 @@ class Article extends Model
 
     public function comments() 
     {
-        return $this->hasMany(\App\Models\Displays\Comment::class)->orderBy('created_at','desc');
+        return $this->hasMany(Comment::class)->orderBy('created_at','desc');
     }
 
     public function category() 
     {
-        return $this->belongsTo(\App\Models\Displays\ArticleCate::class, 'cate_id', 'id');
+        return $this->belongsTo(ArticleCate::class, 'cate_id', 'id');
     }
 
 }

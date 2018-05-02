@@ -12,7 +12,7 @@ class ArticleCate extends Model
 
     public function articles() 
     {
-        return $this->hasMany(\App\Models\Displays\Article::class, 'cate_id', 'id')->orderBy('created_at','desc');
+        return $this->hasMany(Article::class, 'cate_id', 'id')->orderBy('created_at','desc');
     }
 
 }

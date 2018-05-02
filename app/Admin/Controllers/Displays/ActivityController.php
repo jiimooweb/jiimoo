@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Displays;
 use Illuminate\Http\Request;
 use App\Models\Displays\Activity;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\ActivityRequest;
 
 class ActivityController extends Controller
 {
@@ -15,17 +16,8 @@ class ActivityController extends Controller
         return response()->json(['status' => 'success', 'data' => $activitys]);
     }
 
-    public function store() 
+    public function store(ActivityRequest $request) 
     {   
-        
-        $this->validate(request(),[
-            'name' => 'required',
-            'places' => 'required|integer',
-            'sign_time' => 'required',
-            'activity_time' => 'required',
-            'content' => 'required',
-        ]);
-
         $data = request([
             'name', 'places', 'content'
         ]);
@@ -49,19 +41,11 @@ class ActivityController extends Controller
     {
         $activity = Activity::find('id', requset()->activity);
         $status = $activity ? 'success' : 'error';
-        return response()->json(['status' => 'success', 'data' => $activity]);   
+        return response()->json(['status' => $status, 'data' => $activity]);   
     }
 
-    public function update()
+    public function update(ActivityRequest $request)
     {
-        $this->validate(request(),[
-            'name' => 'required',
-            'places' => 'required|integer',
-            'sign_time' => 'required',
-            'activity_time' => 'required',
-            'content' => 'required',
-        ]);
-
         $data = request([
             'name', 'places', 'content'
         ]);
@@ -84,7 +68,7 @@ class ActivityController extends Controller
 
     }
 
-    public function destroy(Activity $activity)
+    public function destroy()
     {
         if(Activity::where('id', request()->activity)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);                              

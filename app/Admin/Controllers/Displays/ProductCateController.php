@@ -2,9 +2,11 @@
 
 namespace App\Admin\Controllers\Displays;
 
+use App\Utils\Common;
 use Illuminate\Http\Request;
 use App\Models\Displays\ProductCate;
 use App\Admin\Controllers\Controller;
+use App\Http\Requests\Displays\ProductCateRequest;
 
 class ProductCateController extends Controller
 {
@@ -12,30 +14,23 @@ class ProductCateController extends Controller
     public function index() 
     {
         $productCates = ProductCate::get();
+        $productCates = Common::getTree($productCates);
         return response()->json(['status' => 'success', 'data' => $productCates]);
         
     }
 
-    public function store() 
+    public function store(ProductCateRequest $request) 
     {   
-        $this->validate(request(),[
-            'name' => 'required|min:2|max:6',
-        ]);
-        
-        if(ProductCate::create(request(['name']))) {
+        if(ProductCate::create(request(['name','pid']))) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                           
         }
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);                           
     }
 
-    public function update() 
+    public function update(ProductCateRequest $request) 
     {
-        $this->validate(request(),[
-            'name' => 'required|min:2|max:6',
-        ]);
-        
-        if(ProductCate::where('id', request()->productCate)->update(request(['name']))) {
+        if(ProductCate::where('id', request()->productCate)->update(request(['name', 'pid']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                           
         }
 

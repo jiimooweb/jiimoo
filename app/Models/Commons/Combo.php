@@ -11,7 +11,7 @@ class Combo extends Model
     protected $table = 'combo';
 
     public function module(){
-        return $this->belongsToMany(module::class,'xcx_combo_module',
+        return $this->belongsToMany(Module::class,'xcx_combo_module',
             'combo_id','module_id')->
         withPivot(['module_id','combo_id']);
     }

@@ -15,7 +15,8 @@
 */
 
 Route::group(['prefix' => '{client_type}/{xcx_flag}'],function () {
-    include_once('display.php');
+    include_once('displays.php');
+    include_once('coupons.php');
     include_once('admin.php');
     include_once('answer.php');
     
@@ -56,3 +57,7 @@ Route::group(['prefix' => 'wechat'], function() {
     Route::post('token/verifyToken', 'MiniProgramController@verifyToken');
     Route::post('saveInfo', 'MiniProgramController@saveInfo')->middleware('token');
 });
+
+Route::get('/getQrCode', '\App\Admin\Controllers\MiniProgramController@getQrCode');
+Route::get('/getMiniCode', '\App\Admin\Controllers\MiniProgramController@getMiniCode');
+Route::get('/test', '\App\Admin\Controllers\MiniProgramController@test');
