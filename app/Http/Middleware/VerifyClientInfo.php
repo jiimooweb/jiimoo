@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Services\Token;
 use App\Models\Commons\Xcx;
 
 class VerifyClientInfo
@@ -17,18 +18,19 @@ class VerifyClientInfo
     public function handle($request, Closure $next)
     {
         $miniProgram = Xcx::where('xcx_flag',$request->xcx_flag)->first();
+        
         if($miniProgram) {
-
-            if($request->client_type == 'web' && !$miniProgram->hasUser(\Auth::id())) {
+            if($request->client_type == 'web' && !$miniProgram->hasUser(Token::getCurrentTokenVar('uid'))) {
                 return redirect('/admin/user');          
             }
             session(['xcx_id' => $miniProgram->id]);
+            session(['module' => $miniProgram->module]);
             return $next($request);
 
         }else {
 
             if($request->client_type == 'web') {
-                return redirect('/admin/user')->with('msg', '小程序不存在或没有权限！');;          
+                return redirect('/admin/user')->with('msg', '小程序不存在或没有权限！');          
             }
             return response()->json(['msg' => '小程序ID错误! '])->setStatusCode(401);  
 

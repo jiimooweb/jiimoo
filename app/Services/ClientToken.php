@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ClientToken extends Token
 {
-    public function getToken(srting $app_key, srting $app_secret)
+    public function getToken($app_key, $app_secret)
     { 
         $app = AdminUser::check($app_key, $app_secret);
         
@@ -29,7 +29,6 @@ class ClientToken extends Token
 
     private function saveToCache(array $values) : string
     {
-
         $token = self::generateToken();
         $expire_in = config('token.token_expire_in');
         Cache::put($token, json_encode($values), $expire_in);

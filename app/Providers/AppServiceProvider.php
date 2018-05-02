@@ -17,10 +17,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191); 
-        // \App\Models\Coupons\CouponRecord::created(function($model){
-        //     $model->xcx_id = 1;
-        //     $model->save();
-        // });
         
     }
 

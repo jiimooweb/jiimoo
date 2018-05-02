@@ -88,10 +88,9 @@ class Token
      * @return void result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentTokenVar(string $key)
+    public static function getCurrentTokenVar($key)
     {
-        $token = Request::instance()
-            ->header('token');
+        $token = request()->header('token');
         $vars = Cache::get($token);
         if (!$vars) {
             return response()->json(['msg' => 'Token信息错误']);
@@ -116,8 +115,7 @@ class Token
      */
     public static function getCurrentIdentity(array $keys)
     {
-        $token = Request::instance()
-            ->header('token');
+        $token = request()->header('token');
         $identities = Cache::get($token);
         if (!$identities) {
             return response()->json(['msg' => 'Token信息错误']);
@@ -180,7 +178,7 @@ class Token
      * @param $token 
      * @return bool
      */
-    public static function verifyToken(string $token)
+    public static function verifyToken($token)
     {
         $exist = Cache::get($token);
         if ($exist) {
