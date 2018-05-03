@@ -24,6 +24,13 @@ class ArticleCateController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
     }
+    
+    public function show() 
+    {
+        $cate = ArticleCate::find(request()->articleCate);             
+        $cate = $cate ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $cate]);
+    }
 
     public function update(ActivityCateRequest $requset) 
     {

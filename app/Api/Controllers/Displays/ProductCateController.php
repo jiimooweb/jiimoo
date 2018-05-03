@@ -28,6 +28,13 @@ class ProductCateController extends Controller
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);                           
     }
 
+    public function show() 
+    {
+        $cate = ProductCate::find(request()->productCates);             
+        $cate = $cate ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $cate]);
+    }
+
     public function update(ProductCateRequest $request) 
     {
         if(ProductCate::where('id', request()->productCate)->update(request(['name', 'pid']))) {

@@ -6,12 +6,12 @@ Route::group(['prefix' => 'api/displays'], function () {
     //文章
     Route::apiResource('/articles', '\App\Api\Controllers\Displays\ArticleController');
     //文章分类
-    Route::apiResource('/article_cates', '\App\Api\Controllers\Displays\ArticleCateController', ['except' => ['show']]);
+    Route::apiResource('/article_cates', '\App\Api\Controllers\Displays\ArticleCateController');
     //评论
     Route::apiResource('/comments', '\App\Api\Controllers\Displays\CommentController');
     //产品分类
     Route::get('/product_cates/{pid}/pid', '\App\Api\Controllers\Displays\ProductCateController@getCateByPid');
-    Route::apiResource('/product_cates', '\App\Api\Controllers\Displays\ProductCateController', ['except' => ['show']]);
+    Route::apiResource('/product_cates', '\App\Api\Controllers\Displays\ProductCateController');
     //产品
     Route::apiResource('/products', '\App\Api\Controllers\Displays\ProductController');
     //活动
