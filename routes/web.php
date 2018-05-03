@@ -44,13 +44,13 @@ Route::group(['prefix'=>'api/user','middleware'=>['token']], function (){
     });
 });
 
-Route::get('admin/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
-Route::post('admin/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
+Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
+Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
 
-Route::get('admin/user/register','\App\Api\Controllers\UserController@create');
-Route::post('admin/user/register','\App\Api\Controllers\UserController@store');
+Route::get('api/user/register','\App\Api\Controllers\UserController@create');
+Route::post('api/user/register','\App\Api\Controllers\UserController@store');
 
-Route::post('admin/token', 'TokenController@getToken')->middleware(['cors']);
+Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 
 Route::group(['prefix' => 'wechat'], function() {
     Route::post('token/getToken', 'MiniProgramController@getToken');
