@@ -12,6 +12,6 @@ namespace App\Utils;
  */
 class RoleScope
 {
-    const User = 0;
-    const Admin = 1;
+    const User = 'User';
+    const Admin = 'Admin';
 }

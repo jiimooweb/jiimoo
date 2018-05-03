@@ -1,8 +1,5 @@
 <?php
 
-// include_once('admin.php');
-// include_once('answer.php');
-// include_once('display.php');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,7 +16,6 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'cl
     include_once('coupons.php');
     include_once('admin.php');
     include_once('answers.php');
-    
 });
 
 Route::group(['prefix'=>'api/user','middleware'=>['token']], function (){
