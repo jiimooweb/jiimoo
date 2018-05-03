@@ -17,11 +17,10 @@
 Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'client']], function () {
     include_once('displays.php');
     include_once('coupons.php');
-    include_once('answers.php');
-    include_once('members.php');
-
+//    include_once('admin.php');
     Route::get('api/xcx/check','\App\Api\Controllers\XcxController@checkCombo');
     Route::post('api/xcx/check','\App\Api\Controllers\XcxController@storeCombo');
+    include_once('answers.php');
     
 });
 
