@@ -137,7 +137,7 @@ class Token
      *而不应当自己解析UID
      *
      */
-    public static function getUid()
+    public static function getCurrentUid()
     {
         $uid = self::getCurrentTokenVar('uid');
         $scope = self::getCurrentTokenVar('scope');
