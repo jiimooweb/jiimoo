@@ -56,7 +56,7 @@ class MemberController extends Controller
     }
 
     //加入会员
-    public function join() 
+    public function join(MemberRequest $request) 
     {
         $data = request()->all();   
         $data['fan_id'] = Token::getUid();
