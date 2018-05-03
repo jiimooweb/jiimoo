@@ -169,7 +169,7 @@ return [
          * Package Service Providers...
          */
         // Overtrue\LaravelUEditor\UEditorServiceProvider::class,
-        Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
+        // Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
 
         /*
          * Application Service Providers...
