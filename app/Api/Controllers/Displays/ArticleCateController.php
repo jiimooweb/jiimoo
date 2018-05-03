@@ -28,7 +28,7 @@ class ArticleCateController extends Controller
     public function show() 
     {
         $cate = ArticleCate::find(request()->articleCate);             
-        $cate = $cate ? 'success' : 'error';
+        $status = $cate ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $cate]);
     }
 
