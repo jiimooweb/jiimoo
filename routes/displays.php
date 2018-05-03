@@ -10,6 +10,7 @@ Route::group(['prefix' => 'api/displays'], function () {
     //评论
     Route::apiResource('/comments', '\App\Api\Controllers\Displays\CommentController');
     //产品分类
+    Route::get('/product_cates/{pid}/pid', '\App\Api\Controllers\Displays\ProductCateController@getCateByPid');
     Route::apiResource('/product_cates', '\App\Api\Controllers\Displays\ProductCateController', ['except' => ['show']]);
     //产品
     Route::apiResource('/products', '\App\Api\Controllers\Displays\ProductController');

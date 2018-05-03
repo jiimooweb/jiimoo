@@ -46,4 +46,10 @@ class ProductCateController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
+
+    public function getCateByPid() 
+    {
+        $cates = ProductCate::where('pid', request()->pid)->get();
+        return response()->json(['status' => 'success', 'data' => $cates]);
+    }
 }

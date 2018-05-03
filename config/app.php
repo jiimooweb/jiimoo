@@ -163,11 +163,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Overtrue\LaravelWeChat\ServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
+        Overtrue\LaravelWeChat\ServiceProvider::class,        
         Overtrue\LaravelUEditor\UEditorServiceProvider::class,
         Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
 
