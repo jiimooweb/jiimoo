@@ -88,7 +88,7 @@ class Token
      * @return void result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentTokenVar($key)
+    public static function getTokenVar($key)
     {
         $token = request()->header('token');
         $vars = Cache::get($token);
@@ -113,7 +113,7 @@ class Token
      * @return array result
      * @throws \app\lib\exception\TokenException
      */
-    public static function getCurrentIdentity(array $keys)
+    public static function getIdentity(array $keys)
     {
         $token = request()->header('token');
         $identities = Cache::get($token);
@@ -137,7 +137,7 @@ class Token
      *而不应当自己解析UID
      *
      */
-    public static function getCurrentUid()
+    public static function getUid()
     {
         $uid = self::getCurrentTokenVar('uid');
         $scope = self::getCurrentTokenVar('scope');
