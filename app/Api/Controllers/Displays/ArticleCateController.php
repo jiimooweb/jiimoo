@@ -27,14 +27,14 @@ class ArticleCateController extends Controller
     
     public function show() 
     {
-        $cate = ArticleCate::find(request()->articleCate);             
+        $cate = ArticleCate::find(request()->article_cate);             
         $status = $cate ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $cate]);
     }
 
     public function update(ActivityCateRequest $requset) 
     {
-        if(ArticleCate::where('id', request()->articleCate)->update(request(['name']))) {
+        if(ArticleCate::where('id', request()->article_cate)->update(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
@@ -44,7 +44,7 @@ class ArticleCateController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(ArticleCate::where('id', request()->articleCate)->delete()) {
+        if(ArticleCate::where('id', request()->article_cate)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
         }
         

@@ -30,14 +30,14 @@ class ProductCateController extends Controller
 
     public function show() 
     {
-        $cate = ProductCate::find(request()->productCates);             
+        $cate = ProductCate::find(request()->product_cate);             
         $status = $cate ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $cate]);
     }
 
     public function update(ProductCateRequest $request) 
     {
-        if(ProductCate::where('id', request()->productCate)->update(request(['name', 'pid']))) {
+        if(ProductCate::where('id', request()->product_cate)->update(request(['name', 'pid']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                           
         }
 
@@ -47,7 +47,7 @@ class ProductCateController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(ProductCate::where('id', request()->productCate)->delete()) {
+        if(ProductCate::where('id', request()->product_cate)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);                           
         }
 
