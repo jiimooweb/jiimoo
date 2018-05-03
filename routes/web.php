@@ -1,5 +1,8 @@
 <?php
 
+// include_once('admin.php');
+// include_once('answer.php');
+// include_once('display.php');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,37 +17,19 @@
 Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'client']], function () {
     include_once('displays.php');
     include_once('coupons.php');
-    include_once('admin.php');
+//    include_once('admin.php');
+    Route::get('api/xcx/check','\App\Api\Controllers\XcxController@checkCombo');
+    Route::post('api/xcx/check','\App\Api\Controllers\XcxController@storeCombo');
     include_once('answers.php');
+    
 });
 
-Route::group(['prefix'=>'api/user','middleware'=>['token']], function (){
-    //登陆
-    Route::get('/index','\App\Api\Controllers\UserController@index');
-    Route::post('/delete','\App\Api\Controllers\UserController@delete');
-    Route::post('/update','\App\Api\Controllers\UserController@update');
-    Route::get('/check_xcxs','\App\Api\Controllers\UserController@checkXcx');
-    Route::post('/update_xcxs','\App\Api\Controllers\UserController@addXcx');
-
-    Route::group(['prefix'=>'module'], function (){
-        Route::get('/index','\App\Api\Controllers\ModuleController@index');
-        Route::post('/create','\App\Api\Controllers\ModuleController@store');
-        Route::post('/delete','\App\Api\Controllers\ModuleController@delete');
-    });
-
-    Route::group(['prefix'=>'combo'], function (){
-        Route::get('/index','\App\Api\Controllers\ComboControlle@index');
-        Route::post('/create','\App\Api\Controllers\ComboControlle@store');
-        Route::post('/update','\App\Api\Controllers\ComboControlle@update');
-        Route::post('/delete','\App\Api\Controllers\ComboControlle@delete');
-    });
-});
 
 Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
 Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
 
-Route::get('api/user/register','\App\Api\Controllers\UserController@create');
-Route::post('api/user/register','\App\Api\Controllers\UserController@store');
+
+include_once('admin.php');
 
 Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 

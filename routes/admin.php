@@ -1,30 +1,15 @@
 <?php
 
 
-Route::group(['prefix'=>'api'],function (){
-
-    Route::group(['middleware'=>'auth:admins'],function (){
-    });
-    Route::group(['prefix'=>'xcx'],function (){
-        Route::get('/show','\App\Api\Controllers\XcxController@index');
-        Route::get('/create','\App\Api\Controllers\XcxController@create');
-        Route::post('/create','\App\Api\Controllers\XcxController@store');
-        Route::get('/check','\App\Api\Controllers\XcxController@checkCombo');
-        Route::post('/check','\App\Api\Controllers\XcxController@storeCombo');
-    });
-
-    Route::group(['prefix'=>'module'],function (){
-        Route::get('/list','\App\Api\Controllers\ModuleController@index');
-        Route::get('/create','\App\Api\Controllers\ModuleController@create');
-        Route::post('/create','\App\Api\Controllers\ModuleController@store');
-    });
-
-    Route::group(['prefix'=>'combo'],function (){
-        Route::get('/list','\App\Api\Controllers\ComboControlle@index');
-        Route::get('/create','\App\Api\Controllers\ComboControlle@create');
-        Route::post('/create','\App\Api\Controllers\ComboControlle@store');
-    });
-
+Route::group(['prefix'=>'api','middleware'=>['token']],function (){
+    Route::get('user/register','\App\Api\Controllers\UserController@create');
+    Route::post('user/register','\App\Api\Controllers\UserController@store');
+    Route::put('user/check_xcxs','\App\Api\Controllers\UserController@checkXcx');
+    Route::post('user/update_xcxs','\App\Api\Controllers\UserController@addXcx');
+    Route::apiResource('user','\App\Api\Controllers\UserController');
+    Route::apiResource('module','\App\Api\Controllers\ModuleController');
+    Route::apiResource('combo','\App\Api\Controllers\ComboControlle');
+    Route::apiResource('xcx','\App\Api\Controllers\XcxController');
     Route::resource('reservations', '\App\Api\Controllers\Resertvations\ResertvationController');
         
 });
