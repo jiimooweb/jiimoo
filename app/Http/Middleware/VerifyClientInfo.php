@@ -20,7 +20,7 @@ class VerifyClientInfo
         $miniProgram = Xcx::where('xcx_flag',$request->xcx_flag)->first();
         
         if($miniProgram) {
-            if($request->client_type == 'web' && !$miniProgram->hasUser(Token::getCurrentUid())) {
+            if($request->client_type == 'web' && !$miniProgram->hasUser(Token::getUid())) {
                 return redirect('/admin/user');          
             }
             session(['xcx_id' => $miniProgram->id]);
