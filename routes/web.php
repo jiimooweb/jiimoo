@@ -24,7 +24,9 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'cl
     
 });
 
-
+Route::get('login',function() {
+    return '这是登录页';
+});
 Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
 Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
 

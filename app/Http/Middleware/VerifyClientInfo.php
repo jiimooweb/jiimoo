@@ -21,7 +21,7 @@ class VerifyClientInfo
         
         if($miniProgram) {
             if($request->client_type == 'web' && !$miniProgram->hasUser(Token::getUid())) {
-                return redirect('/admin/user');          
+                return redirect('login');          
             }
             session(['xcx_id' => $miniProgram->id]);
             session(['module' => $miniProgram->module]);
@@ -30,7 +30,7 @@ class VerifyClientInfo
         }else {
 
             if($request->client_type == 'web') {
-                return redirect('/admin/user')->with('msg', '小程序不存在或没有权限！');          
+                return redirect('login')->with('msg', '小程序不存在或没有权限！');          
             }
             return response()->json(['msg' => '小程序ID错误! '])->setStatusCode(401);  
 

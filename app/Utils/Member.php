@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Models\Members;
+namespace App\Utils;
 
-use App\Models\Model;
+use App\Models\Members\Group;
 use App\Models\Members\MiniMember;
 
-class Group extends Model
+class Member 
 {
-    public $timestamps = false;
-
     public static function getGroup() 
     {
-        return Group::orderBy('value', 'asc')->get();
+        return Common::convert_arr_key(Group::orderBy('value')->get()->toArray(), 'id');
     }
 
     public static function changeGroupLevel($uid) 
@@ -19,11 +17,13 @@ class Group extends Model
         $member = MiniMember::find($uid);
         $groups = self::getGroup();
         foreach($groups as $group) {
-            if($member->integral_total >= $group->value) {
-                $member->group_id = $group->id;
+            if($member->integral_total >= $group['value']) {
+                $member->group_id = $group['id'];
                 $member->save();
             }
         }
     }
 
+    
 }
+

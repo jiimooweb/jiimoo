@@ -13,7 +13,7 @@ class GroupController extends Controller
     
     public function index() 
     {
-        $groups = Group::orderBy('value','desc')->get();
+        $groups = Group::getGroup();
         return response()->json(['status' => 'success', 'data' => $groups]);   
     }
 

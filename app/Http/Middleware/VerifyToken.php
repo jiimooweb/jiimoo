@@ -24,7 +24,7 @@ class VerifyToken
         }
 
         if($request->client_type == 'web') {
-            return redirect('admin/user')->with('msg', 'token不存在或已过期！');
+            return redirect('login')->with('msg', 'token不存在或已过期！');
         }
 
        return response()->json(['msg' => 'token不存在或已过期！'])->setStatusCode(401);

@@ -16,4 +16,19 @@ class Common
         }
         return $tree;
     }
+
+    /**
+     * @param $arr
+     * @param $key_name
+     * @return array
+     * 将数据库中查出的列表以指定的 id 作为数组的键名 
+     */
+    public static function convert_arr_key($arr, $key_name)
+    {
+        $result = array();
+        foreach($arr as $key => $val){
+            $result[$val[$key_name]] = $val;
+        }
+        return $result;
+    }
 }
