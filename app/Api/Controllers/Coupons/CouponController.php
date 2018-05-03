@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Admin\Controllers\Coupons;
+namespace App\Api\Controllers\Coupons;
 
 use Illuminate\Http\Request;
 use App\Models\Coupons\Coupon;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class CouponController extends Controller

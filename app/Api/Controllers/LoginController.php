@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Admin\Controllers;
-use App\Admin\Controllers\Controller;
+namespace App\Api\Controllers;
+use App\Api\Controllers\Controller;
 use App\Models\Commons\AdminUser;
 
 class LoginController extends Controller

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Admin\Controllers\Displays;
+namespace App\Api\Controllers\Displays;
 
 use Illuminate\Http\Request;
 use App\Models\Displays\Article;
 use App\Models\Displays\ArticleCate;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 use App\Http\Requests\Displays\ArticleRequest;
 
 class ArticleController extends Controller

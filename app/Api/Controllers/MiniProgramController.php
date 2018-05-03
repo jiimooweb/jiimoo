@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Api\Controllers;
 
 use Exception;
 use App\Services\Token;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Admin\Controllers\Answers;
+namespace App\Api\Controllers\Answers;
 
 use Illuminate\Http\Request;
 use App\Models\Answers\Activitie;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 
 class ActivityController extends Controller
 {

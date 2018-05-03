@@ -6,8 +6,8 @@
  * Time: 15:57
  */
 
-namespace App\Admin\Controllers;
-use App\Admin\Controllers\Controller;
+namespace App\Api\Controllers;
+use App\Api\Controllers\Controller;
 use App\Models\Commons\Combo;
 use App\Models\Commons\Module;
 class ComboControlle extends Controller

@@ -6,8 +6,8 @@
  * Time: 16:01
  */
 
-namespace App\Admin\Controllers;
-use App\Admin\Controllers\Controller;
+namespace App\Api\Controllers;
+use App\Api\Controllers\Controller;
 use App\Models\Commons\Module;
 class ModuleController extends Controller
 {

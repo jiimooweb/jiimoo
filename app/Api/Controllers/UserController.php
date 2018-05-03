@@ -6,10 +6,10 @@
  * Time: 9:13
  */
 
-namespace App\Admin\Controllers;
+namespace App\Api\Controllers;
 
 
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 use App\Models\Commons\AdminUser;
 use App\Models\Commons\Xcx;
 

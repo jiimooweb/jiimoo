@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Admin\Controllers\Displays;
+namespace App\Api\Controllers\Displays;
 
 use App\Utils\Common;
 use Illuminate\Http\Request;
 use App\Models\Displays\ProductCate;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 use App\Http\Requests\Displays\ProductCateRequest;
 
 class ProductCateController extends Controller

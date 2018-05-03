@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Admin\Controllers\Displays;
+namespace App\Api\Controllers\Displays;
 
 use Illuminate\Http\Request;
 use App\Models\Displays\Swiper;
 use App\Models\Displays\ProductCate;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 
 class SwiperController extends Controller
 {

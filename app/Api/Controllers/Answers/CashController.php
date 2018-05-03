@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Admin\Controllers\Answers;
+namespace App\Api\Controllers\Answers;
 
 use Illuminate\Http\Request;
 use App\Models\Answers\Cash;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 
 class CashController extends Controller
 {

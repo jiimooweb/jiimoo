@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Admin\Controllers\Displays;
+namespace App\Api\Controllers\Displays;
 
 use Illuminate\Http\Request;
 use App\Models\Displays\Suggest;
-use App\Admin\Controllers\Controller;
+use App\Api\Controllers\Controller;
 use App\Http\Requests\Displays\SuggestRequest;
 
 class SuggestController extends Controller

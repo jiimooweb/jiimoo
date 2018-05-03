@@ -22,33 +22,33 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'cl
     
 });
 
-Route::group(['prefix'=>'admin/user','middleware'=>['token']], function (){
+Route::group(['prefix'=>'api/user','middleware'=>['token']], function (){
     //登陆
-    Route::get('/index','\App\Admin\Controllers\UserController@index');
-    Route::post('/delete','\App\Admin\Controllers\UserController@delete');
-    Route::post('/update','\App\Admin\Controllers\UserController@update');
-    Route::get('/check_xcxs','\App\Admin\Controllers\UserController@checkXcx');
-    Route::post('/update_xcxs','\App\Admin\Controllers\UserController@addXcx');
+    Route::get('/index','\App\Api\Controllers\UserController@index');
+    Route::post('/delete','\App\Api\Controllers\UserController@delete');
+    Route::post('/update','\App\Api\Controllers\UserController@update');
+    Route::get('/check_xcxs','\App\Api\Controllers\UserController@checkXcx');
+    Route::post('/update_xcxs','\App\Api\Controllers\UserController@addXcx');
 
     Route::group(['prefix'=>'module'], function (){
-        Route::get('/index','\App\Admin\Controllers\ModuleController@index');
-        Route::post('/create','\App\Admin\Controllers\ModuleController@store');
-        Route::post('/delete','\App\Admin\Controllers\ModuleController@delete');
+        Route::get('/index','\App\Api\Controllers\ModuleController@index');
+        Route::post('/create','\App\Api\Controllers\ModuleController@store');
+        Route::post('/delete','\App\Api\Controllers\ModuleController@delete');
     });
 
     Route::group(['prefix'=>'combo'], function (){
-        Route::get('/index','\App\Admin\Controllers\ComboControlle@index');
-        Route::post('/create','\App\Admin\Controllers\ComboControlle@store');
-        Route::post('/update','\App\Admin\Controllers\ComboControlle@update');
-        Route::post('/delete','\App\Admin\Controllers\ComboControlle@delete');
+        Route::get('/index','\App\Api\Controllers\ComboControlle@index');
+        Route::post('/create','\App\Api\Controllers\ComboControlle@store');
+        Route::post('/update','\App\Api\Controllers\ComboControlle@update');
+        Route::post('/delete','\App\Api\Controllers\ComboControlle@delete');
     });
 });
 
-Route::get('admin/user','\App\Admin\Controllers\LoginController@index')->middleware(['cors']);
-Route::post('admin/user/login','\App\Admin\Controllers\LoginController@login')->middleware(['cors']);
+Route::get('admin/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
+Route::post('admin/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
 
-Route::get('admin/user/register','\App\Admin\Controllers\UserController@create');
-Route::post('admin/user/register','\App\Admin\Controllers\UserController@store');
+Route::get('admin/user/register','\App\Api\Controllers\UserController@create');
+Route::post('admin/user/register','\App\Api\Controllers\UserController@store');
 
 Route::post('admin/token', 'TokenController@getToken')->middleware(['cors']);
 
@@ -58,6 +58,6 @@ Route::group(['prefix' => 'wechat'], function() {
     Route::post('saveInfo', 'MiniProgramController@saveInfo')->middleware('token');
 });
 
-Route::get('/getQrCode', '\App\Admin\Controllers\MiniProgramController@getQrCode');
-Route::get('/getMiniCode', '\App\Admin\Controllers\MiniProgramController@getMiniCode');
-Route::get('/test', '\App\Admin\Controllers\MiniProgramController@test');
+Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
+Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
+Route::get('/test', '\App\Api\Controllers\MiniProgramController@test');
