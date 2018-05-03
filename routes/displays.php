@@ -4,6 +4,7 @@ Route::group(['prefix' => 'api/displays'], function () {
     //基本信息
     Route::apiResource('/infos', '\App\Api\Controllers\Displays\BasicInfoController');
     //文章
+    Route::post('/articles/search', '\App\Api\Controllers\Displays\ArticleController@search');    
     Route::apiResource('/articles', '\App\Api\Controllers\Displays\ArticleController');
     //文章分类
     Route::apiResource('/article_cates', '\App\Api\Controllers\Displays\ArticleCateController');

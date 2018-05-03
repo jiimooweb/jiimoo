@@ -6,5 +6,5 @@ use App\Models\Model;
 
 class Member extends Model
 {
-
+    
 }

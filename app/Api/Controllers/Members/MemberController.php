@@ -13,7 +13,7 @@ class MemberController extends Controller
     
     public function index() 
     {
-        $members = Member::orderBy('created_at','desc')->paginate(config('common.pagesize'));
+        $members = Member::all();
         return response()->json(['status' => 'success', 'data' => $members]);   
     }
 

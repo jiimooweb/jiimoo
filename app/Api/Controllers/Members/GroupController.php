@@ -13,7 +13,7 @@ class GroupController extends Controller
     
     public function index() 
     {
-        $groups = Group::orderBy('value','desc')->paginate(config('common.pagesize'));
+        $groups = Group::orderBy('value','desc')->get();
         return response()->json(['status' => 'success', 'data' => $groups]);   
     }
 
@@ -54,7 +54,7 @@ class GroupController extends Controller
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
 
-    //加入会员
+    //设为默认
     public function setDefault() 
     {
         $groups = Group::get();
