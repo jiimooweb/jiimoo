@@ -12,26 +12,33 @@ namespace App\Api\Controllers;
 use App\Api\Controllers\Controller;
 use App\Models\Commons\AdminUser;
 use App\Models\Commons\Xcx;
-
+use App\Http\Requests\Admin\UserRequest;
+use Validator;
+use App\Services\Token;
 class UserController extends Controller
 {
     // 只出现用户
-    public function index(){
+    public function index()
+    {
         $pagesize=config('common.pagesize');
-        $users=AdminUser::where('identity','User')->paginate(20);
+        $users=AdminUser::where('identity','User')->paginate($pagesize);
         return response()->json(["status"=>"success","data"=>$users]);
     }
-    public function edit(){
-        $adminUser=AdminUser::where('id',\Auth::id())->first();
+
+    public function edit()
+    {
+        $adminUser=AdminUser::where('id',Token::getUid())->first();
         return response()->json(["data"=>compact('adminUser')]);
     }
+
     //用户自行修改自己信息
-    public function update(){
-        $adminUser=AdminUser::where('id',\Auth::id())->first();
-        $this->validate(request(),[
-            'password'=>'required',
+    public function update()
+    {
+        $valid=Validator::make(request()->all(), [
+            'newpassword'=>'required',
         ]);
-        $password=request('password');
+        $adminUser=AdminUser::where('id',Token::getUid())->first();
+        $password=bcrypt(request('newpassword'));
         $update=$adminUser->update(['password'=>$password]);
         if ($update){
             return response()->json(["status"=>"success","msg"=>"更新成功！"]);
@@ -41,8 +48,9 @@ class UserController extends Controller
     }
 
     //添加用户
-    public function store(){
-        $this->validate(request(),[
+    public function store()
+    {
+        $valid=Validator::make(request()->all(), [
             'username'=>'required|unique:admin_users,username',
             'email'=>'required|email|unique:admin_users,email',
             'password'=>'required',
@@ -60,13 +68,11 @@ class UserController extends Controller
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
     }
-    public function create(){
-        return view('admin/register/index');
-    }
+
     //删除用户
-    public function delete(){
-        DB::transaction(function () {
-        $adminUser_id=request('user_id');
+    public function destroy()
+    {
+        $adminUser_id=request()->user;
         $adminUser=AdminUser::where('id',$adminUser_id)->first();
         $xcxs=$adminUser->xcxs;
             foreach ($xcxs as $xcx){
@@ -78,20 +84,22 @@ class UserController extends Controller
             }else{
                 return response()->json(["status"=>"error","msg"=>"删除失败！"]);
             }
-        });
     }
+
     //小程序选择界面
-    public function checkXcx(){
+    public function checkXcx(UserRequest $request)
+    {
         $adminiUser=AdminUser::where('id',request('user_id'))->first();
         $xcxs=Xcx::all();
         $hasXcxs=$adminiUser->xcxs;
         return response()->json(["status"=>"success","data"=>compact('xcxs','hasXcxs')]);
     }
+
     //给用户添加小程序
-    public function addXcx(){
-        $this->validate(request(),[
+    public function addXcx(UserRequest $request)
+    {
+        $valid=Validator::make(request()->all(), [
             'xcxs'=>'required|array',
-            'user_id'=>'required'
         ]);
         $adminUser_id=request('user_id');
         $adminUser=AdminUser::where('id',$adminUser_id)->first();

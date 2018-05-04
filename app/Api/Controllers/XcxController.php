@@ -7,10 +7,14 @@ use App\Models\Commons\Xcx;
 use App\Models\Commons\AdminUser;
 use App\Models\Commons\XcxHasCombo;
 use App\Models\Commons\Combo;
+use App\Http\Requests\Admin\XcxRequest;
+use App\Services\Token;
 class XcxController extends Controller{
+
         //用户所有小程序
-        public function index(){
-            $adminUser_id=\Auth::id();
+        public function index()
+        {
+            $adminUser_id=Token::getUid();
             $adminUser=AdminUser::where('id',$adminUser_id)->first();
             $xcxs=$adminUser->xcxs;
             $xcxlist=$xcxs->sortByDesc( function ($product, $key) {
@@ -19,42 +23,54 @@ class XcxController extends Controller{
             return response()->json(["status"=>"success","data"=>$xcxlist]);
         }
 
-        public function create(){
+        public function create()
+        {
             return view('admin/xcx/create');
         }
+
+
         //创建小程序并指定用户关系
-        public function store(){
-            $this->validate(request(),[
-                'name'=>'required|unique:xcxs,name',
-                'appid'=>'required|unique:xcxs,appid',
-            ]);
-            $save=Xcx::create(request(['name','appid']));
+        public function store(XcxRequest $request)
+        {
+            $savedata=request(['name','app_id']);
+            $savedata['xcx_flag']=str_random(5);
+            $save=Xcx::create($savedata);
             if ($save){
                 $adminUser=AdminUser::find(1);
                 $adminUser->assignXcx($save);
-                if(request('userid')){
-                    $user=AdminUser::find(request('userid'));
+                if(request('user_id')){
+                    $user=AdminUser::find(request('user_id'));
                     $assgin=$user->assignXcx($save);
-                    return response()->json(["date"=>$assgin]);
+                    return response()->json(["status"=>"success","msg"=>"保存成功！"]);
                 }
                 return response()->json(["status"=>"success","msg"=>"保存成功！"]);
             }
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
+
+        public function update()
+        {
+
+        }
+
         //选择所需套餐
-        public function checkCombo(){
+        public function checkCombo()
+        {
             $xcx_id=session('xcx_id');
             $xcx=Xcx::find($xcx_id);
             $combos=Combo::all();
-            $hasCombo=XcxHasCombo::where('xcx_id', $xcx_id);
-            if ($hasCombo){
-                $hasCombo=json_decode($hasCombo->modules);
-                return response()->json(["status"=>"success","data"=>compact('combos','hasCombo','xcx')]);
-            }
-            return response()->json(["status"=>"success","data"=>compact('combos','xcx')]);
+            $hasCombo=XcxHasCombo::where('xcx_id', $xcx_id)->first();
+            $hasCombo=json_decode($hasCombo->modules);
+            return response()->json(["status"=>"success","data"=>compact('combos','hasCombo','xcx')]);
         }
+
         //保存小程序套餐关系
-        public function storeCombo(){
+        public function storeCombo()
+        {
+            $valid=Validator::make(request()->all(), [
+                'combos'=>'required|array',
+                'modules'=>'required|array',
+            ]);
             $xcx_id=session('xcx_id');
             $xcx=Xcx::find($xcx_id);
             $reCombos=request('combos');
@@ -62,14 +78,20 @@ class XcxController extends Controller{
             $modules=["parent"=>$reCombos,'sub'=>$reModules];
             $modules=json_encode($modules);
             $save=XcxHasCombo::create(compact('xcx_id','modules'));
+            if(!$xcx->apply_modules){
+                $xcx->apply_modules=$modules;
+                $xcx->save();
+            }
             if ($save){
                 return response()->json(["status"=>"success","msg"=>"保存成功！"]);
             }else{
                 return response()->json(["status"=>"error","msg"=>"保存失败！"]);
             }
         }
-        public function delete(){
-            $xcx_id=session('xcx_id');
+
+        public function destroy()
+        {
+            $xcx_id=request()->xcx;
             $xcx=Xcx::find($xcx_id);
             $users=$xcx->user;
             foreach ($users as $user){
