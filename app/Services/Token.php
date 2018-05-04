@@ -5,7 +5,7 @@ namespace App\Services;
 use Exception;
 use App\Utils\RoleScope;
 use Illuminate\Support\Facades\Cache;
-
+use App\Models\Commons\AdminUser;
 class Token
 {
 
@@ -141,16 +141,10 @@ class Token
     {
         $uid = self::getCurrentTokenVar('uid');
         $scope = self::getCurrentTokenVar('scope');
-        if ($scope == RoleScope::Admin) {
-            // 只有Super权限才可以自己传入uid
-            // 且必须在get参数中，post不接受任何uid字段
-            $userID = request()->input('uid');
-            if (!$userID) {
-                return response()->json(['msg' => '用户UID无效']);
-            }
-            return $userID;
-        } else {
+        if($uid&&$scope){
             return $uid;
+        }else{
+            return response()->json(['msg' => 'uid无效']);
         }
     }
 
