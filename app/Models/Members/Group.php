@@ -7,6 +7,8 @@ use App\Models\Members\MiniMember;
 
 class Group extends Model
 {
+    protected $table = 'member_groups';
+    
     public $timestamps = false;
 
     public static function getGroup() 

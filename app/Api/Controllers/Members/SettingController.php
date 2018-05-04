@@ -4,23 +4,23 @@ namespace App\Api\Controllers\Members;
 
 use App\Services\Token;
 use Illuminate\Http\Request;
-use App\Models\Members\Group;
+use App\Models\Members\Setting;
 use App\Api\Controllers\Controller;
-use App\Http\Requests\Members\GroupRequest;
+use App\Http\Requests\Members\SettingRequest;
 
-class GroupController extends Controller
+class SettingController extends Controller
 {
     
     public function index() 
     {
-        $groups = Group::getGroup();
-        return response()->json(['status' => 'success', 'data' => $groups]);   
+        $settings = Setting::get();
+        return response()->json(['status' => 'success', 'data' => $settings]);   
     }
 
-    public function store(GroupRequest $request) 
+    public function store(SettingRequest $request) 
     {   
         $data = request()->all();  
-        if(Group::create($data)) {
+        if(Setting::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                             
         }
 
@@ -30,15 +30,15 @@ class GroupController extends Controller
 
     public function show()
     {
-        $group = Group::find(request()->group);
+        $group = Setting::find(request()->group);
         $status = $group ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $group]);   
     }
 
-    public function update(GroupRequest $request)
+    public function update(SettingRequest $request)
     {
         $data = request()->all();                      
-        if(Group::where('id', request()->group)->update($data)) {
+        if(Setting::where('id', request()->group)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                             
         }
 
@@ -47,31 +47,13 @@ class GroupController extends Controller
 
     public function destroy()
     {
-        if(Group::where('id', request()->group)->delete()) {
+        if(Setting::where('id', request()->group)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);                              
         }
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
 
-    //设为默认
-    public function default() 
-    {
-        $groups = Group::get();
-        foreach($groups as $group) {
-            if($group->default == 1) {
-                $group->default = 0;
-                $group->save();
-            }
-        }
-
-        if(Group::where('id', request()->group_id)->update(['default' => 1])) {
-            return response()->json(['status' => 'success', 'msg' => '修改成功！']);                           
-        }
-
-        return response()->json(['status' => 'error', 'msg' => '修改失败！']); 
-        
-    }
     
 
 }

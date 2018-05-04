@@ -13,7 +13,7 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('member_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('xcx_id')->default(0)->comment('小程序ID');
             $table->string('name')->default('')->comment('等级名称');
