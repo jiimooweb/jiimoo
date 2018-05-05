@@ -10,22 +10,25 @@ class Combo extends Model
     protected $guarded=[];
     protected $table = 'combo';
 
-    public function module(){
+    public function module()
+    {
         return $this->belongsToMany(Module::class,'xcx_combo_module',
             'combo_id','module_id')->
         withPivot(['module_id','combo_id']);
     }
 
-    public function assignModule($module){
+    public function assignModule($module)
+    {
         return $this->module()->save($module);
     }
-    public  function  detachModule($module){
+
+    public  function  detachModule($module)
+    {
         return $this->module()->detach($module);
     }
-    public function deleteModule($module){
-        return $this->module()->delete($module);
-    }
-    public function hasModule($module){
+
+    public function hasModule($module)
+    {
         return $this->module->contains($module);
     }
 }
