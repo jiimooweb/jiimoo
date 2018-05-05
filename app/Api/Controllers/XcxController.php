@@ -48,16 +48,10 @@ class XcxController extends Controller{
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
 
-        public function update()
-        {
 
-        }
-
-        //选择所需套餐
         public function checkCombo()
         {
-
-            $xcx_id=session('xcx_id');
+            $xcx_id=request()->xcx;
             $xcx=Xcx::find($xcx_id);
             $combos=Combo::all();
             $hasCombo=XcxHasCombo::where('xcx_id', $xcx_id)->first();
@@ -65,21 +59,32 @@ class XcxController extends Controller{
             return response()->json(["status"=>"success","data"=>compact('combos','hasCombo','xcx')]);
         }
 
-        //保存小程序套餐关系
-        public function storeCombo()
+
+        public function update(XcxRequest $request)
         {
-            $valid=Validator::make(request()->all(), [
-                'combos'=>'required|array',
-                'modules'=>'required|array',
-            ]);
-            if($valid->errors()->count()){
-                return response()->json(["status"=>"error","data"=>$valid->error()]);
-            }
             $xcx_id=session('xcx_id');
-            $xcx=Xcx::find($xcx_id);
+            $data=request(['name','app_id','start_time','	end_time']);
             $reCombos=request('combos');
             $reModules=request('modules');
+            if($reCombos&&$reModules){
+                $modules=["parent"=>$reCombos,'sub'=>$reModules];
+                $data['apply_modules']=$modules;
+            }
+            $update=Xcx::where('id',$xcx_id)->update($data);
+            if ($update){
+                return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+            }
+        }
+
+        public function storeCombo(){
+            $xcx_id=session('xcx_id');
+            $reCombos=request('combos');
+            $reModules=request('modules');
+            $xcx=Xcx::find($xcx_id);
             $modules=["parent"=>$reCombos,'sub'=>$reModules];
+            $saveCombo=$this->updateCombo($xcx,$modules);
             $modules=json_encode($modules);
             $save=XcxHasCombo::create(compact('xcx_id','modules'));
             if(!$xcx->apply_modules){

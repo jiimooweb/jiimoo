@@ -19,6 +19,7 @@ class ComboControlle extends Controller
         $combo=Combo::paginate($pagesize);
         return response()->json(["status"=>"success","data"=>$combo]);
     }
+
     public function store(ComboRequest $request)
     {
         $saveCombo=Combo::create(request(['name','desc']));
@@ -29,6 +30,7 @@ class ComboControlle extends Controller
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
     }
+
     public function update(ComboRequest $request)
     {
         $combo_id=request()->combo;
@@ -41,12 +43,14 @@ class ComboControlle extends Controller
             return response()->json(["status"=>"error","msg"=>"修改失败！"]);
         }
     }
+
     public function create()
     {
         $modules=Module::all();
         return view("admin/combo/create",compact('modules'));
         return response()->json(["status"=>"success","data"=>$modules]);
     }
+
     public function storeMoudle($modules,$combo)
     {
         $modules=Module::findMany($modules);
@@ -61,6 +65,7 @@ class ComboControlle extends Controller
         }
         return compact('save','delete');
     }
+
     public function destroy()
     {
         $combo_id=request()->combo;

@@ -12,12 +12,15 @@ use App\Models\Commons\Module;
 use App\Http\Requests\Admin\ModuleRequest;
 class ModuleController extends Controller
 {
-     public function index(){
+     public function index()
+     {
          $pagesize=config('common.pagesize');
          $module=Module::paginate();
          return response()->json(["status"=>"success","data"=>$module]);
      }
-     public function store(ModuleRequest $request){
+
+     public function store(ModuleRequest $request)
+     {
          $save=Module::create(request(['name','desc']));
          if ($save){
              return response()->json(["status"=>"success","msg"=>"保存成功！"]);
@@ -25,7 +28,9 @@ class ModuleController extends Controller
              return response()->json(["status"=>"error","msg"=>"保存失败！"]);
          }
      }
-     public function update(ModuleRequest $request){
+
+     public function update(ModuleRequest $request)
+     {
          $module_id=request()->module;
          $update=Module::where('id',$module_id)->update(request(['name','desc']));
          if ($update){
@@ -34,10 +39,13 @@ class ModuleController extends Controller
              return response()->json(["status"=>"error","msg"=>"修改失败！"]);
          }
      }
+
      public function create(){
          return view('admin/module/create');
      }
-     public function destroy(){
+
+     public function destroy()
+     {
             $module_id=request()->module;
             $module=Module::find($module_id);
             $combos=$module->combo;
