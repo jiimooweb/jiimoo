@@ -11,6 +11,7 @@ class AdminUser extends Authenticatable
     protected $guarded=[];
     protected $table = 'admin_users';
     protected $rememberTokenName='';
+    protected $hidden = ['password'];
 
     public function xcxs(){
         return $this->belongsToMany(Xcx::class,'users_xcxs',

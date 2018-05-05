@@ -26,12 +26,12 @@ class Xcx extends Model
 
     public function assignUser($user)
     {
-        return $this->xcxs()->save($user);
+        return $this->user()->save($user);
     }
 
     public function detachUser($user)
     {
-        return $this->detachXcx()->detach($user);
+        return $this->user()->detach($user);
     }
 
     //获取小程序实例

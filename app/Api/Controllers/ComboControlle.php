@@ -10,18 +10,17 @@ namespace App\Api\Controllers;
 use App\Api\Controllers\Controller;
 use App\Models\Commons\Combo;
 use App\Models\Commons\Module;
+use App\Http\Requests\Admin\ComboRequest;
 class ComboControlle extends Controller
 {
-    public function index(){
-        $combo=Combo::all();
+    public function index()
+    {
+        $pagesize=config('common.pagesize');
+        $combo=Combo::paginate($pagesize);
         return response()->json(["status"=>"success","data"=>$combo]);
     }
-    public function store(){
-        $this->validate(request(),[
-            'name'=>'required',
-            'desc'=>'required',
-            'modules'=>'required|array'
-        ]);
+    public function store(ComboRequest $request)
+    {
         $saveCombo=Combo::create(request(['name','desc']));
         if ($saveCombo){
             $store=$this->storeMoudle(request('modules'),$saveCombo);
@@ -30,12 +29,26 @@ class ComboControlle extends Controller
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
     }
-    public function create(){
+    public function update(ComboRequest $request)
+    {
+        $combo_id=request()->combo;
+        $combo=Combo::where('id',$combo_id)->update(request(['name','	desc']));
+        $combo=Combo::find($combo_id);
+        $store=$this->storeMoudle(request('modules'),$combo);
+        if($store&&$combo){
+            return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+        }else{
+            return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+        }
+    }
+    public function create()
+    {
         $modules=Module::all();
         return view("admin/combo/create",compact('modules'));
         return response()->json(["status"=>"success","data"=>$modules]);
     }
-    public function storeMoudle($modules,$combo){
+    public function storeMoudle($modules,$combo)
+    {
         $modules=Module::findMany($modules);
         $hasModules=$combo->module;
         $adds=$modules->diff($hasModules);
@@ -46,14 +59,15 @@ class ComboControlle extends Controller
         foreach ($detachs as $detach){
            $delete=$combo->detachModule($detach);
         }
-        return compact('save');
+        return compact('save','delete');
     }
-    public function delete(){
-        $combo_id=request('combo_id');
+    public function destroy()
+    {
+        $combo_id=request()->combo;
         $combo=Combo::find($combo_id);
         $hasModules=$combo->module;
         foreach($hasModules as $hasModule){
-            $combo->deleteModule($hasModule->id);
+            $combo->detachModule($hasModule->id);
         }
         $delete=$combo->delete();
         if ($delete){

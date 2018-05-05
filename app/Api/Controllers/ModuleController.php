@@ -9,17 +9,15 @@
 namespace App\Api\Controllers;
 use App\Api\Controllers\Controller;
 use App\Models\Commons\Module;
+use App\Http\Requests\Admin\ModuleRequest;
 class ModuleController extends Controller
 {
      public function index(){
-         $module=Module::all();
+         $pagesize=config('common.pagesize');
+         $module=Module::paginate();
          return response()->json(["status"=>"success","data"=>$module]);
      }
-     public function store(){
-         $this->validate(request(),[
-             'name'=>'required',
-             'desc'=>'required',
-         ]);
+     public function store(ModuleRequest $request){
          $save=Module::create(request(['name','desc']));
          if ($save){
              return response()->json(["status"=>"success","msg"=>"保存成功！"]);
@@ -27,11 +25,20 @@ class ModuleController extends Controller
              return response()->json(["status"=>"error","msg"=>"保存失败！"]);
          }
      }
+     public function update(ModuleRequest $request){
+         $module_id=request()->module;
+         $update=Module::where('id',$module_id)->update(request(['name','desc']));
+         if ($update){
+             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+         }else{
+             return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+         }
+     }
      public function create(){
          return view('admin/module/create');
      }
-     public function delete(){
-            $module_id=request('module_id');
+     public function destroy(){
+            $module_id=request()->module;
             $module=Module::find($module_id);
             $combos=$module->combo;
             foreach ($combos as $combo){

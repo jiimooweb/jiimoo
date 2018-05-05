@@ -56,6 +56,7 @@ class XcxController extends Controller{
         //选择所需套餐
         public function checkCombo()
         {
+
             $xcx_id=session('xcx_id');
             $xcx=Xcx::find($xcx_id);
             $combos=Combo::all();
@@ -71,6 +72,9 @@ class XcxController extends Controller{
                 'combos'=>'required|array',
                 'modules'=>'required|array',
             ]);
+            if($valid->errors()->count()){
+                return response()->json(["status"=>"error","data"=>$valid->error()]);
+            }
             $xcx_id=session('xcx_id');
             $xcx=Xcx::find($xcx_id);
             $reCombos=request('combos');

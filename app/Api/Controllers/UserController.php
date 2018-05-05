@@ -24,7 +24,11 @@ class UserController extends Controller
         $users=AdminUser::where('identity','User')->paginate($pagesize);
         return response()->json(["status"=>"success","data"=>$users]);
     }
-
+    public function userInfo(){
+        $adminUser_id=Token::getUid();
+        $adminUser=AdminUser::find($adminUser_id);
+        return response()->json(["status"=>"success","data"=>$adminUser]);
+    }
     public function edit()
     {
         $adminUser=AdminUser::where('id',Token::getUid())->first();
@@ -37,6 +41,9 @@ class UserController extends Controller
         $valid=Validator::make(request()->all(), [
             'newpassword'=>'required',
         ]);
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->error()]);
+        }
         $adminUser=AdminUser::where('id',Token::getUid())->first();
         $password=bcrypt(request('newpassword'));
         $update=$adminUser->update(['password'=>$password]);
@@ -55,6 +62,9 @@ class UserController extends Controller
             'email'=>'required|email|unique:admin_users,email',
             'password'=>'required',
         ]);
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->error()]);
+        }
         $random=str_random(5);
         $username=request('username');
         $email=	request('email');
@@ -101,6 +111,9 @@ class UserController extends Controller
         $valid=Validator::make(request()->all(), [
             'xcxs'=>'required|array',
         ]);
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->error()]);
+        }
         $adminUser_id=request('user_id');
         $adminUser=AdminUser::where('id',$adminUser_id)->first();
         $xcxs=Xcx::findMany(request('xcxs'));
