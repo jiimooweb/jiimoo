@@ -32,6 +32,7 @@ class CommonRequest extends FormRequest
         exit(json_encode(array(
             'status' => 'error',
             'data' => $validator->getMessageBag()->toArray()
-        )));
+        ))); 
+        
     }
 }

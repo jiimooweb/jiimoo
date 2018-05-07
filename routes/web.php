@@ -14,7 +14,7 @@
 |
 */
 
-Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'client']], function () {
+Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'client', 'cors']], function () {
     include_once('displays.php');
     include_once('coupons.php');
     include_once('answers.php');
