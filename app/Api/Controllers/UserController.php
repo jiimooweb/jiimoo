@@ -42,7 +42,7 @@ class UserController extends Controller
             'newpassword'=>'required',
         ]);
         if($valid->errors()->count()){
-            return response()->json(["status"=>"error","data"=>$valid->error()]);
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
         }
         $adminUser=AdminUser::where('id',Token::getUid())->first();
         $password=bcrypt(request('newpassword'));
@@ -63,7 +63,7 @@ class UserController extends Controller
             'password'=>'required',
         ]);
         if($valid->errors()->count()){
-            return response()->json(["status"=>"error","data"=>$valid->error()]);
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
         }
         $random=str_random(5);
         $username=request('username');
@@ -112,7 +112,7 @@ class UserController extends Controller
             'xcxs'=>'required|array',
         ]);
         if($valid->errors()->count()){
-            return response()->json(["status"=>"error","data"=>$valid->error()]);
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
         }
         $adminUser_id=request('user_id');
         $adminUser=AdminUser::where('id',$adminUser_id)->first();

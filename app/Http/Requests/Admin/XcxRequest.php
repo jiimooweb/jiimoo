@@ -14,8 +14,8 @@ class XcxRequest extends CommonRequest
     public function rules()
     {
         return [
-            'name'=>'required|unique:xcxs,name',
-            'app_id'=>'required|unique:xcxs,app_id',
+            'name'=>'required',
+            'app_id'=>'required',
         ];
     }
 }

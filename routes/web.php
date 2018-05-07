@@ -19,9 +19,6 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}','middleware'=>['token', 'cl
     include_once('coupons.php');
     include_once('answers.php');
     include_once('members.php');
-    Route::get('api/xcx/check','\App\Api\Controllers\XcxController@checkCombo');
-    Route::post('api/xcx/check','\App\Api\Controllers\XcxController@storeCombo');
-    
 });
 
 Route::get('login',function() {
