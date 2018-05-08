@@ -17,6 +17,12 @@ class DepotController extends Controller
             return response()->json(["status"=>"success","data"=>$depot]);
         }
 
+        public function show()
+        {
+            $depot=Depot::all();
+            return response()->json(["status"=>"success","data"=>$depot]);
+        }
+
         public function store(DepotRequest $request)
         {
             $save=Depot::create(request(['name','desc']));

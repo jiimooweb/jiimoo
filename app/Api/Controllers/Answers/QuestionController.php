@@ -10,18 +10,18 @@ class QuestionController extends Controller
 {
         public function index()
         {
-            $depot_id=request('depot_id');
-            $question=Question::where('depot_id',$depot_id)->paginate(15);
-            return $question;
+            $pagesize=config('common.pagesize');
+            $question=Question::paginate($pagesize);
+            return response()->json(["status"=>"success","data"=>$question]);
         }
 
         public function store(QusetionRequest $request){
-            $question=request('question');
+            $questions=request('questions');
             $answer=json_encode(request('answer'));
             $positive=request('positive');
-            $depotId=request('depot_id');
-            $type=request('type')?request('type'):"";
-            $save=Question::create(compact('question','answer','positive','depotId'
+            $depot_id=request('depot_id');
+            $type=request('type');
+            $save=Question::create(compact('questions','answer','positive','depot_id'
             ,'type'));
             if ($save){
                 return response()->json(["status"=>"success","msg"=>"保存成功！"]);
@@ -33,12 +33,12 @@ class QuestionController extends Controller
         public function update(QusetionRequest $request)
         {
             $question_id=request()->question;
-            $question=Question::find($question_id);
+            $questions=request('questions');
             $answer=json_encode(request('answer'));
             $positive=request('positive');
-            $depotId=request('depot_id');
-            $type=request('type')?request('type'):"";
-            $update=$question->update(compact('question','answer','positive','depotId'
+            $depot_id=request('depot_id');
+            $type=request('type');
+            $update=Question::where('id',$question_id)->update(compact('questions','answer','positive','depot_id'
                 ,'type'));
             if ($update){
                 return response()->json(["status"=>"success","msg"=>"修改成功！"]);
