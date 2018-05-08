@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Answers\AnswersUser;
 use App\Api\Controllers\Controller;
 
-class UserController extends Controller
+class FanController extends Controller
 {
 
-        public function index(){
+        public function index()
+        {
            $ssss= AnswersUser::get();
         }
-        public function edite(){}
+
         public function update($fanid)
         {
             $this->validate(request(), [

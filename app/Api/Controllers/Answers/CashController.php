@@ -5,29 +5,34 @@ namespace App\Api\Controllers\Answers;
 use Illuminate\Http\Request;
 use App\Models\Answers\Cash;
 use App\Api\Controllers\Controller;
-
+use App\Http\Requests\Answers\CashRequest;
 class CashController extends Controller
 {
-        public function show($xcxid){
-            $cash=Cash::where('xcx_id',$xcxid);
-            return $xcxid;
+        public function show()
+        {
+            $xcx_id=session('xcx_id');
+            $cash=Cash::where('xcx_id',$xcx_id)->get();
+            return response()->json(["status"=>"success","data"=>$cash]);
         }
-        public function create(){
 
+        public function store(CashRequest $request)
+        {
+            $save=Cash::create(['ratio'=>request('ratio')]);
+            if ($save){
+                return response()->json(["status"=>"success","msg"=>"保存成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"保存失败！"]);
+            }
         }
-        public function store($xcx_id){
-            $this->validate(request(),[
-                'ratio' => 'required',
-            ]);
-           $save=Cash::create(['xcx_id'=>$xcx_id,'ratio'=>request('ratio')]);
-           return $save;
-        }
-        public function edite(){}
-        public function update($xcx_id){
-            $this->validate(request(),[
-                'ratio' => 'required',
-            ]);
+
+        public function update(CashRequest $request)
+        {
+            $xcx_id=session('xcx_id');
             $update=Cash::where('xcx_id',$xcx_id)->update(['ratio'=>request('ratio')]);
-            return $update;
+            if ($update){
+                return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+            }
         }
 }
