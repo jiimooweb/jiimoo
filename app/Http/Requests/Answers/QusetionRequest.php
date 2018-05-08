@@ -15,7 +15,7 @@ class QusetionRequest extends CommonRequest
     public function rules()
     {
         return [
-            'question' => 'required',
+            'questions' => 'required',
             'answer' => 'required|array',
             'positive' => 'required',
             'depot_id'=>'required',
