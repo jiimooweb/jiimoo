@@ -54,7 +54,7 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/wechat','middleware'=>['clie
 
 Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
 Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
-Route::get('/test', '\App\Api\Controllers\MiniProgramController@test');
+Route::get('wechat/test', '\App\Api\Controllers\MiniProgramController@test');
 
 Route::get('flash_token', function() {
     $token = request()->header('token');
