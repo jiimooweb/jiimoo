@@ -47,9 +47,9 @@ include_once('admin.php');
 Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 
 Route::group(['prefix' => 'wechat'], function() {
-    Route::post('token/getToken', 'MiniProgramController@getToken');
-    Route::post('token/verifyToken', 'MiniProgramController@verifyToken');
-    Route::post('saveInfo', 'MiniProgramController@saveInfo')->middleware('token');
+    Route::post('token/getToken', '\App\Api\Controllers\MiniProgramController@getToken');
+    Route::post('token/verifyToken', '\App\Api\Controllers\MiniProgramController@verifyToken');
+    Route::post('saveInfo', '\App\Api\Controllers\MiniProgramController@saveInfo')->middleware('token');
 });
 
 Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
