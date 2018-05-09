@@ -2,12 +2,14 @@
 
 namespace App\Models\Queues;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Queues\QueueFan;
 use Illuminate\Support\Facades\Cache;
 
 class Queue extends Model
 {
+    protected $guarded = [];
+    
     public function fans() 
     {
         return $this->hasMany(QueueFan::class, 'queue_id', 'id')->where('status', 0)->orderBy('id', 'asc');
@@ -21,8 +23,8 @@ class Queue extends Model
     public function getQueueFans() 
     {
         $queues = optional($this->orderBy('id', 'asc')->withCount('fans')->get())->load('fans');
-
-        if($queue) {
+        
+        if($queues) {
             foreach($queues as &$queue) {
                 foreach($queue->fans as &$fan) {
                     $fan->openid =  $this->getOpenid($fan->queue_id, $fan->fan_id);
@@ -46,10 +48,14 @@ class Queue extends Model
         return $queue;
     }
 
-    public function addNotice($openid,$count)
+    public function addNotice($xcx_id, $count)
     {
-        $title = '测试\n';
-        $content = '前面还有'.$count.'人\n';
-        return Cache::put($openid, $title.$content, 10);;
+        $data = [
+            'xcx_id' => $xcx_id,
+            'title' => '测试'.$count,
+            'content' => '测试'
+        ];
+
+        \App\Models\Queues\QueueNotice::create($data);
     }
 }
