@@ -19,4 +19,8 @@ class Fan extends Model
     {
         return $query->where('module', session('module'));
     }
+
+    public function queue() {
+        return $this->belongsTo(\App\Models\Queue\QueueUser::class, 'fan_id', 'id');
+    }
 }

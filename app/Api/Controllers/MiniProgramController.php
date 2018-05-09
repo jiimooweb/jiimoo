@@ -67,8 +67,24 @@ class MiniProgramController extends Controller
     }
 
     public function test() {
-        $app = Xcx::getApp(1);
-        
-        dd($app->server);
+        $app = Xcx::getApp(3);
+        // $template = $app->template_message->list(0, 20);
+        // $template = $app->template_message->getTemplates(0, 1);
+
+        $template = $app->template_message->send([
+            'touser' => 'oB_Gk5KSjbQlQnnYDim1ib5RIM8M',
+            'template_id' => 'WV83mpSsgqDUaC1Ah09hN19h3LTHKe-0LCBHsNkSTCY',
+            'form_id' => '6ca425c450d25578f422a39f88bb1cc1',
+            'data' => [
+                'keyword1' => '任意门工作室',
+                'keyword2' => 'A002',
+                'keyword3' => '1桌',
+                'keyword4' => '5分钟',
+                'keyword5' => '排队中',
+                'keyword6' => '请留意我们的叫号通知',
+            ],
+        ]);
+
+        dd($template);
     }
 }

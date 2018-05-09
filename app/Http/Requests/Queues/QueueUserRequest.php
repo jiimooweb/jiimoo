@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Displays;
+namespace App\Http\Requests\Queues;
 
-use App\Http\Requests\CommonRequest;
+use \App\Http\Requests\CommonRequest;
 
-class ActivityCateRequest extends CommonRequest
+class QueueUserRequest extends CommonRequest
 {
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,7 +15,7 @@ class ActivityCateRequest extends CommonRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:2'
+            'user_id' => 'required|integer',
         ];
     }
 }
