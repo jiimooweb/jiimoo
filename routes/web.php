@@ -55,3 +55,10 @@ Route::group(['prefix' => 'wechat'], function() {
 Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
 Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
 Route::get('/test', '\App\Api\Controllers\MiniProgramController@test');
+
+Route::get('flash_token', function() {
+    $token = request()->header('token');
+    if(\App\Services\Token::verifyToken($token)) {
+        cache([$token => cache($token)], config('token.token_expire_in'));
+    }
+});
