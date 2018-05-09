@@ -15,7 +15,7 @@ class ModuleController extends Controller
      public function index()
      {
          $pagesize=config('common.pagesize');
-         $module=Module::paginate();
+         $module=Module::paginate($pagesize);
          return response()->json(["status"=>"success","data"=>$module]);
      }
 
