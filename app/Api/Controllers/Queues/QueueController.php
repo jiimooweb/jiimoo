@@ -91,7 +91,8 @@ class QueueController extends Controller
     public function confirm()
     {
         if(QueueFan::where('id', request()->fan)->update(['status' => 1])) {
-            dispatch(new SendQueueNotice(QueueFan::where('id', request()->fan)->first()->queue_id));
+            $queue_id = QueueFan::where('id', request()->fan)->first()->queue_id;
+            dispatch(new SendQueueNotice(session('xcx_id'), $queue_id));
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);                         
         }  
     }

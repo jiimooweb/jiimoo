@@ -14,6 +14,7 @@ class SendQueueNotice implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $xcx_id;
     private $queue_id;
     private $notice;
     private $count = 0;
@@ -23,8 +24,9 @@ class SendQueueNotice implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($queue_id)
+    public function __construct($xcx_id, $queue_id)
     {
+        $this->xcx_id = $xcx_id;
         $this->queue_id = $queue_id;
     }
 
@@ -34,29 +36,13 @@ class SendQueueNotice implements ShouldQueue
      * @return void
      */
     public function handle()
-    {   
-        $app = Xcx::getApp(\Session::get('xcx_id'));        
+    {          
         $Queue = new Queue();
         $queue = $Queue->getFansByQueueID($this->queue_id);
-        file_put_contents('test.txt',$queue->template_id);
-        
         foreach($queue->fans as $fan) {
-            // $Queue->addNotice($fan->openid,++$this->count);
-            file_put_contents('test.txt',$queue->template_id);
-
-            $app->template_message->send([
-                'touser' => $fan->openid,
-                'template_id' => $queue->template_id,
-                'form_id' => 'ec2cb02bc0c051dff0b2d875db13ceb5',
-                'data' => [
-                    'keyword1' => '任意门工作室',
-                    'keyword2' => 'A002',
-                    'keyword3' => ++$this->count.'桌',
-                    'keyword4' => ($this->count * 6).'分钟',
-                    'keyword5' => '排队中',
-                    'keyword6' => '留意我们的叫号通知',
-                ],
-            ]);
+            //TODO：发送通知
+            $Queue->addNotice($this->xcx_id,++$this->count);
         }
+        
     }
 }

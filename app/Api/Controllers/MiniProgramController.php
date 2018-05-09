@@ -15,7 +15,7 @@ class MiniProgramController extends Controller
 
     public function getToken()
     {
-        $app = Xcx::getApp(sesion('xcx_id'));
+        $app = Xcx::getApp(3);
 
         $user = $app->auth->session(request('code'));
 
@@ -52,7 +52,7 @@ class MiniProgramController extends Controller
 
     public function getMiniCode() 
     {
-        $app = Xcx::getApp(1);
+        $app = Xcx::getApp(3);
         $response = $app->app_code->get('path/to/page');
         $filename = $response->save('wechat/miniprogram/','minicode.png');
         return $filename;
@@ -60,7 +60,7 @@ class MiniProgramController extends Controller
 
     public function getQrCode() 
     {
-        $app = Xcx::getApp(1);
+        $app = Xcx::getApp(3);
         $response = $app->app_code->getQrCode('/path/to/page');
         $filename = $response->save('wechat/miniprogram/','appcode.png');
         return $filename;

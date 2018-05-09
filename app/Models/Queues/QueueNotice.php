@@ -2,9 +2,11 @@
 
 namespace App\Models\Queues;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class QueueNotice extends Model
 {
+    protected $guarded = [];
     
+    protected $table = 'notices';
 }

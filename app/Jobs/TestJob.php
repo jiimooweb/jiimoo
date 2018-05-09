@@ -29,6 +29,9 @@ class TestJob implements ShouldQueue
      */
     public function handle()
     {
-        file_put_contents('test.txt', 'hello world!\n', FILE_APPEND);
+        // file_put_contents('test.txt', 'hello world!\n', FILE_APPEND);
+        $queue = \App\Models\Queues\Queue::all()->toArray();
+        \Log::info($queue);
+        
     }
 }
