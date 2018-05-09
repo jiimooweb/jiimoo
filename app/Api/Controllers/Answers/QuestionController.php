@@ -5,50 +5,56 @@ namespace App\Api\Controllers\Answers;
 use Illuminate\Http\Request;
 use App\Models\Answers\Question;
 use App\Api\Controllers\Controller;
-
+use App\Http\Requests\Answers\QusetionRequest;
 class QuestionController extends Controller
 {
-        public function index(){
-            $question=Question::paginate(15);
-            return $question;
+        public function index()
+        {
+            $pagesize=config('common.pagesize');
+            $question=Question::paginate($pagesize);
+            return response()->json(["status"=>"success","data"=>$question]);
         }
-        public function create(){
 
-        }
-        public function store(){
-            $this->validate(request(),[
-                'question' => 'required',
-                'answer' => 'required|array',
-                'positive' => 'required',
-                'depot_id'=>'required',
-            ]);
-            $question=request('question');
+        public function store(QusetionRequest $request){
+            $questions=request('questions');
             $answer=json_encode(request('answer'));
             $positive=request('positive');
-            $depotId=request('depot_id');
-            $type=request('type')?request('type'):"";
-            $save=Question::create(compact('question','answer','positive','$depotId'
+            $depot_id=request('depot_id');
+            $type=request('type');
+            $save=Question::create(compact('questions','answer','positive','depot_id'
             ,'type'));
-            return $save;
+            if ($save){
+                return response()->json(["status"=>"success","msg"=>"保存成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"保存失败！"]);
+            }
         }
-        public function edite(){}
-        public function update(Question $question){
-            $this->validate(request(),[
-                'question' => 'required',
-                'answer' => 'required|array',
-                'positive' => 'required',
-                'depot_id'=>'required',
-            ]);
-            $question=request('question');
+
+        public function update(QusetionRequest $request)
+        {
+            $question_id=request()->question;
+            $questions=request('questions');
             $answer=json_encode(request('answer'));
             $positive=request('positive');
-            $depotId=request('depot_id');
-            $type=request('type')?request('type'):"";
-            $save=$question->update(compact('question','answer','positive','depotId'
+            $depot_id=request('depot_id');
+            $type=request('type');
+            $update=Question::where('id',$question_id)->update(compact('questions','answer','positive','depot_id'
                 ,'type'));
+            if ($update){
+                return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+            }
         }
-        public function delete(Question $question){
 
-            $question->delete();
+        public function destroy(){
+            $question_id=request()->question;
+            $question=Question::find($question_id);
+            $delete=$question->delete();
+            if($delete){
+                return response()->json(["status"=>"success","msg"=>"删除成功！"]);
+            }else{
+                return response()->json(["status"=>"error","msg"=>"删除失败！"]);
+            }
         }
 }

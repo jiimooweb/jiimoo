@@ -5,7 +5,7 @@ Route::group(['prefix'=>'api','middleware'=>['token']],function (){
     Route::get('user/userInfo','\App\Api\Controllers\UserController@userInfo');
     Route::get('user/register','\App\Api\Controllers\UserController@create');
     Route::post('user/register','\App\Api\Controllers\UserController@store');
-    Route::put('user/check_xcxs','\App\Api\Controllers\UserController@checkXcx');
+    Route::get('user/check_xcxs','\App\Api\Controllers\UserController@checkXcx');
     Route::post('user/update_xcxs','\App\Api\Controllers\UserController@addXcx');
     Route::get('xcx/choice/{xcx_flag}','\App\Api\Controllers\XcxController@choiceCombo');
     Route::post('xcx/choice/{xcx_flag}','\App\Api\Controllers\XcxController@storeCombo');
