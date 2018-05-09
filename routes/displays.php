@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'api/displays'], function () {
+Route::group(['prefix' => 'displays'], function () {
     //基本信息
     Route::apiResource('/infos', '\App\Api\Controllers\Displays\BasicInfoController');
     //文章

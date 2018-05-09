@@ -5,7 +5,7 @@
  * Date: 2018/4/25
  * Time: 11:28
  */
-Route::group(['prefix'=>'api/answer'],function (){
+Route::group(['prefix'=>'answer'],function (){
     Route::group(['prefix'=>'cash'],function (){
         Route::get('/cash/create','\App\Api\Controllers\Answers\CashController@create');
         Route::post('/cash/store','\App\Api\Controllers\Answers\CashController@store');
