@@ -15,7 +15,7 @@ class MiniProgramController extends Controller
 
     public function getToken()
     {
-        $app = Xcx::getApp(3);
+        $app = Xcx::getApp(session('xcx_id'));
 
         $user = $app->auth->session(request('code'));
 
@@ -36,6 +36,7 @@ class MiniProgramController extends Controller
         $data = json_decode($data, true);
 
         $userInfo = request('userInfo');
+        $userInfo['xcx_id'] = 3;
         
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
