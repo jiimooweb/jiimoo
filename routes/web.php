@@ -60,5 +60,7 @@ Route::get('flash_token', function() {
     $token = request()->header('token');
     if(\App\Services\Token::verifyToken($token)) {
         cache([$token => cache($token)], config('token.token_expire_in'));
+        return 'success';
     }
+    return 'error';
 });
