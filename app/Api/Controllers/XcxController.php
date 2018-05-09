@@ -15,12 +15,11 @@ class XcxController extends Controller{
         //用户所有小程序
         public function index()
         {
-            $adminUser_id=Token::getUid();
-            $adminUser=AdminUser::where('id',$adminUser_id)->first();
-            $xcxs=$adminUser->xcxs;
-            $xcxlist=$xcxs->sortByDesc( function ($product, $key) {
-                return $product['pivot']['sort'];
-            });
+            $pagesize=config('common.pagesize');
+            $xcxlist = Xcx::with(['user' => function ($query) {
+                $adminUser_id=Token::getUid();
+                $query->where('user_id', $adminUser_id)->orderBy('sort', 'desc');
+            }])->paginate($pagesize);
             return response()->json(["status"=>"success","data"=>$xcxlist]);
         }
 

@@ -16,7 +16,7 @@ class Xcx extends Model
     {
         return $this->belongsToMany(AdminUser::class,'users_xcxs',
             'xcx_id','user_id')->
-            withPivot(['xcx_id','user_id']);
+            withPivot(['xcx_id','user_id','sort']);
     }
 
     public function hasUser($id) 
