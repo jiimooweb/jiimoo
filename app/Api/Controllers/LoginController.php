@@ -20,7 +20,8 @@ class LoginController extends Controller
             $user=AdminUser::orWhere('username',request('username'))->
             orWhere('email',request('username'))->
             update(['last_time'=>$now,'last_ip'=>$user_ip]);
-            $user=AdminUser::find($user);
+            $user=AdminUser::orWhere('username',request('username'))->
+            orWhere('email',request('username'))->first();
             return response()->json(['token' => $token, 'msg' => '登录成功！','user'=>$user]);
         }else {
             return response()->json(['error' => $token, 'msg' => '用户名或者密码错误！']);
