@@ -20,7 +20,7 @@ class XcxController extends Controller{
                 $page=request('page');
                 $pagesize=config('common.pagesize');
 //                $offset=($page - 1) * $pagesize;->offset($offset)->limit($pagesize)
-                $query->orderBy('sort', 'desc')->paginate(1);
+                $query->orderBy('sort', 'desc')->paginate($pagesize);
             }])->first();
             $xcxlist=$admin->xcxs;
             return response()->json(["status"=>"success","data"=>$xcxlist]);
