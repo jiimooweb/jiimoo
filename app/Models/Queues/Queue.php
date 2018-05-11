@@ -48,14 +48,9 @@ class Queue extends Model
         return $queue;
     }
 
-    public function addNotice($xcx_id, $count)
-    {
-        $data = [
-            'xcx_id' => $xcx_id,
-            'title' => '测试'.$count,
-            'content' => '测试'
-        ];
-
-        \App\Models\Queues\QueueNotice::create($data);
+    public function getNo($queue_id) {
+        $flag = $this->where('id', $queue_id)->pluck('flag')[0];
+        $no = QueueFan::where('queue_id', $queue_id)->where('created_at', '>', date('Y-m-d', time()))->get()->count();
+        return $flag.++$no;
     }
 }

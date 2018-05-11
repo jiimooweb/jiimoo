@@ -34,8 +34,9 @@ Route::get('cache/{id}', function($id) {
     return Cache::get(Fan::find($id)->openid, '没有数据');
 });
 
-Route::get('/tests', function() {
-    \App\Models\Queues\Queue::all()->toArray();
+Route::get('/test', function() {
+    $flag =  \App\Models\Queues\Queue::where('id', 1)->pluck('flag')[0];
+    dd($flag);
 });
 
 Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
