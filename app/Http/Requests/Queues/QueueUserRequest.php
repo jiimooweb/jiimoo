@@ -15,7 +15,7 @@ class QueueUserRequest extends CommonRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer',
+            'fan_id' => 'required|integer',
         ];
     }
 }

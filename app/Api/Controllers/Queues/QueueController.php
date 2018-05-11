@@ -61,20 +61,47 @@ class QueueController extends Controller
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
 
-    public function join(QueueUserRequest $request) 
+    public function join(Request $request) 
     {
+        $queue_id = $request->queue;
         $Queue = new Queue;
-        $queue = $Queue->getFansByQueueID($request->queue);
-        $data['queue_id'] = $request->queue;
-        $data['user_id'] = $request->user_id;
-        $data['no'] = $queue->fans_count++;
+        $queue = $Queue->getFansByQueueID($queue_id);
+        $data['xcx_id'] = session('xcx_id');
+        $data['fan_id'] =  Token::getUid();
+        if(QueueFan::where($data)->where('status',0)->get()->count()) {
+            return response()->json(['status' => 'error', 'msg' => '请勿重复排队！']);     
+        }else {
+            $data['form_id'] = $request->form_id;
+            $data['queue_id'] = $queue_id;            
+            $data['no'] = $Queue->getNo($queue_id);
+            $data['is_notice'] = 1;
+            $data['notice_pos'] = $request->position;
+            if(QueueFan::create($data)) {
+                $queues = $Queue->getQueueFans();
+                return response()->json(['status' => 'success', 'data' => $queues,'msg' => '排队成功！','no' => $data['no']]);
+            }
+            return response()->json(['status' => 'error', 'msg' => '排队失败！']);
+        }
+    }
+
+    public function add(Request $request) 
+    {
+        $queue_id = $request->queue;
+        $Queue = new Queue;
+        $queue = $Queue->getFansByQueueID($queue_id);
+        $data['xcx_id'] = session('xcx_id');
+        $data['queue_id'] = $queue_id;            
+        $data['no'] = $Queue->getNo($queue_id);
+        $data['is_notice'] = 0;
         if(QueueFan::create($data)) {
-            return response()->json(['status' => 'success', 'msg' => '排队成功！']);                         
+            $queues = $Queue->getQueueFans();
+            return response()->json(['status' => 'success', 'data' => $queues,'msg' => '排队成功！','no' => $data['no']]);
         }
 
-        return response()->json(['status' => 'error', 'msg' => '排队失败！']);     
+        return response()->json(['status' => 'error', 'msg' => '排队失败！']);
         
     }
+
 
     public function call()
     {
