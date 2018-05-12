@@ -18,8 +18,9 @@ class ArticleCateController extends Controller
 
     public function store(ArticleCateRequest $requset) 
     {   
-        if(ArticleCate::create(request(['name']))) {
-            return response()->json(['status' => 'success', 'msg' => '新增成功！']);               
+        $articleCate = ArticleCate::create(request(['name']));
+        if($articleCate) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $articleCate]);               
         }
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
