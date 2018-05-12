@@ -5,7 +5,7 @@ namespace App\Api\Controllers\Commons;
 use Illuminate\Http\Request;
 use App\Models\Commons\ArticleCate;
 use App\Api\Controllers\Controller;
-use App\Http\Requests\Commons\ActivityCateRequest;
+use App\Http\Requests\Commons\ArticleCateRequest;
 
 class ArticleCateController extends Controller
 {
@@ -16,7 +16,7 @@ class ArticleCateController extends Controller
         return response()->json(['status' => 'success', 'data' => $articleCates]);
     }
 
-    public function store(ActivityCateRequest $requset) 
+    public function store(ArticleCateRequest $requset) 
     {   
         if(ArticleCate::create(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);               
@@ -32,7 +32,7 @@ class ArticleCateController extends Controller
         return response()->json(['status' => $status, 'data' => $cate]);
     }
 
-    public function update(ActivityCateRequest $requset) 
+    public function update(ArticleCateRequest $requset) 
     {
         if(ArticleCate::where('id', request()->article_cate)->update(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               

@@ -14,7 +14,7 @@ class MemberController extends Controller
     
     public function index() 
     {
-        $members = MiniMember::all();
+        $members = MiniMember::get();
         return response()->json(['status' => 'success', 'data' => $members]);   
     }
 
