@@ -20,7 +20,8 @@ class ActivityRequest extends CommonRequest
             'start_time' => 'required_with:end_time',
             'end_time' => 'required_with:start_time',
             'reward_total' => 'required',
-            'depots'=>'array'
+            'depots'=>'array',
+            'question_number'=>'required|integer'
         ];
     }
 }

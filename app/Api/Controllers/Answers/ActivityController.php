@@ -8,6 +8,7 @@ use App\Api\Controllers\Controller;
 use App\Http\Requests\Answers\ActivityRequest;
 use App\Models\Answers\Depot;
 use Validator;
+use App\Models\Answers\ActivitieFans;
 class ActivityController extends Controller
 {
     public function index(){
@@ -25,7 +26,8 @@ class ActivityController extends Controller
         if($valid->errors()->count()){
             return response()->json(["status"=>"error","data"=>$valid->errors()]);
         }
-        $save=Activitie::create(request(['name','start_time','end_time','reward','reward_total']));
+        $save=Activitie::create(request(['name','start_time','end_time','reward','reward_total',
+                        'question_number','partake']));
         $depots=request('depots');
         if ($depots){
             $depots=Depot::findMany($depots);
@@ -45,7 +47,8 @@ class ActivityController extends Controller
     {
         $activity_id=request()->activity;
         $activity=Activitie::find($activity_id);
-        $update=$activity->update(request(['name','start_time','end_time','reward','reward_total','status']));
+        $update=$activity->update(request(['name','start_time','end_time','reward','reward_total',
+                            'question_number','status','partake']));
         $depots=request('depots');
         if ($depots){
             $depots=Depot::findMany($depots);
@@ -66,7 +69,8 @@ class ActivityController extends Controller
         }
     }
 
-    public function choiceDepot(){
+    public function choiceDepot()
+    {
         $depot=Depot::all();
         $activity_id=request('activity_id');
         if($activity_id){
@@ -97,4 +101,28 @@ class ActivityController extends Controller
             return response()->json(["status"=>"error","msg"=>"删除失败！"]);
         }
     }
+
+//    public function checkPartake()
+//    {
+//        $valid=Validator::make(request()->all(), [
+//            'activity_id'=>'required',
+//            'fan_id'=>'required',
+//        ]);
+//        if($valid->errors()->count()){
+//            return response()->json(["status"=>"error","data"=>$valid->errors()]);
+//        }
+//        $activity_id=request('activity_id');
+//        $fan_id=request('fan_id');
+//        $activity=Activitie::find($activity_id);
+//        if ($activity->hasFan($fan_id)){
+//            $fanPartake=ActivitieFans::where('fan_id',$fan_id)->where('activity_id',$activity_id)->first();
+//            if($fanPartake->partake>$activity->partake){
+//                return response()->json(["status"=>"error","msg"=>"已参加！"]);
+//            }else{
+//                return response()->json(["status"=>"success","msg"=>"可以参加！"]);
+//            }
+//        }else{
+//            return response()->json(["status"=>"success","msg"=>"可以参加！"]);
+//        }
+//    }
 }

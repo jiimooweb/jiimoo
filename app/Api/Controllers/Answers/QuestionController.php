@@ -2,6 +2,7 @@
 
 namespace App\Api\Controllers\Answers;
 
+use App\Models\Answers\Activitie;
 use Illuminate\Http\Request;
 use App\Models\Answers\Question;
 use App\Api\Controllers\Controller;
@@ -13,6 +14,13 @@ class QuestionController extends Controller
             $pagesize=config('common.pagesize');
             $question=Question::paginate($pagesize);
             return response()->json(["status"=>"success","data"=>$question]);
+        }
+
+        public function show()
+        {
+            $question = Activity::find('id', requset()->question);
+            $status = $question ? 'success' : 'error';
+            return response()->json(['status' => $status, 'data' => $question]);
         }
 
         public function store(QusetionRequest $request){
@@ -56,5 +64,14 @@ class QuestionController extends Controller
             }else{
                 return response()->json(["status"=>"error","msg"=>"删除失败！"]);
             }
+        }
+
+        public function randomQus()
+        {
+            $activity=Activitie::find(request('activity_id'));
+            $question_number=$activity->question_number;
+            $depot=$activity->depot;
+            $question=Question::whereIn('depot_id',$depot)->inRandomOrder()->limit($question_number);
+            return response()->json(["status"=>"success","data"=>$question]);
         }
 }
