@@ -15,7 +15,7 @@ class MiniProgramController extends Controller
 
     public function getToken()
     {
-        $app = Xcx::getApp(sesion('xcx_id'));
+        $app = Xcx::getApp(session('xcx_id'));
 
         $user = $app->auth->session(request('code'));
 
@@ -36,6 +36,7 @@ class MiniProgramController extends Controller
         $data = json_decode($data, true);
 
         $userInfo = request('userInfo');
+        $userInfo['xcx_id'] = 3;
         
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
@@ -52,7 +53,7 @@ class MiniProgramController extends Controller
 
     public function getMiniCode() 
     {
-        $app = Xcx::getApp(1);
+        $app = Xcx::getApp(3);
         $response = $app->app_code->get('path/to/page');
         $filename = $response->save('wechat/miniprogram/','minicode.png');
         return $filename;
@@ -60,15 +61,31 @@ class MiniProgramController extends Controller
 
     public function getQrCode() 
     {
-        $app = Xcx::getApp(1);
+        $app = Xcx::getApp(3);
         $response = $app->app_code->getQrCode('/path/to/page');
         $filename = $response->save('wechat/miniprogram/','appcode.png');
         return $filename;
     }
 
     public function test() {
-        $app = Xcx::getApp(1);
-        
-        dd($app->server);
+        $app = Xcx::getApp(3);
+        // $template = $app->template_message->list(0, 20);
+        // $template = $app->template_message->getTemplates(0, 1);
+
+        $template = $app->template_message->send([
+            'touser' => 'oB_Gk5PJ0yNg_ZXtuPY1WcBLJ1AU',
+            'template_id' => 'WV83mpSsgqDUaC1Ah09hN19h3LTHKe-0LCBHsNkSTCY',
+            'form_id' => '1525856350900',
+            'data' => [
+                'keyword1' => '任意门工作室',
+                'keyword2' => 'A002',
+                'keyword3' => '1桌',
+                'keyword4' => '5分钟',
+                'keyword5' => '排队中',
+                'keyword6' => '浩哥没鸡鸡',
+            ],
+        ]);
+
+        dd($template);
     }
 }

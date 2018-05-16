@@ -15,6 +15,7 @@ use App\Models\Commons\Xcx;
 use App\Http\Requests\Admin\UserRequest;
 use Validator;
 use App\Services\Token;
+use App\Models\Commons\UserXcxs;
 class UserController extends Controller
 {
     // 只出现用户
@@ -97,7 +98,7 @@ class UserController extends Controller
     }
 
     //小程序选择界面
-    public function checkXcx(UserRequest $request)
+    public function choiceXcx(UserRequest $request)
     {
         $adminiUser=AdminUser::where('id',request('user_id'))->first();
         $xcxs=Xcx::all();
@@ -127,5 +128,24 @@ class UserController extends Controller
             $delete=$adminUser->detachXcx($detach);
         }
         return response()->json(["status"=>"success","msg"=>"更新成功！"]);
+    }
+
+    public function updateSort(UserRequest $request)
+    {
+        $valid=Validator::make(request()->all(), [
+            'xcx_id'=>'required|integer',
+            'sort'=>'required|integer',
+        ]);
+        $sort=request('sort');
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
+        }
+        $update=UserXcxs::where('user_id',request('user_id'))
+            ->where('xcx_id',request('xcx_id'))->update(compact('sort'));
+        if ($update){
+            return response()->json(["status"=>"success","msg"=>"更新成功！"]);
+        }else{
+            return response()->json(["status"=>"error","msg"=>"更新失败！"]);
+        }
     }
 }

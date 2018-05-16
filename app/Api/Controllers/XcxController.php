@@ -9,17 +9,20 @@ use App\Models\Commons\XcxHasCombo;
 use App\Models\Commons\Combo;
 use App\Http\Requests\Admin\XcxRequest;
 use App\Services\Token;
+use Validator;
 class XcxController extends Controller{
 
         //用户所有小程序
         public function index()
         {
             $adminUser_id=Token::getUid();
-            $adminUser=AdminUser::where('id',$adminUser_id)->first();
-            $xcxs=$adminUser->xcxs;
-            $xcxlist=$xcxs->sortByDesc( function ($product, $key) {
-                return $product['pivot']['sort'];
-            });
+            $admin = AdminUser::where('id',$adminUser_id)->with(['xcxs' => function ($query) {
+                $page=request('page');
+                $pagesize=config('common.pagesize');
+//                $offset=($page - 1) * $pagesize;->offset($offset)->limit($pagesize)
+                $query->orderBy('sort', 'desc')->paginate($pagesize);
+            }])->first();
+            $xcxlist=$admin->xcxs;
             return response()->json(["status"=>"success","data"=>$xcxlist]);
         }
 
