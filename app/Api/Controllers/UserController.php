@@ -98,7 +98,7 @@ class UserController extends Controller
     }
 
     //小程序选择界面
-    public function checkXcx(UserRequest $request)
+    public function choiceXcx(UserRequest $request)
     {
         $adminiUser=AdminUser::where('id',request('user_id'))->first();
         $xcxs=Xcx::all();
