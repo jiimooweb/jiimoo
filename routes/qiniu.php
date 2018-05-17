@@ -22,4 +22,4 @@ Route::post('/qiniuDelete', function() {
         return response()->json(['status' => 'success', 'msg' => '删除成功']);
     }
     return response()->json(['status' => 'error', 'msg' => '删除失败']);
-})>middleware('token');
+})->middleware('token');
