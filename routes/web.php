@@ -1,6 +1,8 @@
 <?php
 
 include_once('admin.php');
+include_once('qiniu.php');
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,7 +21,6 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token',
     include_once('members.php');
     include_once('commons.php');
     include_once('queues.php');
-    include_once('qiniu.php');
 });
 
 Route::get('login',function() {
