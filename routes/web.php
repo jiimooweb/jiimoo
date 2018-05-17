@@ -30,15 +30,6 @@ Route::get('login',function() {
     return '这是登录页';
 });
 
-Route::get('cache/{id}', function($id) {
-    return Cache::get(Fan::find($id)->openid, '没有数据');
-});
-
-Route::get('/test', function() {
-    $flag =  \App\Models\Queues\Queue::where('id', 1)->pluck('flag')[0];
-    dd($flag);
-});
-
 Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
 Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
 
@@ -47,21 +38,24 @@ include_once('admin.php');
 
 Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 
-Route::group(['prefix' => '{client_type}/{xcx_flag}/wechat','middleware'=>['client', 'cors']], function() {
-    Route::post('token/getToken', '\App\Api\Controllers\MiniProgramController@getToken');
-    Route::post('token/verifyToken', '\App\Api\Controllers\MiniProgramController@verifyToken');
-    Route::post('saveInfo', '\App\Api\Controllers\MiniProgramController@saveInfo')->middleware('token');
+Route::group(['prefix' => '{client_type}/{xcx_flag}/api/wechat','middleware'=>['client', 'cors']], function() {
+    Route::post('token/getToken', '\App\Api\Controllers\Wechat\MiniProgramController@getToken');
+    Route::post('token/verifyToken', '\App\Api\Controllers\Wechat\MiniProgramController@verifyToken');
+    Route::post('saveInfo', '\App\Api\Controllers\Wechat\MiniProgramController@saveInfo')->middleware('token');
 });
 
 Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
 Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
 Route::get('wechat/test', '\App\Api\Controllers\MiniProgramController@test');
 
-Route::get('flash_token', function() {
-    $token = request()->header('token');
-    if(\App\Services\Token::verifyToken($token)) {
-        cache([$token => cache($token)], config('token.token_expire_in'));
-        return 'success';
+
+//七牛，获取上传凭证
+Route::post('getQiniuUploadToken', function() {
+    $filename = request('filename');
+    $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
+    $token = $disk->uploadToken($filename);
+    if($token) {
+        return response()->json(['status' => 'success', 'token' => $token]);
     }
-    return 'error';
+    return response()->json(['status' => 'error']); 
 });

@@ -64,11 +64,16 @@ return [
         ],
 
         'qiniu' => [
-            'driver'     => 'qiniu',
-            'access_key' => env('QINIU_ACCESS_KEY', 'xxxxxxxxxxxxxxxx'),
-            'secret_key' => env('QINIU_SECRET_KEY', 'xxxxxxxxxxxxxxxx'),
-            'bucket'     => env('QINIU_BUCKET', 'test'),
-            'domain'     => env('QINIU_DOMAIN', 'xxx.clouddn.com'), 
+            'driver'  => 'qiniu',
+            'domains' => [
+                'default'   => env('QINIU_DOMAIN', 'p8r2g6z46.bkt.clouddn.com'), 
+                'https'     => '',         //你的HTTPS域名
+                'custom'    => '', 
+            ],
+            'access_key'=> env('QINIU_ACCESS_KEY', 'UkqtQ4uH8hG0Ungulygbr6BwBbvrMhyz37T21zPx'),  //AccessKey
+            'secret_key'=> env('QINIU_SECRET_KEY', 'a9p_5iiuGTFh4dBPhoK9mmuDoqwqcfMm72ajVOlz'),  //SecretKey
+            'bucket'    => env('QINIU_BUCKET', 'rdoorweb'),  //Bucket名字
+            'notify_url'=> '',  //持久化处理回调地址
         ],
 
     ],
