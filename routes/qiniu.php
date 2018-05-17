@@ -1,6 +1,6 @@
 <?php
 
-Route::post('qiniuUpload', function() {
+Route::post('/qiniuUpload', function() {
     $file = request()->file('file');
     $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
     $fileName = session('xcx_flag').'/'.date('Y-m-d',time()).'/'.md5($file->getClientOriginalName().time().rand()).'.'.$file->getClientOriginalExtension();
@@ -14,7 +14,7 @@ Route::post('qiniuUpload', function() {
 });
 
 
-Route::post('qiniuDelete', function() {
+Route::post('/qiniuDelete', function() {
     $url = request('url');
     $filename = basename($url);
     $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
