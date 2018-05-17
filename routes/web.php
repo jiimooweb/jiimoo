@@ -61,7 +61,7 @@ Route::post('getQiniuUploadToken', function() {
 });
 
 Route::post('qiniuUpload', function() {
-    $file = $request->file('file');
+    $file = request()->file('file');
     $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
     $fileName = md5($file->getClientOriginalName().time().rand()).'.'.$file->getClientOriginalExtension();
     $bool = $disk->put($fileName, file_get_contents($file->getRealPath()));
