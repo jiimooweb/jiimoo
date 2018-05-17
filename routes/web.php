@@ -48,18 +48,6 @@ Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode')
 Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
 Route::get('wechat/test', '\App\Api\Controllers\MiniProgramController@test');
 
-
-//七牛，获取上传凭证
-Route::post('getQiniuUploadToken', function() {
-    $filename = request('filename');
-    $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
-    $token = $disk->uploadToken($filename);
-    if($token) {
-        return response()->json(['status' => 'success', 'token' => $token]);
-    }
-    return response()->json(['status' => 'error']); 
-});
-
 Route::post('qiniuUpload', function() {
     $file = request()->file('file');
     $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
