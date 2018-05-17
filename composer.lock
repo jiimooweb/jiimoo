@@ -1749,16 +1749,16 @@
         },
         {
             "name": "overtrue/laravel-wechat",
-            "version": "4.0.10",
+            "version": "4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/laravel-wechat.git",
-                "reference": "2574b1f7be8a09e0932fd6dee9aaa33d1debc4a3"
+                "reference": "0bd15267704a9932a6003df9a4e4c8d026ce7ca3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/overtrue/laravel-wechat/2574b1f7be8a09e0932fd6dee9aaa33d1debc4a3.zip",
-                "reference": "2574b1f7be8a09e0932fd6dee9aaa33d1debc4a3",
+                "url": "https://files.phpcomposer.com/files/overtrue/laravel-wechat/0bd15267704a9932a6003df9a4e4c8d026ce7ca3.zip",
+                "reference": "0bd15267704a9932a6003df9a4e4c8d026ce7ca3",
                 "shasum": ""
             },
             "require": {
@@ -1798,7 +1798,7 @@
                 "wechat",
                 "weixin"
             ],
-            "time": "2018-03-29T02:51:52+00:00"
+            "time": "2018-05-17T01:19:34+00:00"
         },
         {
             "name": "overtrue/socialite",
@@ -1852,16 +1852,16 @@
         },
         {
             "name": "overtrue/wechat",
-            "version": "4.0.23",
+            "version": "4.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/wechat.git",
-                "reference": "777be0b512bcb4d3ae6827ce3dea8f5e16e1ba70"
+                "reference": "7ff3cbb7913d7e25c9eeb2b87e7346c07e610c4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/overtrue/wechat/777be0b512bcb4d3ae6827ce3dea8f5e16e1ba70.zip",
-                "reference": "777be0b512bcb4d3ae6827ce3dea8f5e16e1ba70",
+                "url": "https://files.phpcomposer.com/files/overtrue/wechat/7ff3cbb7913d7e25c9eeb2b87e7346c07e610c4f.zip",
+                "reference": "7ff3cbb7913d7e25c9eeb2b87e7346c07e610c4f",
                 "shasum": ""
             },
             "require": {
@@ -1911,7 +1911,7 @@
                 "weixin",
                 "weixin-sdk"
             ],
-            "time": "2018-04-16T12:08:52+00:00"
+            "time": "2018-05-15T09:27:47+00:00"
         },
         {
             "name": "paragonie/random_compat",
