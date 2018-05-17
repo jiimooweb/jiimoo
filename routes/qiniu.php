@@ -11,7 +11,7 @@ Route::post('/qiniuUpload', function() {
         return response()->json(['status' => 'success', 'url' => $path]);
    }
    return response()->json(['status' => 'error']);
-});
+})->middleware('token');
 
 
 Route::post('/qiniuDelete', function() {
@@ -22,4 +22,4 @@ Route::post('/qiniuDelete', function() {
         return response()->json(['status' => 'success', 'msg' => '删除成功']);
     }
     return response()->json(['status' => 'error', 'msg' => '删除失败']);
-});
+})>middleware('token');
