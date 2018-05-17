@@ -23,6 +23,7 @@ class VerifyClientInfo
                 return redirect('login');          
             }
             session(['xcx_id' => $miniProgram->id]);
+            session(['xcx_flag' => $miniProgram->xcx_flag]);
             session(['module' => $miniProgram->module]);
             return $next($request);
 

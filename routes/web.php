@@ -1,11 +1,7 @@
 <?php
 
-use App\Models\Commons\Fan;
-use Illuminate\Support\Facades\Cache;
 
-// include_once('admin.php');
-// include_once('answer.php');
-// include_once('display.php');
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +20,7 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token',
     include_once('members.php');
     include_once('commons.php');
     include_once('queues.php');
+    include_once('qiniu.php');
 });
 
 Route::get('login',function() {
@@ -48,15 +45,3 @@ Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode')
 Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
 Route::get('wechat/test', '\App\Api\Controllers\MiniProgramController@test');
 
-Route::post('qiniuUpload', function() {
-    $file = request()->file('file');
-    $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
-    $fileName = md5($file->getClientOriginalName().time().rand()).'.'.$file->getClientOriginalExtension();
-    $bool = $disk->put($fileName, file_get_contents($file->getRealPath()));
-   // 判断是否上传成功
-   if ($bool) {
-        $path = $disk->downloadUrl($fileName);
-        return response()->json(['status' => 'success', 'url' => $path]);
-   }
-   return response()->json(['status' => 'error']);
-});
