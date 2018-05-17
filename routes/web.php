@@ -59,3 +59,18 @@ Route::post('getQiniuUploadToken', function() {
     }
     return response()->json(['status' => 'error']); 
 });
+
+Route::post('qiniuUpload', function() {
+    dd(request());
+    $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
+    $token = $disk->uploadToken();
+    foreach($images as $image) {
+        $fileName = md5($image).strrchr($image, '.');
+        $disk->put($fileName,file_get_contents($file->getRealPath()));
+    }
+   // 判断是否上传成功
+   if ($bool) {
+        $path = $disk->downloadUrl($fileName);
+        return '上传成功，图片url:'.$path;
+   }
+});
