@@ -1,7 +1,6 @@
 <?php
 
-
-
+include_once('admin.php');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,21 +26,27 @@ Route::get('login',function() {
     return '这是登录页';
 });
 
+
 Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
 Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
 
-
-include_once('admin.php');
-
 Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 
-Route::group(['prefix' => '{client_type}/{xcx_flag}/api/wechat','middleware'=>['client', 'cors']], function() {
-    Route::post('token/getToken', '\App\Api\Controllers\Wechat\MiniProgramController@getToken');
-    Route::post('token/verifyToken', '\App\Api\Controllers\Wechat\MiniProgramController@verifyToken');
-    Route::post('saveInfo', '\App\Api\Controllers\Wechat\MiniProgramController@saveInfo')->middleware('token');
+Route::group(['prefix' => '{client_type}/{xcx_flag}/wechat','middleware'=>['client', 'cors']], function() {
+    Route::post('token/getToken', '\App\Api\Controllers\MiniProgramController@getToken');
+    Route::post('token/verifyToken', '\App\Api\Controllers\MiniProgramController@verifyToken');
+    Route::post('saveInfo', '\App\Api\Controllers\MiniProgramController@saveInfo')->middleware('token');
 });
 
 Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
 Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
 Route::get('wechat/test', '\App\Api\Controllers\MiniProgramController@test');
 
+Route::get('flash_token', function() {
+    $token = request()->header('token');
+    if(\App\Services\Token::verifyToken($token)) {
+        cache([$token => cache($token)], config('token.token_expire_in'));
+        return 'success';
+    }
+    return 'error';
+});
