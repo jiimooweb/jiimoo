@@ -2,6 +2,7 @@
 
 include_once('admin.php');
 include_once('qiniu.php');
+include_once('wechat.php');
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,10 @@ Route::get('flash_token', function() {
     }
     return 'error';
 });
+
+Route::get('ticket', function() {
+    return cache('component_verify_ticket');
+});
+
+
+
