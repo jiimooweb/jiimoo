@@ -61,16 +61,8 @@ class OpenPlatformController extends Controller
 
     public function user_authorize() 
     {
-
-        $config = [
-            'app_id'   => 'wx52138ff0d64d2daa',
-            'secret'   => '91c01b5cfb4bd40bf86866fe16fd8841',
-            'token'    => 'rdoorweb',
-            'aes_key'  => 'AFwHSLBGKEZsBgRRzAdDSavgQiHAcW874HmmIisrZjw'
-            ];
-        
-        $openPlatform = \EasyWeChat\Factory::openPlatform($config);
+        $openPlatform = OpenPlatform::getApp();
         // $code = $openPlatform->createPreAuthorizationCode();
-        $openPlatform->getPreAuthorizationUrl('http://rdoorweb/jiimoo/public/callback');
+        $openPlatform->getPreAuthorizationUrl('http://rdoorweb.com/callback');
     }
 }
