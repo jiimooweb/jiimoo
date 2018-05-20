@@ -69,6 +69,8 @@ class OpenPlatformController extends Controller
 
     public function callback() 
     {
-        return '回调';
+        $openPlatform = OpenPlatform::getApp();        
+        $server = $openPlatform->getAuthorizers(0, 100);
+        dd($server);
     }
 }
