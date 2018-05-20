@@ -63,7 +63,7 @@ class OpenPlatformController extends Controller
     {
         // $openPlatform = OpenPlatform::getApp();
         // $url = $openPlatform->getPreAuthorizationUrl('http://rdoorweb.com/wechat/callback');
-        return Header("Location:https://www.baidu.com");
+        header("Location:https://www.baidu.com");
     }
 
     public function callback() 
