@@ -62,10 +62,8 @@ class OpenPlatformController extends Controller
     public function user_authorize() 
     {
         $openPlatform = OpenPlatform::getApp();
-        $code = $openPlatform->createPreAuthorizationCode();
-        dd($code);
-        $server = $openPlatform->getPreAuthorizationUrl('http://rdoorweb.com/wechat/callback');
-        dd($server);
+        $url = $openPlatform->getPreAuthorizationUrl('http://rdoorweb.com/wechat/callback');
+        header($url);
     }
 
     public function callback() 
