@@ -63,6 +63,7 @@ class OpenPlatformController extends Controller
     {
         $openPlatform = OpenPlatform::getApp();
         $code = $openPlatform->createPreAuthorizationCode();
+        dd($code);
         // $openPlatform->getPreAuthorizationUrl('http://rdoorweb.com/wechat/callback');
     }
 
