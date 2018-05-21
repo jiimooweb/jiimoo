@@ -16,7 +16,6 @@ class OpenPlatformController extends Controller
         $server = $openPlatform->server;
         // 处理授权成功事件
         $server->push(function ($message) {
-            OpenPlatform::initOpenPlayform();
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
@@ -44,6 +43,7 @@ class OpenPlatformController extends Controller
     public function authorized() 
     {
         //保存数据
+        OpenPlatform::initOpenPlayform();
 
         $openPlatform = OpenPlatform::getApp();
         
