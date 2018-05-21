@@ -30,10 +30,10 @@ class OpenPlatform
 
         $data = [
             "action" =>  $method,
-            "requestdomain" => ["https://www.rdoorweb.com"],
-            "wsrequestdomain" => ["wss://www.rdoorweb.com"],
-            "uploaddomain" => ["https://www.rdoorweb.com"],
-            "downloaddomain"=> ["https://www.rdoorweb.com"],
+            "requestdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+            "wsrequestdomain" => ["wss://www.rdoorweb.com","wss://www.rdoorweb.com"],
+            "uploaddomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+            "downloaddomain"=> ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
         ];
 
         return self::openPlatformPost($url, $data);
