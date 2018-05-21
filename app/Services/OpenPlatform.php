@@ -55,7 +55,7 @@ class OpenPlatform
     public static function deleteAuthorizerCache($appid)
     {
         Cache::forget($appid.'_authorizer_access_token');
-        Cache::forget($appid.'authorizer_refresh_token');
+        Cache::forget($appid.'_authorizer_refresh_token');
         Cache::forget($appid.'_func_info');
     }
 
