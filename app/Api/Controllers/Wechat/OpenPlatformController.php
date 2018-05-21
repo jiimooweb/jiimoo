@@ -54,9 +54,8 @@ class OpenPlatformController extends Controller
 
         $miniProgram = $openPlatform->getAuthorizer($authorizer['authorizer_appid']);
 
-        Cache::put('miniProgram', $miniProgram, 60);
-        dd(Cache::get('miniProgram'));
-        OpenPlatform::saveMiniProgram($miniProgram);        
+        // Cache::put('miniProgram', $miniProgram, 60);
+                
 
         dd($miniProgram);
         
@@ -64,9 +63,11 @@ class OpenPlatformController extends Controller
 
     public function token() 
     {
-        $appid = 'wxc1fb7bd6c21cb0cc';
-        $authorizer = OpenPlatform::getAuthorizerAccessToken($appid);
-        dd($authorizer);        
+        dd(Cache::get('miniProgram'));
+        OpenPlatform::saveMiniProgram($miniProgram);
+        // $appid = 'wxc1fb7bd6c21cb0cc';
+        // $authorizer = OpenPlatform::getAuthorizerAccessToken($appid);
+        // dd($authorizer);        
         
     }
 }
