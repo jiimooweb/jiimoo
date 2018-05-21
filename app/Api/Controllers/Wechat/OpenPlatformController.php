@@ -93,8 +93,8 @@ class OpenPlatformController extends Controller
         $refresh_token = $authorizer['authorizer_refresh_token'];
         $expires_in = $authorizer['expires_in'] / 60;
         $func_info = serialize($authorizer['func_info']);
-        cache($appid, $access_token, $expires_in);
-        dd(cache($appid));
+        Cache::put($appid, $access_token, $expires_in);
+        dd(Cache::get($appid));
         dd($infos);
     }
 
