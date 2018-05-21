@@ -99,7 +99,7 @@ class OpenPlatformController extends Controller
 
     public function token() 
     {
-        $openPlatform = Xcx::getApp(3);      
+        $openPlatform = \App\Models\Commons\Xcx::getApp(3);      
         $accessToken = $openPlatform->access_token->getToken();
         dd($accessToken);
         
