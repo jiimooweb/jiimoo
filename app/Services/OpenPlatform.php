@@ -28,6 +28,7 @@ class OpenPlatform
     public static function initOpenPlayform() 
     {
         $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
+        dd($authorizer);
         //缓存authorizer_access_token、authorizer_refresh_token、func_info
         self::setAuthorizerCache($authorizer['authorizer_appid'], $authorizer['authorizer_access_token'] ,$authorizer['authorizer_refresh_token'],serialize($authorizer['func_info']));
     }
@@ -46,7 +47,7 @@ class OpenPlatform
                 "downloaddomain"=> ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
             ];
         }
-        
+
         return self::openPlatformPost($url, json_encode($data));
     }
 
