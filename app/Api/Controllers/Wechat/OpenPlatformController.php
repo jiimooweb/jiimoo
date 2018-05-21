@@ -53,6 +53,8 @@ class OpenPlatformController extends Controller
         // $miniProgram = $openPlatform->miniProgram($authorizer['authorizer_appid'], $authorizer['authorizer_refresh_token']);
 
         $miniProgram = $openPlatform->getAuthorizer($authorizer['authorizer_appid']);
+
+        dd($miniProgram);
         OpenPlatform::saveMiniProgram($miniProgram);        
 
         dd($miniProgram);
