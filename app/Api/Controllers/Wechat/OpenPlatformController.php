@@ -17,7 +17,14 @@ class OpenPlatformController extends Controller
         // 处理授权成功事件
         
         $server->push(function ($message) {
-           
+           //保存数据
+            $authorizer = OpenPlatform::initOpenPlayform();
+
+            $openPlatform = OpenPlatform::getApp();
+
+            $miniProgram = $openPlatform->getAuthorizer($message['authorizer_appid']);
+                    
+            OpenPlatform::saveMiniProgram($miniProgram);
 
         }, Guard::EVENT_AUTHORIZED);
 
@@ -45,27 +52,17 @@ class OpenPlatformController extends Controller
 
     public function authorized() 
     {
-        //保存数据
-        $authorizer = OpenPlatform::initOpenPlayform();
-
-        $openPlatform = OpenPlatform::getApp();
-
-        // $miniProgram = $openPlatform->miniProgram($authorizer['authorizer_appid'], $authorizer['authorizer_refresh_token']);
-
-        $miniProgram = $openPlatform->getAuthorizer($authorizer['authorizer_appid']);
-                
-        OpenPlatform::saveMiniProgram($miniProgram);
+        
 
         return 'success';
     }
 
     public function token() 
     {
-        $miniProgram = Cache::get('miniProgram');
-        OpenPlatform::saveMiniProgram($miniProgram);
-        // $appid = 'wxc1fb7bd6c21cb0cc';
-        // $authorizer = OpenPlatform::getAuthorizerAccessToken($appid);
-        // dd($authorizer);        
+        $miniProgram = Xcx::find(33);
+        $openPlatform = OpenPlatform::getApp();
+        $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
+        dd($server->tester->list());
         
     }
 }
