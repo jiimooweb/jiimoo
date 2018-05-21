@@ -96,4 +96,12 @@ class OpenPlatformController extends Controller
         // $server = $openPlatform->getAuthorizer(config('wechat.open_platform.default.app_id'));
         dd($server);
     }
+
+    public function token() 
+    {
+        $openPlatform = OpenPlatform::getApp();      
+        $accessToken = $openPlatform->access_token->getToken();
+        dd($accessToken);
+        
+    }
 }
