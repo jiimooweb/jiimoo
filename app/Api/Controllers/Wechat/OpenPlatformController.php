@@ -49,7 +49,7 @@ class OpenPlatformController extends Controller
     public function token() 
     {
         $appid = 'wxc1fb7bd6c21cb0cc';
-        deleteAuthorizerCache($appid);
+        OpenPlatform::deleteAuthorizerCache($appid);
         $authorizer = OpenPlatform::getAuthorizerCache($appid);
         dd($authorizer);        
         
