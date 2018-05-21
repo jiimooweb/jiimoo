@@ -88,8 +88,11 @@ class OpenPlatformController extends Controller
     {
         $openPlatform = OpenPlatform::getApp();        
         $info = $openPlatform->handleAuthorize();
+        $appid = $info['authorization_info']['authorizer_appid'];
+        $refresh_token = $info['authorization_info']['authorizer_refresh_token'];
+        $server = $openPlatform->getAuthorizer($appid);
         // $miniProgram = $openPlatform->miniProgram($server['authorization_info']['authorizer_appid'], $server['authorization_info']['authorizer_refresh_token']);
         // $server = $openPlatform->getAuthorizer(config('wechat.open_platform.default.app_id'));
-        dd($info);
+        dd($server);
     }
 }
