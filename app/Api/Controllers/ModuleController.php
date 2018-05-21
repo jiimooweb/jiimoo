@@ -19,9 +19,14 @@ class ModuleController extends Controller
          return response()->json(["status"=>"success","data"=>$module]);
      }
 
+     public function parentCombox(){
+         $module=Module::get();
+         return response()->json(["status"=>"success","data"=>$module]);
+     }
+
      public function store(ModuleRequest $request)
      {
-         $save=Module::create(request(['name','desc']));
+         $save=Module::create(request(['name','desc','parent']));
          if ($save){
              return response()->json(["status"=>"success","msg"=>"保存成功！"]);
          }else{
@@ -32,7 +37,7 @@ class ModuleController extends Controller
      public function update(ModuleRequest $request)
      {
          $module_id=request()->module;
-         $update=Module::where('id',$module_id)->update(request(['name','desc']));
+         $update=Module::where('id',$module_id)->update(request(['name','desc','parent']));
          if ($update){
              return response()->json(["status"=>"success","msg"=>"修改成功！"]);
          }else{

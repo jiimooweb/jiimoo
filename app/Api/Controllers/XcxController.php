@@ -3,6 +3,7 @@ namespace App\Api\Controllers;
 
 
 use App\Api\Controllers\Controller;
+use App\Models\Commons\Module;
 use App\Models\Commons\Xcx;
 use App\Models\Commons\AdminUser;
 use App\Models\Commons\XcxHasCombo;
@@ -63,7 +64,7 @@ class XcxController extends Controller{
             $xcx_flag=request()->xcx_flag;
             $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
             $hasCombo=XcxHasCombo::where('xcx_id', $xcx->id)->first();
-            $hasCombo=json_decode($hasCombo->modules);
+            $hasCombo=json_decode($hasCombo->modules,true);
             return response()->json(["status"=>"success","data"=>$hasCombo]);
         }
 
@@ -79,7 +80,7 @@ class XcxController extends Controller{
             }
             $hasCombo=XcxHasCombo::where('xcx_id', $xcx->id)->first();
             if($hasCombo){
-                $hasCombo=json_decode($hasCombo->modules);
+                $hasCombo=json_decode($hasCombo->modules,true);
             }else{
                 $hasCombo=[];
             }
@@ -95,6 +96,8 @@ class XcxController extends Controller{
             if ($reCombos&&$reModules){
                 $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
                 $xcx_id=$xcx->id;
+                $reCombos=Combo::findMany($reCombos);
+                $reModules=Module::findMany($reModules);
                 $modules=["parent"=>$reCombos,'sub'=>$reModules];
                 $modules=json_encode($modules);
                 $save=XcxHasCombo::create(compact('xcx_id','modules'));
