@@ -50,8 +50,8 @@ class OpenPlatformController extends Controller
     {
         $appid = 'wxc1fb7bd6c21cb0cc';
         $authorizer = OpenPlatform::getAuthorizerCache($appid);
-        $members = OpenPlatform::miniProgramMemberAuth($authorizer['authorizer_access_token']);
-        // $members = OpenPlatform::miniProgramBindTester($authorizer['authorizer_access_token'], '');
+        // $members = OpenPlatform::miniProgramMemberAuth($authorizer['authorizer_access_token']);
+        $members = OpenPlatform::miniProgramBindTester($authorizer['authorizer_access_token'], 'Stan_ff');
         
         dd($members);
         

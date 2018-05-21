@@ -28,7 +28,7 @@ class OpenPlatform
     public static function initOpenPlayform() 
     {
         $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
-        self::setAuthorizerCache($authorizer['authorizer_appid'], $authorizer['authorizer_access_token'] ,$authorizer['authorizer_refresh_token'],serialize($authorizer['func_info']));
+        self::setAuthorizerCache($authorizer);
     }
 
     public static function miniProgramModifyDomain($access_token, $method)
@@ -67,11 +67,12 @@ class OpenPlatform
         return self::openPlatformPost($url, json_encode(['action' =>'get_experiencer']));
     }
     
-    public static function setAuthorizerCache($appid, $access_token, $refresh_token, $func_info)
+    public static function setAuthorizerCache($authorizer)
     {    
-        Cache::put($appid.'_authorizer_access_token', $access_token, 120);
-        Cache::forever($appid.'authorizer_refresh_token', $refresh_token);
-        Cache::forever($appid.'_func_info', $func_info);  
+        $appid = $authorizer['authorizer_appid'];
+        Cache::put($appid.'_authorizer_access_token', $authorizer['authorizer_access_token'], 120);
+        Cache::forever($appid.'authorizer_refresh_token', $authorizer['authorizer_refresh_token']);
+        Cache::forever($appid.'_func_info', serialize($authorizer['func_info']));  
     }
 
     public static function deleteAuthorizerCache($appid)
