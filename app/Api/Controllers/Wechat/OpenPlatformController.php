@@ -87,7 +87,7 @@ class OpenPlatformController extends Controller
     public function authorized() 
     {
         $openPlatform = OpenPlatform::getApp();        
-        $server = $openPlatform->getAuthorizers(0, 100);
+        $server = $openPlatform->getAuthorizer(config('wechat.open_platform.default.app_id'));
         dd($server);
     }
 }
