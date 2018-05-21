@@ -58,6 +58,14 @@ class XcxController extends Controller{
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
 
+        public function hasCombo()
+        {
+            $xcx_flag=request()->xcx_flag;
+            $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
+            $hasCombo=XcxHasCombo::where('xcx_id', $xcx->id)->first();
+            $hasCombo=json_decode($hasCombo->modules);
+            return response()->json(["status"=>"success","data"=>$hasCombo]);
+        }
 
         public function choiceCombo()
         {
@@ -76,12 +84,13 @@ class XcxController extends Controller{
 
         public function storeCombo(XcxRequest $request){
             $xcx_flag=request()->xcx_flag;
-            $data=request(['name','logoUrl','star_time','end_time']);
+            $data=request(['name','logoUrl','star_time','end_time','apply_modules']);
             $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
             $reCombos=request('combos');
             $reModules=request('modules');
             if ($reCombos&&$reModules){
                 $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
+                $xcx_id=$xcx->id;
                 $modules=["parent"=>$reCombos,'sub'=>$reModules];
                 $modules=json_encode($modules);
                 $save=XcxHasCombo::create(compact('xcx_id','modules'));
