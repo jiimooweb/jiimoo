@@ -52,13 +52,13 @@ class OpenPlatform
     public static function miniProgramBindTester($access_token, $wechatid)
     {
         $url = "https://api.weixin.qq.com/wxa/bind_tester?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['wechatid' =>$wechatid]));
+        return self::openPlatformPost($url, json_encode(['wechatid' =>$userstr]));
     }
 
     public static function miniProgramUnbindTester($access_token, $wechatid)
     {
         $url = "https://api.weixin.qq.com/wxa/unbind_tester?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['wechatid' =>$wechatid]));
+        return self::openPlatformPost($url, json_encode(['userstr' =>$userstr]));
     }
 
     public static function miniProgramMemberAuth($access_token)
@@ -67,12 +67,10 @@ class OpenPlatform
         return self::openPlatformPost($url, json_encode(['action' =>'get_experiencer']));
     }
     
-    public static function setAuthorizerCache($authorizer)
+    public static function setAuthorizerAccessToken($authorizer)
     {    
         $appid = $authorizer['authorizer_appid'];
         Cache::put($appid.'_authorizer_access_token', $authorizer['authorizer_access_token'], 120);
-        Cache::forever($appid.'authorizer_refresh_token', $authorizer['authorizer_refresh_token']);
-        Cache::forever($appid.'_func_info', serialize($authorizer['func_info']));  
     }
 
     public static function deleteAuthorizerCache($appid)
@@ -86,8 +84,6 @@ class OpenPlatform
     {
         return [
             'authorizer_access_token' => Cache::get($appid.'_authorizer_access_token'),
-            'authorizer_refresh_token' => Cache::get($appid.'_authorizer_refresh_token'),
-            'func_info' => Cache::get($appid.'_func_info'),
         ];
     }
 }
