@@ -15,7 +15,9 @@ class OpenPlatformController extends Controller
         $openPlatform = OpenPlatform::getApp();
         $server = $openPlatform->server;
         // 处理授权成功事件
+        
         $server->push(function ($message) {
+            OpenPlatform::initOpenPlayform();
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
@@ -35,7 +37,6 @@ class OpenPlatformController extends Controller
 
     public function user_authorize() 
     {
-        $openPlatform = OpenPlatform::getApp();
         $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/authorized');
         return view('/wechat',['url' => $url]);
     }
@@ -52,7 +53,7 @@ class OpenPlatformController extends Controller
     public function token() 
     {
         $appid = 'wxc1fb7bd6c21cb0cc';
-        $authorizer = OpenPlatform::getAuthorizerCache($appid);
+        $authorizer = OpenPlatform::getAuthorizerAccessToken($appid);
         dd($authorizer);        
         
     }

@@ -28,7 +28,7 @@ class OpenPlatform
     public static function initOpenPlayform() 
     {
         $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
-        self::setAuthorizerCache($authorizer);
+        self::setAuthorizerAccessToken($authorizer);
     }
 
     public static function miniProgramModifyDomain($access_token, $method)
@@ -73,14 +73,7 @@ class OpenPlatform
         Cache::put($appid.'_authorizer_access_token', $authorizer['authorizer_access_token'], 120);
     }
 
-    public static function deleteAuthorizerCache($appid)
-    {
-        Cache::forget($appid.'_authorizer_access_token');
-        Cache::forget($appid.'_authorizer_refresh_token');
-        Cache::forget($appid.'_func_info');
-    }
-
-    public static function getAuthorizerCache($appid)
+    public static function getAuthorizerAccessToken($appid)
     {
         return [
             'authorizer_access_token' => Cache::get($appid.'_authorizer_access_token'),
