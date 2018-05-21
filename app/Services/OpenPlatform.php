@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
+
 class OpenPlatform 
 {
 
@@ -42,5 +44,27 @@ class OpenPlatform
         return self::openPlatformPost($url, json_encode($data));
         
     }
+    
+    public static function setAuthorizerCache($appid, $access_token, $refresh_token, $func_info)
+    {    
+        Cache::put($appid.'_authorizer_access_token', $access_token, 120);
+        Cache::forever($appid.'authorizer_refresh_token', $refresh_token);
+        Cache::forever($appid.'_func_info', $func_info);  
+    }
 
+    public static function deleteAuthorizerCache($appid)
+    {
+        Cache::forget($appid.'_authorizer_access_token');
+        Cache::forget($appid.'authorizer_refresh_token');
+        Cache::forget($appid.'_func_info');
+    }
+
+    public static function getAuthorizerCache($appid)
+    {
+        return [
+            'authorizer_access_token' => Cache::get($appid.'_authorizer_access_token'),
+            'authorizer_refresh_token' => Cache::get($appid.'_authorizer_refresh_token'),
+            'func_info' => Cache::get($appid.'_func_info'),
+        ];
+    }
 }
