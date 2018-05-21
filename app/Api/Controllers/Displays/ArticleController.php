@@ -14,10 +14,7 @@ class ArticleController extends Controller
     public function index() 
     {
         $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(config('common.pagesize'));
-        $articles->load('category');                
-        foreach($articles as &$article) {
-            $article['thumb'] = env('APP_URL').$article['thumb'];
-        }
+        $articles->load('category');        
 
         return response()->json(['status' => 'success', 'data' => $articles]);
     }
@@ -26,11 +23,9 @@ class ArticleController extends Controller
     public function store(ArticleRequest $request) 
     {   
         $data = request([
-            'title', 'cate_id', 'author', 'click', 'content'
+            'title', 'cate_id', 'author', 'click', 'content', 'thumb'
         ]);
 
-        $data['thumb'] = '/storage/'.request()->file('thumb')->storePublicly(md5(time()));
-        
         if(Article::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                            
         }
@@ -50,10 +45,8 @@ class ArticleController extends Controller
     public function update(ArticleRequest $request)
     {
         $data = request([
-            'title', 'cate_id', 'author', 'click', 'content'
+            'title', 'cate_id', 'author', 'click', 'content', 'thumb'
         ]);
-        
-        $data['thumb'] = '/storage/'.request()->file('thumb')->storePublicly(md5(time()));
         
         if(Article::where('id', request()->article)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                

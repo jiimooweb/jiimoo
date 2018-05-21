@@ -13,21 +13,14 @@ class SwiperController extends Controller
     public function index() 
     {
         $swipers = Swiper::where('display', 1)->orderBy('created_at','asc')->get();
-
-        foreach($swipers as &$swiper) {
-            $swiper['image'] = env('APP_URL').$swiper['image'];
-        }
-
         return response()->json(['status' => 'success', 'data' => $swipers]);
     }
 
     public function store(SwiperRequest $request) 
     {   
         $data = request([
-            'url', 'remake', 'display'
+            'url', 'remake', 'display', 'image'
         ]);
-
-        $data['image'] = '/storage/'.request()->file('image')->storePublicly(md5(time()));
         
         if(Swiper::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
@@ -48,11 +41,9 @@ class SwiperController extends Controller
         // TODO:判断更新权限
         
         $data = request([
-            'url', 'remake', 'display'
+            'url', 'remake', 'display', 'image'
         ]);
 
-        $data['image'] = '/storage/'.request()->file('image')->storePublicly(md5(time()));
-        
         if(Swiper::where('id', request()->swiper)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
         }
