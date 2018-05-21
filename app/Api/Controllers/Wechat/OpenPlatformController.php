@@ -56,9 +56,20 @@ class OpenPlatformController extends Controller
     public function event_authorize(){
         $openPlatform = OpenPlatform::getApp();
         $server = $openPlatform->server;
+        // 处理授权成功事件
         $server->push(function ($message) {
-            dd($message['AuthorizerAppid']);
+            \Log::info('处理授权成功事件:'.$message['AuthorizerAppid']);
         }, Guard::EVENT_AUTHORIZED);
+
+        // 处理授权更新事件
+        $server->push(function ($message) {
+            \Log::info('处理授权更新事件:'.$message['AuthorizerAppid']);
+        }, Guard::EVENT_UPDATE_AUTHORIZED);
+
+        // 处理授权取消事件
+        $server->push(function ($message) {
+            \Log::info('处理授权取消事件:'.$message['AuthorizerAppid']);            
+        }, Guard::EVENT_UNAUTHORIZED);
 
         return $server->serve();
     }
