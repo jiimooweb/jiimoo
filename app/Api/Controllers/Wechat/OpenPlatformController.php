@@ -44,7 +44,6 @@ class OpenPlatformController extends Controller
     public function authorized() 
     {
         OpenPlatform::initOpenPlayform();
-        dd($infos);
     }
 
     public function token() 
