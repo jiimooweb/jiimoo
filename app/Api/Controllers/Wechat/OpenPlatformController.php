@@ -16,7 +16,7 @@ class OpenPlatformController extends Controller
         $server = $openPlatform->server;
         // 处理授权成功事件
         $server->push(function ($message) {
-            \Log::info('处理授权成功事件:'.$message['AuthorizerAppid']);
+            OpenPlatform::initOpenPlayform();
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
@@ -43,13 +43,15 @@ class OpenPlatformController extends Controller
 
     public function authorized() 
     {
-        OpenPlatform::initOpenPlayform();
+        //保存数据
+
+        $openPlatform = OpenPlatform::getApp();
+        
     }
 
     public function token() 
     {
         $appid = 'wxc1fb7bd6c21cb0cc';
-        OpenPlatform::deleteAuthorizerCache($appid);
         $authorizer = OpenPlatform::getAuthorizerCache($appid);
         dd($authorizer);        
         
