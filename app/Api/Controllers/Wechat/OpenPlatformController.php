@@ -93,7 +93,7 @@ class OpenPlatformController extends Controller
         $refresh_token = $authorizer['authorizer_refresh_token'];
         $expires_in = $authorizer['expires_in'] / 60;
         cache($appid, compact('access_token','refresh_token'), $expires_in);
-        dd($appid);
+        dd(cache($appid));
         dd($infos);
     }
 
