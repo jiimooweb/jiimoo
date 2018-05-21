@@ -59,7 +59,7 @@ class OpenPlatformController extends Controller
 
     public function token() 
     {
-        $miniProgram = Xcx::find(33);
+        $miniProgram = \App\Models\Commons\Xcx::find(33);
         $openPlatform = OpenPlatform::getApp();
         $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
         dd($server->tester->list());
