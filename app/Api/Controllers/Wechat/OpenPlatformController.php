@@ -5,6 +5,7 @@ namespace App\Api\Controllers\Wechat;
 use App\Services\OpenPlatform;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use EasyWeChat\OpenPlatform\Server\Guard;
 
 
 class OpenPlatformController extends Controller
@@ -54,7 +55,16 @@ class OpenPlatformController extends Controller
 
     public function event_authorize(){
         $openPlatform = OpenPlatform::getApp();
-        return $openPlatform->server->serve();
+        $server = $openPlatform->server;
+        $server->push(function ($message) {
+            $openPlatform = OpenPlatform::getApp();        
+            $server = $openPlatform->getAuthorizers(0, 100);
+            dd($server);
+        }, Guard::EVENT_AUTHORIZED);
+
+        return $server->serve();
+        
+    
     }
 
     
@@ -62,15 +72,13 @@ class OpenPlatformController extends Controller
     public function user_authorize() 
     {
         $openPlatform = OpenPlatform::getApp();
-        $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/callback');
+        $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/authorized');
         // return redirect($url);
         return view('/wechat',['url' => $url]);
     }
 
-    public function callback() 
+    public function authorized() 
     {
-        $openPlatform = OpenPlatform::getApp();        
-        $server = $openPlatform->getAuthorizers(0, 100);
-        dd($server);
+        
     }
 }
