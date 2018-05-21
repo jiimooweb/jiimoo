@@ -100,7 +100,7 @@ class OpenPlatformController extends Controller
     public function token() 
     {
         $openPlatform = OpenPlatform::getApp();      
-        $accessToken = $openPlatform->access_token->getToken();
+        $accessToken = $openPlatform->access_token->getToken(true);
         dd($accessToken);
         
     }
