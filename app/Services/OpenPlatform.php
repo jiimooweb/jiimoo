@@ -95,6 +95,6 @@ class OpenPlatform
         $authorizer_info['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $authorizer_info['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
         // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
-        return Xcx::where('id', 33)->update($data) ? true : false;
+        return Xcx::where('id', 33)->update($authorizer_info) ? true : false;
     }
 }
