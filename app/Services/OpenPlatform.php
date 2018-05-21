@@ -98,7 +98,7 @@ class OpenPlatform
         $data['business_info'] = serialize($authorizer_info['business_info']);
         $data['network'] = serialize($authorizer_info['MiniProgramInfo']['network']);
         $data['categories'] = serialize($authorizer_info['MiniProgramInfo']['categories']);
-        $data['visit_status'] = serialize($authorizer_info['MiniProgramInfo']['visit_status']);
+        $data['visit_status'] = $authorizer_info['MiniProgramInfo']['visit_status'];
         $data['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
