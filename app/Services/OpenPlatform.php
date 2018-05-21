@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Commons\Xcx;
 use Illuminate\Support\Facades\Cache;
 
 class OpenPlatform 
