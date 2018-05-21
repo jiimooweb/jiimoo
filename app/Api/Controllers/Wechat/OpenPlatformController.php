@@ -54,7 +54,8 @@ class OpenPlatformController extends Controller
 
         $miniProgram = $openPlatform->getAuthorizer($authorizer['authorizer_appid']);
 
-        dd($miniProgram);
+        cache('miniProgram', $miniProgram, 60);
+        dd(cache('miniProgram'));
         OpenPlatform::saveMiniProgram($miniProgram);        
 
         dd($miniProgram);
