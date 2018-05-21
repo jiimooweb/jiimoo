@@ -40,6 +40,8 @@ class OpenPlatformController extends Controller
     {
         $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/authorized');
         return view('/wechat',['url' => $url]);
+
+        
     }
 
     public function authorized() 
@@ -49,7 +51,10 @@ class OpenPlatformController extends Controller
 
         $openPlatform = OpenPlatform::getApp();
 
-        $miniProgram = $openPlatform->miniProgram($authorizer['authorizer_appid'], $authorizer['authorizer_refresh_token']);
+        // $miniProgram = $openPlatform->miniProgram($authorizer['authorizer_appid'], $authorizer['authorizer_refresh_token']);
+
+        $miniProgram = $openPlatform->getAuthorizer($authorizer['authorizer_appid']);
+        $openPlatform->saveMiniProgram($miniProgram);        
 
         dd($miniProgram);
         

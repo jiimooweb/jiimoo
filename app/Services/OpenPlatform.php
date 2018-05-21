@@ -80,4 +80,20 @@ class OpenPlatform
             'authorizer_access_token' => Cache::get($appid.'_authorizer_access_token'),
         ];
     }
+
+    public function saveMiniProgram($miniProgram)
+    {
+        $authorizer_info = $miniProgram['authorizer_info'];
+        $authorizer_info['service_type_info'] = $authorizer_info['service_type_info']['id'];
+        $authorizer_info['verify_type_info'] = $authorizer_info['verify_type_info']['id'];
+        $authorizer_info['business_info'] = serialize($authorizer_info['business_info']);
+        $authorizer_info['network'] = serialize($authorizer_info['MiniProgramInfo']['network']);
+        $authorizer_info['categories'] = serialize($authorizer_info['MiniProgramInfo']['categories']);
+        $authorizer_info['visit_status'] = serialize($authorizer_info['MiniProgramInfo']['visit_status']);
+        $authorizer_info['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
+        $authorizer_info['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
+        $authorizer_info['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
+        // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
+        return Xcx::where('id', 33)->update($data) ? true : false;
+    }
 }
