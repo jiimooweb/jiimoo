@@ -84,18 +84,26 @@ class OpenPlatform
 
     public static function saveMiniProgram($miniProgram)
     {
+        $data = [];
         $authorizer_info = $miniProgram['authorizer_info'];
-        $authorizer_info['service_type_info'] = $authorizer_info['service_type_info']['id'];
-        $authorizer_info['verify_type_info'] = $authorizer_info['verify_type_info']['id'];
-        $authorizer_info['business_info'] = serialize($authorizer_info['business_info']);
-        $authorizer_info['network'] = serialize($authorizer_info['MiniProgramInfo']['network']);
-        $authorizer_info['categories'] = serialize($authorizer_info['MiniProgramInfo']['categories']);
-        $authorizer_info['visit_status'] = serialize($authorizer_info['MiniProgramInfo']['visit_status']);
-        $authorizer_info['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
-        $authorizer_info['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
-        $authorizer_info['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
+        $data['head_img'] = $authorizer_info['head_img'];
+        $data['nick_name'] = $authorizer_info['nick_name'];
+        $data['user_name'] = $authorizer_info['user_name'];
+        $data['qrcode_url'] = $authorizer_info['qrcode_url'];
+        $data['principal_name'] = $authorizer_info['principal_name'];
+        $data['signature'] = $authorizer_info['signature'];
+        $data['qrcode_url'] = $authorizer_info['qrcode_url'];
+        $data['service_type_info'] = $authorizer_info['service_type_info']['id'];
+        $data['verify_type_info'] = $authorizer_info['verify_type_info']['id'];
+        $data['business_info'] = serialize($authorizer_info['business_info']);
+        $data['network'] = serialize($authorizer_info['MiniProgramInfo']['network']);
+        $data['categories'] = serialize($authorizer_info['MiniProgramInfo']['categories']);
+        $data['visit_status'] = serialize($authorizer_info['MiniProgramInfo']['visit_status']);
+        $data['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
+        $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
+        $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
         dd($authorizer_info);
         // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
-        // return Xcx::where('id', 33)->update($authorizer_info) ? true : false;
+        return Xcx::where('id', 33)->update($authorizer_info) ? true : false;
     }
 }
