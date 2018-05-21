@@ -81,7 +81,7 @@ class OpenPlatform
         ];
     }
 
-    public function saveMiniProgram($miniProgram)
+    public static function saveMiniProgram($miniProgram)
     {
         $authorizer_info = $miniProgram['authorizer_info'];
         $authorizer_info['service_type_info'] = $authorizer_info['service_type_info']['id'];
