@@ -11,7 +11,7 @@ class OpenPlatform
         return $openPlatform;
     }
 
-    public static function openPlatformPost($url,$data) 
+    public static function openPlatformPost($url,$data = '') 
     {   
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -27,14 +27,17 @@ class OpenPlatform
     public static function miniProgramModifyDomain($access_token, $method)
     {
         $url = "https://api.weixin.qq.com/wxa/modify_domain?access_token=" . $access_token;
-
-        $data = [
-            "action" =>  $method,
-            "requestdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-            "wsrequestdomain" => ["wss://www.rdoorweb.com","wss://www.rdoorweb.com"],
-            "uploaddomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-            "downloaddomain"=> ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-        ];
+        if($method == 'get') {
+            $data = ["action" =>  $method];
+        }else {
+            $data = [
+                "action" =>  $method,
+                "requestdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+                "wsrequestdomain" => ["wss://www.rdoorweb.com","wss://www.rdoorweb.com"],
+                "uploaddomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+                "downloaddomain"=> ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+            ];
+        }
 
         return self::openPlatformPost($url, json_encode($data));
         
