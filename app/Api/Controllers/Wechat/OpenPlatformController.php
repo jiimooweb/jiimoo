@@ -57,14 +57,10 @@ class OpenPlatformController extends Controller
         $openPlatform = OpenPlatform::getApp();
         $server = $openPlatform->server;
         $server->push(function ($message) {
-            $openPlatform = OpenPlatform::getApp();        
-            $server = $openPlatform->getAuthorizers(0, 100);
-            dd($server);
+            dd($message['AuthorizerAppid']);
         }, Guard::EVENT_AUTHORIZED);
 
         return $server->serve();
-        
-    
     }
 
     
@@ -79,6 +75,8 @@ class OpenPlatformController extends Controller
 
     public function authorized() 
     {
-        
+        $openPlatform = OpenPlatform::getApp();        
+        $server = $openPlatform->getAuthorizers(0, 100);
+        dd($server);
     }
 }
