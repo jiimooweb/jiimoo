@@ -11,48 +11,6 @@ use EasyWeChat\OpenPlatform\Server\Guard;
 class OpenPlatformController extends Controller
 {
 
-
-    // public function eventAuthorize() {
-
-    //     $token = config('wechat.open_platform.default.token');
-    //     $encodingAesKey = config('wechat.open_platform.default.aes_key');  
-    //     $appId = config('wechat.open_platform.default.app_id');        
-        
-    //     $timeStamp  = empty($_GET['timestamp']) ? ""  : trim($_GET['timestamp']) ;  
-    //     $nonce      = empty($_GET['nonce'])     ? ""    : trim($_GET['nonce']) ;  
-    //     $msg_sign   = empty($_GET['msg_signature']) ? ""    : trim($_GET['msg_signature']) ;  
-
-    //     //接收XML数据  
-    //     $encryptMsg = file_get_contents('php://input');  
-    //     $pc = new WXBizMsgCrypt($token, $encodingAesKey, $appId);  
-    //     $xml_tree = new DOMDocument();  
-    //     $xml_tree->loadXML($encryptMsg);  
-    //     $array_e = $xml_tree->getElementsByTagName('Encrypt');  
-    //     $encrypt = $array_e->item(0)->nodeValue;  
-    //     $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";  
-    //     $from_xml = sprintf($format, $encrypt);  
-
-    //     //利用微信官方给的方法解密，$msg就是解密后的值  
-    //     $msg = '';  
-    //     $errCode = $pc->decryptMsg($msg_sign, $timeStamp, $nonce, $from_xml, $msg);  
-        
-    //     $component_verify_ticket ="";  
-    //     //解密成功  
-    //     if ($errCode == 0) {  
-    //         $xml = new DOMDocument();  
-    //         $xml->loadXML($msg);  
-    //         $array_e = $xml->getElementsByTagName('ComponentVerifyTicket');  
-    //         $component_verify_ticket = $array_e->item(0)->nodeValue;  
-    //         Cache::put('component_verify_ticket', $component_verify_ticket, 10);
-    //         return "success";  
-    //     }  
-    //     //解密失败  
-    //     else {  
-    //         return "false";  
-    //     }  
-        
-    // }
-
     public function event_authorize(){
         $openPlatform = OpenPlatform::getApp();
         $server = $openPlatform->server;
@@ -80,24 +38,21 @@ class OpenPlatformController extends Controller
     {
         $openPlatform = OpenPlatform::getApp();
         $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/authorized');
-        // return redirect($url);
         return view('/wechat',['url' => $url]);
     }
 
     public function authorized() 
     {
-        $openPlatform = OpenPlatform::getApp();        
-        $authorizer = $openPlatform->handleAuthorize()['authorization_info'];
-        OpenPlatform::setAuthorizerCache($authorizer['authorizer_appid'], $authorizer['authorizer_access_token'] ,$authorizer['authorizer_refresh_token'],serialize($authorizer['func_info']));
-        dd(OpenPlatform::getAuthorizerCache($authorizer['authorizer_appid']));
+        OpenPlatform::initOpenPlayform();
         dd($infos);
     }
 
     public function token() 
     {
-        $openPlatform = \App\Models\Commons\Xcx::getApp(3);      
-        $accessToken = $openPlatform->access_token->getToken();
-        dd($accessToken);
+        $appid = 'wxc1fb7bd6c21cb0cc';
+        $authorizer = OpenPlatform::getAuthorizerCache($appid);
+        $members = OpenPlatform::miniProgramMemberAuth($authorizer['authorizer_access_token']);
+        dd($members);
         
     }
 }

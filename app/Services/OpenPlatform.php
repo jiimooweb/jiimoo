@@ -9,7 +9,6 @@ class OpenPlatform
     public static function getApp()
     {
         $openPlatform = \EasyWeChat\Factory::openPlatform(config('wechat.open_platform.default'));  
-
         return $openPlatform;
     }
 
@@ -26,6 +25,13 @@ class OpenPlatform
         return $data;
     }
 
+    public static function initOpenPlayform() 
+    {
+        $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
+        //缓存authorizer_access_token、authorizer_refresh_token、func_info
+        self::setAuthorizerCache($authorizer['authorizer_appid'], $authorizer['authorizer_access_token'] ,$authorizer['authorizer_refresh_token'],serialize($authorizer['func_info']));
+    }
+
     public static function miniProgramModifyDomain($access_token, $method)
     {
         $url = "https://api.weixin.qq.com/wxa/modify_domain?access_token=" . $access_token;
@@ -40,9 +46,26 @@ class OpenPlatform
                 "downloaddomain"=> ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
             ];
         }
-
-        return self::openPlatformPost($url, json_encode($data));
         
+        return self::openPlatformPost($url, json_encode($data));
+    }
+
+    public static function miniProgramBindTester($access_token, $wechatid)
+    {
+        $url = "https://api.weixin.qq.com/wxa/bind_tester?access_token=" . $access_token;
+        return self::openPlatformPost($url, json_encode(['wechatid' =>$wechatid]));
+    }
+
+    public static function miniProgramUnbindTester($access_token, $wechatid)
+    {
+        $url = "https://api.weixin.qq.com/wxa/unbind_tester?access_token=" . $access_token;
+        return self::openPlatformPost($url, json_encode(['wechatid' =>$wechatid]));
+    }
+
+    public static function miniProgramMemberAuth($access_token)
+    {
+        $url = "https://api.weixin.qq.com/wxa/memberauth?access_token=" . $access_token;
+        return self::openPlatformPost($url, json_encode(['action' =>'get_experiencer']));
     }
     
     public static function setAuthorizerCache($appid, $access_token, $refresh_token, $func_info)
