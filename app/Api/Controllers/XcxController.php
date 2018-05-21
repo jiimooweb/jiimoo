@@ -78,7 +78,11 @@ class XcxController extends Controller{
                 $combo->module;
             }
             $hasCombo=XcxHasCombo::where('xcx_id', $xcx->id)->first();
-            $hasCombo=json_decode($hasCombo->modules);
+            if($hasCombo){
+                $hasCombo=json_decode($hasCombo->modules);
+            }else{
+                $hasCombo=[];
+            }
             return response()->json(["status"=>"success","data"=>compact('combos','hasCombo','xcx','modules')]);
         }
 
