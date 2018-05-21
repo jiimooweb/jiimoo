@@ -17,12 +17,13 @@ class OpenPlatformController extends Controller
         // 处理授权成功事件
         
         $server->push(function ($message) {
-            OpenPlatform::initOpenPlayform();
+           
+
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
         $server->push(function ($message) {
-            \Log::info('处理授权更新事件:'.$message['AuthorizerAppid']);
+            OpenPlatform::initOpenPlayform();
         }, Guard::EVENT_UPDATE_AUTHORIZED);
 
         // 处理授权取消事件
@@ -44,9 +45,13 @@ class OpenPlatformController extends Controller
     public function authorized() 
     {
         //保存数据
-        OpenPlatform::initOpenPlayform();
+        $authorizer = OpenPlatform::initOpenPlayform();
 
         $openPlatform = OpenPlatform::getApp();
+
+        $miniProgram = $openPlatform->miniProgram($message['AuthorizerAppid'], $authorizer['authorizer_referer_token']);
+
+        dd($miniProgram);
         
     }
 

@@ -29,6 +29,7 @@ class OpenPlatform
     {
         $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
         self::setAuthorizerAccessToken($authorizer);
+        return $authorizer;
     }
 
     public static function miniProgramModifyDomain($access_token, $method)
