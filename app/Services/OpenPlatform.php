@@ -28,8 +28,6 @@ class OpenPlatform
     public static function initOpenPlayform() 
     {
         $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
-        dd($authorizer);
-        //缓存authorizer_access_token、authorizer_refresh_token、func_info
         self::setAuthorizerCache($authorizer['authorizer_appid'], $authorizer['authorizer_access_token'] ,$authorizer['authorizer_refresh_token'],serialize($authorizer['func_info']));
     }
 
