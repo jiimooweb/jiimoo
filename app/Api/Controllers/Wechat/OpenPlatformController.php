@@ -87,14 +87,12 @@ class OpenPlatformController extends Controller
     public function authorized() 
     {
         $openPlatform = OpenPlatform::getApp();        
-        $info = $openPlatform->handleAuthorize();
-        $appid = $info['authorization_info']['authorizer_appid'];
-        $access_token = $info['authorization_info']['authorizer_access_token'];
-        $refresh_token = $info['authorization_info']['authorizer_refresh_token'];
-        // $server = $openPlatform->getAuthorizer($appid);
-        $infos = OpenPlatform::miniProgramModifyDomain($access_token, 'delete');
-        // $miniProgram = $openPlatform->miniProgram($server['authorization_info']['authorizer_appid'], $server['authorization_info']['authorizer_refresh_token']);
-        // $server = $openPlatform->getAuthorizer(config('wechat.open_platform.default.app_id'));
+        $authorizer = $openPlatform->handleAuthorize()['authorization_info'];
+        dd($authorizer);
+        $appid = $authorizer['authorizer_appid'];
+        $access_token = $authorizer['authorizer_access_token'];
+        $refresh_token = $authorizer['authorizer_refresh_token'];
+        cache($appid, compact('access_token','refresh_token'), 120);
         dd($infos);
     }
 
