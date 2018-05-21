@@ -5,6 +5,7 @@ namespace App\Api\Controllers\Wechat;
 use App\Services\OpenPlatform;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use EasyWeChat\OpenPlatform\Server\Guard;
 
 
 class OpenPlatformController extends Controller
@@ -54,7 +55,23 @@ class OpenPlatformController extends Controller
 
     public function event_authorize(){
         $openPlatform = OpenPlatform::getApp();
-        return $openPlatform->server->serve();
+        $server = $openPlatform->server;
+        // 处理授权成功事件
+        $server->push(function ($message) {
+            \Log::info('处理授权成功事件:'.$message['AuthorizerAppid']);
+        }, Guard::EVENT_AUTHORIZED);
+
+        // 处理授权更新事件
+        $server->push(function ($message) {
+            \Log::info('处理授权更新事件:'.$message['AuthorizerAppid']);
+        }, Guard::EVENT_UPDATE_AUTHORIZED);
+
+        // 处理授权取消事件
+        $server->push(function ($message) {
+            \Log::info('处理授权取消事件:'.$message['AuthorizerAppid']);            
+        }, Guard::EVENT_UNAUTHORIZED);
+
+        return $server->serve();
     }
 
     
@@ -62,15 +79,20 @@ class OpenPlatformController extends Controller
     public function user_authorize() 
     {
         $openPlatform = OpenPlatform::getApp();
-        $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/callback');
+        $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/authorized');
         // return redirect($url);
         return view('/wechat',['url' => $url]);
     }
 
-    public function callback() 
+    public function authorized() 
     {
         $openPlatform = OpenPlatform::getApp();        
-        $server = $openPlatform->getAuthorizers(0, 100);
+        $info = $openPlatform->handleAuthorize();
+        $appid = $info['authorization_info']['authorizer_appid'];
+        $refresh_token = $info['authorization_info']['authorizer_refresh_token'];
+        $server = $openPlatform->getAuthorizer($appid);
+        // $miniProgram = $openPlatform->miniProgram($server['authorization_info']['authorizer_appid'], $server['authorization_info']['authorizer_refresh_token']);
+        // $server = $openPlatform->getAuthorizer(config('wechat.open_platform.default.app_id'));
         dd($server);
     }
 }

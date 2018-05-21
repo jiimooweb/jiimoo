@@ -58,4 +58,9 @@ Route::get('ticket', function() {
 });
 
 
+Route::get('test', function() {
+    return request()->input('id');
+});
+
+
 
