@@ -63,7 +63,7 @@ class OpenPlatformController extends Controller
 
     public function token() 
     {
-        dd(Cache::get('miniProgram'));
+        $miniProgram = Cache::get('miniProgram');
         OpenPlatform::saveMiniProgram($miniProgram);
         // $appid = 'wxc1fb7bd6c21cb0cc';
         // $authorizer = OpenPlatform::getAuthorizerAccessToken($appid);
