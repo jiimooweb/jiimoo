@@ -52,6 +52,7 @@ class OpenPlatformController extends Controller
             return response()->json(['status' => 'success', 'msg' => '绑定成功']);
         }
         
+        return 'error';
         // TODO:: 判断错误代码
     }
 
@@ -64,6 +65,8 @@ class OpenPlatformController extends Controller
             Experiencer::where('wechatid', $wechatid)->delete();
             return response()->json(['status' => 'success', 'msg' => '解绑成功']);
         }
+
+        return 'error';        
 
         // TODO:: 判断错误代码
         
