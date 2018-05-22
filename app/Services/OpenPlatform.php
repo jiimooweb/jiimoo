@@ -40,7 +40,7 @@ class OpenPlatform
         //获取小程序信息
         $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
         //保存
-        return self::saveMiniProgram($miniProgramInfo);
+        self::saveMiniProgram($miniProgramInfo);
         
     }
 
@@ -87,6 +87,6 @@ class OpenPlatform
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
         $data['authorization_status'] = 1; 
-        return $data;
+        Xcx::where('id', 33)->update($data);
     }
 }

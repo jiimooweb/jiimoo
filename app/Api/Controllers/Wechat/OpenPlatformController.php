@@ -17,28 +17,17 @@ class OpenPlatformController extends Controller
 
         // 处理授权成功事件
         $server->push(function ($message) {
-            \Log::info('处理授权成功事件');
             $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
-            Xcx::where('id', 33)->update($data);
-            
-            
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
         $server->push(function ($message) {
-            \Log::info('处理授权更新事件');
-
             $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'set');
-            Xcx::where('id', 33)->update($data);
-
         }, Guard::EVENT_UPDATE_AUTHORIZED);
 
         // 处理授权取消事件
         $server->push(function ($message) {
-            \Log::info('处理授权取消事件');
-
             OpenPlatform::unAuthorized();
-
         }, Guard::EVENT_UNAUTHORIZED);
 
         return $server->serve();
