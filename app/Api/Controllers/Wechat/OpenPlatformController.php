@@ -48,7 +48,7 @@ class OpenPlatformController extends Controller
         $miniProgram = OpenPlatform::getMiniProgram();
         $msg = $miniProgram->tester->bind($wechatid);
         if($msg['errcode'] == 0) {
-            Experiencer::create(['wechatid' => $wechatid, '	userstr' => $msg['userstr']]);
+            Experiencer::create(['wechatid' => $wechatid, 'userstr' => $msg['userstr']]);
             return response()->json(['status' => 'success', 'msg' => '绑定成功']);
         }
         
