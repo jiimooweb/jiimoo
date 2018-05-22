@@ -65,4 +65,3 @@ Route::get('/', function() {
 });
 
 
-
