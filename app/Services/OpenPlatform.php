@@ -13,6 +13,13 @@ class OpenPlatform
         return $openPlatform;
     }
 
+    public static function getMiniProgram()
+    {
+        $xcx = Xcx::find(33);
+        $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
+        return $app;
+    }
+
     public static function openPlatformPost($url,$data = '') 
     {   
         $ch = curl_init();
