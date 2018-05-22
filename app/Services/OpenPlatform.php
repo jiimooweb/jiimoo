@@ -26,6 +26,26 @@ class OpenPlatform
         return $data;
     }
 
+    public static function initOpenPlatform($auth_code, $method = 'add')
+    {
+        $openPlatform = self::getApp();
+
+        $info = $openPlatform->handleAuthorize($auth_code);
+        //获取小程序实例
+        $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
+        //设置域名
+        $miniProgram->domain->modify(self::miniProgramModifyDomain($method));
+        
+        if($method == 'delete'){
+            Xcx::where('id', session('xcx_id'))->update(['authorization_status' => -1]);   
+        }else{
+            //获取小程序信息
+            $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);
+             //保存
+            self::saveMiniProgram($miniProgramInfo);
+        }
+    }
+
     public static function miniProgramModifyDomain($method)
     {
         if($method == 'get') {

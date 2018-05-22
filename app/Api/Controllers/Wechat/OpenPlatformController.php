@@ -2,6 +2,7 @@
 
 namespace App\Api\Controllers\Wechat;
 
+use App\Models\Commons\Xcx;
 use App\Services\OpenPlatform;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -18,28 +19,22 @@ class OpenPlatformController extends Controller
         
         $server->push(function ($message) {
 
-            $openPlatform = OpenPlatform::getApp();
-    
-            $info = $openPlatform->handleAuthorize($message['AuthorizationCode']);
-            //获取小程序实例
-            $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
-            //设置域名
-            $miniProgram->domain->modify(OpenPlatform::miniProgramModifyDomain('add'));
-            //获取小程序信息
-            $miniProgramInfo = $openPlatform->getAuthorizer($message['AuthorizerAppid']);
-            //保存
-            OpenPlatform::saveMiniProgram($miniProgramInfo);
+            OpenPlatform::initOpenPlatform($message['AuthorizationCode']);
             
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
         $server->push(function ($message) {
-            OpenPlatform::initOpenPlayform();
+
+            OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'set');
+
         }, Guard::EVENT_UPDATE_AUTHORIZED);
 
         // 处理授权取消事件
         $server->push(function ($message) {
-            \Log::info('处理授权取消事件:'.$message['AuthorizerAppid']);            
+
+            OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'delete');
+
         }, Guard::EVENT_UNAUTHORIZED);
 
         return $server->serve();
