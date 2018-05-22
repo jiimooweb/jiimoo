@@ -91,8 +91,7 @@ class OpenPlatform
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
         $data['authorzation_status'] = 1; 
         \Log::info($data);
-        
+        Xcx::where('id', 3)->update($data);
         // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
-        return Xcx::where('id', 33)->update($data) ? true : false;
     }
 }
