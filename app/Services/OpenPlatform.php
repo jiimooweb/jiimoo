@@ -26,7 +26,7 @@ class OpenPlatform
         return $data;
     }
 
-    public static function initOpenPlatform($auth_code, $method = 'add')
+    public static function initOpenPlatform($auth_code, $method)
     {
         $openPlatform = self::getApp();
 
