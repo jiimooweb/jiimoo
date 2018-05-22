@@ -60,9 +60,8 @@ Route::get('ticket', function() {
 
 Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
 
-Route::get('/', function() {
-    view('welcome');
+Route::get('/', function () {
+    return view('welcome');
 });
-
 
 
