@@ -14,16 +14,17 @@ class OpenPlatformController extends Controller
 
     public function event_authorize(){
         $server  = OpenPlatform::getApp()->server;
-        
+
         // 处理授权成功事件
         $server->push(function ($message) {
-
+            \Log::info('处理授权成功事件');
             OpenPlatform::initOpenPlatform($message['AuthorizationCode']);
             
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
         $server->push(function ($message) {
+            \Log::info('处理授权更新事件');
 
             OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'set');
 
@@ -31,6 +32,7 @@ class OpenPlatformController extends Controller
 
         // 处理授权取消事件
         $server->push(function ($message) {
+            \Log::info('处理授权取消事件');
 
             OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'delete');
 
