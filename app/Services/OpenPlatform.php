@@ -42,9 +42,10 @@ class OpenPlatform
         }else{
             //获取小程序信息
             $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);
-            \Log::info($miniProgramInfo);
              //保存
-            self::saveMiniProgram($miniProgramInfo);
+            $ret = self::saveMiniProgram($miniProgramInfo);
+            \Log::info($ret);
+            
         }
     }
 
