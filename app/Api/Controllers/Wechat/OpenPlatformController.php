@@ -34,7 +34,7 @@ class OpenPlatformController extends Controller
         $server->push(function ($message) {
             \Log::info('处理授权取消事件');
 
-            OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'delete');
+            OpenPlatform::unAuthorized();
 
         }, Guard::EVENT_UNAUTHORIZED);
 

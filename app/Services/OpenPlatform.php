@@ -37,18 +37,19 @@ class OpenPlatform
         //设置域名
         $miniProgram->domain->modify(self::miniProgramModifyDomain($method));
         
-        if($method == 'delete'){
-            Xcx::where('id', 33)->update(['authorization_status' => -1]);   
-        }else{
-            //获取小程序信息
-            $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);
-            \Log::info($miniProgramInfo);
-            
-             //保存
-            $ret = self::saveMiniProgram($miniProgramInfo);
-            \Log::info($ret);
-            
-        }
+        //获取小程序信息
+        $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
+        //保存
+        $ret = self::saveMiniProgram($miniProgramInfo);
+    }
+
+    public static function unAuthorized()
+    {
+        $miniProgram = Xcx::find(33);
+        $openPlatform = self::getApp();
+        $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
+        $server->domain->modify(OpenPlatform::miniProgramModifyDomain('delete'));
+        Xcx::where('id', 33)->update(['authorization_status' => -1]);   
     }
 
     public static function miniProgramModifyDomain($method)
@@ -89,6 +90,8 @@ class OpenPlatform
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
         $data['authorzation_status'] = 1; 
+        \Log::info($data);
+        
         // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
         return Xcx::where('id', 33)->update($data) ? true : false;
     }
