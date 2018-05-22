@@ -43,8 +43,8 @@ class XcxController extends Controller{
             if($valid->errors()->count()){
                 return response()->json(["status"=>"error","data"=>$valid->errors()]);
             }
-            $savedata=request(['name','app_id','app_secret','logoUrl']);
-            $savedata['xcx_flag']=str_random(5);
+            $savedata=request(['name','	start_time','end_time']);
+            $savedata['xcx_flag']=str_random(8);
             $save=Xcx::create($savedata);
             if ($save){
                 $adminUser=AdminUser::find(1);
@@ -89,7 +89,7 @@ class XcxController extends Controller{
 
         public function storeCombo(XcxRequest $request){
             $xcx_flag=request()->xcx_flag;
-            $data=request(['name','logoUrl','star_time','end_time','apply_modules']);
+            $data=request(['name','star_time','end_time','apply_modules']);
             $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
             $reCombos=request('combos');
             $reModules=request('modules');
@@ -106,11 +106,7 @@ class XcxController extends Controller{
                     $xcx->save();
                 }
             }
-            if ($update){
                 return response()->json(["status"=>"success","msg"=>"修改成功！"]);
-            }else{
-                return response()->json(["status"=>"error","msg"=>"修改失败！"]);
-            }
         }
 
         public function destroy()

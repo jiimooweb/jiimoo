@@ -24,3 +24,5 @@ Route::apiResource('/swipers', '\App\Api\Controllers\Commons\SwiperController');
 Route::apiResource('/swiper_groups', '\App\Api\Controllers\Commons\SwiperGroupController');   
 
 
+//范文
+Route::apiResource('/templet', '\App\Api\Controllers\Commons\TempletController');
