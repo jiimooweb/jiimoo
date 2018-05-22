@@ -19,7 +19,7 @@ class OpenPlatformController extends Controller
         $server->push(function ($message) {
             \Log::info('处理授权成功事件');
             $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
-            Xcx::where('id', 33)->update($data);
+            \Log::info(Xcx::where('id', 33)->first());
             
         }, Guard::EVENT_AUTHORIZED);
 
