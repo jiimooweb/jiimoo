@@ -40,7 +40,10 @@ class OpenPlatform
         //获取小程序信息
         $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
         //保存
-        $ret = self::saveMiniProgram($miniProgramInfo);
+        $data = self::saveMiniProgram($miniProgramInfo);
+
+        Xcx::where('id', 33)->update($data);
+        
     }
 
     public static function unAuthorized()
@@ -92,7 +95,8 @@ class OpenPlatform
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
         $data['authorzation_status'] = 1; 
-        Xcx::where('id', 33)->update($data);
+
+        return $data;
         \Log::info('Xcx更新');
         // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
     }
