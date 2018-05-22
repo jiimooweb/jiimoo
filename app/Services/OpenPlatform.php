@@ -26,16 +26,8 @@ class OpenPlatform
         return $data;
     }
 
-    public static function initOpenPlayform() 
+    public static function miniProgramModifyDomain($method)
     {
-        $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
-        self::setAuthorizerAccessToken($authorizer);
-        return $authorizer;
-    }
-
-    public static function miniProgramModifyDomain($access_token, $method)
-    {
-        $url = "https://api.weixin.qq.com/wxa/modify_domain?access_token=" . $access_token;
         if($method == 'get') {
             $data = ["action" =>  $method];
         }else {
@@ -48,38 +40,7 @@ class OpenPlatform
             ];
         }
 
-        return self::openPlatformPost($url, json_encode($data));
-    }
-
-    public static function miniProgramBindTester($access_token, $wechatid)
-    {
-        $url = "https://api.weixin.qq.com/wxa/bind_tester?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['wechatid' =>$userstr]));
-    }
-
-    public static function miniProgramUnbindTester($access_token, $wechatid)
-    {
-        $url = "https://api.weixin.qq.com/wxa/unbind_tester?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['userstr' =>$userstr]));
-    }
-
-    public static function miniProgramMemberAuth($access_token)
-    {
-        $url = "https://api.weixin.qq.com/wxa/memberauth?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['action' =>'get_experiencer']));
-    }
-    
-    public static function setAuthorizerAccessToken($authorizer)
-    {    
-        $appid = $authorizer['authorizer_appid'];
-        Cache::put($appid.'_authorizer_access_token', $authorizer['authorizer_access_token'], 120);
-    }
-
-    public static function getAuthorizerAccessToken($appid)
-    {
-        return [
-            'authorizer_access_token' => Cache::get($appid.'_authorizer_access_token'),
-        ];
+        return $data;
     }
 
     public static function saveMiniProgram($miniProgram)

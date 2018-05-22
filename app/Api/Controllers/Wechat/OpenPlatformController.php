@@ -17,15 +17,19 @@ class OpenPlatformController extends Controller
         // 处理授权成功事件
         
         $server->push(function ($message) {
-           //保存数据
-            $authorizer = OpenPlatform::initOpenPlayform();
 
             $openPlatform = OpenPlatform::getApp();
-
-            $miniProgram = $openPlatform->getAuthorizer($message['authorizer_appid']);
-                    
-            OpenPlatform::saveMiniProgram($miniProgram);
-
+    
+            $info = $openPlatform->handleAuthorize($message['AuthorizationCode']);
+            //获取小程序实例
+            $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
+            //设置域名
+            $miniProgram->domain->modify(OpenPlatform::miniProgramModifyDomain('add'));
+            //获取小程序信息
+            $miniProgramInfo = $openPlatform->getAuthorizer($message['AuthorizerAppid']);
+            //保存
+            OpenPlatform::saveMiniProgram($miniProgramInfo);
+            
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
@@ -53,7 +57,6 @@ class OpenPlatformController extends Controller
     public function authorized() 
     {
         
-
         return 'success';
     }
 
