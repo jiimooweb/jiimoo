@@ -61,8 +61,7 @@ class OpenPlatformController extends Controller
         $miniProgram = \App\Models\Commons\Xcx::find(33);
         $openPlatform = OpenPlatform::getApp();
         $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
-        $miniProgram->domain->modify(self::miniProgramModifyDomain($method));
-        dd($server->tester->list());
+        dd($miniProgram->domain->modify(OpenPlatform::miniProgramModifyDomain('delete')));
         
     }
 }
