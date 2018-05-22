@@ -42,28 +42,31 @@ class OpenPlatformController extends Controller
         return view('/wechat',['url' => $url]);
     }
 
-    public function bindTester()
+    public function bind_tester()
     {
-        $wechat = request()->wechatid;
+        $wechatid = request()->wechatid;
         $miniProgram = OpenPlatform::getMiniProgram();
         $msg = $miniProgram->tester->bind($wechatid);
         if($msg['errcode'] == 0) {
-            Experiencer::create(['wechatid' => $wechatid, '	userstr' => $msg['userstr']]);
+            Experiencer::create(['wechatid' => $wechatid, 'userstr' => $msg['userstr']]);
             return response()->json(['status' => 'success', 'msg' => '绑定成功']);
         }
         
+        return 'error';
         // TODO:: 判断错误代码
     }
 
-    public function unbindTester()
+    public function unbind_tester()
     {
-        $wechat = request()->wechatid;
+        $wechatid = request()->wechatid;
         $miniProgram = OpenPlatform::getMiniProgram();
         $msg = $miniProgram->tester->unbind($wechatid);
         if($msg['errcode'] == 0) {
             Experiencer::where('wechatid', $wechatid)->delete();
             return response()->json(['status' => 'success', 'msg' => '解绑成功']);
         }
+
+        return 'error';        
 
         // TODO:: 判断错误代码
         
