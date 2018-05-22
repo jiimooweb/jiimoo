@@ -62,7 +62,7 @@ class OpenPlatformController extends Controller
         $miniProgram = OpenPlatform::getMiniProgram();
         $msg = $miniProgram->tester->unbind($wechatid);
         if($msg['errcode'] == 0) {
-            dd(Experiencer::where(['wechatid' => $wechatid]));
+            dd(Experiencer::where('wechatid', $wechatid)->first());
             return response()->json(['status' => 'success', 'msg' => '解绑成功']);
         }
 
