@@ -41,7 +41,7 @@ class OpenPlatform
         $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
         //保存
         $data = self::saveMiniProgram($miniProgramInfo);
-
+        \Log::info($data);
         Xcx::where('id', 33)->update($data);
         
     }
