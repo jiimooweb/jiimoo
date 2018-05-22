@@ -42,7 +42,7 @@ class OpenPlatformController extends Controller
         return view('/wechat',['url' => $url]);
     }
 
-    public function bindTester()
+    public function bind_tester()
     {
         $wechat = request()->wechatid;
         $miniProgram = OpenPlatform::getMiniProgram();
@@ -56,7 +56,7 @@ class OpenPlatformController extends Controller
         // TODO:: 判断错误代码
     }
 
-    public function unbindTester()
+    public function unbind_tester()
     {
         $wechat = request()->wechatid;
         $miniProgram = OpenPlatform::getMiniProgram();
