@@ -38,10 +38,12 @@ class OpenPlatform
         $miniProgram->domain->modify(self::miniProgramModifyDomain($method));
         
         if($method == 'delete'){
-            Xcx::where('id', session('xcx_id'))->update(['authorization_status' => -1]);   
+            Xcx::where('id', 33)->update(['authorization_status' => -1]);   
         }else{
             //获取小程序信息
             $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);
+            \Log::info($miniProgramInfo);
+            
              //保存
             $ret = self::saveMiniProgram($miniProgramInfo);
             \Log::info($ret);
