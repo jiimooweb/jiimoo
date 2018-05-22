@@ -28,12 +28,9 @@ class OpenPlatform
 
     public static function initOpenPlatform($auth_code, $method = 'add')
     {
-        \Log::info($auth_code);
-        
         $openPlatform = self::getApp();
 
-        $info = $openPlatform->handleAuthorize($auth_code);
-        \Log::info($info);
+        $info = $openPlatform->handleAuthorize($auth_code)['authorization_info'];
         
         //获取小程序实例
         $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
