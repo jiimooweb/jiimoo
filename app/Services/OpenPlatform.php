@@ -74,8 +74,6 @@ class OpenPlatform
 
     public static function saveMiniProgram($miniProgram)
     {
-        \Log::info('Xcx开始更新');
-        
         $data = [];
         $authorizer_info = $miniProgram['authorizer_info'];
         $data['head_img'] = $authorizer_info['head_img'];
@@ -94,11 +92,7 @@ class OpenPlatform
         $data['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
-        $data['authorzation_status'] = 1; 
-        \Log::info('Xcx更新');
-        
-
+        $data['authorzation_statuss'] = 1; 
         return $data;
-        // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
     }
 }
