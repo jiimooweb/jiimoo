@@ -48,7 +48,7 @@ class OpenPlatform
         $miniProgram = Xcx::find(33);
         $openPlatform = self::getApp();
         $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
-        $server->domain->modify(OpenPlatform::miniProgramModifyDomain('delete'));
+        $server->domain->modify(self::miniProgramModifyDomain('delete'));
         Xcx::where('id', 33)->update(['authorization_status' => -1]);   
     }
 
