@@ -44,7 +44,7 @@ class OpenPlatformController extends Controller
 
     public function bind_tester()
     {
-        $wechat = request()->wechatid;
+        $wechatid = request()->wechatid;
         $miniProgram = OpenPlatform::getMiniProgram();
         $msg = $miniProgram->tester->bind($wechatid);
         if($msg['errcode'] == 0) {
@@ -58,7 +58,7 @@ class OpenPlatformController extends Controller
 
     public function unbind_tester()
     {
-        $wechat = request()->wechatid;
+        $wechatid = request()->wechatid;
         $miniProgram = OpenPlatform::getMiniProgram();
         $msg = $miniProgram->tester->unbind($wechatid);
         if($msg['errcode'] == 0) {
