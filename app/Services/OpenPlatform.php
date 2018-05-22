@@ -71,6 +71,8 @@ class OpenPlatform
 
     public static function saveMiniProgram($miniProgram)
     {
+        \Log::info('Xcx开始更新');
+        
         $data = [];
         $authorizer_info = $miniProgram['authorizer_info'];
         $data['head_img'] = $authorizer_info['head_img'];
