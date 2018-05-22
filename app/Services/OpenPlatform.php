@@ -40,18 +40,12 @@ class OpenPlatform
         //获取小程序信息
         $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
         //保存
-        $data = self::saveMiniProgram($miniProgramInfo);
-        \Log::info($data);
-        Xcx::where('id', 33)->update($data);
+        return self::saveMiniProgram($miniProgramInfo);
         
     }
 
     public static function unAuthorized()
     {
-        $miniProgram = Xcx::find(33);
-        $openPlatform = self::getApp();
-        $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
-        $server->domain->modify(self::miniProgramModifyDomain('delete'));
         Xcx::where('id', 33)->update(['authorization_status' => -1]);   
     }
 
