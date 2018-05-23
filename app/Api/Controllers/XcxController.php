@@ -42,7 +42,7 @@ class XcxController extends Controller{
             if($valid->errors()->count()){
                 return response()->json(["status"=>"error","data"=>$valid->errors()]);
             }
-            $savedata=request(['nick_name','	start_time','end_time']);
+            $savedata=request(['nick_name','start_time','end_time']);
             $savedata['xcx_flag']=str_random(8);
             $save=Xcx::create($savedata);
             if ($save){
