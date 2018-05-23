@@ -103,7 +103,7 @@ class OpenPlatform
             'extEnable' => true,
             'extAppid' => 'wxc1fb7bd6c21cb0cc',
             'ext' => [
-                'xcx_flag' => 'sdq12DSs'
+                'xcx_flag' => '浩哥牛逼'
             ]
         ];
 
