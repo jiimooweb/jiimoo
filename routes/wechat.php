@@ -9,6 +9,7 @@ Route::group(['prefix' => 'wechat'], function () {
     Route::get('unbind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
     Route::get('commit', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
     Route::get('get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
+    Route::get('get_category', '\App\Api\Controllers\Wechat\OpenPlatformController@get_category');
 });
 
 

@@ -83,7 +83,13 @@ class OpenPlatformController extends Controller
     public function get_qrcode()
     {
         $miniProgram = OpenPlatform::getMiniProgram();
-        dd($miniProgram->code->getQrCode('pages/index/index'));
+        return $miniProgram->code->getQrCode('pages/index/index');
+    }
+
+    public function get_category()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->getCategory();
     }
 
     public function token() 
