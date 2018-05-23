@@ -104,7 +104,31 @@ class OpenPlatformController extends Controller
         return $miniProgram->code->submitAudit();                
     }
 
+    public function code_tpl_get_drafts()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code_template->getDrafts();                  
+    }
 
+    public function code_tpl_create_from_draft()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code_template->createFromDraft(request()->draft_id);                
+    }
+
+    public function code_tpl_list()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code_template->list(); 
+    }
+
+    public function code_tpl_delete()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code_template->delete(request()->template_id); 
+    }
+
+    
     public function callback($app_id)
     {
         // $official = $this->initOfficialAccount();
