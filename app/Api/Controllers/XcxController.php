@@ -99,7 +99,7 @@ class XcxController extends Controller{
                 $reModules=Module::findMany($reModules);
                 $modules=["parent"=>$reCombos,'sub'=>$reModules];
                 $modules=json_encode($modules);
-                $save=XcxHasCombo::create(compact('xcx_id','modules'));
+                $save=XcxHasCombo::updateOrCreate(compact('xcx_id'),compact('modules'));
                 if(!$xcx->apply_modules){
                     $xcx->apply_modules=$modules;
                     $xcx->save();
