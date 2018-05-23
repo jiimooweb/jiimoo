@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Controllers\Displays;
+namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
 use App\Models\Commons\Templet;
@@ -11,14 +11,25 @@ class TempletController extends Controller
 {
     public function index()
     {
+        //用户个人范文
         $xcx_id=session('xcx_id');
-        $templet=Templet::orWhere('xcx_id','0')->orWhere('xcx_id',$xcx_id)->get();
+        $templet=Templet::where('xcx_id',$xcx_id)->get();
+        return response()->json(['status' => 'success', 'data' => $templet]);
+    }
+
+    public function templetCombox(){
+        //用户使用范文（包过自身的以及公用的）
+        $xcx_id=session('xcx_id');
+        $templet=Templet::orWhere('xcx_id',$xcx_id)->orWhere('xcx_id',$xcx_id)->get();
         return response()->json(['status' => 'success', 'data' => $templet]);
     }
 
     public function store(TempletRequest $request)
     {
-        $save=Templet::create($request);
+        $xcx_id=session('xcx_id');
+        $data=request(['desc','content']);
+        $data['xcx_id']=$xcx_id;
+        $save=Templet::create($data);
         if ($save){
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
         }else{
@@ -29,7 +40,7 @@ class TempletController extends Controller
     public function update(TempletRequest $request)
     {
         $id=request()->templet;
-        $update=Templet::find($id)->update($request);
+        $update=Templet::find($id)->update(request(['desc','content']));
         if ($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{

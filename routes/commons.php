@@ -25,4 +25,5 @@ Route::apiResource('/swiper_groups', '\App\Api\Controllers\Commons\SwiperGroupCo
 
 
 //范文
+Route::get('/templetCombox','\App\Api\Controllers\Commons\TempletController@templetCombox');
 Route::apiResource('/templet', '\App\Api\Controllers\Commons\TempletController');
