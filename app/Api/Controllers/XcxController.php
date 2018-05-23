@@ -95,8 +95,8 @@ class XcxController extends Controller{
             if ($reCombos&&$reModules){
                 $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
                 $xcx_id=$xcx->id;
-                $reCombos=Combo::findMany($reCombos);
-                $reModules=Module::findMany($reModules);
+//                $reCombos=Combo::findMany($reCombos);
+//                $reModules=Module::findMany($reModules);
                 $modules=["parent"=>$reCombos,'sub'=>$reModules];
                 $modules=json_encode($modules);
                 $save=XcxHasCombo::updateOrCreate(compact('xcx_id'),compact('modules'));
