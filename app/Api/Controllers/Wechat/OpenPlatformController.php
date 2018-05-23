@@ -92,6 +92,12 @@ class OpenPlatformController extends Controller
         return $miniProgram->code->getCategory();
     }
 
+    public function get_page()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->getPage();        
+    }
+
     public function token() 
     {
 
