@@ -73,6 +73,13 @@ class OpenPlatformController extends Controller
         return 'success';
     }
 
+    public function commit()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        $extJson = OpenPlatform::createExtJson();
+        return $miniProgram->code-commit(0, $extJson, '1.0', '任意门网络工作室小程序');
+    }
+
     public function token() 
     {
 

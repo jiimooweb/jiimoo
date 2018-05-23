@@ -96,4 +96,17 @@ class OpenPlatform
         $data['authorization_status'] = 1; 
         Xcx::where('id', 33)->update($data);
     }
+
+    public static function createExtJson() 
+    {
+        $ext = [
+            'extEnable' => true,
+            'extAppid' => 'wxc1fb7bd6c21cb0cc',
+            'ext' => [
+                'xcx_flag' => 'sdq12DSs'
+            ]
+        ];
+
+        return json_encode($ext);
+    }
 }
