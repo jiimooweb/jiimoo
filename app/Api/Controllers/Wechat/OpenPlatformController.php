@@ -38,7 +38,7 @@ class OpenPlatformController extends Controller
     public function user_authorize() 
     {
         $openPlatform = OpenPlatform::getApp();        
-        $url = $openPlatform->getPreAuthorizationUrl('http://www.rdoorweb.com/wechat/authorized');
+        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/authorized');
         return view('/wechat',['url' => $url]);
     }
 
@@ -65,7 +65,6 @@ class OpenPlatformController extends Controller
             Experiencer::where('wechatid', $wechatid)->delete();
             return response()->json(['status' => 'success', 'msg' => '解绑成功']);
         }
-
         return response()->json(['status' => 'error', 'msg' => '系统繁忙']);
     }
 
