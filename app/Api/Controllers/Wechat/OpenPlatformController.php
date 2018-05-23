@@ -80,6 +80,12 @@ class OpenPlatformController extends Controller
         return $miniProgram->code->commit(0, $extJson, '1.0', '任意门网络工作室小程序');
     }
 
+    public function get_qrcode()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->getQrCode('pages/index/index');
+    }
+
     public function token() 
     {
 
