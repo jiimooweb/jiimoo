@@ -16,6 +16,8 @@ Route::group(['prefix'=>'api','middleware'=>['token']],function (){
     Route::apiResource('combo','\App\Api\Controllers\ComboControlle');
     Route::apiResource('xcx','\App\Api\Controllers\XcxController');
     Route::resource('reservations', '\App\Api\Controllers\Resertvations\ResertvationController');
-        
+
+
+    Route::apiResource('/templet','\App\Api\Controllers\Commons\AdminTempletController');
 });
 

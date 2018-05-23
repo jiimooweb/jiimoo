@@ -37,13 +37,12 @@ class XcxController extends Controller{
         public function store(XcxRequest $request)
         {
             $valid=Validator::make(request()->all(), [
-                'name'=>'unique:xcxs,name',
-                'app_secret'=>'required'
+                'nick_name'=>'unique:xcxs,nick_name',
             ]);
             if($valid->errors()->count()){
                 return response()->json(["status"=>"error","data"=>$valid->errors()]);
             }
-            $savedata=request(['name','	start_time','end_time']);
+            $savedata=request(['nick_name','start_time','end_time']);
             $savedata['xcx_flag']=str_random(8);
             $save=Xcx::create($savedata);
             if ($save){
@@ -89,7 +88,7 @@ class XcxController extends Controller{
 
         public function storeCombo(XcxRequest $request){
             $xcx_flag=request()->xcx_flag;
-            $data=request(['name','star_time','end_time','apply_modules']);
+            $data=request(['nick_name','star_time','end_time','apply_modules']);
             $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
             $reCombos=request('combos');
             $reModules=request('modules');
@@ -100,7 +99,7 @@ class XcxController extends Controller{
                 $reModules=Module::findMany($reModules);
                 $modules=["parent"=>$reCombos,'sub'=>$reModules];
                 $modules=json_encode($modules);
-                $save=XcxHasCombo::create(compact('xcx_id','modules'));
+                $save=XcxHasCombo::updateOrCreate(compact('xcx_id'),compact('modules'));
                 if(!$xcx->apply_modules){
                     $xcx->apply_modules=$modules;
                     $xcx->save();

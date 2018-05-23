@@ -7,28 +7,17 @@ use App\Models\Commons\Templet;
 use App\Api\Controllers\Controller;
 use App\Http\Requests\Commons\TempletRequest;
 
-class TempletController extends Controller
+class AdminTempletController extends Controller
 {
     public function index()
     {
-        //用户个人范文
-        $xcx_id=session('xcx_id');
-        $templet=Templet::where('xcx_id',$xcx_id)->get();
-        return response()->json(['status' => 'success', 'data' => $templet]);
-    }
-
-    public function templetCombox(){
-        //用户使用范文（包过自身的以及公用的）
-        $xcx_id=session('xcx_id');
-        $templet=Templet::orWhere('xcx_id',$xcx_id)->orWhere('xcx_id',$xcx_id)->get();
+        $templet=Templet::where('xcx_id','0')->get();
         return response()->json(['status' => 'success', 'data' => $templet]);
     }
 
     public function store(TempletRequest $request)
     {
-        $xcx_id=session('xcx_id');
         $data=request(['desc','content']);
-        $data['xcx_id']=$xcx_id;
         $save=Templet::create($data);
         if ($save){
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
