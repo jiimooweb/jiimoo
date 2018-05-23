@@ -102,10 +102,10 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram();
         return $miniProgram->code->submitAudit();                
-        
     }
 
-    public function receiver($app_id)
+
+    public function callback($app_id)
     {
         // $official = $this->initOfficialAccount();
         $openPlatform = OpenPlatform::getApp();
