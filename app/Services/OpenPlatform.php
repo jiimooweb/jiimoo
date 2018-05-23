@@ -13,6 +13,13 @@ class OpenPlatform
         return $openPlatform;
     }
 
+    public static function getMiniProgram()
+    {
+        $xcx = Xcx::find(33);
+        $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
+        return $app;
+    }
+
     public static function openPlatformPost($url,$data = '') 
     {   
         $ch = curl_init();
@@ -26,16 +33,31 @@ class OpenPlatform
         return $data;
     }
 
-    public static function initOpenPlayform() 
+    public static function initOpenPlatform($auth_code, $method)
     {
-        $authorizer = self::getApp()->handleAuthorize()['authorization_info'];
-        self::setAuthorizerAccessToken($authorizer);
-        return $authorizer;
+        $openPlatform = self::getApp();
+
+        $info = $openPlatform->handleAuthorize($auth_code)['authorization_info'];
+        
+        //获取小程序实例
+        $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
+        //设置域名
+        $miniProgram->domain->modify(self::miniProgramModifyDomain($method));
+        
+        //获取小程序信息
+        $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
+        //保存
+        self::saveMiniProgram($miniProgramInfo);
+        
     }
 
-    public static function miniProgramModifyDomain($access_token, $method)
+    public static function unAuthorized()
     {
-        $url = "https://api.weixin.qq.com/wxa/modify_domain?access_token=" . $access_token;
+        Xcx::where('id', 33)->update(['authorization_status' => -1]);   
+    }
+
+    public static function miniProgramModifyDomain($method)
+    {
         if($method == 'get') {
             $data = ["action" =>  $method];
         }else {
@@ -48,38 +70,7 @@ class OpenPlatform
             ];
         }
 
-        return self::openPlatformPost($url, json_encode($data));
-    }
-
-    public static function miniProgramBindTester($access_token, $wechatid)
-    {
-        $url = "https://api.weixin.qq.com/wxa/bind_tester?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['wechatid' =>$userstr]));
-    }
-
-    public static function miniProgramUnbindTester($access_token, $wechatid)
-    {
-        $url = "https://api.weixin.qq.com/wxa/unbind_tester?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['userstr' =>$userstr]));
-    }
-
-    public static function miniProgramMemberAuth($access_token)
-    {
-        $url = "https://api.weixin.qq.com/wxa/memberauth?access_token=" . $access_token;
-        return self::openPlatformPost($url, json_encode(['action' =>'get_experiencer']));
-    }
-    
-    public static function setAuthorizerAccessToken($authorizer)
-    {    
-        $appid = $authorizer['authorizer_appid'];
-        Cache::put($appid.'_authorizer_access_token', $authorizer['authorizer_access_token'], 120);
-    }
-
-    public static function getAuthorizerAccessToken($appid)
-    {
-        return [
-            'authorizer_access_token' => Cache::get($appid.'_authorizer_access_token'),
-        ];
+        return $data;
     }
 
     public static function saveMiniProgram($miniProgram)
@@ -102,7 +93,7 @@ class OpenPlatform
         $data['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
-        // return Xcx::where('xcx_id', session('xcx_id'))->update($data) ? true : false;
-        return Xcx::where('id', 33)->update($data) ? true : false;
+        $data['authorization_status'] = 1; 
+        Xcx::where('id', 33)->update($data);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Api\Controllers\Wechat;
 
+use App\Models\Commons\Xcx;
 use App\Services\OpenPlatform;
+use App\Models\Wechat\Experiencer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use EasyWeChat\OpenPlatform\Server\Guard;
@@ -10,32 +12,22 @@ use EasyWeChat\OpenPlatform\Server\Guard;
 
 class OpenPlatformController extends Controller
 {
-
     public function event_authorize(){
-        $openPlatform = OpenPlatform::getApp();
-        $server = $openPlatform->server;
+        $server  = OpenPlatform::getApp()->server;
+
         // 处理授权成功事件
-        
         $server->push(function ($message) {
-           //保存数据
-            $authorizer = OpenPlatform::initOpenPlayform();
-
-            $openPlatform = OpenPlatform::getApp();
-
-            $miniProgram = $openPlatform->getAuthorizer($message['authorizer_appid']);
-                    
-            OpenPlatform::saveMiniProgram($miniProgram);
-
+            $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
         $server->push(function ($message) {
-            OpenPlatform::initOpenPlayform();
+            $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'set');
         }, Guard::EVENT_UPDATE_AUTHORIZED);
 
         // 处理授权取消事件
         $server->push(function ($message) {
-            \Log::info('处理授权取消事件:'.$message['AuthorizerAppid']);            
+            OpenPlatform::unAuthorized();
         }, Guard::EVENT_UNAUTHORIZED);
 
         return $server->serve();
@@ -50,19 +42,40 @@ class OpenPlatformController extends Controller
         return view('/wechat',['url' => $url]);
     }
 
+    public function bind_tester()
+    {
+        $wechatid = request()->wechatid;
+        $miniProgram = OpenPlatform::getMiniProgram();
+        $msg = $miniProgram->tester->bind($wechatid);
+        if($msg['errcode'] == 0) {
+            Experiencer::create(['wechatid' => $wechatid, 'userstr' => $msg['userstr']]);
+            return response()->json(['status' => 'success', 'msg' => '绑定成功']);
+        }
+        
+        return 'error';
+        // TODO:: 判断错误代码
+    }
+
+    public function unbind_tester()
+    {
+        $wechatid = request()->wechatid;
+        $miniProgram = OpenPlatform::getMiniProgram();
+        $msg = $miniProgram->tester->unbind($wechatid);
+        if($msg['errcode'] == 0) {
+            Experiencer::where('wechatid', $wechatid)->delete();
+            return response()->json(['status' => 'success', 'msg' => '解绑成功']);
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '系统繁忙']);
+    }
+
     public function authorized() 
     {
-        
-
         return 'success';
     }
 
     public function token() 
     {
-        $miniProgram = \App\Models\Commons\Xcx::find(33);
-        $openPlatform = OpenPlatform::getApp();
-        $server = $openPlatform->miniProgram($miniProgram['app_id'], $miniProgram['refresh_token']);
-        dd($server->tester->list());
-        
+
     }
 }
