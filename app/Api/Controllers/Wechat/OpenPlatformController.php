@@ -76,7 +76,7 @@ class OpenPlatformController extends Controller
     public function commit()
     {
         $miniProgram = OpenPlatform::getMiniProgram();
-        $extJson = OpenPlatform::createExtJson();
+        $extJson = OpenPlatform::getExtJson();
         return $miniProgram->code->commit(2, $extJson, '1.0', '任意门网络工作室小程序');
     }
 
@@ -98,8 +98,42 @@ class OpenPlatformController extends Controller
         return $miniProgram->code->getPage();        
     }
 
-    public function token() 
+    public function submit_audit()
     {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->submitAudit();                
+        
+    }
 
+    public function callback($app_id)
+    {
+        // $official = $this->initOfficialAccount();
+        $openPlatform = OpenPlatform::getApp();
+        $server      = $openPlatform->server;
+
+        $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
+
+        $msg = $server->getMessage();
+
+        $miniProgram = OpenPlatform::getMiniProgram();
+
+        if ($msg['MsgType'] == 'text') {
+            if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+                $miniProgram->customer_service->message($msg['Content'] . '_callback')
+                    ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+                die;
+            } elseif (strpos($msg['Content'], 'QUERY_AUTH_CODE') == 0) {
+                echo '';
+                $code           = substr($msg['Content'], 16);
+                $miniProgram->customer_service->message($code . "_from_api")
+                            ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+            }
+        } elseif ($msg['MsgType'] == 'event') {
+            $miniProgram->customer_service->message($msg['Event'] . 'from_callback')
+                ->to($msg['FromUserName'])->from($msg['ToUserName'])->send();
+            die;
+        }
+
+        return $openPlatform->server->serve();
     }
 }
