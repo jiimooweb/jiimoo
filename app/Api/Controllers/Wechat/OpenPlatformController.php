@@ -17,7 +17,6 @@ class OpenPlatformController extends Controller
 
         // 处理授权成功事件
         $server->push(function ($message) {
-            \Log::info('处理授权成功事件');
             $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
         }, Guard::EVENT_AUTHORIZED);
 
@@ -40,7 +39,7 @@ class OpenPlatformController extends Controller
     {
         $openPlatform = OpenPlatform::getApp();        
         $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/authorized');
-        return view('/wechat',['url' => $url]);
+        return response()->json(['status' => 'success', 'url' => $url]);
     }
 
     public function bind_tester()
@@ -71,7 +70,7 @@ class OpenPlatformController extends Controller
 
     public function authorized() 
     {
-        return 'success';
+        return response()->json(['status' => 'success']);
     }
 
     public function commit()

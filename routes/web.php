@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Redis;
+
 include_once('admin.php');
 include_once('qiniu.php');
 include_once('wechat.php');
@@ -62,6 +64,14 @@ Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
 
 Route::get('/', function() {
     return view('welcome');
+});
+
+Route::get('setredis', function() {
+    return Redis::set('redis','我是redis');
+});
+
+Route::get('getredis', function() {
+    return Redis::get('redis');
 });
 
 
