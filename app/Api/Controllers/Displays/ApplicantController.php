@@ -19,7 +19,8 @@ class ApplicantController extends Controller
 
     public function show(){
         $like=request('like');
-        $applicant=Applicant::orWhere('name','like',$like)->orWhere('duty','like',$like)->get();
+        $applicant=Applicant::orWhere('name','like',$like)->orWhere('duty','like',$like)->
+        where('status','Y')->get();
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
@@ -57,7 +58,7 @@ class ApplicantController extends Controller
                 $applicant->detachCareer($detch);
             }
         }
-        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary']));
+        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary','status']));
         if($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{
