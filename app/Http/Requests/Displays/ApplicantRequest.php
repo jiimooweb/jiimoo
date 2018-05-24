@@ -16,7 +16,6 @@ class ApplicantRequest extends CommonRequest
     {
         return [
             'name' => 'required',
-            'salary' => 'required',
             'experience' => 'required',
             'duty' => 'required',
             'photo' => 'required',

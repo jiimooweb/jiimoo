@@ -14,4 +14,8 @@ class Career extends Model
             'career_id','applicant_id')->withPivot(['applicant_id','career_id']);
     }
 
+    public function detachApplicant($applicant)
+    {
+        return $this->applicant()->detach($applicant);
+    }
 }

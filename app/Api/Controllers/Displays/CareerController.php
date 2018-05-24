@@ -17,7 +17,7 @@ class CareerController extends Controller
 
     public function store(CareerRequest $request)
     {
-        $save=Career::create($request);
+        $save=Career::create(request(['career']));
         if ($save){
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
         }else{
@@ -27,19 +27,25 @@ class CareerController extends Controller
 
     public function update(CareerRequest $request)
     {
-        $id=request()->career;
-        $update=Career::find($id)->update($request);
-        if ($update){
-            return response()->json(["status"=>"success","msg"=>"修改成功！"]);
-        }else{
-            return response()->json(["status"=>"error","msg"=>"修改失败！"]);
-        }
+//        $id=request()->career;
+//        return $id;
+//        $update=Career::find($id)->update(request(['career']));
+//        if ($update){
+//            return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+//        }else{
+//            return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+//        }
     }
 
     public function destroy()
     {
         $id=request()->career;
-        $delete=Templet::find($id)->delete();
+        $career=Career::find($id);
+        $hasApplicants=$career->applicant;
+        foreach ($hasApplicants as $hasApplicant ){
+            $career->detachApplicant($hasApplicant);
+        }
+        $delete=$career->delete();
         if($delete){
             return response()->json(["status"=>"success","msg"=>"删除成功！"]);
         }else{
@@ -48,7 +54,12 @@ class CareerController extends Controller
     }
    
     public function xcxShow(){
-        $careers=Career::with('applicant')->get();
+        $careers_id=request()->careers;
+        if($careers_id){
+            $careers=Career::find($careers_id)->with('applicant')->get();
+        }else{
+            $careers=Career::with('applicant')->get();
+        }
         return response()->json(['status' => 'success', 'data' => $careers]);
     }
 }

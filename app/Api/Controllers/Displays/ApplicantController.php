@@ -13,7 +13,7 @@ class ApplicantController extends Controller
 {
     public function index()
     {
-        $applicant=Applicant::aginate(config('common.pagesize'));
+        $applicant=Applicant::paginate(config('common.pagesize'));
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
@@ -25,7 +25,7 @@ class ApplicantController extends Controller
 
     public function store(ApplicantRequest $request)
     {
-        $save=Applicant::create($request);
+        $save=Applicant::create(request(['name','experience','duty','resume','photo','salary']));
         $careers_id=request('careers');
         if ($careers_id){
             $careers=Career::findMany($careers_id);
@@ -57,7 +57,7 @@ class ApplicantController extends Controller
                 $applicant->detachCareer($detch);
             }
         }
-        $update=$applicant->update($request);
+        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary']));
         if($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{
