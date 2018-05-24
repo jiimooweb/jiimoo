@@ -17,6 +17,7 @@ class OpenPlatformController extends Controller
 
         // 处理授权成功事件
         $server->push(function ($message) {
+            \Log::info('处理授权成功事件');
             $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
         }, Guard::EVENT_AUTHORIZED);
 
