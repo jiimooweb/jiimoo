@@ -39,7 +39,7 @@ class OpenPlatformController extends Controller
     {
         $openPlatform = OpenPlatform::getApp();        
         $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/authorized');
-        return view('/wechat',['url' => $url]);
+        return response()->json(['status' => 'success', 'url' => $url]);
     }
 
     public function bind_tester()
