@@ -56,9 +56,18 @@ class CareerController extends Controller
     public function xcxShow(){
         $careers_id=request()->careers;
         if($careers_id){
-            $careers=Career::find($careers_id)->with('applicant')->get();
+            $careers=Career::find($careers_id)->with((['applicant' => function ($query) {
+                $page=request('page');
+                $pagesize=config('common.pagesize');
+                $query->where('status','Y')->paginate($pagesize);
+            }]))->get();
         }else{
-            $careers=Career::with('applicant')->get();
+            $pagesize=config('common.pagesize');
+            $careers=Career::with('applicant')->with((['applicant' => function ($query) {
+                $page=request('page');
+                $pagesize=config('common.pagesize');
+                $query->where('status','Y')->paginate($pagesize);
+            }]))->get();
         }
         return response()->json(['status' => 'success', 'data' => $careers]);
     }
