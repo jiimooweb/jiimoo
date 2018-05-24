@@ -15,7 +15,7 @@ class OpenPlatform
 
     public static function getMiniProgram()
     {
-        $xcx = Xcx::find(3);
+        $xcx = Xcx::find(33);
         $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
         return $app;
     }
@@ -53,7 +53,7 @@ class OpenPlatform
 
     public static function unAuthorized()
     {
-        Xcx::where('id', 3)->update(['authorization_status' => -1]);   
+        Xcx::where('id', 33)->update(['authorization_status' => -1]);   
     }
 
     public static function miniProgramModifyDomain($method)
@@ -86,15 +86,15 @@ class OpenPlatform
         $data['qrcode_url'] = $authorizer_info['qrcode_url'];
         $data['service_type_info'] = $authorizer_info['service_type_info']['id'];
         $data['verify_type_info'] = $authorizer_info['verify_type_info']['id'];
-        $data['business_info'] = serialize($authorizer_info['business_info']);
-        $data['network'] = serialize($authorizer_info['MiniProgramInfo']['network']);
-        $data['categories'] = serialize($authorizer_info['MiniProgramInfo']['categories']);
+        $data['business_info'] = json_encode($authorizer_info['business_info']);
+        $data['network'] = json_encode($authorizer_info['MiniProgramInfo']['network']);
+        $data['categories'] = json_encode($authorizer_info['MiniProgramInfo']['categories']);
         $data['visit_status'] = $authorizer_info['MiniProgramInfo']['visit_status'];
         $data['app_id'] = $miniProgram['authorization_info']['authorizer_appid'];         
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
-        $data['func_info'] = serialize($miniProgram['authorization_info']['func_info']); 
+        $data['func_info'] = json_encode($miniProgram['authorization_info']['func_info']); 
         $data['authorization_status'] = 1; 
-        Xcx::where('id', 3)->update($data);
+        Xcx::where('id', 33)->update($data);
     }
 
     public static function getExtJson() 

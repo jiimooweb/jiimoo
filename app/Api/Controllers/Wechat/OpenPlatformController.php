@@ -70,7 +70,12 @@ class OpenPlatformController extends Controller
 
     public function authorized() 
     {
-        return response()->json(['status' => 'success']);
+        $miniProgram = Xcx::where(['authorization_status' => 1 , 'id' => 33])->first();
+        if($miniProgram->count()){
+            return response()->json(['status' => 'success', 'data' => $miniProgram]);
+        }
+
+        return response()->json(['status' => 'error']);
     }
 
     public function commit()
