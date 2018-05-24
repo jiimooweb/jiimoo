@@ -35,11 +35,19 @@ class OpenPlatformController extends Controller
 
     
 
-    public function user_authorize() 
+    public function miniprogram() 
     {
+        $miniProgram = Xcx::find(33);
+    
+        if($miniProgram->authorization_status == 1) {
+            return response()->json(['status' => 'authorize', 'data' => $miniProgram]);
+        }
+
         $openPlatform = OpenPlatform::getApp();        
-        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/authorized');
-        return response()->json(['status' => 'success', 'url' => $url]);
+
+        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/user-authorize');
+
+        return response()->json(['status' => 'unauthorize', 'data' => $url]);
     }
 
     public function bind_tester()
@@ -66,11 +74,6 @@ class OpenPlatformController extends Controller
             return response()->json(['status' => 'success', 'msg' => '解绑成功']);
         }
         return response()->json(['status' => 'error', 'msg' => '系统繁忙']);
-    }
-
-    public function authorized() 
-    {
-        return response()->json(['status' => 'success']);
     }
 
     public function commit()
