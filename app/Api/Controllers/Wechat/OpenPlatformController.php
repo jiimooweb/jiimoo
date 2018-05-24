@@ -70,7 +70,7 @@ class OpenPlatformController extends Controller
 
     public function authorized() 
     {
-        return 'success';
+        return response()->json(['status' => 'success']);
     }
 
     public function commit()
