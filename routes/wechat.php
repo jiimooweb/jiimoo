@@ -4,8 +4,7 @@
 Route::group(['prefix' => 'wechat'], function () {
     Route::any('{appid}/callback', '\App\Api\Controllers\Wechat\OpenPlatformController@callback');    
     Route::any('authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
-    Route::any('authorized', '\App\Api\Controllers\Wechat\OpenPlatformController@authorized');    
-    Route::any('user-authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@user_authorize');
+    Route::any('miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
     Route::get('bind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
     Route::get('unbind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
     Route::get('commit', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
