@@ -59,14 +59,14 @@ class CareerController extends Controller
             $careers=Career::find($careers_id)->with((['applicant' => function ($query) {
                 $page=request('page');
                 $pagesize=config('common.pagesize');
-                $query->where('status','Y')->paginate($pagesize);
+                $query->where('status','Y')->orderBy('rank', 'desc')->paginate($pagesize);
             }]))->get();
         }else{
             $pagesize=config('common.pagesize');
             $careers=Career::with('applicant')->with((['applicant' => function ($query) {
                 $page=request('page');
                 $pagesize=config('common.pagesize');
-                $query->where('status','Y')->paginate($pagesize);
+                $query->where('status','Y')->orderBy('rank', 'desc')->paginate($pagesize);
             }]))->get();
         }
         return response()->json(['status' => 'success', 'data' => $careers]);

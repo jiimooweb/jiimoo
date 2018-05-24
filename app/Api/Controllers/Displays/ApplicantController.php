@@ -58,7 +58,8 @@ class ApplicantController extends Controller
                 $applicant->detachCareer($detch);
             }
         }
-        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary','status']));
+        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary','status'
+        ,'evaluate','rank']));
         if($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{
