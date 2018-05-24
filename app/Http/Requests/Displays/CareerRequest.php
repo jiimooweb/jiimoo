@@ -15,8 +15,7 @@ class CareerRequest extends CommonRequest
     public function rules()
     {
         return [
-            'desc' => 'required',
-            'content' => 'required',
+            'career' => 'required',
         ];
     }
 }
