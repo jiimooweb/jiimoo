@@ -17,6 +17,7 @@ class OpenPlatformController extends Controller
 
         // 处理授权成功事件
         $server->push(function ($message) {
+            \Log::info('处理授权成功事件');
             $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
         }, Guard::EVENT_AUTHORIZED);
 
@@ -73,8 +74,101 @@ class OpenPlatformController extends Controller
         return 'success';
     }
 
-    public function token() 
+    public function commit()
     {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        $extJson = OpenPlatform::getExtJson();
+        return $miniProgram->code->commit(2, $extJson, '1.0', '任意门网络工作室小程序');
+    }
 
+    public function get_qrcode()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->getQrCode('pages/index/index');
+    }
+
+    public function get_category()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->getCategory();
+    }
+
+    public function get_page()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->getPage();        
+    }
+
+    public function submit_audit()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram();
+        return $miniProgram->code->submitAudit();                
+    }
+
+    public function code_tpl_get_drafts()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return $openPlatform->code_template->getDrafts();                  
+    }
+
+    public function code_tpl_create_from_draft()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return $openPlatform->code_template->createFromDraft(request()->draft_id);                
+    }
+
+    public function code_tpl_list()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return $openPlatform->code_template->list(); 
+    }
+
+    public function code_tpl_delete()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return $openPlatform->code_template->delete(request()->template_id); 
+    }
+
+    
+    public function callback($app_id)
+    {
+        // $official = $this->initOfficialAccount();
+        $openPlatform = OpenPlatform::getApp();
+        $server      = $openPlatform->server;
+
+        $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
+
+        $msg = $server->getMessage();
+
+        if ($msg['MsgType'] == 'text') {
+            if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+                $miniProgram = $openPlatform->miniProgram($app_id, Cache::get($app_id));
+                $miniProgram->customer_service->message($msg['Content'] . '_callback')
+                    ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+                die;
+            } elseif (strpos($msg['Content'], 'QUERY_AUTH_CODE') == 0) {
+                echo '';
+                $code           = substr($msg['Content'], 16);
+                $authorizerInfo = $openPlatform->handleAuthorize($code)['authorization_info'];
+                Cache::put(
+                    $authorizerInfo['authorizer_appid'], 
+                    $authorizerInfo['authorizer_refresh_token'],
+                    7200
+                );
+                $miniProgram = $openPlatform->miniProgram(
+                    $authorizerInfo['authorizer_appid'], 
+                    $authorizerInfo['authorizer_refresh_token']
+                );
+                $miniProgram->customer_service->message($code . "_from_api")
+                            ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+            }
+        } elseif ($msg['MsgType'] == 'event') {
+            $miniProgram = $openPlatform->miniProgram($app_id, Cache::get($app_id));
+            $miniProgram->customer_service->message($msg['Event'] . 'from_callback')
+                ->to($msg['FromUserName'])->from($msg['ToUserName'])->send();
+            die;
+        }
+
+        return $openPlatform->server->serve();
     }
 }
