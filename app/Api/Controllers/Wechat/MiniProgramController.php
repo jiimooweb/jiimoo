@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Controllers;
+namespace App\Api\Controllers\Wechat;
 
 use Exception;
 use App\Services\Token;
@@ -8,6 +8,7 @@ use App\Models\Commons\Fan;
 use App\Models\Commons\Xcx;
 use Illuminate\Http\Request;
 use App\Services\MiniProgramToken;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
 class MiniProgramController extends Controller

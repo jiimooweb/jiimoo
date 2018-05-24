@@ -9,6 +9,7 @@ class Module extends Model
     //
     protected $guarded=[];
     protected $table = 'module';
+    protected $hidden = ['created_at','updated_at'];
     public function combo()
     {
         return $this->belongsToMany(Combo::class,'xcx_combo_module',

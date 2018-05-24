@@ -3,6 +3,7 @@ namespace App\Api\Controllers;
 
 
 use App\Api\Controllers\Controller;
+use App\Models\Commons\Module;
 use App\Models\Commons\Xcx;
 use App\Models\Commons\AdminUser;
 use App\Models\Commons\XcxHasCombo;
@@ -36,14 +37,13 @@ class XcxController extends Controller{
         public function store(XcxRequest $request)
         {
             $valid=Validator::make(request()->all(), [
-                'name'=>'unique:xcxs,name',
-                'app_secret'=>'required'
+                'nick_name'=>'unique:xcxs,nick_name',
             ]);
             if($valid->errors()->count()){
                 return response()->json(["status"=>"error","data"=>$valid->errors()]);
             }
-            $savedata=request(['name','app_id','app_secret','logoUrl']);
-            $savedata['xcx_flag']=str_random(5);
+            $savedata=request(['nick_name','start_time','end_time']);
+            $savedata['xcx_flag']=str_random(8);
             $save=Xcx::create($savedata);
             if ($save){
                 $adminUser=AdminUser::find(1);
@@ -58,6 +58,14 @@ class XcxController extends Controller{
             return response()->json(["status"=>"error","msg"=>"保存失败！"]);
         }
 
+        public function hasCombo()
+        {
+            $xcx_flag=request()->xcx_flag;
+            $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
+            $hasCombo=XcxHasCombo::where('xcx_id', $xcx->id)->first();
+            $hasCombo=json_decode($hasCombo->modules,true);
+            return response()->json(["status"=>"success","data"=>$hasCombo]);
+        }
 
         public function choiceCombo()
         {
@@ -70,31 +78,34 @@ class XcxController extends Controller{
                 $combo->module;
             }
             $hasCombo=XcxHasCombo::where('xcx_id', $xcx->id)->first();
-            $hasCombo=json_decode($hasCombo->modules);
+            if($hasCombo){
+                $hasCombo=json_decode($hasCombo->modules,true);
+            }else{
+                $hasCombo=[];
+            }
             return response()->json(["status"=>"success","data"=>compact('combos','hasCombo','xcx','modules')]);
         }
 
         public function storeCombo(XcxRequest $request){
             $xcx_flag=request()->xcx_flag;
-            $data=request(['name','logoUrl','star_time','end_time']);
+            $data=request(['nick_name','star_time','end_time','apply_modules']);
             $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
             $reCombos=request('combos');
             $reModules=request('modules');
             if ($reCombos&&$reModules){
                 $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
+                $xcx_id=$xcx->id;
+//                $reCombos=Combo::findMany($reCombos);
+//                $reModules=Module::findMany($reModules);
                 $modules=["parent"=>$reCombos,'sub'=>$reModules];
                 $modules=json_encode($modules);
-                $save=XcxHasCombo::create(compact('xcx_id','modules'));
+                $save=XcxHasCombo::updateOrCreate(compact('xcx_id'),compact('modules'));
                 if(!$xcx->apply_modules){
                     $xcx->apply_modules=$modules;
                     $xcx->save();
                 }
             }
-            if ($update){
                 return response()->json(["status"=>"success","msg"=>"修改成功！"]);
-            }else{
-                return response()->json(["status"=>"error","msg"=>"修改失败！"]);
-            }
         }
 
         public function destroy()

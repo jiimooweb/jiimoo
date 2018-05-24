@@ -12,7 +12,8 @@ class ArticleCateController extends Controller
     
     public function index() 
     {
-        $articleCates = ArticleCate::get();
+        $articleCates = ArticleCate::withCount('articles')->get();
+        
         return response()->json(['status' => 'success', 'data' => $articleCates]);
     }
 
@@ -28,7 +29,7 @@ class ArticleCateController extends Controller
     
     public function show() 
     {
-        $cate = ArticleCate::find(request()->article_cate);             
+        $cate = ArticleCate::withCount('articles')->find(request()->article_cate);             
         $status = $cate ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $cate]);
     }

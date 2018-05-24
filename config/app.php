@@ -168,8 +168,9 @@ return [
          * Package Service Providers...
          */
         Overtrue\LaravelWeChat\ServiceProvider::class,        
-        Overtrue\LaravelUEditor\UEditorServiceProvider::class,
-        Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
+        // Overtrue\LaravelUEditor\UEditorServiceProvider::class,
+        // Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class,
+        zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
 
         /*
          * Application Service Providers...

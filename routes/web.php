@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Commons\Fan;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
-// include_once('admin.php');
-// include_once('answer.php');
-// include_once('display.php');
+include_once('admin.php');
+include_once('qiniu.php');
+include_once('wechat.php');
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,20 +30,9 @@ Route::get('login',function() {
     return '这是登录页';
 });
 
-Route::get('cache/{id}', function($id) {
-    return Cache::get(Fan::find($id)->openid, '没有数据');
-});
-
-Route::get('/test', function() {
-    $flag =  \App\Models\Queues\Queue::where('id', 1)->pluck('flag')[0];
-    dd($flag);
-});
 
 Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
 Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
-
-
-include_once('admin.php');
 
 Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 
@@ -65,3 +54,24 @@ Route::get('flash_token', function() {
     }
     return 'error';
 });
+
+Route::get('ticket', function() {
+    return cache('component_verify_ticket');
+});
+
+
+Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
+
+Route::get('/', function() {
+    return view('welcome');
+});
+
+Route::get('setredis', function() {
+    return Redis::set('redis','我是redis');
+});
+
+Route::get('getredis', function() {
+    return Redis::get('redis');
+});
+
+

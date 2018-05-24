@@ -21,6 +21,18 @@ Route::group(['prefix' => 'displays'], function () {
     Route::apiResource('/suggests', '\App\Api\Controllers\Displays\SuggestController');    
     //其他::轮播图
     Route::apiResource('/swipers', '\App\Api\Controllers\Displays\SwiperController');   
-    
+
+    //工种分类
+    Route::post('/career/show', '\App\Api\Controllers\Displays\CareerController@xcxShow');
+    Route::apiResource('/career', '\App\Api\Controllers\Displays\CareerController');
+    //求职人员
+    Route::post('/applicant/show', '\App\Api\Controllers\Displays\ApplicantController@show');
+    //收藏
+    Route::post('/applicant/collection', '\App\Api\Controllers\Displays\ApplicantController@collection');
+    Route::post('/applicant/disCollection', '\App\Api\Controllers\Displays\ApplicantController@disCollection');
+    Route::post('/applicant/showCollection', '\App\Api\Controllers\Displays\ApplicantController@showCollection');
+
+    Route::apiResource('/applicant', '\App\Api\Controllers\Displays\ApplicantController');
+
 });
 

@@ -21,8 +21,8 @@ class ProductController extends Controller
     public function store(ProductRequest $request) 
     {   
         $data = request()->all();
-
-        // TODO:储存图片
+        
+        $data['banner'] = json_encode($data['banner']);
         
         if(Product::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
@@ -41,10 +41,9 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request) 
     {
-        // TODO:判断更新权限
-        $data = request()->all();
+        $data = request()->all();   
 
-        // TODO:储存图片
+        $data['banner'] = json_encode($data['banner']);        
         
         if(Product::where('id', request()->product)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   

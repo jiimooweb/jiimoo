@@ -19,6 +19,12 @@ class Xcx extends Model
             withPivot(['xcx_id','user_id','sort']);
     }
 
+    public function experiencers()
+    {
+        return $this->hasMany(\App\Models\Wechat\Experiencer::class,'xcx_id',
+            'id');
+    }
+
     public function hasUser($id) 
     {
         return $this->user()->where('user_id', $id)->count();

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Commons;
 
 use App\Http\Requests\CommonRequest;
 
-class XcxRequest extends CommonRequest
+class TempletRequest extends CommonRequest
 {
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,7 +15,8 @@ class XcxRequest extends CommonRequest
     public function rules()
     {
         return [
-            'nick_name'=>'required',
+            'desc' => 'required',
+            'content' => 'required',
         ];
     }
 }

@@ -19,10 +19,8 @@ class BasicInfoController extends Controller
     public function store(BasicInfoRequest $request) 
     {   
         $data = request([
-            'name', 'tel', 'address', 'intro', 'desc'
+            'name', 'tel', 'address', 'intro', 'desc', 'logo'
         ]);
-
-        $data['logo'] = '/storage/'.request()->file('logo')->storePublicly(md5(time()));
         
         if(BasicInfo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
@@ -43,10 +41,8 @@ class BasicInfoController extends Controller
     {
         // TODO:判断更新权限
         $data = request([
-            'name', 'tel', 'address', 'intro', 'desc'
+            'name', 'tel', 'address', 'intro', 'desc', 'logo'
         ]);
-
-        $data['logo'] = '/storage/'.request()->file('logo')->storePublicly(md5(time()));
         
         if(BasicInfo::where('id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    

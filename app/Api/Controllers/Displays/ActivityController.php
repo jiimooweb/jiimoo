@@ -19,7 +19,7 @@ class ActivityController extends Controller
     public function store(ActivityRequest $request) 
     {   
         $data = request([
-            'name', 'places', 'content'
+            'name', 'places', 'content', 'thumb'
         ]);
 
         $sign_time = explode('~',request('sign_time'));
@@ -47,7 +47,7 @@ class ActivityController extends Controller
     public function update(ActivityRequest $request)
     {
         $data = request([
-            'name', 'places', 'content'
+            'name', 'places', 'content', 'thumb'
         ]);
 
         $sign_time = explode('~',request('sign_time'));
