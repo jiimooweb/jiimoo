@@ -66,12 +66,5 @@ Route::get('/', function() {
     return view('welcome');
 });
 
-Route::get('setredis', function() {
-    return Redis::set('redis','我是redis');
-});
-
-Route::get('getredis', function() {
-    return Redis::get('redis');
-});
 
 

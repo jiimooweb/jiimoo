@@ -13,9 +13,9 @@ class OpenPlatform
         return $openPlatform;
     }
 
-    public static function getMiniProgram()
+    public static function getMiniProgram($xcx_id)
     {
-        $xcx = Xcx::find(33);
+        $xcx = Xcx::find($xcx_id);
         $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
         return $app;
     }
@@ -33,27 +33,39 @@ class OpenPlatform
         return $data;
     }
 
-    public static function initOpenPlatform($auth_code, $method)
+    public static function initMiniProgram($xcx_id, $auth_code)
     {
         $openPlatform = self::getApp();
 
         $info = $openPlatform->handleAuthorize($auth_code)['authorization_info'];
-        
+
         //获取小程序实例
         $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
         //设置域名
-        $miniProgram->domain->modify(self::miniProgramModifyDomain($method));
+        $miniProgram->domain->modify(self::miniProgramModifyDomain('add'));
         
         //获取小程序信息
         $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
         //保存
-        self::saveMiniProgram($miniProgramInfo);
+        self::saveMiniProgram($xcx_id,$miniProgramInfo);
         
     }
 
-    public static function unAuthorized()
+    public static function updateMiniProgram($app_id)
     {
-        Xcx::where('id', 33)->update(['authorization_status' => -1]);   
+        $Xcx = Xcx::where(['app_id' => $app_id, 'authorization_status' => 1])->first();
+
+        $openPlatform = self::getApp();
+        //获取小程序信息
+        $miniProgramInfo = $openPlatform->getAuthorizer($app_id);        
+        //保存
+        self::saveMiniProgram($Xcx->id, $miniProgramInfo);
+        
+    }
+
+    public static function unAuthorized($app_id)
+    {
+        Xcx::where('app_id', $app_id)->update(['authorization_status' => -1]);   
     }
 
     public static function miniProgramModifyDomain($method)
@@ -73,7 +85,7 @@ class OpenPlatform
         return $data;
     }
 
-    public static function saveMiniProgram($miniProgram)
+    public static function saveMiniProgram($xcx_id, $miniProgram)
     {
         $data = [];
         $authorizer_info = $miniProgram['authorizer_info'];
@@ -94,7 +106,7 @@ class OpenPlatform
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = json_encode($miniProgram['authorization_info']['func_info']); 
         $data['authorization_status'] = 1; 
-        Xcx::where('id', 33)->update($data);
+        Xcx::where('id', $xcx_id)->update($data);
     }
 
     public static function getExtJson() 
