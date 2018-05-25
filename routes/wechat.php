@@ -1,7 +1,7 @@
 <?php
 
 Route::any('wechat/{appid}/callback', '\App\Api\Controllers\Wechat\OpenPlatformController@callback');    
-Route::any('wechat/miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
+Route::any('wechat/miniprogram/{xcx_id?}', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
 Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
 
 Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {

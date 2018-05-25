@@ -37,18 +37,17 @@ class OpenPlatformController extends Controller
 
     public function miniprogram() 
     {
-        return session('xcx_id');
-        // $miniProgram = Xcx::find(session('xcx_id'));
+        $miniProgram = Xcx::find(request()->xcx_id);
     
-        // if($miniProgram->authorization_status == 1) {
-        //     return response()->json(['status' => 'authorized', 'data' => $miniProgram]);
-        // }
+        if($miniProgram->authorization_status == 1) {
+            return response()->json(['status' => 'authorized', 'data' => $miniProgram]);
+        }
 
-        // $openPlatform = OpenPlatform::getApp();        
+        $openPlatform = OpenPlatform::getApp();        
 
-        // $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/user-authorize');
+        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/miniprogram');
 
-        // return response()->json(['status' => 'unauthorize', 'data' => $url]);
+        return response()->json(['status' => 'unauthorize', 'data' => $url]);
     }
 
     public function bind_tester()
