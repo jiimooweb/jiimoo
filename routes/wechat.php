@@ -3,6 +3,7 @@
 Route::any('wechat/{appid}/callback', '\App\Api\Controllers\Wechat\OpenPlatformController@callback');    
 Route::any('wechat/miniprogram/{xcx_id?}', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
 Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
+Route::any('wechat/user_author', '\App\Api\Controllers\Wechat\OpenPlatformController@user_author');    
 
 Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {
     Route::get('bind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
