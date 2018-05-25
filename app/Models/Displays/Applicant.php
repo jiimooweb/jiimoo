@@ -4,6 +4,7 @@ namespace App\Models\Displays;
 
 use App\Models\Model;
 use App\Models\Displays\Career;
+use App\Models\Commons\Fan;
 class Applicant extends Model
 {
     protected $table = 'displays_applicants';
@@ -23,4 +24,11 @@ class Applicant extends Model
     {
         return $this->career()->detach($career);
     }
+
+    public function fans()
+    {
+        return $this->belongsToMany(Fan::class,'displays_fans_applicant',
+            'applicant_id','fan_id');
+    }
+
 }
