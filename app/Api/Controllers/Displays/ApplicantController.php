@@ -19,8 +19,20 @@ class ApplicantController extends Controller
 
     public function show(){
         $like=request('like');
-        $applicant=Applicant::orWhere('name','like',$like)->orWhere('duty','like',$like)->
-        where('status','Y')->withCount('fans')->get();
+        $career_id=request('career_id');
+        $pagesize=config('common.pagesize');
+        $applicant=Applicant::where('status',0)->withCount('fans')
+            ->with('career');
+        if($like){
+            $like="%".$like."%";
+            $applicant=$applicant->Where('name','like',$like)->orWhere('duty','like',$like);
+        }else if($career_id){
+            $applicant=$applicant->whereHas('career', function ($query) {
+               $career_id=request('career_id');
+                $query->where('career_id',$career_id);
+            });
+        }
+        $applicant=$applicant->orderBy('rank', 'desc')->paginate($pagesize);
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
