@@ -20,7 +20,7 @@ class ApplicantController extends Controller
     public function show(){
         $like=request('like');
         $applicant=Applicant::orWhere('name','like',$like)->orWhere('duty','like',$like)->
-        where('status','Y')->get();
+        where('status','Y')->withCount('fans')->get();
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
@@ -125,4 +125,20 @@ class ApplicantController extends Controller
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
+    public function addClick()
+    {
+        $valid=Validator::make(request()->all(), [
+            'click_number'=>'required|int',
+            'applicant_id'=>'required'
+        ]);
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
+        }
+        $update=Applicant::find(request('applicant_id'))->update(request(['click_number']));
+        if($update){
+            return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+        }else{
+            return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+        }
+    }
 }

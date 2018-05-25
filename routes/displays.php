@@ -29,8 +29,10 @@ Route::group(['prefix' => 'displays'], function () {
     Route::post('/applicant/show', '\App\Api\Controllers\Displays\ApplicantController@show');
     //收藏
     Route::post('/applicant/collection', '\App\Api\Controllers\Displays\ApplicantController@collection');
-    Route::post('/applicant/disCollection', '\App\Api\Controllers\Displays\ApplicantController@disCollection');
-    Route::post('/applicant/showCollection', '\App\Api\Controllers\Displays\ApplicantController@showCollection');
+    Route::post('/applicant/dis_collection', '\App\Api\Controllers\Displays\ApplicantController@disCollection');
+    Route::post('/applicant/show_collection', '\App\Api\Controllers\Displays\ApplicantController@showCollection');
+
+    Route::post('/applicant/add_click', '\App\Api\Controllers\Displays\ApplicantController@addClick');
 
     Route::apiResource('/applicant', '\App\Api\Controllers\Displays\ApplicantController');
 
