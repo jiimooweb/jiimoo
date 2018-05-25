@@ -40,7 +40,7 @@ class OpenPlatformController extends Controller
         $miniProgram = Xcx::find(33);
     
         if($miniProgram->authorization_status == 1) {
-            return response()->json(['status' => 'authorize', 'data' => $miniProgram]);
+            return response()->json(['status' => 'authorized', 'data' => $miniProgram]);
         }
 
         $openPlatform = OpenPlatform::getApp();        
