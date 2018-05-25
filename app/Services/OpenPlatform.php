@@ -15,7 +15,7 @@ class OpenPlatform
 
     public static function getMiniProgram()
     {
-        $xcx = Xcx::find(session('xcx_id'));
+        $xcx = Xcx::find(33);
         $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
         return $app;
     }
@@ -53,7 +53,7 @@ class OpenPlatform
 
     public static function unAuthorized()
     {
-        Xcx::where('id', session('xcx_id'))->update(['authorization_status' => -1]);   
+        Xcx::where('id', 33)->update(['authorization_status' => -1]);   
     }
 
     public static function miniProgramModifyDomain($method)
@@ -94,7 +94,7 @@ class OpenPlatform
         $data['refresh_token'] = $miniProgram['authorization_info']['authorizer_refresh_token'];
         $data['func_info'] = json_encode($miniProgram['authorization_info']['func_info']); 
         $data['authorization_status'] = 1; 
-        Xcx::where('id', session('xcx_id'))->update($data);
+        Xcx::where('id', 33)->update($data);
     }
 
     public static function getExtJson() 
