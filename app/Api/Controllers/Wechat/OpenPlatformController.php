@@ -37,6 +37,7 @@ class OpenPlatformController extends Controller
 
     public function miniprogram() 
     {
+        return sesion('xcx_id');
         $miniProgram = Xcx::find(session('xcx_id'));
     
         if($miniProgram->authorization_status == 1) {
