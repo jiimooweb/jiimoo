@@ -20,6 +20,10 @@ class MiniProgramController extends Controller
 
         $user = $app->auth->session(request('code'));
 
+        // $app = OpenPlatform::getMiniProgram(session('xcx_id'));
+
+        // $user = $app->auth->session(request('code'));
+
         $miniToken = new MiniProgramToken();
         
         $token = $miniToken->getToken($user);
@@ -37,8 +41,9 @@ class MiniProgramController extends Controller
         $data = json_decode($data, true);
 
         $userInfo = request('userInfo');
-        $userInfo['xcx_id'] = 3;
-        
+        $userInfo['xcx_id'] = session('xcx_id');
+        $userInfo['nickname'] = $userInfo['nickName'];
+        unset($userInfo['nickName']);
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
         }

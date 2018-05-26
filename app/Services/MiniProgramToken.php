@@ -14,10 +14,12 @@ class MiniProgramToken extends Token
     public function getToken(array $data) : string
     {
         $openid = $data['openid'];
+        // $unionid = $data['unionid'];
         $fans = Fan::getByOpenID($openid);
         if (!$fans)
         {
             $uid = $this->newUser($openid);
+            // $uid = $this->newUser($openid, $unionid);
         }
         else {
             $uid = $fans->id;
@@ -49,9 +51,9 @@ class MiniProgramToken extends Token
     }
 
     // 创建新用户
-    private function newUser(string $openid) : int
+    private function newUser(string $openid, string $unionid = '') : int
     {
-        $user = Fan::create(['openid' => $openid]);
+        $user = Fan::create(['openid' => $openid, 'unionid' => $unionid]);
         return $user->id;
     }
 }
