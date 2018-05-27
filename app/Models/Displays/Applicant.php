@@ -31,4 +31,9 @@ class Applicant extends Model
             'applicant_id','fan_id');
     }
 
+    public function hasFan($uid)
+    {
+        return $this->fans->contains('id', $uid);
+    }
+
 }

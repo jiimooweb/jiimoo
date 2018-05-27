@@ -37,6 +37,9 @@ class ApplicantController extends Controller
     public function show()
     {
         $applicant=Applicant::find(request()->applicant);
+        if($applicant->hasFan(Token::getUid())) {
+            dd('ddd');
+        }
         if ($applicant){
             return response()->json(["status"=>"success","data"=>$applicant]);
         }else{
