@@ -36,10 +36,16 @@ class ApplicantController extends Controller
 
     public function show()
     {
-        $applicant=Applicant::find(request()->applicant);
-        if($applicant->hasFan(Token::getUid())) {
-            dd('ddd');
-        }
+        $uid = Token::getUid();
+        $applicant=Applicant::find(request()->applicant)->load('fans')->toArray();
+        foreach($applicant['fans'] as $fan) {
+            if($fan['id'] == $uid) {
+                $applicant['collection'] = 1;
+                break;
+            }
+        }  
+        unset($applicant['fans']);
+        
         if ($applicant){
             return response()->json(["status"=>"success","data"=>$applicant]);
         }else{

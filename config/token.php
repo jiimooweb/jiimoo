@@ -2,5 +2,5 @@
 
 return [
     'token_salt' => env('TOKEN_SALT', 'renyimen'),
-    'token_expire_in' => env('TOKEN_EXPIRE_IN', 120),
+    'token_expire_in' => env('TOKEN_EXPIRE_IN', 1),
 ];
