@@ -20,7 +20,7 @@ class ApplicantController extends Controller
         $pagesize = config('common.pagesize');
         $offset = ($page - 1) * $pagesize;
         $applicants = Applicant::withCount(['fans'])->offset($offset)
-        ->limit($pagesize)->get()->load('fans')->toArray();
+        ->limit($pagesize)->get()->load('fans','career')->toArray();
         foreach($applicants as &$applicant) {
             foreach($applicant['fans'] as $fan) {
                 if($fan['id'] == $uid) {
