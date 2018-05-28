@@ -18,9 +18,7 @@ class BasicInfoController extends Controller
 
     public function store(BasicInfoRequest $request) 
     {   
-        $data = request([
-            'name', 'tel', 'address', 'intro', 'desc', 'logo'
-        ]);
+        $data = request()->all();
         
         if(BasicInfo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
@@ -40,9 +38,7 @@ class BasicInfoController extends Controller
     public function update(BasicInfoRequest $request) 
     {
         // TODO:判断更新权限
-        $data = request([
-            'name', 'tel', 'address', 'intro', 'desc', 'logo'
-        ]);
+        $data = request()->all();
         
         if(BasicInfo::where('id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
