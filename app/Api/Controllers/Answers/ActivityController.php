@@ -14,8 +14,8 @@ class ActivityController extends Controller
     public function index(){
         $xcx_id=session('xcx_id');
         $pagesize=config('common.pagesize');
-        $activite=Activitie::orderBy('created_at','desc')->paginate($pagesize);
-        return response()->json(["status"=>"success","data"=>$activite]);
+        $activites=Activitie::orderBy('created_at','desc')->paginate($pagesize);
+        return response()->json(["status"=>"success","data"=>$activites]);
     }
 
     public function store(ActivityRequest $request)

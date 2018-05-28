@@ -11,8 +11,8 @@ class CashController extends Controller
         public function show()
         {
             $xcx_id=session('xcx_id');
-            $cash=Cash::where('xcx_id',$xcx_id)->get();
-            return response()->json(["status"=>"success","data"=>$cash]);
+            $cashs=Cash::where('xcx_id',$xcx_id)->get();
+            return response()->json(["status"=>"success","data"=>$cashs]);
         }
 
         public function store(CashRequest $request)
