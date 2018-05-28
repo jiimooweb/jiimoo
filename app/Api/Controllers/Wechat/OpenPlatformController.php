@@ -76,7 +76,7 @@ class OpenPlatformController extends Controller
             return response()->json(['status' => 'success', 'msg' => '绑定成功']);
         }
         
-        return 'error';
+        return $msg;
         // TODO:: 判断错误代码
     }
 

@@ -38,6 +38,9 @@ class ApplicantController extends Controller
     {
         $uid = Token::getUid();
         $applicant=Applicant::find(request()->applicant)->load('fans')->toArray();
+        if(request()->client_type == 'app') {
+            Applicant::find(request()->applicant)->increment('click_number');
+        }
         foreach($applicant['fans'] as $fan) {
             if($fan['id'] == $uid) {
                 $applicant['collection'] = 1;
@@ -54,22 +57,33 @@ class ApplicantController extends Controller
     }
 
     public function show_by_filter(){
-        $like=request('like');
-        $career_id=request('career_id');
-        $pagesize=config('common.pagesize');
+        $like = request('like');
+        $career_id = request('career_id');
+        $uid = Token::getUid();
+        $page = request('page') ?? 1;
+        $pagesize = config('common.pagesize');
+        $offset = ($page - 1) * $pagesize;
         $applicant=Applicant::where('status',0)->withCount('fans')
-            ->with('career');
+            ->with('career')->with('fans');
         if($like){
             $like="%".$like."%";
-            $applicant=$applicant->Where('name','like',$like)->orWhere('duty','like',$like);
+            $applicant = $applicant->Where('name','like',$like)->orWhere('duty','like',$like);
         }else if($career_id){
-            $applicant=$applicant->whereHas('career', function ($query) {
-               $career_id=request('career_id');
+            $applicant = $applicant->whereHas('career', function ($query) use ($career_id) {
                 $query->where('career_id',$career_id);
             });
         }
-        $applicant=$applicant->orderBy('rank', 'desc')->paginate($pagesize);
-        return response()->json(['status' => 'success', 'data' => $applicant]);
+        $applicants = $applicant->offset($offset)->limit($pagesize)->get()->toArray();
+        foreach($applicants as &$applicant) {
+            foreach($applicant['fans'] as $fan) {
+                if($fan['id'] == $uid) {
+                    $applicant['collection'] = 1;
+                    break;
+                }
+            }  
+            unset($applicant['fans']);
+        } 
+        return response()->json(['status' => 'success', 'data' => $applicants]);
     }
 
     public function store(ApplicantRequest $request)
