@@ -18,6 +18,6 @@ Route::group(['prefix'=>'api','middleware'=>['token']],function (){
     Route::resource('reservations', '\App\Api\Controllers\Resertvations\ResertvationController');
 
 
-    Route::apiResource('/templet','\App\Api\Controllers\Commons\AdminTempletController');
+    Route::apiResource('/templets','\App\Api\Controllers\Commons\AdminTempletController');
 });
 

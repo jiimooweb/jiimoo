@@ -13,15 +13,15 @@ class TempletController extends Controller
     {
         //用户个人范文
         $xcx_id=session('xcx_id');
-        $templet=Templet::where('xcx_id',$xcx_id)->get();
-        return response()->json(['status' => 'success', 'data' => $templet]);
+        $templets=Templet::where('xcx_id',$xcx_id)->get();
+        return response()->json(['status' => 'success', 'data' => $templets]);
     }
 
     public function templetCombox(){
         //用户使用范文（包过自身的以及公用的）
         $xcx_id=session('xcx_id');
-        $templet=Templet::orWhere('xcx_id',$xcx_id)->orWhere('xcx_id',$xcx_id)->get();
-        return response()->json(['status' => 'success', 'data' => $templet]);
+        $templets=Templet::orWhere('xcx_id',$xcx_id)->orWhere('xcx_id',$xcx_id)->get();
+        return response()->json(['status' => 'success', 'data' => $templets]);
     }
 
     public function store(TempletRequest $request)
