@@ -20,9 +20,7 @@ class VerifyToken
         $token = $request->header('token');
 
         if(Token::verifyToken($token)){
-            if($request->client_type == 'web') {
-                cache([$token => cache($token)], config('token.token_expire_in'));  //刷新token时间
-            }
+            cache([$token => cache($token)], config('token.token_expire_in'));  //刷新token时间
             return $next($request);
         }
 

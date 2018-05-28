@@ -36,10 +36,10 @@ Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->midd
 
 Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
 
-Route::group(['prefix' => '{client_type}/{xcx_flag}/wechat','middleware'=>['client', 'cors']], function() {
-    Route::post('token/getToken', '\App\Api\Controllers\MiniProgramController@getToken');
-    Route::post('token/verifyToken', '\App\Api\Controllers\MiniProgramController@verifyToken');
-    Route::post('saveInfo', '\App\Api\Controllers\MiniProgramController@saveInfo')->middleware('token');
+Route::group(['prefix' => '{client_type}/{xcx_flag}/api/wechat','middleware'=>['client', 'cors']], function() {
+    Route::post('token/getToken', '\App\Api\Controllers\Wechat\MiniProgramController@getToken');
+    Route::post('token/verifyToken', '\App\Api\Controllers\Wechat\MiniProgramController@verifyToken');
+    Route::post('saveInfo', '\App\Api\Controllers\Wechat\MiniProgramController@saveInfo')->middleware('token');
 });
 
 Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
@@ -66,12 +66,5 @@ Route::get('/', function() {
     return view('welcome');
 });
 
-Route::get('setredis', function() {
-    return Redis::set('redis','我是redis');
-});
-
-Route::get('getredis', function() {
-    return Redis::get('redis');
-});
 
 

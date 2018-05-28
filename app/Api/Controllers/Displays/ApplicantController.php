@@ -2,24 +2,73 @@
 
 namespace App\Api\Controllers\Displays;
 
+use App\Services\Token;
 use App\Models\Commons\Fan;
 use Illuminate\Http\Request;
+use App\Models\Displays\Career;
 use App\Models\Displays\Applicant;
 use App\Api\Controllers\Controller;
-use App\Http\Requests\Displays\ApplicantRequest;
-use App\Models\Displays\Career;
 use App\Models\Displays\FanApplicant;
+use App\Http\Requests\Displays\ApplicantRequest;
+
 class ApplicantController extends Controller
 {
     public function index()
     {
-        $applicant=Applicant::paginate(config('common.pagesize'));
-        return response()->json(['status' => 'success', 'data' => $applicant]);
+        $uid = Token::getUid();
+        $page = request()->get('page') ?? 1;
+        $pagesize = config('common.pagesize');
+        $offset = ($page - 1) * $pagesize;
+        $applicants = Applicant::withCount(['fans'])->offset($offset)
+        ->limit($pagesize)->get()->load('fans','career')->toArray();
+        foreach($applicants as &$applicant) {
+            foreach($applicant['fans'] as $fan) {
+                if($fan['id'] == $uid) {
+                    $applicant['collection'] = 1;
+                    break;
+                }
+            }  
+            unset($applicant['fans']);
+        }
+          
+        return response()->json(['status' => 'success', 'data' => $applicants]);
     }
 
-    public function show(){
+    public function show()
+    {
+        $uid = Token::getUid();
+        $applicant=Applicant::find(request()->applicant)->load('fans')->toArray();
+        foreach($applicant['fans'] as $fan) {
+            if($fan['id'] == $uid) {
+                $applicant['collection'] = 1;
+                break;
+            }
+        }  
+        unset($applicant['fans']);
+        
+        if ($applicant){
+            return response()->json(["status"=>"success","data"=>$applicant]);
+        }else{
+            return response()->json(["status"=>"error"]);
+        }
+    }
+
+    public function show_by_filter(){
         $like=request('like');
-        $applicant=Applicant::orWhere('name','like',$like)->orWhere('duty','like',$like)->get();
+        $career_id=request('career_id');
+        $pagesize=config('common.pagesize');
+        $applicant=Applicant::where('status',0)->withCount('fans')
+            ->with('career');
+        if($like){
+            $like="%".$like."%";
+            $applicant=$applicant->Where('name','like',$like)->orWhere('duty','like',$like);
+        }else if($career_id){
+            $applicant=$applicant->whereHas('career', function ($query) {
+               $career_id=request('career_id');
+                $query->where('career_id',$career_id);
+            });
+        }
+        $applicant=$applicant->orderBy('rank', 'desc')->paginate($pagesize);
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
@@ -57,7 +106,8 @@ class ApplicantController extends Controller
                 $applicant->detachCareer($detch);
             }
         }
-        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary']));
+        $update=$applicant->update(request(['name','experience','duty','resume','photo','salary','status'
+        ,'evaluate','rank']));
         if($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{
@@ -83,14 +133,14 @@ class ApplicantController extends Controller
 
     public function collection()
     {
-        $valid=Validator::make(request()->all(), [
+        $valid = \Validator::make(request()->all(), [
             'applicant_id'=>'required',
-            'fan_id'=>'required'
         ]);
+        $fan_id = Token::getUid();
         if($valid->errors()->count()){
             return response()->json(["status"=>"error","data"=>$valid->errors()]);
         }
-        $save=FanApplicant::create(request(['applicant_id','fan_id']));
+        $save=FanApplicant::create(['applicant_id' => request('applicant_id'),'fan_id' => $fan_id ]);
         if ($save){
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
         }else{
@@ -100,15 +150,15 @@ class ApplicantController extends Controller
 
     public function disCollection()
     {
-        $valid=Validator::make(request()->all(), [
-            'applicant_ids'=>'required|array',
-            'fan_id'=>'required'
+        $valid=\Validator::make(request()->all(), [
+            'applicant_id'=>'required',
         ]);
+        $fan_id = Token::getUid();
         if($valid->errors()->count()){
             return response()->json(["status"=>"error","data"=>$valid->errors()]);
         }
-        $fan=Fan::find(request('fan_id'));
-        $applicants=Applicant::findMany(request('applicant_ids'));
+        $fan=Fan::find($fan_id);
+        $applicants=Applicant::findMany(request('applicant_id'));
         foreach ($applicants as $applicant){
             $fan->detchApplicant($applicant);
         }
@@ -117,10 +167,26 @@ class ApplicantController extends Controller
 
     public function showCollection()
     {
-        $fan_id=request()->fan;
+        $fan_id=Token::getUid();
         $fan=Fan::find($fan_id);
         $applicant=$fan->displayApplicant;
         return response()->json(['status' => 'success', 'data' => $applicant]);
     }
 
+    public function addClick()
+    {
+        $valid=Validator::make(request()->all(), [
+            'click_number'=>'required|int',
+            'applicant_id'=>'required'
+        ]);
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
+        }
+        $update=Applicant::find(request('applicant_id'))->update(request(['click_number']));
+        if($update){
+            return response()->json(["status"=>"success","msg"=>"修改成功！"]);
+        }else{
+            return response()->json(["status"=>"error","msg"=>"修改失败！"]);
+        }
+    }
 }

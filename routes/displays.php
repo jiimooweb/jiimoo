@@ -23,16 +23,18 @@ Route::group(['prefix' => 'displays'], function () {
     Route::apiResource('/swipers', '\App\Api\Controllers\Displays\SwiperController');   
 
     //工种分类
-    Route::post('/career/show', '\App\Api\Controllers\Displays\CareerController@xcxShow');
-    Route::apiResource('/career', '\App\Api\Controllers\Displays\CareerController');
+    Route::post('/careers/show', '\App\Api\Controllers\Displays\CareerController@xcxShow');
+    Route::apiResource('/careers', '\App\Api\Controllers\Displays\CareerController');
     //求职人员
-    Route::post('/applicant/show', '\App\Api\Controllers\Displays\ApplicantController@show');
+    Route::post('/applicants/show_by_filter', '\App\Api\Controllers\Displays\ApplicantController@show_by_filter');
     //收藏
-    Route::post('/applicant/collection', '\App\Api\Controllers\Displays\ApplicantController@collection');
-    Route::post('/applicant/disCollection', '\App\Api\Controllers\Displays\ApplicantController@disCollection');
-    Route::post('/applicant/showCollection', '\App\Api\Controllers\Displays\ApplicantController@showCollection');
+    Route::post('/applicants/collection', '\App\Api\Controllers\Displays\ApplicantController@collection');
+    Route::post('/applicants/dis_collection', '\App\Api\Controllers\Displays\ApplicantController@disCollection');
+    Route::post('/applicants/show_collection', '\App\Api\Controllers\Displays\ApplicantController@showCollection');
 
-    Route::apiResource('/applicant', '\App\Api\Controllers\Displays\ApplicantController');
+    Route::post('/applicants/add_click', '\App\Api\Controllers\Displays\ApplicantController@addClick');
+
+    Route::apiResource('/applicants', '\App\Api\Controllers\Displays\ApplicantController');
 
 });
 

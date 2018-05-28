@@ -17,12 +17,12 @@ class OpenPlatformController extends Controller
 
         // 处理授权成功事件
         $server->push(function ($message) {
-            $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
+            // OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'add');
         }, Guard::EVENT_AUTHORIZED);
 
         // 处理授权更新事件
         $server->push(function ($message) {
-            $data = OpenPlatform::initOpenPlatform($message['AuthorizationCode'], 'set');
+            OpenPlatform::updateMiniProgram($message['AuthorizerAppid']);
         }, Guard::EVENT_UPDATE_AUTHORIZED);
 
         // 处理授权取消事件
@@ -33,19 +33,43 @@ class OpenPlatformController extends Controller
         return $server->serve();
     }
 
-    
-
-    public function user_authorize() 
+    public function user_author() 
     {
         $openPlatform = OpenPlatform::getApp();        
-        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/authorized');
-        return view('/wechat',['url' => $url]);
+
+        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/user');
+
+        return view('wechat',['url' => $url]);
+    }
+
+    public function miniprogram() 
+    {
+        $xcx_id = request()->xcx_id;
+
+        $miniProgram = Xcx::find($xcx_id);
+    
+        if($miniProgram->authorization_status == 1) {
+            return response()->json(['status' => 'authorized', 'data' => $miniProgram]);
+        }
+
+        $openPlatform = OpenPlatform::getApp();        
+
+        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/save_miniprogram'.$xcx_id);
+
+        return response()->json(['status' => 'unauthorize', 'data' => $url]);
+    }
+
+    public function save_miniprogram() 
+    {  
+        $code = request()->get('auth_code');
+        $xcx_id = request()->xcx_id;
+        OpenPlatform::initMiniProgram($xcx_id,$auth_code);
     }
 
     public function bind_tester()
     {
         $wechatid = request()->wechatid;
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $msg = $miniProgram->tester->bind($wechatid);
         if($msg['errcode'] == 0) {
             Experiencer::create(['wechatid' => $wechatid, 'userstr' => $msg['userstr']]);
@@ -59,7 +83,7 @@ class OpenPlatformController extends Controller
     public function unbind_tester()
     {
         $wechatid = request()->wechatid;
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $msg = $miniProgram->tester->unbind($wechatid);
         if($msg['errcode'] == 0) {
             Experiencer::where('wechatid', $wechatid)->delete();
@@ -68,39 +92,34 @@ class OpenPlatformController extends Controller
         return response()->json(['status' => 'error', 'msg' => '系统繁忙']);
     }
 
-    public function authorized() 
-    {
-        return 'success';
-    }
-
     public function commit()
     {
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $extJson = OpenPlatform::getExtJson();
-        return $miniProgram->code->commit(2, $extJson, '1.0', '任意门网络工作室小程序');
+        return $miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序');
     }
 
     public function get_qrcode()
     {
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->code->getQrCode('pages/index/index');
     }
 
     public function get_category()
     {
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->code->getCategory();
     }
 
     public function get_page()
     {
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->code->getPage();        
     }
 
     public function submit_audit()
     {
-        $miniProgram = OpenPlatform::getMiniProgram();
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->code->submitAudit();                
     }
 

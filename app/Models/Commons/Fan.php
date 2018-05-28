@@ -30,7 +30,7 @@ class Fan extends Model
     //展示类：使用者收藏求职者
     public function displayApplicant(){
         return $this->belongsToMany(Applicant::class,'displays_fans_applicant',
-                'fan_id','applicant_id	');
+                'fan_id','applicant_id');
     }
     public function detchApplicant($applicant){
         return $this->displayApplicant()->detach($applicant);
