@@ -13,8 +13,8 @@ class DepotController extends Controller
         public function index()
         {
             $pagesize=config('common.pagesize');
-            $depot=Depot::paginate($pagesize);
-            return response()->json(["status"=>"success","data"=>$depot]);
+            $depots=Depot::paginate($pagesize);
+            return response()->json(["status"=>"success","data"=>$depots]);
         }
 
         public function show()
