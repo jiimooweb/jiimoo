@@ -225,7 +225,7 @@ class OpenPlatformController extends Controller
 
     public function get_template()
     {
-        $template_id = request()->$template_id;
+        $template_id = request()->template_id;
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return Wechat::retMsg($miniProgram->template_message->get($template_id));
     }
