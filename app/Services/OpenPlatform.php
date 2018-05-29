@@ -109,13 +109,14 @@ class OpenPlatform
         Xcx::where('id', $xcx_id)->update($data);
     }
 
-    public static function getExtJson() 
+    public static function getExtJson($xcx_id) 
     {
+        $xcx = Xcx::find($xcx_id);
         $ext = [
             'extEnable' => true,
-            'extAppid' => 'wxc1fb7bd6c21cb0cc',
+            'extAppid' => $xcx->app_id,
             'ext' => [
-                'xcx_flag' => 'sdq12DSs'
+                'xcx_flag' => $xcx->xcx_flag
             ]
         ];
 
@@ -125,5 +126,17 @@ class OpenPlatform
     public static function getItemList()
     {
 
+    }
+
+    public static function saveAudit(string $app_id, array $msg, int $status){
+        $audit = Audit::where('app_id', $app_id)->orderBy('id', 'desc')->first();        
+        $audit->status = $status;
+        $audit->org_id = $msg['ToUserName'];
+        $audit->sys_id = $msg['FromUserName'];
+        $audit->create_time = $msg['CreateTime'];
+        $audit->succ_time = $msg['SuccTime'];
+        $audit->fail_time = $msg['FailTime'];
+        $audit->reason  = $msg['Reason'];
+        return $audit->save();
     }
 }

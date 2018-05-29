@@ -3,10 +3,12 @@
 namespace App\Api\Controllers\Wechat;
 
 use App\Models\Commons\Xcx;
+use App\Models\Wechat\Audit;
 use App\Services\OpenPlatform;
 use App\Models\Wechat\Experiencer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use EasyWeChat\OpenPlatform\Server\Guard;
 
 
@@ -94,8 +96,9 @@ class OpenPlatformController extends Controller
 
     public function commit()
     {
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        $extJson = OpenPlatform::getExtJson();
+        $xcx_id = request()->xcx_id;
+        $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
+        $extJson = OpenPlatform::getExtJson($xcx_id);
         return $miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序');
     }
 
@@ -119,9 +122,66 @@ class OpenPlatformController extends Controller
 
     public function submit_audit()
     {
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->submitAudit();                
+        $xcx_id = request()->xcx_id;
+        $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
+        $itemList = [
+                        [
+                            "address" => "pages/applicants/applicants",
+                            "tag" => "人员 资源",
+                            "first_class" => "文娱",
+                            "second_class"=> "资讯",
+                            "first_id" => 275,
+                            "second_id" => 276,
+                            "title" => "首页"
+                        ]
+                    ];
+
+        $res = $miniProgram->code->submitAudit($itemList);    
+        if($res['errcode'] == 0) {
+            $xcx = Xcx::find($xcx_id);
+            $data = [
+                'xcx_id' => $xcx_id,
+                'audit_id' => $res['auditid'],
+                'app_id' => $xcx['app_id']
+            ];
+            Audit::create($data);
+        }
+
+        return $res;
     }
+
+    public function get_auditstatus()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->getAuditStatus(request()->audit_id); 
+    }
+
+    public function get_latest_auditstatus()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->getLatestAuditStatus(); 
+    }
+
+    public function release() 
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->release(); 
+    }
+
+    public function rollback_release()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->rollbackRelease(); 
+    }
+
+    public function change_visitstatus()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->changeVisitStatus(request()->action);
+    }
+
+
+
 
     public function code_tpl_get_drafts()
     {
@@ -150,7 +210,6 @@ class OpenPlatformController extends Controller
     
     public function callback($app_id)
     {
-        // $official = $this->initOfficialAccount();
         $openPlatform = OpenPlatform::getApp();
         $server      = $openPlatform->server;
 
@@ -158,32 +217,27 @@ class OpenPlatformController extends Controller
 
         $msg = $server->getMessage();
 
+        $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+        $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
+
         if ($msg['MsgType'] == 'text') {
-            if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
-                $miniProgram = $openPlatform->miniProgram($app_id, Cache::get($app_id));
-                $miniProgram->customer_service->message($msg['Content'] . '_callback')
-                    ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
-                die;
-            } elseif (strpos($msg['Content'], 'QUERY_AUTH_CODE') == 0) {
-                echo '';
-                $code           = substr($msg['Content'], 16);
-                $authorizerInfo = $openPlatform->handleAuthorize($code)['authorization_info'];
-                Cache::put(
-                    $authorizerInfo['authorizer_appid'], 
-                    $authorizerInfo['authorizer_refresh_token'],
-                    7200
-                );
-                $miniProgram = $openPlatform->miniProgram(
-                    $authorizerInfo['authorizer_appid'], 
-                    $authorizerInfo['authorizer_refresh_token']
-                );
-                $miniProgram->customer_service->message($code . "_from_api")
-                            ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
-            }
+            // if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+            //     $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+            //     $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
+            //     $miniProgram->customer_service->message($msg['Content'] . '_callback')
+            //         ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+            //     die;
+            // }
         } elseif ($msg['MsgType'] == 'event') {
-            $miniProgram = $openPlatform->miniProgram($app_id, Cache::get($app_id));
-            $miniProgram->customer_service->message($msg['Event'] . 'from_callback')
-                ->to($msg['FromUserName'])->from($msg['ToUserName'])->send();
+
+            if($msg['Event'] == 'weapp_audit_success') {
+                OpenPlatform::saveAudit($app_id, $msg, 0);
+            }
+
+            if($msg['Event'] == 'weapp_audit_fail') {
+                OpenPlatform::saveAudit($app_id, $msg, 1);
+            }
+            
             die;
         }
 
