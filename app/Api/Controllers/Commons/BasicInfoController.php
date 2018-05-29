@@ -40,11 +40,9 @@ class BasicInfoController extends Controller
     public function update(BasicInfoRequest $request) 
     {
         // TODO:判断更新权限
-        $data = request([
-            'name', 'logo', 'intro', 'tel', 'qrcode', 'address', 'lon', 'lat', 'desc'
-        ]);
+        $data = request()->all();
 
-        dd(request()->all());
+        dd(request()->info);
         if(BasicInfo::where('id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
         }
