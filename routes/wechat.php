@@ -20,11 +20,15 @@ Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {
     Route::get('{xcx_id}/rollback_release', '\App\Api\Controllers\Wechat\OpenPlatformController@rollback_release');
     Route::get('{xcx_id}/change_visitstatus/{action}', '\App\Api\Controllers\Wechat\OpenPlatformController@change_visitstatus');
 
-    //模板管理
+    //代码模板管理
     Route::get('code_tpl_get_drafts', '\App\Api\Controllers\Wechat\OpenPlatformController@code_tpl_get_drafts');
     Route::get('code_tpl_create_from_draft/{draft_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@code_tpl_create_from_draft');
     Route::get('code_tpl_list', '\App\Api\Controllers\Wechat\OpenPlatformController@code_tpl_list');
     Route::get('code_tpl_delete/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@code_tpl_delete');
+
+    //消息模板
+    Route::get('{xcx_id}/template_list', '\App\Api\Controllers\Wechat\OpenPlatformController@template_list');
+    
 });
 
 

@@ -188,8 +188,7 @@ class OpenPlatformController extends Controller
     }
 
 
-
-
+    //小程序代码模板
     public function code_tpl_get_drafts()
     {
         $openPlatform = OpenPlatform::getApp();   
@@ -212,6 +211,16 @@ class OpenPlatformController extends Controller
     {
         $openPlatform = OpenPlatform::getApp();   
         return Wechat::retMsg($openPlatform->code_template->delete(request()->template_id)); 
+    }
+
+    //模板消息
+    public function template_list()
+    {
+        $page = request()->page ?? 1;
+        $count = 20;
+        $offset = $count * ($page - 1);
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return Wechat::retMsg($miniProgram->template_message->list($offset, $count));
     }
 
     
