@@ -2,7 +2,7 @@
 
 namespace App\Models\Wechat;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Experiencer extends Model
 {

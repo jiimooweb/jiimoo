@@ -72,10 +72,11 @@ class OpenPlatformController extends Controller
     public function bind_tester()
     {
         $wechatid = request()->wechatid;
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        $xcx_id = request()->xcx_id;
+        $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $msg = $miniProgram->tester->bind($wechatid);
         if($msg['errcode'] == 0) {
-            Experiencer::create(['wechatid' => $wechatid, 'userstr' => $msg['userstr']]);
+            Experiencer::create(['xcx_id' => $xcx_id,'wechatid' => $wechatid, 'userstr' => $msg['userstr']]);
             return response()->json(['status' => 'success', 'msg' => '绑定成功']);
         }
         

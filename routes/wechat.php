@@ -6,8 +6,8 @@ Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformControll
 
 Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], function () {
     //代码管理
-    Route::get('bind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
-    Route::get('unbind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
+    Route::get('bind_tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
+    Route::get('unbind_tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
     Route::get('get_testers', '\App\Api\Controllers\Wechat\OpenPlatformController@get_testers');
     Route::get('commit/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
     Route::get('get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
