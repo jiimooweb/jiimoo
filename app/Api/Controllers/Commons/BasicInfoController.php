@@ -43,7 +43,7 @@ class BasicInfoController extends Controller
         $data = request()->all();
 
         dd(request()->info);
-        if(BasicInfo::where('id', request()->info)->update($data)) {
+        if(BasicInfo::where('xcx_id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
         }
         
@@ -54,7 +54,7 @@ class BasicInfoController extends Controller
     public function destroy()
     {
         // TODO:判断删除权限
-        if(BasicInfo::where('id', request()->info)->delete()) {
+        if(BasicInfo::where('xcx_id', request()->info)->delete()) {
             return response()->json(['status' => 'success','msg' => '删除成功！']); 
         }
 
