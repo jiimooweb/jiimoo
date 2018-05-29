@@ -94,8 +94,9 @@ class OpenPlatformController extends Controller
 
     public function commit()
     {
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        $extJson = OpenPlatform::getExtJson();
+        $xcx_id = request()->xcx_id;
+        $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
+        $extJson = OpenPlatform::getExtJson($xcx_id);
         return $miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序');
     }
 
@@ -120,8 +121,25 @@ class OpenPlatformController extends Controller
     public function submit_audit()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->submitAudit();                
+        $itemList = [
+            "item_list" => [
+                [
+                    "address" => "pages/applicants/applicants",
+                    "tag" => "人员 资源",
+                    "first_class" => "文娱",
+                    "second_class"=> "资讯",
+                    "first_id" => 275,
+                    "second_id" => 276,
+                    "title" => "首页"
+                ]
+            ]
+        ];
+
+        return $miniProgram->code->submitAudit($itemList);                
     }
+
+
+
 
     public function code_tpl_get_drafts()
     {
