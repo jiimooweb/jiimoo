@@ -95,6 +95,12 @@ class OpenPlatformController extends Controller
         return response()->json(['status' => 'error', 'msg' => '系统繁忙']);
     }
 
+    public function get_testers()
+    {
+        $experiencers = Experiencer::where('xcx_id', request()->xcx_id);
+        return response()->json(['status' => 'success', 'data' => $experiencers]);
+    }
+
     public function commit()
     {
         $xcx_id = request()->xcx_id;
@@ -188,30 +194,6 @@ class OpenPlatformController extends Controller
     }
 
 
-    //小程序代码模板
-    public function code_tpl_get_drafts()
-    {
-        $openPlatform = OpenPlatform::getApp();   
-        return Wechat::retMsg($openPlatform->code_template->getDrafts());                  
-    }
-
-    public function code_tpl_create_from_draft()
-    {
-        $openPlatform = OpenPlatform::getApp();   
-        return Wechat::retMsg($openPlatform->code_template->createFromDraft(request()->draft_id));                
-    }
-
-    public function code_tpl_list()
-    {
-        $openPlatform = OpenPlatform::getApp();   
-        return Wechat::retMsg($openPlatform->code_template->list()); 
-    }
-
-    public function code_tpl_delete()
-    {
-        $openPlatform = OpenPlatform::getApp();   
-        return Wechat::retMsg($openPlatform->code_template->delete(request()->template_id)); 
-    }
 
     //模板消息
     public function template_list()
@@ -252,6 +234,32 @@ class OpenPlatformController extends Controller
         $template_id = request()->$template_id;
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return Wechat::retMsg($miniProgram->template_message->delete($template_id));
+    }
+
+
+    //小程序代码模板
+    public function code_tpl_get_drafts()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return Wechat::retMsg($openPlatform->code_template->getDrafts());                  
+    }
+
+    public function code_tpl_create_from_draft()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return Wechat::retMsg($openPlatform->code_template->createFromDraft(request()->draft_id));                
+    }
+
+    public function code_tpl_list()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return Wechat::retMsg($openPlatform->code_template->list()); 
+    }
+
+    public function code_tpl_delete()
+    {
+        $openPlatform = OpenPlatform::getApp();   
+        return Wechat::retMsg($openPlatform->code_template->delete(request()->template_id)); 
     }
 
     
