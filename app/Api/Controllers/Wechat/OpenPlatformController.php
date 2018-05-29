@@ -98,7 +98,7 @@ class OpenPlatformController extends Controller
 
     public function get_testers()
     {
-        $experiencers = Experiencer::where('xcx_id', request()->xcx_id);
+        $experiencers = Experiencer::where('xcx_id', request()->xcx_id)->get();
         return response()->json(['status' => 'success', 'data' => $experiencers]);
     }
 
