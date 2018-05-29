@@ -122,18 +122,16 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $itemList = [
-            "item_list" => [
-                [
-                    "address" => "pages/applicants/applicants",
-                    "tag" => "人员 资源",
-                    "first_class" => "文娱",
-                    "second_class"=> "资讯",
-                    "first_id" => 275,
-                    "second_id" => 276,
-                    "title" => "首页"
-                ]
-            ]
-        ];
+                        [
+                            "address" => "pages/applicants/applicants",
+                            "tag" => "人员 资源",
+                            "first_class" => "文娱",
+                            "second_class"=> "资讯",
+                            "first_id" => 275,
+                            "second_id" => 276,
+                            "title" => "首页"
+                        ]
+                    ];
 
         return $miniProgram->code->submitAudit($itemList);                
     }
