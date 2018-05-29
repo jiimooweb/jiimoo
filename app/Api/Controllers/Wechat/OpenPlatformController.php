@@ -223,6 +223,37 @@ class OpenPlatformController extends Controller
         return Wechat::retMsg($miniProgram->template_message->list($offset, $count));
     }
 
+    public function get_template()
+    {
+        $template_id = request()->$template_id;
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return Wechat::retMsg($miniProgram->template_message->get($template_id));
+    }
+
+    public function add_template()
+    {
+        $template_id = request('template_id');
+        $keyword_id_list = request('keyword_id_list');
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return Wechat::retMsg($miniProgram->template_message->add($id, $keyword_id_list));
+    }
+
+    public function get_templates()
+    {
+        $page = request()->page ?? 1;
+        $count = 20;
+        $offset = $count * ($page - 1);
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return Wechat::retMsg($miniProgram->template_message->getTemplates($offset, $count));
+    }
+
+    public function del_template()
+    {
+        $template_id = request()->$template_id;
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return Wechat::retMsg($miniProgram->template_message->delete($template_id));
+    }
+
     
     public function callback($app_id)
     {

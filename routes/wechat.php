@@ -28,6 +28,10 @@ Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {
 
     //消息模板
     Route::get('{xcx_id}/template_list', '\App\Api\Controllers\Wechat\OpenPlatformController@template_list');
+    Route::get('{xcx_id}/get_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_template');
+    Route::post('{xcx_id}/add_template', '\App\Api\Controllers\Wechat\OpenPlatformController@add_template');
+    Route::get('{xcx_id}/get_templates', '\App\Api\Controllers\Wechat\OpenPlatformController@get_templates');
+    Route::get('{xcx_id}/del_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@del_template');
     
 });
 
