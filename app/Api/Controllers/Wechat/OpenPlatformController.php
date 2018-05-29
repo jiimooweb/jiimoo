@@ -136,6 +136,12 @@ class OpenPlatformController extends Controller
         return $miniProgram->code->submitAudit($itemList);                
     }
 
+    public function get_auditstatus()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->getAuditStatus(request()->audit_id); 
+    }
+
 
 
 

@@ -6,13 +6,14 @@ Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformControll
 
 Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {
     //代码管理
-    Route::get('bind-tester/{xcx_id}/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
-    Route::get('unbind-tester/{xcx_id}/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
-    Route::get('commit/{xcx_id}/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
-    Route::get('get_qrcode/{xcx_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
-    Route::get('get_category/{xcx_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_category');
-    Route::get('get_page/{xcx_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_page');
-    Route::get('submit_audit/{xcx_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@submit_audit');
+    Route::get('{xcx_id}/bind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
+    Route::get('{xcx_id}/unbind-tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
+    Route::get('{xcx_id}/commit/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
+    Route::get('{xcx_id}/get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
+    Route::get('{xcx_id}/get_category', '\App\Api\Controllers\Wechat\OpenPlatformController@get_category');
+    Route::get('{xcx_id}/get_page', '\App\Api\Controllers\Wechat\OpenPlatformController@get_page');
+    Route::get('{xcx_id}/submit_audit', '\App\Api\Controllers\Wechat\OpenPlatformController@submit_audit');
+    Route::get('{xcx_id}/get_auditstatus/{audit_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_auditstatus');
     //模板管理
     Route::get('code_tpl_get_drafts', '\App\Api\Controllers\Wechat\OpenPlatformController@code_tpl_get_drafts');
     Route::get('code_tpl_create_from_draft/{draft_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@code_tpl_create_from_draft');
