@@ -44,7 +44,7 @@ class BasicInfoController extends Controller
             'name', 'logo', 'intro', 'tel', 'qrcode', 'address', 'lon', 'lat', 'desc'
         ]);
 
-        dd(request());
+        dd(request()->all());
         if(BasicInfo::where('id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
         }
