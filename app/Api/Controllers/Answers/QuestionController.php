@@ -71,7 +71,7 @@ class QuestionController extends Controller
             $activity=Activitie::find(request('activity_id'));
             $question_number=$activity->question_number;
             $depot=$activity->depot;
-            $question=Question::whereIn('depot_id',$depot)->inRandomOrder()->limit($question_number);
-            return response()->json(["status"=>"success","data"=>$question]);
+            $questions=Question::whereIn('depot_id',$depot)->inRandomOrder()->limit($question_number)->get()->toArray();
+            return response()->json(["status"=>"success","data"=>$questions]);
         }
 }
