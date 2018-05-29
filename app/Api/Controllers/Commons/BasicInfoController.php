@@ -18,9 +18,7 @@ class BasicInfoController extends Controller
 
     public function store(BasicInfoRequest $request) 
     {   
-        $data = $data = request([
-            'name', 'logo', 'intro', 'tel', 'qrcode', 'address', 'lon', 'lat', 'desc'
-        ]);
+        $data = $data = request()->all();
         
         if(BasicInfo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
