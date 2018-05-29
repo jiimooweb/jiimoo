@@ -127,4 +127,16 @@ class OpenPlatform
     {
 
     }
+
+    public static function saveAudit(string $app_id, array $msg, int $status){
+        $audit = Audit::where('app_id', $app_id)->orderBy('id', 'desc')->first();        
+        $audit->status = $status;
+        $audit->org_id = $msg['ToUserName'];
+        $audit->sys_id = $msg['FromUserName'];
+        $audit->create_time = $msg['CreateTime'];
+        $audit->succ_time = $msg['SuccTime'];
+        $audit->fail_time = $msg['FailTime'];
+        $audit->reason  = $msg['Reason'];
+        return $audit->save();
+    }
 }
