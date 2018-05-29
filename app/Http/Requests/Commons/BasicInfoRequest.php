@@ -18,7 +18,7 @@ class BasicInfoRequest extends CommonRequest
             'name' => 'required',
             'tel' => 'required',
             'address' => 'required',
-            'logo' => 'required|file',
+            'logo' => 'required',
             'intro' => 'required',
             'desc' => 'required',
         ];
