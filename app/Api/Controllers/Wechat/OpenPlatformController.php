@@ -2,6 +2,7 @@
 
 namespace App\Api\Controllers\Wechat;
 
+use App\Utils\Wechat;
 use App\Models\Commons\Xcx;
 use App\Models\Wechat\Audit;
 use App\Services\OpenPlatform;
@@ -78,8 +79,8 @@ class OpenPlatformController extends Controller
             return response()->json(['status' => 'success', 'msg' => '绑定成功']);
         }
         
-        return $msg;
-        // TODO:: 判断错误代码
+        return Wechat::retMsg($msg);
+        
     }
 
     public function unbind_tester()
@@ -99,25 +100,25 @@ class OpenPlatformController extends Controller
         $xcx_id = request()->xcx_id;
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $extJson = OpenPlatform::getExtJson($xcx_id);
-        return $miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序');
+        return Wechat::retMsg($miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序'));
     }
 
     public function get_qrcode()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->getQrCode('pages/index/index');
+        return Wechat::retMsg($miniProgram->code->getQrCode('pages/index/index'));
     }
 
     public function get_category()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->getCategory();
+        return Wechat::retMsg($miniProgram->code->getCategory());
     }
 
     public function get_page()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->getPage();        
+        return Wechat::retMsg($miniProgram->code->getPage());        
     }
 
     public function submit_audit()
@@ -147,43 +148,43 @@ class OpenPlatformController extends Controller
             Audit::create($data);
         }
 
-        return $res;
+        return Wechat::retMsg($res);
     }
 
     public function get_auditstatus()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->getAuditStatus(request()->audit_id); 
+        return Wechat::retMsg($miniProgram->code->getAuditStatus(request()->audit_id)); 
     }
 
     public function get_latest_auditstatus()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->getLatestAuditStatus(); 
+        return Wechat::retMsg($miniProgram->code->getLatestAuditStatus()); 
     }
 
     public function release() 
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->release(); 
+        return Wechat::retMsg($miniProgram->code->release()); 
     }
 
     public function undocodeaudit()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->withdrawAudit(); 
+        return Wechat::retMsg($miniProgram->code->withdrawAudit()); 
     }
 
     public function rollback_release()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->rollbackRelease(); 
+        return Wechat::retMsg($miniProgram->code->rollbackRelease()); 
     }
 
     public function change_visitstatus()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->code->changeVisitStatus(request()->action);
+        return Wechat::retMsg($miniProgram->code->changeVisitStatus(request()->action));
     }
 
 
@@ -192,25 +193,25 @@ class OpenPlatformController extends Controller
     public function code_tpl_get_drafts()
     {
         $openPlatform = OpenPlatform::getApp();   
-        return $openPlatform->code_template->getDrafts();                  
+        return Wechat::retMsg($openPlatform->code_template->getDrafts());                  
     }
 
     public function code_tpl_create_from_draft()
     {
         $openPlatform = OpenPlatform::getApp();   
-        return $openPlatform->code_template->createFromDraft(request()->draft_id);                
+        return Wechat::retMsg($openPlatform->code_template->createFromDraft(request()->draft_id));                
     }
 
     public function code_tpl_list()
     {
         $openPlatform = OpenPlatform::getApp();   
-        return $openPlatform->code_template->list(); 
+        return Wechat::retMsg($openPlatform->code_template->list()); 
     }
 
     public function code_tpl_delete()
     {
         $openPlatform = OpenPlatform::getApp();   
-        return $openPlatform->code_template->delete(request()->template_id); 
+        return Wechat::retMsg($openPlatform->code_template->delete(request()->template_id)); 
     }
 
     
