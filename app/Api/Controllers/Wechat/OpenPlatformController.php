@@ -168,6 +168,12 @@ class OpenPlatformController extends Controller
         return $miniProgram->code->release(); 
     }
 
+    public function undocodeaudit()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->code->withdrawAudit(); 
+    }
+
     public function rollback_release()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);

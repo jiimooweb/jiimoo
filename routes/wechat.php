@@ -16,6 +16,7 @@ Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {
     Route::get('{xcx_id}/get_auditstatus/{audit_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_auditstatus');
     Route::get('{xcx_id}/get_latest_auditstatus', '\App\Api\Controllers\Wechat\OpenPlatformController@get_latest_auditstatus');
     Route::get('{xcx_id}/release', '\App\Api\Controllers\Wechat\OpenPlatformController@release');
+    Route::get('{xcx_id}/undocodeaudit', '\App\Api\Controllers\Wechat\OpenPlatformController@undocodeaudit');
     Route::get('{xcx_id}/rollback_release', '\App\Api\Controllers\Wechat\OpenPlatformController@rollback_release');
     Route::get('{xcx_id}/change_visitstatus/{action}', '\App\Api\Controllers\Wechat\OpenPlatformController@change_visitstatus');
 
