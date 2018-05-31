@@ -15,13 +15,35 @@ class ApplicantController extends Controller
 {
     public function index()
     {
-        $uid = Token::getUid();
         $page = request()->get('page') ?? 1;
         $pagesize = config('common.pagesize');
         $offset = ($page - 1) * $pagesize;
         $applicants = Applicant::withCount(['fans'])->offset($offset)
         ->limit($pagesize)->get()->load('fans','career')->toArray();
-        foreach($applicants as &$applicant) {
+        if(request()->client_type == 'app') {
+            $uid = Token::getUid();        
+            foreach($applicants as &$applicant) {
+                foreach($applicant['fans'] as $fan) {
+                    if($fan['id'] == $uid) {
+                        $applicant['collection'] = 1;
+                        break;
+                    }
+                }  
+                unset($applicant['fans']);
+            }
+        }
+        
+          
+        return response()->json(['status' => 'success', 'data' => $applicants]);
+    }
+
+    public function show()
+    {
+        
+        $applicant=Applicant::find(request()->applicant)->load('fans')->toArray();
+        if(request()->client_type == 'app') {
+            $uid = Token::getUid();
+            Applicant::find(request()->applicant)->increment('click_number');
             foreach($applicant['fans'] as $fan) {
                 if($fan['id'] == $uid) {
                     $applicant['collection'] = 1;
@@ -30,24 +52,6 @@ class ApplicantController extends Controller
             }  
             unset($applicant['fans']);
         }
-          
-        return response()->json(['status' => 'success', 'data' => $applicants]);
-    }
-
-    public function show()
-    {
-        $uid = Token::getUid();
-        $applicant=Applicant::find(request()->applicant)->load('fans')->toArray();
-        if(request()->client_type == 'app') {
-            Applicant::find(request()->applicant)->increment('click_number');
-        }
-        foreach($applicant['fans'] as $fan) {
-            if($fan['id'] == $uid) {
-                $applicant['collection'] = 1;
-                break;
-            }
-        }  
-        unset($applicant['fans']);
         
         if ($applicant){
             return response()->json(["status"=>"success","data"=>$applicant]);
@@ -59,7 +63,7 @@ class ApplicantController extends Controller
     public function show_by_filter(){
         $like = request('like');
         $career_id = request('career_id');
-        $uid = Token::getUid();
+       
         $page = request('page') ?? 1;
         $pagesize = config('common.pagesize');
         $offset = ($page - 1) * $pagesize;
@@ -74,15 +78,18 @@ class ApplicantController extends Controller
             });
         }
         $applicants = $applicant->offset($offset)->limit($pagesize)->get()->toArray();
-        foreach($applicants as &$applicant) {
-            foreach($applicant['fans'] as $fan) {
-                if($fan['id'] == $uid) {
-                    $applicant['collection'] = 1;
-                    break;
-                }
-            }  
-            unset($applicant['fans']);
-        } 
+        if(request()->client_type == 'app') {
+            $uid = Token::getUid();
+            foreach($applicants as &$applicant) {
+                foreach($applicant['fans'] as $fan) {
+                    if($fan['id'] == $uid) {
+                        $applicant['collection'] = 1;
+                        break;
+                    }
+                }  
+                unset($applicant['fans']);
+            } 
+        }
         return response()->json(['status' => 'success', 'data' => $applicants]);
     }
 
