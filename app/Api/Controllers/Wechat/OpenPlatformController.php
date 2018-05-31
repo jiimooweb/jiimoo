@@ -150,7 +150,8 @@ class OpenPlatformController extends Controller
             $data = [
                 'xcx_id' => $xcx_id,
                 'audit_id' => $res['auditid'],
-                'app_id' => $xcx['app_id']
+                'app_id' => $xcx['app_id'],
+                'item_list' => json_encode($itemList)
             ];
             Audit::create($data);
         }
