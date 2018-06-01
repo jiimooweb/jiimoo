@@ -327,4 +327,10 @@ class OpenPlatformController extends Controller
 
         return $openPlatform->server->serve();
     }
+
+    public function qrcode_jump_get()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return Wechat::retMsg($miniProgram->code->qrcode_jump_get($template_id));
+    }
 }

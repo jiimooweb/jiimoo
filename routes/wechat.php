@@ -14,6 +14,7 @@ Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], functio
     Route::get('get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
     Route::get('get_category', '\App\Api\Controllers\Wechat\OpenPlatformController@get_category');
     Route::get('get_page', '\App\Api\Controllers\Wechat\OpenPlatformController@get_page');
+    Route::get('qrcode_jump_get', '\App\Api\Controllers\Wechat\OpenPlatformController@qrcode_jump_get');
     //审核
     Route::get('submit_audit', '\App\Api\Controllers\Wechat\OpenPlatformController@submit_audit');
     Route::get('get_auditstatus/{audit_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_auditstatus');
