@@ -227,7 +227,7 @@ class OpenPlatformController extends Controller
         if($xcxNotice) {
             $xcxNotice->status = $xcxNotice->status ? 0 : 1;
             $xcxNotice->save();
-            return response()->json(['status' => 'success', 'msg' => '关闭成功']);
+            return response()->json(['status' => 'success', 'msg' => '操作成功']);
         }
         $template = \App\Models\Commons\NoticeTemplate::find($id);
 
