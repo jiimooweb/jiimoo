@@ -45,7 +45,7 @@ Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {
 });
 
 
-Route::any('wechat/user_author', '\App\Api\Controllers\Wechat\OpenPlatformController@user_author');   
+Route::any('wechat/{xcx_id}/user_author', '\App\Api\Controllers\Wechat\OpenPlatformController@user_author');   
 
 Route::any('wechat/user', function() {
     return  'success';
