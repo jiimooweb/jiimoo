@@ -114,7 +114,7 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         // dd($miniProgram->code->getQrCode('pages/index/index'));
-        return Wechat::retMsg($miniProgram->code->getQrCode('pages/index/index'));
+        return $miniProgram->code->getQrCode('pages/index/index');
     }
 
     public function get_category()
