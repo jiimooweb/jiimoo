@@ -30,8 +30,8 @@ class ApplicantController extends Controller
             }  
             unset($applicant['fans']);
         }
-          
-        return response()->json(['status' => 'success', 'data' => $applicants]);
+        $total=Applicant::count();
+        return response()->json(['status' => 'success', 'data' => $applicants,'total'=>$total]);
     }
 
     public function show()
