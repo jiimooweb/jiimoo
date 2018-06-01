@@ -225,7 +225,7 @@ class OpenPlatformController extends Controller
         $xcx_id = request()->xcx_id;
         $xcxNotice = \App\Models\Wechat\NoticeTemplate::where(['notice_template_id' => $id, 'xcx_id' => $xcx_id])->first();
         if($xcxNotice) {
-            $xcxNotice->status = $xcxNotice->status ?? 0;
+            $xcxNotice->status = $xcxNotice->status ? 0 : 1;
             $xcxNotice->save();
             return response()->json(['status' => 'success', 'msg' => '关闭成功']);
         }
