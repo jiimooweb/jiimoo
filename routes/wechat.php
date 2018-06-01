@@ -22,9 +22,10 @@ Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], functio
     Route::get('change_visitstatus/{action}', '\App\Api\Controllers\Wechat\OpenPlatformController@change_visitstatus');
 
     //消息模板
+    Route::get('get_notice_templates', '\App\Api\Controllers\Wechat\OpenPlatformController@get_notice_templates');
     Route::get('template_list', '\App\Api\Controllers\Wechat\OpenPlatformController@template_list');
     Route::get('get_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_template');
-    Route::post('add_template', '\App\Api\Controllers\Wechat\OpenPlatformController@add_template');
+    Route::get('add_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@add_template');
     Route::get('get_templates', '\App\Api\Controllers\Wechat\OpenPlatformController@get_templates');
     Route::get('del_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@del_template');
     

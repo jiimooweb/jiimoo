@@ -195,7 +195,12 @@ class OpenPlatformController extends Controller
         return Wechat::retMsg($miniProgram->code->changeVisitStatus(request()->action));
     }
 
-
+    public function get_notice_templates()
+    {
+        $xcx_id = request()->xcx_id;
+        $templates = \App\Models\Wechat\NoticeTemplate::getTemplate($xcx_id);
+        return $templates;
+    }
 
     //模板消息
     public function template_list()
@@ -216,10 +221,26 @@ class OpenPlatformController extends Controller
 
     public function add_template()
     {
-        $template_id = request('template_id');
-        $keyword_id_list = request('keyword_id_list');
+        $id = request()->template_id;
+        $xcx_id = request()->xcx_id;
+
+        $template = \App\Models\Commons\NoticeTemplate::find($id);
+
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return Wechat::retMsg($miniProgram->template_message->add($id, $keyword_id_list));
+        $msg = $miniProgram->template_message->add($template['template_id'], explode(',', $template['keyword_id_list']));
+
+        if($msg['errcode'] == 0) {
+            $data = [
+                'xcx_id' => $xcx_id,
+                'notice_template_id' => $id,
+                'template_id' => $msg['template_id'],
+                'status' => 1
+            ];
+            \App\Models\Wechat\NoticeTemplate::create($data);
+            return response()->json(['status' => 'success']);
+        }
+
+        return Wechat::retMsg($msg);
     }
 
     public function get_templates()

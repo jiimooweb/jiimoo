@@ -31,7 +31,7 @@ class NoticeTemplateController extends Controller
     public function destroy()
     {
         // TODO:判断删除权限
-        if(NoticeTemplate::where('xcx_id', request()->notice_template)->delete()) {
+        if(NoticeTemplate::where('id', request()->notice_template)->delete()) {
             return response()->json(['status' => 'success','msg' => '删除成功！']); 
         }
 
