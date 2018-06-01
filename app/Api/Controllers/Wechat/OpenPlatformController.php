@@ -336,9 +336,7 @@ class OpenPlatformController extends Controller
             "permit_sub_rule" => "1",
             "path" => "pages/index/index",
             "open_version" => "1",
-            "debug_url" => [
-                "https://www.rdoorweb.com",
-            ],
+            "debug_url" => [],
             "is_edit" => 0,
         ];
         return Wechat::retMsg($miniProgram->code->qrcodeJumpAdd($qrcode));
