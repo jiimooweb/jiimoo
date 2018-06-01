@@ -65,7 +65,7 @@ class OpenPlatformController extends Controller
 
     public function save_miniprogram() 
     {  
-        $code = request()->get('auth_code');
+        $auth_code = request()->get('auth_code');
         $xcx_id = request()->xcx_id;
         OpenPlatform::initMiniProgram($xcx_id,$auth_code);
         return 'success';
