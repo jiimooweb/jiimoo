@@ -4,6 +4,8 @@ Route::any('wechat/{appid}/callback', '\App\Api\Controllers\Wechat\OpenPlatformC
 Route::any('wechat/{xcx_id?}/miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
 Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
 
+Route::get('wechat/{xcx_id}/get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
+
 Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], function () {
     //体验者
     Route::get('bind_tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
@@ -11,7 +13,6 @@ Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], functio
     Route::get('get_testers', '\App\Api\Controllers\Wechat\OpenPlatformController@get_testers');
     //上传相关
     Route::get('commit/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
-    Route::get('get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
     Route::get('get_category', '\App\Api\Controllers\Wechat\OpenPlatformController@get_category');
     Route::get('get_page', '\App\Api\Controllers\Wechat\OpenPlatformController@get_page');
     Route::get('qrcode_jump_get', '\App\Api\Controllers\Wechat\OpenPlatformController@qrcode_jump_get');
