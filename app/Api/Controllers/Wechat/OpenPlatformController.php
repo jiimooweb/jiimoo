@@ -223,7 +223,11 @@ class OpenPlatformController extends Controller
     {
         $id = request()->template_id;
         $xcx_id = request()->xcx_id;
-
+        $xcxNotice = \App\Models\Wechat\NoticeTemplate::where(['notice_template_id' => $id, 'xcx_id' => $xcx_id])->first();
+        if($xcxNotice) {
+            $xcxNotice->status = $xcxNotice->status ?? 0;
+            $xcxNotice->save();
+        }
         $template = \App\Models\Commons\NoticeTemplate::find($id);
 
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
