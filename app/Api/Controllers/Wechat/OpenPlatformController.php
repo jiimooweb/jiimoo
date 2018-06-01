@@ -221,7 +221,7 @@ class OpenPlatformController extends Controller
 
     public function add_template()
     {
-        $id = request()->template_id;
+        $id = request()->id;
         $xcx_id = request()->xcx_id;
         $xcxNotice = \App\Models\Wechat\NoticeTemplate::where(['notice_template_id' => $id, 'xcx_id' => $xcx_id])->first();
         if($xcxNotice) {
