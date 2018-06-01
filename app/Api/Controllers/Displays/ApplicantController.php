@@ -15,20 +15,22 @@ class ApplicantController extends Controller
 {
     public function index()
     {
-        $uid = Token::getUid();
         $page = request()->get('page') ?? 1;
         $pagesize = config('common.pagesize');
         $offset = ($page - 1) * $pagesize;
         $applicants = Applicant::withCount(['fans'])->offset($offset)
         ->limit($pagesize)->get()->load('fans','career')->toArray();
-        foreach($applicants as &$applicant) {
-            foreach($applicant['fans'] as $fan) {
-                if($fan['id'] == $uid) {
-                    $applicant['collection'] = 1;
-                    break;
+        if(request()->client_type == 'app') {
+            $uid = Token::getUid();
+            foreach($applicants as &$applicant) {
+                foreach($applicant['fans'] as $fan) {
+                    if($fan['id'] == $uid) {
+                        $applicant['collection'] = 1;
+                        break;
+                    }
                 }
-            }  
-            unset($applicant['fans']);
+                unset($applicant['fans']);
+            }
         }
         $total=Applicant::count();
         return response()->json(['status' => 'success', 'data' => $applicants,'total'=>$total]);
