@@ -331,6 +331,6 @@ class OpenPlatformController extends Controller
     public function qrcode_jump_get()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return Wechat::retMsg($miniProgram->code->qrcode_jump_get($template_id));
+        return Wechat::retMsg($miniProgram->code->qrcodeJumpGet());
     }
 }
