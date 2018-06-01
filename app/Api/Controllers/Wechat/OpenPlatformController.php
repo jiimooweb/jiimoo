@@ -332,12 +332,12 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $qrcode = [
-            // "prefix" => "https://www.rdoorweb.com/wechat",
-            // "permit_sub_rule" => "1",
-            // "path" => "pages/index/index",
-            // "open_version" => "1",
-            // "debug_url" => [],
-            // "is_edit" => 0,
+            "prefix" => "https://www.rdoorweb.com/wechat",
+            "permit_sub_rule" => "1",
+            "path" => "pages/index/index",
+            "open_version" => "1",
+            "debug_url" => [],
+            "is_edit" => 0,
         ];
         return Wechat::retMsg($miniProgram->code->qrcodeJumpAdd($qrcode));
         
