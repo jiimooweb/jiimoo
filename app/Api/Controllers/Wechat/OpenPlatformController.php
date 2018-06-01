@@ -227,6 +227,7 @@ class OpenPlatformController extends Controller
         if($xcxNotice) {
             $xcxNotice->status = $xcxNotice->status ?? 0;
             $xcxNotice->save();
+            return response()->json(['status' => 'success', 'msg' => '关闭成功']);
         }
         $template = \App\Models\Commons\NoticeTemplate::find($id);
 
@@ -241,7 +242,7 @@ class OpenPlatformController extends Controller
                 'status' => 1
             ];
             \App\Models\Wechat\NoticeTemplate::create($data);
-            return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success', 'msg' => '开启成功']);
         }
 
         return Wechat::retMsg($msg);
