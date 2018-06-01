@@ -2,6 +2,7 @@
 
 Route::any('wechat/{appid}/callback', '\App\Api\Controllers\Wechat\OpenPlatformController@callback');    
 Route::any('wechat/{xcx_id?}/miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
+Route::any('wechat/{xcx_id?}/save_miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@save_miniprogram');
 Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
 
 Route::get('wechat/{xcx_id}/get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode');
