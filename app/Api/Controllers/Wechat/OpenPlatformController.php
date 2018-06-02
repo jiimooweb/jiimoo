@@ -118,7 +118,7 @@ class OpenPlatformController extends Controller
             $xcx = Xcx::find($xcx_id);
             $data = [
                 'xcx_id' => $xcx_id,
-                'temolate_id' => $template_id,
+                'template_id' => $template_id,
                 'version' => $version,
                 'app_id' => $xcx['qpp_id'],
             ];
