@@ -138,7 +138,8 @@ class OpenPlatformController extends Controller
     public function get_qrcode()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        var_dump($miniProgram->code->getQrCode('pages/index/index'));
+        $file = $miniProgram->code->getQrCode('pages/index/index');
+        echo file_get_contents('php://temp');
         die;
         return $miniProgram->code->getQrCode('pages/index/index');
     }
