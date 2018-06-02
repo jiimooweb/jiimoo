@@ -124,11 +124,6 @@ class OpenPlatform
         return json_encode($ext);
     }
 
-    public static function getItemList()
-    {
-
-    }
-
     public static function saveAudit(string $app_id, array $msg, int $status){
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
