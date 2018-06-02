@@ -30,7 +30,7 @@ class OpenPlatformController extends Controller
 
         // 处理授权取消事件
         $server->push(function ($message) {
-            OpenPlatform::unAuthorized();
+            OpenPlatform::unAuthorized($message['AuthorizerAppid']);
         }, Guard::EVENT_UNAUTHORIZED);
 
         return $server->serve();
@@ -107,9 +107,32 @@ class OpenPlatformController extends Controller
     public function commit()
     {
         $xcx_id = request()->xcx_id;
+        $template_id = request()->template_id;
+        $audit = Audit::where(['xcx_id' => $xcx_id, 'template_id' => $template_id])->first();
+        $version = $audit['version'] ?? OpenPlatform::getVersion();
+        $extJson = OpenPlatform::getExtJson($xcx_id); 
+
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
-        $extJson = OpenPlatform::getExtJson($xcx_id);
-        return Wechat::retMsg($miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序'));
+        $msg = $miniProgram->code->commit($template_id, $extJson, $version, '任意门网络工作室小程序');
+
+        if($msg['errcode'] == 0) {
+            $xcx = Xcx::find($xcx_id);
+            $data = [
+                'xcx_id' => $xcx_id,
+                'app_id' => $xcx['app_id'],                
+                'template_id' => $template_id,
+                'version' => $version,
+                'status' => 3,
+            ];
+            if($audit) {
+                $data['status'] = $audit['status'];
+                Audit::where('id', $audit['id'])->update($data);
+            }else {
+                Audit::create($data);
+            }   
+        }
+
+        return Wechat::retMsg($msg);
     }
 
     public function get_qrcode()
@@ -131,35 +154,43 @@ class OpenPlatformController extends Controller
         return Wechat::retMsg($miniProgram->code->getPage());        
     }
 
+    public function get_audits()
+    {
+        $xcx_id = request()->xcx_id;
+        $audits = Audit::where('xcx_id', $xcx_id)->get();
+        return response()->json(['status' => 'success', 'data' => $audits]);
+    }
+
     public function submit_audit()
     {
         $xcx_id = request()->xcx_id;
+        $audit_id = request('audit_id');
+        $itemList = request('item_list');
+        
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $itemList = [
                         [
                             "address" => "pages/applicants/applicants",
                             "tag" => "人员 资源",
-                            "first_class" => "文娱",
-                            "second_class"=> "资讯",
-                            "first_id" => 275,
-                            "second_id" => 276,
+                            "first_class" => "餐饮",
+                            "second_class"=> "菜谱",
+                            "first_id" => 220,
+                            "second_id" => 225,
                             "title" => "首页"
                         ]
                     ];
 
-        $res = $miniProgram->code->submitAudit($itemList);    
-        if($res['errcode'] == 0) {
-            $xcx = Xcx::find($xcx_id);
+        $msg = $miniProgram->code->submitAudit($itemList);    
+        if($msg['errcode'] == 0) {
             $data = [
-                'xcx_id' => $xcx_id,
-                'audit_id' => $res['auditid'],
-                'app_id' => $xcx['app_id'],
+                'audit_id' => $msg['auditid'],
+                'status' => 2,
                 'item_list' => json_encode($itemList)
             ];
-            Audit::create($data);
+            Audit::where('id', $audit_id)->update($data);
         }
 
-        return Wechat::retMsg($res);
+        return Wechat::retMsg($msg);
     }
 
     public function get_auditstatus()
@@ -328,6 +359,11 @@ class OpenPlatformController extends Controller
         }
 
         return $openPlatform->server->serve();
+    }
+
+    public function summary_trend(){
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->data_cube->summaryTrend();
     }
 
 }

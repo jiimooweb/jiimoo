@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Commons\Xcx;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class OpenPlatform 
 {
@@ -129,7 +130,10 @@ class OpenPlatform
     }
 
     public static function saveAudit(string $app_id, array $msg, int $status){
-        $audit = Audit::where('app_id', $app_id)->orderBy('id', 'desc')->first();        
+        $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
+        $miniProgram = self::getMiniProgram($xcx_id);
+        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
+        $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();        
         $audit->status = $status;
         $audit->org_id = $msg['ToUserName'];
         $audit->sys_id = $msg['FromUserName'];
@@ -138,5 +142,18 @@ class OpenPlatform
         $audit->fail_time = $msg['FailTime'];
         $audit->reason  = $msg['Reason'];
         return $audit->save();
+    }
+
+    public static function getVersion()
+    {
+        $version = Redis::get('version');
+        if($version) {
+            Redis::set('version', ++$version);
+        }else {
+            $version = 10000;
+            Redis::set('version', $version);
+        }
+        
+        return $version;
     }
 }

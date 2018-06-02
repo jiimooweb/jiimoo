@@ -16,15 +16,15 @@ Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], functio
     Route::get('commit/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@commit');
     Route::get('get_category', '\App\Api\Controllers\Wechat\OpenPlatformController@get_category');
     Route::get('get_page', '\App\Api\Controllers\Wechat\OpenPlatformController@get_page');
-    Route::get('qrcode_jump_get', '\App\Api\Controllers\Wechat\OpenPlatformController@qrcode_jump_get');
-    Route::get('qrcode_jump_add', '\App\Api\Controllers\Wechat\OpenPlatformController@qrcode_jump_add');
     //审核
-    Route::get('submit_audit', '\App\Api\Controllers\Wechat\OpenPlatformController@submit_audit');
+    Route::get('get_audits', '\App\Api\Controllers\Wechat\OpenPlatformController@get_audits');
+    Route::post('submit_audit', '\App\Api\Controllers\Wechat\OpenPlatformController@submit_audit');
     Route::get('get_auditstatus/{audit_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_auditstatus');
     Route::get('get_latest_auditstatus', '\App\Api\Controllers\Wechat\OpenPlatformController@get_latest_auditstatus');
+    Route::get('undocodeaudit', '\App\Api\Controllers\Wechat\OpenPlatformController@undocodeaudit');
+    
     //发布
     Route::get('release', '\App\Api\Controllers\Wechat\OpenPlatformController@release');
-    Route::get('undocodeaudit', '\App\Api\Controllers\Wechat\OpenPlatformController@undocodeaudit');
     Route::get('rollback_release', '\App\Api\Controllers\Wechat\OpenPlatformController@rollback_release');
     Route::get('change_visitstatus/{action}', '\App\Api\Controllers\Wechat\OpenPlatformController@change_visitstatus');
     //消息模板
