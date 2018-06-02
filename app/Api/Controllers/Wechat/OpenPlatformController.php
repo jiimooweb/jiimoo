@@ -143,7 +143,6 @@ class OpenPlatformController extends Controller
         // $handle = fopen('php://temp/Qrcode.jpg','rb+')
         // fread($handle, request()->headers(''));
         // copy('php://temp', '/Qrcode.jpg');
-        die;
         return $miniProgram->code->getQrCode('pages/index/index');
     }
 
