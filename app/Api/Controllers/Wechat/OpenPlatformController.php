@@ -139,7 +139,7 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         var_dump($miniProgram->code->getQrCode('pages/index/index'));
-        die();
+        die;
         return $miniProgram->code->getQrCode('pages/index/index');
     }
 
