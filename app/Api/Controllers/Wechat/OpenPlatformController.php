@@ -156,10 +156,10 @@ class OpenPlatformController extends Controller
                         [
                             "address" => "pages/applicants/applicants",
                             "tag" => "人员 资源",
-                            "first_class" => "文娱",
-                            "second_class"=> "资讯",
-                            "first_id" => 275,
-                            "second_id" => 276,
+                            "first_class" => "餐饮",
+                            "second_class"=> "菜谱",
+                            "first_id" => 220,
+                            "second_id" => 225,
                             "title" => "首页"
                         ]
                     ];
