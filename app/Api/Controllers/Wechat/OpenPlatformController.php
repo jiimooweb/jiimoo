@@ -139,9 +139,7 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $file = $miniProgram->code->getQrCode('pages/index/index');
-        foreach ($file as $name => $value) {
-            echo "$name: $value\n";
-        }
+        dd($file->headers);
         
         die;
         // copy('php://temp', '/Qrcode.jpg');
