@@ -122,6 +122,7 @@ class OpenPlatformController extends Controller
                 'app_id' => $xcx['app_id'],                
                 'template_id' => $template_id,
                 'version' => $version,
+                'status' => 3,
             ];
             if($audit) {
                 $data['status'] = $audit['status'];
@@ -183,6 +184,7 @@ class OpenPlatformController extends Controller
         if($msg['errcode'] == 0) {
             $data = [
                 'audit_id' => $msg['auditid'],
+                'status' => 2,
                 'item_list' => json_encode($itemList)
             ];
             Audit::where('id', $audit_id)->update($data);
