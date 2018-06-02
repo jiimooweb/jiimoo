@@ -125,7 +125,7 @@ class OpenPlatformController extends Controller
             Audit::create($data);
         }
 
-        return Wechat::retMsg($res);
+        return Wechat::retMsg($msg);
     }
 
     public function get_qrcode()
