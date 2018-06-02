@@ -116,13 +116,18 @@ class OpenPlatformController extends Controller
 
         if($msg['errcode'] == 0) {
             $xcx = Xcx::find($xcx_id);
+            $audit = Audit::where(['xcx_id' => $xcx_id, 'template_id' => $template_id])->first();
             $data = [
                 'xcx_id' => $xcx_id,
                 'app_id' => $xcx['app_id'],                
                 'template_id' => $template_id,
                 'version' => $version,
             ];
-            Audit::create($data);
+            if($audit) {
+                Audit::where('id', $audit['id'])->update($data);
+            }else {
+                Audit::create($data);
+            }   
         }
 
         return Wechat::retMsg($msg);
