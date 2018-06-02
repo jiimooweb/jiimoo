@@ -24,6 +24,7 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token',
     include_once('members.php');
     include_once('commons.php');
     include_once('queues.php');
+    include_once('lotteries.php');
 });
 
 Route::get('login',function() {
