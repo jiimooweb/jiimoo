@@ -139,7 +139,7 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $file = $miniProgram->code->getQrCode('pages/index/index');
-        echo $_FILES['userfile']['tmp_name'];
+        echo ini_get("upload_tmp_dir");
         die;
         // copy('php://temp', '/Qrcode.jpg');
         return $miniProgram->code->getQrCode('pages/index/index');
