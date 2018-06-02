@@ -118,9 +118,9 @@ class OpenPlatformController extends Controller
             $xcx = Xcx::find($xcx_id);
             $data = [
                 'xcx_id' => $xcx_id,
+                'app_id' => $xcx['app_id'],                
                 'template_id' => $template_id,
                 'version' => $version,
-                'app_id' => $xcx['qpp_id'],
             ];
             Audit::create($data);
         }
