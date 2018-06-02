@@ -145,7 +145,7 @@ class OpenPlatform
     {
         $version = Redis::get('version');
         if($version) {
-            Redis::set('version', $version++);
+            Redis::set('version', ++$version);
         }else {
             $version = 10000;
             Redis::set('version', $version);
