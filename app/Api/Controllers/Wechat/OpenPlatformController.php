@@ -150,6 +150,7 @@ class OpenPlatformController extends Controller
     public function submit_audit()
     {
         $xcx_id = request()->xcx_id;
+        $audit_id = request()->audit_id;
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $itemList = [
                         [
@@ -163,16 +164,16 @@ class OpenPlatformController extends Controller
                         ]
                     ];
 
-        $res = $miniProgram->code->submitAudit($itemList);    
-        if($res['errcode'] == 0) {
+        $msg = $miniProgram->code->submitAudit($itemList);    
+        if($msg['errcode'] == 0) {
             $data = [
-                'audit_id' => $res['auditid'],
+                'audit_id' => $msg['auditid'],
                 'item_list' => json_encode($itemList)
             ];
             Audit::where('id', $audit_id)->update($data);
         }
 
-        return Wechat::retMsg($res);
+        return Wechat::retMsg($msg);
     }
 
     public function get_auditstatus()
