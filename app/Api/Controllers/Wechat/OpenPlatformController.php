@@ -30,7 +30,7 @@ class OpenPlatformController extends Controller
 
         // 处理授权取消事件
         $server->push(function ($message) {
-            OpenPlatform::unAuthorized();
+            OpenPlatform::unAuthorized($message['AuthorizerAppid']);
         }, Guard::EVENT_UNAUTHORIZED);
 
         return $server->serve();
@@ -113,7 +113,7 @@ class OpenPlatformController extends Controller
         $version = OpenPlatform::getVersion();
 
         $msg = $miniProgram->code->commit($template_id, $extJson, $version, '任意门网络工作室小程序');
-        
+
         if($msg['errcode'] == 0) {
             $xcx = Xcx::find($xcx_id);
             $data = [
