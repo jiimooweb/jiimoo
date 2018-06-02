@@ -153,10 +153,19 @@ class OpenPlatformController extends Controller
         return Wechat::retMsg($miniProgram->code->getPage());        
     }
 
+    public function get_audits()
+    {
+        $xcx_id = request()->xcx_id;
+        $audits = Audit::where('xcx_id', $xcx_id)->get();
+        return response()->json(['status' => 'success', 'data' => $audits]);
+    }
+
     public function submit_audit()
     {
         $xcx_id = request()->xcx_id;
-        $audit_id = request()->audit_id;
+        $audit_id = request('audit_id');
+        $itemList = request('item_list');
+        
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $itemList = [
                         [
