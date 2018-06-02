@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Commons\Xcx;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class OpenPlatform 
 {
@@ -138,5 +139,18 @@ class OpenPlatform
         $audit->fail_time = $msg['FailTime'];
         $audit->reason  = $msg['Reason'];
         return $audit->save();
+    }
+
+    public static function getVersion()
+    {
+        $version = Redis::get('version');
+        if($version) {
+            Redis::set('version', $version++);
+        }else {
+            $version = 10000;
+            Redis::set('version', $version);
+        }
+        
+        return $version;
     }
 }

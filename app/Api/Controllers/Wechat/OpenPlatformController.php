@@ -107,9 +107,25 @@ class OpenPlatformController extends Controller
     public function commit()
     {
         $xcx_id = request()->xcx_id;
+        $template_id = request()->template_id;
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $extJson = OpenPlatform::getExtJson($xcx_id);
-        return Wechat::retMsg($miniProgram->code->commit(request()->template_id, $extJson, '1.0', '任意门网络工作室小程序'));
+        $version = OpenPlatform::getVersion();
+
+        $msg = $miniProgram->code->commit($template_id, $extJson, $version, '任意门网络工作室小程序');
+        
+        if($msg['errcode'] == 0) {
+            $xcx = Xcx::find($xcx_id);
+            $data = [
+                'xcx_id' => $xcx_id,
+                'temolate_id' => $template_id,
+                'version' => $version,
+                'app_id' => $xcx['qpp_id'],
+            ];
+            Audit::create($data);
+        }
+
+        return Wechat::retMsg($res);
     }
 
     public function get_qrcode()
@@ -149,14 +165,11 @@ class OpenPlatformController extends Controller
 
         $res = $miniProgram->code->submitAudit($itemList);    
         if($res['errcode'] == 0) {
-            $xcx = Xcx::find($xcx_id);
             $data = [
-                'xcx_id' => $xcx_id,
                 'audit_id' => $res['auditid'],
-                'app_id' => $xcx['app_id'],
                 'item_list' => json_encode($itemList)
             ];
-            Audit::create($data);
+            Audit::where('id', $audit_id)->update($data);
         }
 
         return Wechat::retMsg($res);
@@ -328,6 +341,11 @@ class OpenPlatformController extends Controller
         }
 
         return $openPlatform->server->serve();
+    }
+
+    public function summary_trend(){
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->data_cube->summaryTrend();
     }
 
 }

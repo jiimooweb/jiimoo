@@ -70,6 +70,7 @@ Route::get('/', function() {
     return view('welcome');
 });
 
+Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
 
 
 

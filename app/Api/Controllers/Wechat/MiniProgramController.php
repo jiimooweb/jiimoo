@@ -75,23 +75,7 @@ class MiniProgramController extends Controller
 
     public function test() {
         $app = Xcx::getApp(3);
-        // $template = $app->template_message->list(0, 20);
-        // $template = $app->template_message->getTemplates(0, 1);
-
-        $template = $app->template_message->send([
-            'touser' => 'oB_Gk5PJ0yNg_ZXtuPY1WcBLJ1AU',
-            'template_id' => 'WV83mpSsgqDUaC1Ah09hN19h3LTHKe-0LCBHsNkSTCY',
-            'form_id' => '1525856350900',
-            'data' => [
-                'keyword1' => '任意门工作室',
-                'keyword2' => 'A002',
-                'keyword3' => '1桌',
-                'keyword4' => '5分钟',
-                'keyword5' => '排队中',
-                'keyword6' => '浩哥没鸡鸡',
-            ],
-        ]);
-
-        dd($template);
+        // return $app->data_cube->summaryTrend('2018-05-30','2018-05-30');
+        return $app->data_cube->dailyVisitTrend('2018-05-30','2018-05-30');
     }
 }

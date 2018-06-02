@@ -22,9 +22,10 @@ Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], functio
     Route::get('submit_audit', '\App\Api\Controllers\Wechat\OpenPlatformController@submit_audit');
     Route::get('get_auditstatus/{audit_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_auditstatus');
     Route::get('get_latest_auditstatus', '\App\Api\Controllers\Wechat\OpenPlatformController@get_latest_auditstatus');
+    Route::get('undocodeaudit', '\App\Api\Controllers\Wechat\OpenPlatformController@undocodeaudit');
+    
     //发布
     Route::get('release', '\App\Api\Controllers\Wechat\OpenPlatformController@release');
-    Route::get('undocodeaudit', '\App\Api\Controllers\Wechat\OpenPlatformController@undocodeaudit');
     Route::get('rollback_release', '\App\Api\Controllers\Wechat\OpenPlatformController@rollback_release');
     Route::get('change_visitstatus/{action}', '\App\Api\Controllers\Wechat\OpenPlatformController@change_visitstatus');
     //消息模板
