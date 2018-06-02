@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script src="./adminlte/bower_components/jquery/dist/jquery.js"></script>
+<script>
+    $.ajax({
+        'url': 'https://www.rdoorweb.com/wechat/3/get_qrcode',
+        'method': 'get',
+        'success': function(res) {
+            console.log(res);
+        }
+    })
+</script>
+</html>
