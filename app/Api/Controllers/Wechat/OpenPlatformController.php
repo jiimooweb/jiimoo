@@ -108,15 +108,15 @@ class OpenPlatformController extends Controller
     {
         $xcx_id = request()->xcx_id;
         $template_id = request()->template_id;
-        $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
-        $extJson = OpenPlatform::getExtJson($xcx_id);
-        $version = OpenPlatform::getVersion();
+        $audit = Audit::where(['xcx_id' => $xcx_id, 'template_id' => $template_id])->first();
+        $version = $audit['version'] ?? OpenPlatform::getVersion();
+        $extJson = OpenPlatform::getExtJson($xcx_id); 
 
+        $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         $msg = $miniProgram->code->commit($template_id, $extJson, $version, '任意门网络工作室小程序');
 
         if($msg['errcode'] == 0) {
             $xcx = Xcx::find($xcx_id);
-            $audit = Audit::where(['xcx_id' => $xcx_id, 'template_id' => $template_id])->first();
             $data = [
                 'xcx_id' => $xcx_id,
                 'app_id' => $xcx['app_id'],                
@@ -124,6 +124,7 @@ class OpenPlatformController extends Controller
                 'version' => $version,
             ];
             if($audit) {
+                $data['status'] = $audit['status'];
                 Audit::where('id', $audit['id'])->update($data);
             }else {
                 Audit::create($data);
