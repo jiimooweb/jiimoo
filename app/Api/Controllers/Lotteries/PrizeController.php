@@ -19,7 +19,7 @@ class PrizeController extends Controller
 
     public function store(PrizeRequest $request)
     {
-        $save=Prize::create(request(['coupo_id','probably']));
+        $save=Prize::create(request(['coupon_id','probably']));
         if ($save){
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
         }else{
@@ -30,7 +30,7 @@ class PrizeController extends Controller
     public function update(PrizeRequest $request)
     {
         $prize_id=request('prize_id');
-        $update=Prize::find($prize_id)->update(request(['coupo_id','probably']));
+        $update=Prize::find($prize_id)->update(request(['coupon_id','probably']));
         if ($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{

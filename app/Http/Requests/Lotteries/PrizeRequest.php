@@ -15,7 +15,7 @@ class PrizeRequest extends CommonRequest
     public function rules()
     {
         return [
-            'coupo_id'=>'required',
+            'coupon_id'=>'required',
             'probably'=>'required'
         ];
     }
