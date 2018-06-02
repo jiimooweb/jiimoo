@@ -57,16 +57,18 @@ class OpenPlatformController extends Controller
 
         $openPlatform = OpenPlatform::getApp();        
 
-        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/save_miniprogram'.$xcx_id);
+        $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/'. $xcx_id. '/save_miniprogram');
 
-        return response()->json(['status' => 'unauthorize', 'data' => $url]);
+        // return response()->json(['status' => 'unauthorize', 'data' => $url]);
+        return view('wechat',['url' => $url]);
     }
 
     public function save_miniprogram() 
     {  
-        $code = request()->get('auth_code');
+        $auth_code = request()->get('auth_code');
         $xcx_id = request()->xcx_id;
         OpenPlatform::initMiniProgram($xcx_id,$auth_code);
+        return 'success';
     }
 
     public function bind_tester()
@@ -113,7 +115,8 @@ class OpenPlatformController extends Controller
     public function get_qrcode()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return Wechat::retMsg($miniProgram->code->getQrCode('pages/index/index'));
+        // dd($miniProgram->code->getQrCode('pages/index/index'));
+        return $miniProgram->code->getQrCode('pages/index/index');
     }
 
     public function get_category()
@@ -326,4 +329,5 @@ class OpenPlatformController extends Controller
 
         return $openPlatform->server->serve();
     }
+
 }
