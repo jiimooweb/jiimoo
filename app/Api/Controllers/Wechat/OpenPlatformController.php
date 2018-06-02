@@ -139,7 +139,7 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $file = $miniProgram->code->getQrCode('pages/index/index');
-        foreach (getallheaders() as $name => $value) {
+        foreach ($file as $name => $value) {
             echo "$name: $value\n";
         }
         
