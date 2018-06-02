@@ -139,6 +139,8 @@ class OpenPlatformController extends Controller
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         $file = $miniProgram->code->getQrCode('pages/index/index');
+        dd($file->toArray());
+        
         dd($file->headers);
         
         die;
