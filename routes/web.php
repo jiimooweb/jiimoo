@@ -48,7 +48,7 @@ Route::group(['prefix' => 'api','middleware'=>['cors']], function () {
         'index', 'store', 'destroy'
     ]])->middleware(['token']);
     //小程序模板
-    Route::apiResource('templates', '\App\Api\Controllers\Commons\NoticeTemplateController', ['only' => [
+    Route::apiResource('templates', '\App\Api\Controllers\Commons\TemplateController', ['only' => [
         'index', 'store', 'update', 'destroy'
     ]])->middleware(['token']);
 
