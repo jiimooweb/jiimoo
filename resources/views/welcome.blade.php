@@ -9,7 +9,7 @@
     <title>Laravel</title>
 
     <!-- Fonts -->
-    <link rel="shortcut icon" href="{{URL::asset('logo.png')}}"/>
+    <link rel="shortcut icon" href="{{URL::asset('favicon.ico')}}"/>
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
     <!-- Styles -->
