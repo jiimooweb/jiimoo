@@ -28,10 +28,22 @@ class NoticeTemplateController extends Controller
         
     }
 
+    public function update(TemplateRequest $request) 
+    {   
+        $data = request()->all();
+        
+        if(Template::where('id', $request->template)->update($data)) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);   
+        
+    }
+
     public function destroy()
     {
         // TODO:判断删除权限
-        if(Template::where('id', request()->notice_template)->delete()) {
+        if(Template::where('id', request()->template)->delete()) {
             return response()->json(['status' => 'success','msg' => '删除成功！']); 
         }
 

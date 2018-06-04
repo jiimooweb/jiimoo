@@ -49,8 +49,10 @@ Route::group(['prefix' => 'api','middleware'=>['cors']], function () {
     ]])->middleware(['token']);
     //小程序模板
     Route::apiResource('templates', '\App\Api\Controllers\Commons\NoticeTemplateController', ['only' => [
-        'index', 'store', 'destroy'
+        'index', 'store', 'update', 'destroy'
     ]])->middleware(['token']);
+
+    //www.rdoorweb.com/api/templates/{id}  GET/POST/DELETE
 });
 
 
