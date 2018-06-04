@@ -25,7 +25,7 @@
         }
 
         .full-height {
-            height: 100vh;
+            height: calc(100vh - 60px);
         }
 
         .flex-center {
