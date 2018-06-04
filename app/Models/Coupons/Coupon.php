@@ -13,7 +13,7 @@ class Coupon extends Model
     }
 
 
-    public static function getTime($id) {
+    public static function getTime(int $id) {
         $time = [];
         $coupon = self::find($id);
         if($coupon->all()) {

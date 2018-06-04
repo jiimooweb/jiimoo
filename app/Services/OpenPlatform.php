@@ -14,7 +14,7 @@ class OpenPlatform
         return $openPlatform;
     }
 
-    public static function getMiniProgram($xcx_id)
+    public static function getMiniProgram(int $xcx_id)
     {
         $xcx = Xcx::find($xcx_id);
         $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
@@ -34,7 +34,7 @@ class OpenPlatform
         return $data;
     }
 
-    public static function initMiniProgram($xcx_id, $auth_code)
+    public static function initMiniProgram(int $xcx_id, string $auth_code)
     {
         $openPlatform = self::getApp();
 
@@ -52,7 +52,7 @@ class OpenPlatform
         
     }
 
-    public static function updateMiniProgram($app_id)
+    public static function updateMiniProgram(string $app_id)
     {
         $Xcx = Xcx::where(['app_id' => $app_id, 'authorization_status' => 1])->first();
 
@@ -64,12 +64,12 @@ class OpenPlatform
         
     }
 
-    public static function unAuthorized($app_id)
+    public static function unAuthorized(string $app_id)
     {
         Xcx::where('app_id', $app_id)->update(['authorization_status' => -1]);   
     }
 
-    public static function miniProgramModifyDomain($method)
+    public static function miniProgramModifyDomain(string $method)
     {
         if($method == 'get') {
             $data = ["action" =>  $method];
@@ -86,7 +86,7 @@ class OpenPlatform
         return $data;
     }
 
-    public static function saveMiniProgram($xcx_id, $miniProgram)
+    public static function saveMiniProgram(int $xcx_id, array $miniProgram)
     {
         $data = [];
         $authorizer_info = $miniProgram['authorizer_info'];
@@ -110,7 +110,7 @@ class OpenPlatform
         Xcx::where('id', $xcx_id)->update($data);
     }
 
-    public static function getExtJson($xcx_id) 
+    public static function getExtJson(int $xcx_id) : string
     {
         $xcx = Xcx::find($xcx_id);
         $ext = [
@@ -124,7 +124,8 @@ class OpenPlatform
         return json_encode($ext);
     }
 
-    public static function saveAudit(string $app_id, array $msg, int $status){
+    public static function saveAudit(string $app_id, array $msg, int $status) : Audit
+    {
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
         $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
@@ -139,7 +140,7 @@ class OpenPlatform
         return $audit->save();
     }
 
-    public static function getVersion()
+    public static function getVersion() : int
     {
         $version = Redis::get('version');
         if($version) {

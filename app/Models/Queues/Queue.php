@@ -15,7 +15,7 @@ class Queue extends Model
         return $this->hasMany(QueueFan::class, 'queue_id', 'id')->where('status', 0)->orderBy('id', 'asc');
     }
 
-    public function getOpenid($queue_id,$fan_id) 
+    public function getOpenid(int $queue_id, int $fan_id) 
     {
         return  optional(QueueFan::where(['queue_id' => $queue_id, 'fan_id'=> $fan_id])->first()->fan)->openid;
     }
@@ -35,7 +35,7 @@ class Queue extends Model
         return $queues;
     }
 
-    public function getFansByQueueID($queue_id)
+    public function getFansByQueueID(int $queue_id)
     {
         $queue = optional($this->where('id', $queue_id)->withCount('fans')->first())->load('fans');
 
@@ -48,7 +48,8 @@ class Queue extends Model
         return $queue;
     }
 
-    public function getNo($queue_id) {
+    public function getNo(int $queue_id) : string
+    {
         $flag = $this->where('id', $queue_id)->pluck('flag')[0];
         $no = QueueFan::where('queue_id', $queue_id)->where('created_at', '>', date('Y-m-d', time()))->get()->count();
         return $flag.++$no;
