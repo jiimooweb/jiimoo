@@ -7,7 +7,7 @@ use App\Api\Controllers\Controller;
 use App\Models\Wechat\Template;
 use App\Http\Requests\Commons\TemplateRequest;
 
-class NoticeTemplateController extends Controller
+class TemplateController extends Controller
 {
     
     public function index() 
