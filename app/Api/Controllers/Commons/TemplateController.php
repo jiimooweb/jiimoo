@@ -24,8 +24,7 @@ class NoticeTemplateController extends Controller
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
 
-        return response()->json(['status' => 'error', 'msg' => '新增失败！']);   
-        
+        return response()->json(['status' => 'error', 'msg' => '新增失败！']);  
     }
 
     public function update(TemplateRequest $request) 
@@ -37,7 +36,6 @@ class NoticeTemplateController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);   
-        
     }
 
     public function destroy()
