@@ -17,10 +17,11 @@ class Cors {
   {
 
     $response = $next($request);
-    $response->header('Access-Control-Allow-Origin', '*');
-    $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
-    $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
-    // $response->header('Access-Control-Allow-Credentials', 'true');
+    $response->headers->add([
+      'Access-Control-Allow-Origin'=>'*',
+      'Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept',
+      'Access-Control-Allow-Methods'=>'POST,GET,OPTIONS,PUT,DELETE,X-CSRF-TOKEN',
+    ]);
     return $response;
   }
 

@@ -10,12 +10,12 @@ class NoticeTemplate extends Model
 
     protected $table = 'xcx_notice_templates';
 
-    public static function notice_template()
+    public function notice_template()
     {
         return $this->belongsTo(\App\Models\Commons\NoticeTemplate::class);
     }
 
-    public static function getTemplate($xcx_id) 
+    public static function getTemplate(int $xcx_id) : array
     {
         $templates = \App\Models\Commons\NoticeTemplate::get()->load('xcx_notice_templates')->toArray();
         foreach($templates as &$template) {
