@@ -159,7 +159,9 @@ class XcxController extends Controller{
         }
         $detachs=$hasUsers->diff($users);
         foreach ($detachs as $detach){
-            $xcx->detachUser($detach);
+            if($detach['username']!='Admin'){
+                $xcx->detachUser($detach);
+            }
         }
         return response()->json(["status"=>"success","msg"=>"更新成功！"]);
     }
