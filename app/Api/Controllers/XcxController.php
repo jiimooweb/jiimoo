@@ -145,7 +145,6 @@ class XcxController extends Controller{
     {
         $valid=Validator::make(request()->all(), [
             'user_ids'=>'required|array',
-            'xcx_flag'=>'required'
         ]);
         if($valid->errors()->count()){
             return response()->json(["status"=>"error","data"=>$valid->errors()]);
