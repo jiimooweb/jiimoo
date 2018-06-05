@@ -154,7 +154,7 @@ class Token
      * @return bool
      * @throws Exception
      */
-    public static function isValidOperate(int $checkedUID) : boolean
+    public static function isValidOperate(int $checkedUID) : bool
     {
         if (!$checkedUID) {
             return response()->json(['msg' => '检查UID时必须传入一个被检查的UID']);
@@ -172,7 +172,7 @@ class Token
      * @param $token 
      * @return bool
      */
-    public static function verifyToken(string $token) : boolean
+    public static function verifyToken(string $token) : bool
     {
         $exist = Cache::get($token);
         if ($exist) {
