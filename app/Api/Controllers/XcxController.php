@@ -124,4 +124,44 @@ class XcxController extends Controller{
                 return response()->json(["status"=>"error","msg"=>"删除失败！"]);
             }
         }
+
+
+
+
+    //小程序选择界面
+    public function choiceUser()
+    {
+        $xcx_flag=request()->xcx_flag;
+        $xcx=Xcx::where('xcx_flag',$xcx_flag)->with(['user' => function ($query) {
+            $query->where('user_id','>',1);
+        }])->first();
+        $hasUsers=$xcx->user;
+        $users=AdminUser::where('id','>',1)->get();
+        return response()->json(["status"=>"success","data"=>compact('hasUsers','users')]);
+    }
+
+    //给用户添加小程序
+    public function updateUser()
+    {
+        $valid=Validator::make(request()->all(), [
+            'user_ids'=>'required|array',
+            'xcx_flag'=>'required'
+        ]);
+        if($valid->errors()->count()){
+            return response()->json(["status"=>"error","data"=>$valid->errors()]);
+        }
+        $xcx_flag=request()->xcx_flag;
+        $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
+        $hasUsers=$xcx->user;
+        $users=AdminUser::findMany(request('user_ids'));
+        $adds=$users->diff($hasUsers);
+        foreach ($adds as $add){
+            $xcx->assignUser($add);
+        }
+        $detachs=$hasUsers->diff($users);
+        foreach ($detachs as $detach){
+            $xcx->detachUser($detach);
+        }
+        return response()->json(["status"=>"success","msg"=>"更新成功！"]);
+    }
 }
