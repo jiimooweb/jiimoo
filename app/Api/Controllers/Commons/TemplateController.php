@@ -16,6 +16,12 @@ class TemplateController extends Controller
         return response()->json(['status' => 'success', 'data' => $templates]);
     }
 
+    public function show()
+    {
+        $template = Template::find(request()->template);
+        return response()->json(['status' => 'success', 'data' => $template]);
+    }
+
     public function store(TemplateRequest $request) 
     {   
         $data = request()->all();

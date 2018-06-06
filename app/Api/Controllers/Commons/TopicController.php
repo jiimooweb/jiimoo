@@ -4,29 +4,29 @@ namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
-use App\Models\Commons\NoticeTemplate;
-use App\Http\Requests\Commons\NoticeTemplateRequest;
+use App\Models\Commons\Topic;
+use App\Http\Requests\Commons\TopicRequest;
 
-class NoticeTemplateController extends Controller
+class TopicController extends Controller
 {
     
     public function index() 
     {
-        $templates = NoticeTemplate::get();
-        return response()->json(['status' => 'success', 'data' => $templates]);
+        $topics = Topic::get();
+        return response()->json(['status' => 'success', 'data' => $topics]);
     }
 
     public function show()
     {
-        $template = NoticeTemplate::find(request()->notice_template);
-        return response()->json(['status' => 'success', 'data' => $template]);
+        $topic = Topic::formatTopic(Topic::find(request()->topic));
+        return response()->json(['status' => 'success', 'data' => $topic]);
     }
 
-    public function store(NoticeTemplateRequest $request) 
+    public function store(TopicRequest $request) 
     {   
         $data = request()->all();
         
-        if(NoticeTemplate::create($data)) {
+        if(Topic::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
 
@@ -34,11 +34,11 @@ class NoticeTemplateController extends Controller
         
     }
 
-    public function update(NoticeTemplateRequest $request) 
+    public function update(TopicRequest $request) 
     {   
         $data = request()->all();
         
-        if(NoticeTemplate::where('id', $request->notice_template)->update($data)) {
+        if(Topic::where('id', $request->topic)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
         }
 
@@ -49,7 +49,7 @@ class NoticeTemplateController extends Controller
     public function destroy()
     {
         // TODO:判断删除权限
-        if(NoticeTemplate::where('id', request()->notice_template)->delete()) {
+        if(Topic::where('id', request()->topic)->delete()) {
             return response()->json(['status' => 'success','msg' => '删除成功！']); 
         }
 
