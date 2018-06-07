@@ -32,7 +32,7 @@ class SwiperGroupController extends Controller
     public function show()
     {
         $group = SwiperGroup::find('id', request()->swiper_group)->load('swipers');
-        $status = $swiper ? 'success' : 'error';
+        $status = $group ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $group]);
     }
 
