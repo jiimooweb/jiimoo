@@ -3,9 +3,10 @@
 namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
-use App\Models\Commons\SwiperGroup;
-use App\Models\Commons\ProductCate;
 use App\Api\Controllers\Controller;
+use App\Models\Commons\ProductCate;
+use App\Models\Commons\SwiperGroup;
+use App\Http\Requests\Commons\SwiperGroupRequest;
 
 class SwiperGroupController extends Controller
 {
