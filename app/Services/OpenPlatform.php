@@ -116,9 +116,6 @@ class OpenPlatform
         $ext = [
             'extEnable' => true,
             'extAppid' => $xcx->app_id,
-            "extPages" => [
-                "pages/applicants/applicants" => []
-            ],
             'ext' => [
                 'xcx_flag' => $xcx->xcx_flag
             ]
