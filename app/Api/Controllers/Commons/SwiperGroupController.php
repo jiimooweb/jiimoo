@@ -13,7 +13,7 @@ class SwiperGroupController extends Controller
     
     public function index() 
     {
-        $groups = SwiperGroup::orderBy('display','asc')->get();
+        $groups = SwiperGroup::orderBy('display','desc')->get();
 
         return response()->json(['status' => 'success', 'data' => $groups]);
     }
