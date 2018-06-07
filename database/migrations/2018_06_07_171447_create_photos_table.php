@@ -15,6 +15,8 @@ class CreatePhotosTable extends Migration
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('xcx_id')->default(0)->comment('小程序ID');
+            $table->string('image', 256)->default('')->comment('图片链接');
             $table->timestamps();
         });
     }
