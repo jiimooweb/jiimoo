@@ -18,8 +18,10 @@ class BasicInfoController extends Controller
 
     public function store(BasicInfoRequest $request) 
     {   
-        $data = $data = request()->all();
-        
+        $data = request()->all();
+
+        $data = json_encode($data['images']);
+
         if(BasicInfo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
@@ -39,6 +41,8 @@ class BasicInfoController extends Controller
     {
         // TODO:判断更新权限
         $data = request()->all();
+
+        $data = json_encode($data['images']);        
 
         if(BasicInfo::where('xcx_id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
