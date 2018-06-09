@@ -33,6 +33,8 @@ class BasicInfoController extends Controller
     public function show()
     {
         $info = BasicInfo::find(request()->info);
+        $info['images'] = json_decode($info['images']);
+        
         $status = $info ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $info]);     
     }
