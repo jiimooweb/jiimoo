@@ -43,9 +43,9 @@ class BasicInfoController extends Controller
     {
         // TODO:判断更新权限
         $data = request()->all();
-        dd($data);
-        $data['images'] = $data['images'] ? json_encode($data['images']) : null;        
 
+        $data['images'] = $data['images'] ? json_encode($data['images']) : null;        
+        dd($data['images']);
         if(BasicInfo::where('xcx_id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
         }
