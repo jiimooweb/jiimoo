@@ -73,7 +73,13 @@ Route::get('/', function() {
     return view('welcome');
 });
 
+Route::get('time', function() {
+    return date('Y-m-d H:i', time());
+});
+
 Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
+
+
 
 
 
