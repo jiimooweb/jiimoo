@@ -26,7 +26,10 @@ Route::apiResource('/swiper_groups', '\App\Api\Controllers\Commons\SwiperGroupCo
 Route::apiResource('/topics', '\App\Api\Controllers\Commons\TopicController');  
 //相册
 Route::apiResource('/photos', '\App\Api\Controllers\Commons\PhotoController');   
-
+//粉丝
+Route::apiResource('/fans', '\App\Api\Controllers\Commons\FanController', ['only' => [
+    'index', 'show'
+]]);  
 
 
 //范文
