@@ -44,7 +44,9 @@ class MiniProgramController extends Controller
         $userInfo = request('userInfo');
         $userInfo['xcx_id'] = session('xcx_id');
         $userInfo['nickname'] = $userInfo['nickName'];
+        
         unset($userInfo['nickName']);
+
         if(Fan::where('id', $data['uid'])->update($userInfo)){
             return response()->json('保存成功');
         }
