@@ -14,7 +14,7 @@ class Queue extends Model
     {
         return $this->hasMany(QueueFan::class, 'queue_id', 'id')->where([
                 ['status', '=', 0],
-                ['created_at', '>', date('Y-m-d', time() . ' 6:00')]
+                ['created_at', '>', date('Y-m-d', time()) . ' 6:00']
             ])->orderBy('id', 'asc');
     }
 
