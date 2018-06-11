@@ -12,7 +12,10 @@ class Queue extends Model
     
     public function fans() 
     {
-        return $this->hasMany(QueueFan::class, 'queue_id', 'id')->where('status', 0)->orderBy('id', 'asc');
+        return $this->hasMany(QueueFan::class, 'queue_id', 'id')->where([
+                ['status', '=', 0],
+                ['created_at', '>', date('Y-m-d', time())]
+            ])->orderBy('id', 'asc');
     }
 
     public function getOpenid(int $queue_id, int $fan_id) 
