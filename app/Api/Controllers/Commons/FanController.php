@@ -4,7 +4,7 @@ namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
-use App\Models\Wechat\Fan;
+use App\Models\Commons\Fan;
 
 class FanController extends Controller
 {
