@@ -25,6 +25,8 @@ class MiniProgramController extends Controller
 
         $user = $app->auth->session(request('code'));
 
+        \Log::info($user);
+
         $miniToken = new MiniProgramToken();
         
         $token = $miniToken->getToken($user);
@@ -42,6 +44,7 @@ class MiniProgramController extends Controller
         $data = json_decode($data, true);
 
         $userInfo = request('userInfo');
+        \Log::info($userInfo);
         $userInfo['xcx_id'] = session('xcx_id');
         $userInfo['nickname'] = $userInfo['nickName'];
         
