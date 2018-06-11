@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Queues;
+namespace App\Http\Requests\Commons;
 
-use \App\Http\Requests\CommonRequest;
+use App\Http\Requests\CommonRequest;
 
-class QueueRequest extends CommonRequest
+class PhotoRequest extends CommonRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,8 +14,7 @@ class QueueRequest extends CommonRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'flag' => 'required',
+            'image' => 'required|string'
         ];
     }
 }

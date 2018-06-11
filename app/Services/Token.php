@@ -172,7 +172,7 @@ class Token
      * @param $token 
      * @return bool
      */
-    public static function verifyToken(string $token) : bool
+    public static function verifyToken($token) : bool
     {
         $exist = Cache::get($token);
         if ($exist) {

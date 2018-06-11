@@ -44,13 +44,9 @@ Route::group(['prefix' => 'api','middleware'=>['cors']], function () {
     Route::post('user/login','\App\Api\Controllers\LoginController@login');
     Route::post('token', 'TokenController@getToken');
     //消息模板
-    Route::apiResource('notice_templates', '\App\Api\Controllers\Commons\NoticeTemplateController', ['only' => [
-        'index', 'store', 'destroy'
-    ]])->middleware(['token']);
+    Route::apiResource('notice_templates', '\App\Api\Controllers\Commons\NoticeTemplateController')->middleware(['token']);
     //小程序模板
-    Route::apiResource('templates', '\App\Api\Controllers\Commons\TemplateController', ['only' => [
-        'index', 'store', 'update', 'destroy'
-    ]])->middleware(['token']);
+    Route::apiResource('templates', '\App\Api\Controllers\Commons\TemplateController')->middleware(['token']);
 
     //www.rdoorweb.com/api/templates/{id}  GET/POST/DELETE
 });
@@ -77,7 +73,13 @@ Route::get('/', function() {
     return view('welcome');
 });
 
+Route::get('time', function() {
+    return date('Y-m-d H:i', time());
+});
+
 Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
+
+
 
 
 
