@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ClientToken extends Token
 {
-    public function getToken($app_key, $app_secret)
+    public function getToken(string $app_key, string $app_secret)
     { 
         $app = AdminUser::check($app_key, $app_secret);
         

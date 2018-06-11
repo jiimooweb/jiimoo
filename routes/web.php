@@ -24,6 +24,7 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token',
     include_once('members.php');
     include_once('commons.php');
     include_once('queues.php');
+    include_once('lotteries.php');
 });
 
 Route::get('login',function() {
@@ -31,20 +32,26 @@ Route::get('login',function() {
 });
 
 
-Route::get('api/user','\App\Api\Controllers\LoginController@index')->middleware(['cors']);
-Route::post('api/user/login','\App\Api\Controllers\LoginController@login')->middleware(['cors']);
-
-Route::post('api/token', 'TokenController@getToken')->middleware(['cors']);
-
 Route::group(['prefix' => '{client_type}/{xcx_flag}/api/wechat','middleware'=>['client', 'cors']], function() {
     Route::post('token/getToken', '\App\Api\Controllers\Wechat\MiniProgramController@getToken');
     Route::post('token/verifyToken', '\App\Api\Controllers\Wechat\MiniProgramController@verifyToken');
     Route::post('saveInfo', '\App\Api\Controllers\Wechat\MiniProgramController@saveInfo')->middleware('token');
 });
 
-Route::get('/getQrCode', '\App\Api\Controllers\MiniProgramController@getQrCode');
-Route::get('/getMiniCode', '\App\Api\Controllers\MiniProgramController@getMiniCode');
-Route::get('wechat/test', '\App\Api\Controllers\MiniProgramController@test');
+
+Route::group(['prefix' => 'api','middleware'=>['cors']], function () {
+    Route::get('user','\App\Api\Controllers\LoginController@index');
+    Route::post('user/login','\App\Api\Controllers\LoginController@login');
+    Route::post('token', 'TokenController@getToken');
+    //消息模板
+    Route::apiResource('notice_templates', '\App\Api\Controllers\Commons\NoticeTemplateController')->middleware(['token']);
+    //小程序模板
+    Route::apiResource('templates', '\App\Api\Controllers\Commons\TemplateController')->middleware(['token']);
+
+    //www.rdoorweb.com/api/templates/{id}  GET/POST/DELETE
+});
+
+
 
 Route::get('flash_token', function() {
     $token = request()->header('token');
@@ -65,6 +72,8 @@ Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
 Route::get('/', function() {
     return view('welcome');
 });
+
+Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
 
 
 

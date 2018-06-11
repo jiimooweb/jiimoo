@@ -17,7 +17,7 @@ class FanController extends Controller
         }
 
         public function fanShow(){
-            $fan_id=request()->fan_id;
+            $fan_id=Token::getUid();;
             $activity_id=request('activity_id');
             $answerFan=AnswersUser::find($fan_id);
             $fan=Fan::find($answerFan->fans_id);
@@ -27,7 +27,7 @@ class FanController extends Controller
 
         public function store()
         {
-            $fans_id=request('fan_id');
+            $fans_id=Token::getUid();;
             $save=AnswersUser::create(compact('fans_id'));
             if ($save){
                 return response()->json(["status"=>"success","msg"=>"保存成功！"]);
@@ -48,7 +48,7 @@ class FanController extends Controller
             if($valid->errors()->count()){
                 return response()->json(["status"=>"error","data"=>$valid->errors()]);
             }
-            $fan_id=request()->fan;
+            $fan_id=Token::getUid();;
             $activity=Activitie::find(request('acityvity_id'));
             $user=AnswersUser::where('fans_id',$fan_id)->update(request(['take_part','number_reward','reward']));
             if($activity->hasFan($fan_id)){

@@ -5,6 +5,7 @@ namespace App\Api\Controllers\Displays;
 use App\Services\Token;
 use Illuminate\Http\Request;
 use App\Models\Displays\Career;
+use App\Models\Displays\Applicant;
 use App\Api\Controllers\Controller;
 use App\Http\Requests\Displays\CareerRequest;
 
@@ -57,31 +58,27 @@ class CareerController extends Controller
     public function xcxShow(){
         $careers_id=request()->career;
         $uid = Token::getUid();
+        $page = request('page') ?? 1;
+        $pagesize = config('common.pagesize');
+        $offset = ($page - 1) * $pagesize;
         if($careers_id){
             $careers=Career::with((['applicant' => function ($query) {
-                $page = request('page') ?? 1;
-                $pagesize = config('common.pagesize');
-                $offset = ($page - 1) * $pagesize;
                 $query->where('status','Y')->withCount(['fans'])->offset($offset)->limit($pagesize)->orderBy('rank', 'desc')->get();
-            }]))->find($careers_id);
+            }]))->find($careers_id);            
             $applicants = $careers->applicant->load('fans', 'career');
-            foreach($applicants as &$applicant) {
-                foreach($applicant['fans'] as $fan) {
-                    if($fan['id'] == $uid) {
-                        $applicant['collection'] = 1;
-                        break;
-                    }
-                }  
-                unset($applicant['fans']);
-            }        
         }else{
-            $pagesize=config('common.pagesize');
-            $careers=Career::with('applicant')->with((['applicant' => function ($query) {
-                $page=request('page');
-                $pagesize=config('common.pagesize');
-                $query->where('status','Y')->withCount('fans')->orderBy('rank', 'desc')->paginate($pagesize);
-            }]))->get();
+            $applicants = Applicant::withCount(['fans'])->offset($offset)->limit($pagesize)->get()->load('fans','career')->toArray();
         }
+
+        foreach($applicants as &$applicant) {
+            foreach($applicant['fans'] as $fan) {
+                if($fan['id'] == $uid) {
+                    $applicant['collection'] = 1;
+                    break;
+                }
+            }  
+            unset($applicant['fans']);
+        }    
         return response()->json(['status' => 'success', 'data' => $applicants]);
     }
 }

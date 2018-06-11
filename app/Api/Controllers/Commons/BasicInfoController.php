@@ -18,10 +18,10 @@ class BasicInfoController extends Controller
 
     public function store(BasicInfoRequest $request) 
     {   
-        $data = request([
-            'name', 'tel', 'address', 'intro', 'desc', 'logo'
-        ]);
-        
+        $data = request()->all();
+
+        $data['images'] = $data['images'] ? json_encode($data['images'], JSON_UNESCAPED_SLASHES) : null; 
+
         if(BasicInfo::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
@@ -33,6 +33,8 @@ class BasicInfoController extends Controller
     public function show()
     {
         $info = BasicInfo::find(request()->info);
+        $info['images'] = json_decode($info['images'], true);
+        
         $status = $info ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $info]);     
     }
@@ -40,11 +42,10 @@ class BasicInfoController extends Controller
     public function update(BasicInfoRequest $request) 
     {
         // TODO:判断更新权限
-        $data = request([
-            'name', 'tel', 'address', 'intro', 'desc', 'logo'
-        ]);
-        
-        if(BasicInfo::where('id', request()->info)->update($data)) {
+        $data = request()->all();
+
+        $data['images'] = $data['images'] ? json_encode($data['images'], JSON_UNESCAPED_SLASHES) : null;       
+        if(BasicInfo::where('xcx_id', request()->info)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);    
         }
         
@@ -55,7 +56,7 @@ class BasicInfoController extends Controller
     public function destroy()
     {
         // TODO:判断删除权限
-        if(BasicInfo::where('id', request()->info)->delete()) {
+        if(BasicInfo::where('xcx_id', request()->info)->delete()) {
             return response()->json(['status' => 'success','msg' => '删除成功！']); 
         }
 

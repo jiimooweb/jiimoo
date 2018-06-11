@@ -21,9 +21,14 @@ Route::apiResource('/suggests', '\App\Api\Controllers\Commons\SuggestController'
 //其他::轮播图
 Route::apiResource('/swipers', '\App\Api\Controllers\Commons\SwiperController');   
 //其他::轮播图组
-Route::apiResource('/swiper_groups', '\App\Api\Controllers\Commons\SwiperGroupController');   
+Route::apiResource('/swiper_groups', '\App\Api\Controllers\Commons\SwiperGroupController'); 
+//专题  
+Route::apiResource('/topics', '\App\Api\Controllers\Commons\TopicController');  
+//相册
+Route::apiResource('/photos', '\App\Api\Controllers\Commons\PhotoController');   
+
 
 
 //范文
-Route::get('/templetCombox','\App\Api\Controllers\Commons\TempletController@templetCombox');
-Route::apiResource('/templet', '\App\Api\Controllers\Commons\TempletController');
+Route::get('/templetsCombox','\App\Api\Controllers\Commons\TempletController@templetCombox');
+Route::apiResource('/templets', '\App\Api\Controllers\Commons\TempletController');

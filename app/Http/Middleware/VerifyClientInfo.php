@@ -18,6 +18,11 @@ class VerifyClientInfo
     public function handle($request, Closure $next)
     {
         $miniProgram = Xcx::where('xcx_flag',$request->xcx_flag)->first();
+
+        // if( strtotime($miniProgram['end_time']) < time() ) {
+        //     return response()->json(['msg' => '小程序已到期! '])->setStatusCode(401); 
+        // }
+
         if($miniProgram) {
             if($request->client_type == 'web' && !$miniProgram->hasUser(Token::getUid())) {
                 return redirect('login');          

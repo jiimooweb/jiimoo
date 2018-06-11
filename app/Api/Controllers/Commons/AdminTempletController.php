@@ -11,8 +11,8 @@ class AdminTempletController extends Controller
 {
     public function index()
     {
-        $templet=Templet::where('xcx_id','0')->get();
-        return response()->json(['status' => 'success', 'data' => $templet]);
+        $templets=Templet::where('xcx_id','0')->get();
+        return response()->json(['status' => 'success', 'data' => $templets]);
     }
 
     public function store(TempletRequest $request)

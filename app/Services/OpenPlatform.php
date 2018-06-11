@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Commons\Xcx;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class OpenPlatform 
 {
@@ -13,7 +14,7 @@ class OpenPlatform
         return $openPlatform;
     }
 
-    public static function getMiniProgram($xcx_id)
+    public static function getMiniProgram(int $xcx_id)
     {
         $xcx = Xcx::find($xcx_id);
         $app = self::getApp()->miniProgram($xcx['app_id'], $xcx['refresh_token']);
@@ -33,7 +34,7 @@ class OpenPlatform
         return $data;
     }
 
-    public static function initMiniProgram($xcx_id, $auth_code)
+    public static function initMiniProgram(int $xcx_id, string $auth_code)
     {
         $openPlatform = self::getApp();
 
@@ -51,7 +52,7 @@ class OpenPlatform
         
     }
 
-    public static function updateMiniProgram($app_id)
+    public static function updateMiniProgram(string $app_id)
     {
         $Xcx = Xcx::where(['app_id' => $app_id, 'authorization_status' => 1])->first();
 
@@ -63,12 +64,12 @@ class OpenPlatform
         
     }
 
-    public static function unAuthorized($app_id)
+    public static function unAuthorized(string $app_id)
     {
         Xcx::where('app_id', $app_id)->update(['authorization_status' => -1]);   
     }
 
-    public static function miniProgramModifyDomain($method)
+    public static function miniProgramModifyDomain(string $method)
     {
         if($method == 'get') {
             $data = ["action" =>  $method];
@@ -85,7 +86,7 @@ class OpenPlatform
         return $data;
     }
 
-    public static function saveMiniProgram($xcx_id, $miniProgram)
+    public static function saveMiniProgram(int $xcx_id, array $miniProgram)
     {
         $data = [];
         $authorizer_info = $miniProgram['authorizer_info'];
@@ -109,21 +110,46 @@ class OpenPlatform
         Xcx::where('id', $xcx_id)->update($data);
     }
 
-    public static function getExtJson() 
+    public static function getExtJson(int $xcx_id) : string
     {
+        $xcx = Xcx::find($xcx_id);
         $ext = [
             'extEnable' => true,
-            'extAppid' => 'wxc1fb7bd6c21cb0cc',
+            'extAppid' => $xcx->app_id,
             'ext' => [
-                'xcx_flag' => 'sdq12DSs'
+                'xcx_flag' => $xcx->xcx_flag
             ]
         ];
 
         return json_encode($ext);
     }
 
-    public static function getItemList()
+    public static function saveAudit(string $app_id, array $msg, int $status) : Audit
     {
+        $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
+        $miniProgram = self::getMiniProgram($xcx_id);
+        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
+        $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();        
+        $audit->status = $status;
+        $audit->org_id = $msg['ToUserName'];
+        $audit->sys_id = $msg['FromUserName'];
+        $audit->create_time = $msg['CreateTime'];
+        $audit->succ_time = $msg['SuccTime'];
+        $audit->fail_time = $msg['FailTime'];
+        $audit->reason  = $msg['Reason'];
+        return $audit->save();
+    }
 
+    public static function getVersion() : int
+    {
+        $version = Redis::get('version');
+        if($version) {
+            Redis::set('version', ++$version);
+        }else {
+            $version = 10000;
+            Redis::set('version', $version);
+        }
+        
+        return $version;
     }
 }

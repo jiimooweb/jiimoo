@@ -20,17 +20,17 @@ class AdminUser extends Authenticatable
         withPivot(['xcx_id','user_id','sort']);
     }
 
-    public function assignXcx($xcx)
+    public function assignXcx(int $xcx)
     {
         return $this->xcxs()->save($xcx);
     }
 
-    public function detachXcx($xcx)
+    public function detachXcx(int $xcx)
     {
         return $this->xcxs()->detach($xcx);
     }
 
-    public static function check($username, $password) 
+    public static function check(string $username, string $password) 
     {
         $email=	$username;
         $userNameAttempt=compact('username','password');
