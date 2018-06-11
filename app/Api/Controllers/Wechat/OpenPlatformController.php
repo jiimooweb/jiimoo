@@ -10,6 +10,7 @@ use App\Models\Wechat\Experiencer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use EasyWeChat\Kernel\Messages\Message;
 use EasyWeChat\OpenPlatform\Server\Guard;
 
 
