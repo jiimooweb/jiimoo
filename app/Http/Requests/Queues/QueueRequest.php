@@ -17,7 +17,6 @@ class QueueRequest extends CommonRequest
         return [
             'name' => 'required',
             'flag' => 'required',
-            'template_id' => 'required'
         ];
     }
 }
