@@ -15,6 +15,9 @@ class ProductController extends Controller
     {
         $products = Product::orderBy('created_at','desc')->paginate(config('common.pagesize'));
         $products->load('category');                
+        foreach($products as &$product) {
+            $product->banner = json_decode($product->banner);
+        }
         return response()->json(['status' => 'success', 'data' => $products]);
     }
 
@@ -34,6 +37,7 @@ class ProductController extends Controller
     public function show()
     {
         $product = Product::where('id', request()->product)->first();
+        $product['banner'] = json_decode($product['banner']);
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
     }
