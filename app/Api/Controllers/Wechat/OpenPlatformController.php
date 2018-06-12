@@ -10,6 +10,7 @@ use App\Models\Wechat\Experiencer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use EasyWeChat\Kernel\Messages\Message;
 use EasyWeChat\OpenPlatform\Server\Guard;
 
 
@@ -329,7 +330,7 @@ class OpenPlatformController extends Controller
         $openPlatform = OpenPlatform::getApp();
         $server      = $openPlatform->server;
 
-        $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
+        // $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
 
         $msg = $server->getMessage();
 
