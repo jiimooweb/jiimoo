@@ -105,13 +105,15 @@ class ActivityController extends Controller
         offset($offset)->limit($pagesize)->get();
         foreach ($activites as $activite){
             if(count($activite['fans'])){
-                if($activite->fans->partook>$activite->partake){
-                    $activite['partake_flag']=0;
+                $activite->surplus_partake=$activite->fans->partook-$activite->partake;
+                if($activite->fans->partook>=$activite->partake){
+                    $activite->partake_flag=0;
                 }else{
-                    $activite['partake_flag']=1;
+                    $activite->partake_flag=1;
                 }
             }else{
-                $activite['partake_flag']=1;
+                $activite->partake_flag=1;
+                $activite->surplus_partake=$activite->partake;
             }
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
