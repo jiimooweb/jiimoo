@@ -330,7 +330,7 @@ class OpenPlatformController extends Controller
         $openPlatform = OpenPlatform::getApp();
         $server      = $openPlatform->server;
 
-        $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
+        // $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
 
         $msg = $server->getMessage();
 
