@@ -13,11 +13,11 @@ class ProductController extends Controller
     
     public function index(Request $request) 
     {
-        $products = Product::orderBy('created_at','desc')->when($request->keyword, function($query) use ($request) {
+        $products = Product::when($request->keyword, function($query) use ($request) {
             return $query->where('title', 'like', '%'.$request->keyword.'%');
         })->when($request->cate_id, function($query) use ($request) {
             return $query->where('cate_id', $request->cate_id);
-        })->paginate(config('common.pagesize'));
+        })->orderBy('created_at','desc')->paginate(config('common.pagesize'));
         $products->load('category');                
         foreach($products as &$product) {
             $product->banner = json_decode($product->banner);
