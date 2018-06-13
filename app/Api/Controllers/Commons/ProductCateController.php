@@ -13,8 +13,7 @@ class ProductCateController extends Controller
     
     public function index() 
     {
-        $productCates = ProductCate::get();
-        $productCates->load('products');
+        $productCates = ProductCate::withCount('products')->get();
         $productCates = Common::getTree($productCates);
         return response()->json(['status' => 'success', 'data' => $productCates]);  
     }
@@ -30,8 +29,7 @@ class ProductCateController extends Controller
 
     public function show() 
     {
-        $cate = ProductCate::find(request()->product_cate);
-        $cate->load('products');             
+        $cate = ProductCate::withCount('products')->find(request()->product_cate);
         $status = $cate ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $cate]);
     }
