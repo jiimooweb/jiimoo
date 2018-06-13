@@ -41,6 +41,7 @@ class ProductController extends Controller
     public function show()
     {
         $product = Product::where('id', request()->product)->first();
+        $product->load('category');  
         $product['banner'] = json_decode($product['banner']);
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
