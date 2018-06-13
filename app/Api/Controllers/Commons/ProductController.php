@@ -28,8 +28,8 @@ class ProductController extends Controller
     public function store(ProductRequest $request) 
     {   
         $data = request()->all();
-        
-        $data['banner'] = json_encode($data['banner']);
+
+        $data['banner'] = $data['banner'] ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
         
         if(Product::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
@@ -42,7 +42,7 @@ class ProductController extends Controller
     {
         $product = Product::where('id', request()->product)->first();
         $product->load('category');  
-        $product['banner'] = json_decode($product['banner']);
+        $data['banner'] = $data['banner'] ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
     }
