@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function index(Request $request) 
     {
         $products = Product::when($request->keyword, function($query) use ($request) {
-            return $query->where('title', 'like', '%'.$request->keyword.'%');
+            return $query->where('name', 'like', '%'.$request->keyword.'%');
         })->when($request->cate_id, function($query) use ($request) {
             return $query->where('cate_id', $request->cate_id);
         })->orderBy('created_at','desc')->paginate(config('common.pagesize'));
