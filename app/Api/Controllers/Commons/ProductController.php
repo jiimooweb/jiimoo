@@ -30,7 +30,7 @@ class ProductController extends Controller
         $data = request()->all();
 
         $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
-        
+
         if(Product::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
@@ -42,7 +42,7 @@ class ProductController extends Controller
     {
         $product = Product::where('id', request()->product)->first();
         $product->load('category');  
-        $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
+        $data['banner'] = json_decode($data['banner']);   
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
     }
@@ -52,8 +52,8 @@ class ProductController extends Controller
     {
         $data = request()->all();   
 
-        $data['banner'] = json_encode($data['banner']);        
-        
+        $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
+             
         if(Product::where('id', request()->product)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
         }
