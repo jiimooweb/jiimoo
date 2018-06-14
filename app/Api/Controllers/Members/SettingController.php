@@ -14,14 +14,17 @@ class SettingController extends Controller
     
     public function index() 
     {
-        $setting = Setting::first()->toArray();
-        $groups = Group::getGroup()->toArray();
+        $setting = Setting::first();
+        $groups = Group::getGroup();
         return response()->json(['status' => 'success', 'setting' => $setting, 'groups' => $groups]);   
     }
 
     public function store(SettingRequest $request) 
     {   
         $data = request()->all();  
+
+        $data['offer'] = json_encode($data['offer']);
+
         if(Setting::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                             
         }
@@ -32,16 +35,8 @@ class SettingController extends Controller
 
     public function show()
     {
-        $array = [
-            1 => ['full' => 100, 'reduction' => 5],
-            2 => ['full' => 100, 'reduction' => 10],
-            3 => ['full' => 100, 'reduction' => 15],
-            4 => ['full' => 100, 'reduction' => 20],
-        ];
-        // dd(json_encode($array));
         $setting = Setting::find(request()->setting);
         $offer = json_decode($setting->offer,true);   
-        dd($offer);
         $status = $setting ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $setting]);   
     }

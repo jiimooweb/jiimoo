@@ -61,7 +61,6 @@ class MemberController extends Controller
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                             
         }
         return response()->json(['status' => 'error', 'msg' => '更新失败！']);                            
-        
     }
 
     //加入会员
@@ -69,7 +68,7 @@ class MemberController extends Controller
     {
         $data = request()->all();   
         $data['fan_id'] = Token::getUid();
-        $data['card_id'] = time();
+        $data['card_id'] = session('xcx_id').time();
         if(MiniMember::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '领取成功！']);                             
         }
