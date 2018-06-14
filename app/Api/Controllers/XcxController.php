@@ -40,7 +40,6 @@ class XcxController extends Controller{
         $savedata=request(['nick_name','start_time','end_time']);
         $savedata['xcx_flag']=str_random(8);
         $save=Xcx::create($savedata);
-        dd($save);
         if ($save){
             $adminUser=AdminUser::where('identity', 'Admin')->first();
             $adminUser->assignXcx($save);
