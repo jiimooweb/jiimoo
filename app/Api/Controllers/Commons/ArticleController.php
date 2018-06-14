@@ -13,7 +13,11 @@ class ArticleController extends Controller
     
     public function index() 
     {
-        $articles = Article::orderBy('created_at','desc')->withCount(['comments'])->paginate(config('common.pagesize'));
+        $articles = Article::when($request->keyword, function($query) use ($request) {
+            return $query->where('name', 'like', '%'.$request->keyword.'%');
+        })->when($request->cate_id, function($query) use ($request) {
+            return $query->where('cate_id', $request->cate_id);
+        })->orderBy('created_at','desc')->withCount(['comments'])->paginate(config('common.pagesize'));
         $articles->load('category');
         
         return response()->json(['status' => 'success', 'data' => $articles]);
