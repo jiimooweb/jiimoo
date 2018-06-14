@@ -16,7 +16,9 @@ class ProductController extends Controller
         $products = Product::when($request->keyword, function($query) use ($request) {
             return $query->where('name', 'like', '%'.$request->keyword.'%');
         })->when($request->cate_id, function($query) use ($request) {
-            return $query->where('cate_id', $request->cate_id);
+            $cate_ids = (new ProductCate)->getChildrens($request->cate_id);
+            $cate_ids[] = (int)$request->cate_id;
+            return $query->whereIn('cate_id', $cate_ids);
         })->orderBy('created_at','desc')->paginate(config('common.pagesize'));
         $products->load('category');                
         foreach($products as &$product) {
