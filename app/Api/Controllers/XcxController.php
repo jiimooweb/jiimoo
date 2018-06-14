@@ -88,7 +88,7 @@ class XcxController extends Controller{
 
         public function storeCombo(XcxRequest $request){
             $xcx_flag=request()->xcx_flag;
-            $data=request(['nick_name','star_time','end_time','apply_modules']);
+            $data=request(['nick_name','start_time','end_time','apply_modules']);
             $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
             $reCombos=request('combos');
             $reModules=request('modules');
