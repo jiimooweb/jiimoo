@@ -14,7 +14,7 @@ class ArticleController extends Controller
     public function index(Request $request) 
     {
         $articles = Article::when($request->keyword, function($query) use ($request) {
-            return $query->where('name', 'like', '%'.$request->keyword.'%');
+            return $query->where('title', 'like', '%'.$request->keyword.'%');
         })->when($request->cate_id, function($query) use ($request) {
             return $query->where('cate_id', $request->cate_id);
         })->orderBy('created_at','desc')->withCount(['comments'])->paginate(config('common.pagesize'));
