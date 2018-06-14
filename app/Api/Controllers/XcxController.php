@@ -142,7 +142,7 @@ class XcxController extends Controller{
         }
         $detachs=$hasUsers->diff($users);
         foreach ($detachs as $detach){
-            if($detach['username']!='Admin'){
+            if($detach['identity']!='Admin'){
                 $xcx->detachUser($detach);
             }
         }
