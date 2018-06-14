@@ -8,8 +8,7 @@ Route::group(['prefix' => 'members'], function () {
     //会员组
     Route::get('/groups/{group_id}/default', '\App\Api\Controllers\Members\GroupController@default');
     Route::apiResource('/groups', '\App\Api\Controllers\Members\GroupController');
-
-
+    //会员卡设置
     Route::apiResource('/settings', '\App\Api\Controllers\Members\SettingController');
     
 });

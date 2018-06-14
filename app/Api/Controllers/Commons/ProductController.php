@@ -11,9 +11,15 @@ use App\Http\Requests\Commons\ProductRequest;
 class ProductController extends Controller
 {
     
-    public function index() 
+    public function index(Request $request) 
     {
-        $products = Product::orderBy('created_at','desc')->paginate(config('common.pagesize'));
+        $products = Product::when($request->keyword, function($query) use ($request) {
+            return $query->where('name', 'like', '%'.$request->keyword.'%');
+        })->when($request->cate_id, function($query) use ($request) {
+            $cate_ids = (new ProductCate)->getChildrens($request->cate_id);
+            $cate_ids[] = (int)$request->cate_id;
+            return $query->whereIn('cate_id', $cate_ids);
+        })->orderBy('created_at','desc')->paginate(config('common.pagesize'));
         $products->load('category');                
         foreach($products as &$product) {
             $product->banner = json_decode($product->banner);
@@ -24,9 +30,9 @@ class ProductController extends Controller
     public function store(ProductRequest $request) 
     {   
         $data = request()->all();
-        
-        $data['banner'] = json_encode($data['banner']);
-        
+
+        $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
+
         if(Product::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
@@ -37,7 +43,8 @@ class ProductController extends Controller
     public function show()
     {
         $product = Product::where('id', request()->product)->first();
-        $product['banner'] = json_decode($product['banner']);
+        $product->load('category');  
+        $data['banner'] = json_decode($data['banner']);   
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
     }
@@ -47,8 +54,8 @@ class ProductController extends Controller
     {
         $data = request()->all();   
 
-        $data['banner'] = json_encode($data['banner']);        
-        
+        $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
+             
         if(Product::where('id', request()->product)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
         }
