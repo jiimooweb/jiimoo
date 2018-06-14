@@ -53,4 +53,18 @@ class PrizeController extends Controller
             return response()->json(["status"=>"error","msg"=>"删除失败！"]);
         }
     }
+
+    public function getPrizes(){
+        $activity_id=request()->activity;
+        $activity=Activity::find($activity_id);
+        $prizes=$activity->prizes->toArray();
+        $noProbably=100;
+        foreach ($prizes as $prize){
+            $noProbably=$noProbably-$prize['probably'];
+        }
+        $noPrize=array('id'=>'no','xcx_id'=>session('xcx_id'),'coupon_id'=>0,
+            'probably'=>$noProbably);
+        array_push($prizes,$noPrize);
+        return response()->json(["status"=>"success","data"=>$prizes]);
+    }
 }

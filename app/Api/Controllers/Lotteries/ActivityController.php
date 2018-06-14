@@ -136,12 +136,18 @@ class ActivityController extends Controller
         }
         $rid = $this->get_rand($arr); //根据概率获取奖项id
         $result='';
-        foreach ($prizes as $prize){
-            if($prize['id']==$rid){
-                $result=$prize;
+        for ($i=0;$i<count($prizes);$i++){
+            if($prizes[$i]['id']==$rid){
+                $result=$i;
                 break;
             }
         }
+//        foreach ($prizes as $prize){
+//            if($prize['id']==$rid){
+//                $result=$prize;
+//                break;
+//            }
+//        }
         if($result){
             return response()->json(["status"=>"success","data"=>$result]);
         }else{
