@@ -41,11 +41,9 @@ class XcxController extends Controller{
         $savedata['xcx_flag']=str_random(8);
         $save=Xcx::create($savedata);
         if ($save){
-            $adminUser=AdminUser::where('identity', 'Admin')->first();
-            $adminUser->assignXcx($save);
+            AdminUser::where('identity', 'Admin')->first()->assignXcx($save);
             if(request('user_id')){
-                $user=AdminUser::find(request('user_id'));
-                $assgin=$user->assignXcx($save);
+                AdminUser::find(request('user_id'))->assignXcx($save);
                 return response()->json(["status"=>"success","msg"=>"保存成功！"]);
             }
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
