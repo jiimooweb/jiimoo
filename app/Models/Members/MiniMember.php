@@ -16,23 +16,16 @@ class MiniMember extends Model
 
     public static function changeIntegral($member_id, $value)
     {
-        $self = new self;
-        if($value > 0) {
-            $self->increment('integral', $vlaue, ['id' => $member_id]);
-        }elseif($value < 0) {
-            $self->decrement('integral', abs($vlaue), ['id' => $member_id]);
-        }
-
-        $self->increment('integral_total', abs($vlaue), ['id' => $member_id]);
+        $self = self::find($member_id);
+        $self->integral = $self->integral + $value;
+        $self->integral_total = $self->integral_total + abs($vlaue);
+        $self->save();
     }
 
     public static function changeMoney($member_id, $value)
     {
-        $self = new self;
-        if($value > 0) {
-            $self->increment('money', $vlaue, ['id' => $member_id]);
-        }elseif($value < 0) {
-            $self->decrement('money', abs($vlaue), ['id' => $member_id]);
-        }
+        $self = self::find($member_id);
+        $self->money = $self->money + $value;
+        $self->save();
     }
 }
