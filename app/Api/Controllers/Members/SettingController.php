@@ -23,6 +23,18 @@ class SettingController extends Controller
     {   
         $data = request()->all();  
 
+        //满减
+        // [
+        //     ['group_id' => 1, 'condition'=> 100, 'discount'=>  10],
+        //     ['group_id' =>  2, 'condition'=> 100, 'discount'=> 20]
+        // ];
+
+        //折扣
+        // [
+        //     ['group_id '=> 1, 'discount' => 9.5],
+        //     ['group_id'=> 2, 'discount'=>  9]
+        // ];
+
         $data['offer'] = json_encode($data['offer']);
 
         if(Setting::create($data)) {

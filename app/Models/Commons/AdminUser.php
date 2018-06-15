@@ -20,12 +20,12 @@ class AdminUser extends Authenticatable
         withPivot(['xcx_id','user_id','sort']);
     }
 
-    public function assignXcx(int $xcx)
+    public function assignXcx(Xcx $xcx)
     {
         return $this->xcxs()->save($xcx);
     }
 
-    public function detachXcx(int $xcx)
+    public function detachXcx(Xcx $xcx)
     {
         return $this->xcxs()->detach($xcx);
     }
