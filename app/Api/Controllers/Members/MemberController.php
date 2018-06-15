@@ -99,16 +99,16 @@ class MemberController extends Controller
     public function changeIntegral()
     {
         $member_id = request('member_id');        
-        $vlaue = request('vlaue');
-        MiniMember::changeIntegral($member_id, $vlaue);
+        $value = request('value');
+        MiniMember::changeIntegral($member_id, $value);
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);  
     }
 
     public function changeMoney()
     {
         $member_id = request('member_id');
-        $vlaue = request('vlaue');        
-        MiniMember::changeMoney($member_id, $vlaue);
+        $value = request('value');        
+        MiniMember::changeMoney($member_id, $value);
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);  
     }
 

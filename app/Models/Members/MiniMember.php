@@ -18,7 +18,7 @@ class MiniMember extends Model
     {
         $self = self::find($member_id);
         $self->integral = $self->integral + $value;
-        $self->integral_total = $self->integral_total + abs($vlaue);
+        $self->integral_total = $self->integral_total + abs($value);
         $self->save();
     }
 
