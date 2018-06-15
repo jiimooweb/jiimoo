@@ -16,21 +16,23 @@ class MiniMember extends Model
 
     public static function changeIntegral($member_id, $value)
     {
+        $self = new self;
         if($value > 0) {
-            $this->increment('integral', $vlaue, ['id' => $member_id]);
+            $self->increment('integral', $vlaue, ['id' => $member_id]);
         }elseif($value < 0) {
-            $this->decrement('integral', abs($vlaue), ['id' => $member_id]);
+            $self->decrement('integral', abs($vlaue), ['id' => $member_id]);
         }
 
-        $this->increment('integral_total', abs($vlaue), ['id' => $member_id]);
+        $self->increment('integral_total', abs($vlaue), ['id' => $member_id]);
     }
 
     public static function changeMoney($member_id, $value)
     {
+        $self = new self;
         if($value > 0) {
-            $this->increment('money', $vlaue, ['id' => $member_id]);
+            $self->increment('money', $vlaue, ['id' => $member_id]);
         }elseif($value < 0) {
-            $this->decrement('money', abs($vlaue), ['id' => $member_id]);
+            $self->decrement('money', abs($vlaue), ['id' => $member_id]);
         }
     }
 }

@@ -100,7 +100,7 @@ class MemberController extends Controller
     {
         $member_id = request('member_id');        
         $vlaue = request('vlaue');
-        (new MiniMember)->changeIntegral($member_id, $vlaue);
+        MiniMember::changeIntegral($member_id, $vlaue);
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);  
     }
 
@@ -108,7 +108,7 @@ class MemberController extends Controller
     {
         $vlaue = request('vlaue');
         $member_id = request('member_id');
-        (new MiniMember)->changeMoney($member_id, $vlaue);
+        MiniMember::changeMoney($member_id, $vlaue);
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);  
     }
 
