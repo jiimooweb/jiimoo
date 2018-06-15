@@ -14,22 +14,22 @@ class MiniMember extends Model
     }
 
 
-    public static function changeIntegral($member_id, $value, $mode)
+    public static function changeIntegral($member_id, $value)
     {
-        if($mode === 'increment') {
+        if($value > 0) {
             MiniMember::increment('integral', $vlaue, ['id' => $member_id]);
-        }elseif($mode === 'decrement') {
+        }elseif($value < 0) {
             MiniMember::decrement('integral', $vlaue, ['id' => $member_id]);
         }
 
         MiniMember::increment('integral_total', $vlaue, ['id' => $member_id]);
     }
 
-    public static function changeMoney($member_id, $value, $mode)
+    public static function changeMoney($member_id, $value)
     {
-        if($mode === 'increment') {
+        if($value > 0) {
             MiniMember::increment('money', $vlaue, ['id' => $member_id]);
-        }elseif($mode === 'decrement') {
+        }elseif($value < 0) {
             MiniMember::decrement('money', $vlaue, ['id' => $member_id]);
         }
     }
