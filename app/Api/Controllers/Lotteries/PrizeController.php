@@ -54,7 +54,7 @@ class PrizeController extends Controller
         }
     }
 
-    public function getPrizes(){
+    public function get_prizes(){
         $activity_id=request()->activity;
         $activity=Activity::find($activity_id);
         $prizes=$activity->prizes->toArray();

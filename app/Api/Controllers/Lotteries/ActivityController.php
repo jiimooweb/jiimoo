@@ -119,7 +119,7 @@ class ActivityController extends Controller
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
 
-    public function getPrizeResult()
+    public function get_prize_result()
     {
         $activity_id=request()->activity;
         $activity=Activity::find($activity_id);
