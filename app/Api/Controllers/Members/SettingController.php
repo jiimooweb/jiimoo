@@ -15,6 +15,7 @@ class SettingController extends Controller
     public function index() 
     {
         $setting = Setting::first();
+        $setting['offer'] = json_decode($setting['offer']);        
         $groups = Group::getGroup();
         return response()->json(['status' => 'success', 'setting' => $setting, 'groups' => $groups]);   
     }
@@ -55,7 +56,10 @@ class SettingController extends Controller
 
     public function update(SettingRequest $request)
     {
-        $data = request()->all();                      
+        $data = request()->all();   
+
+        $data['offer'] = json_encode($data['offer']);
+             
         if(Setting::where('id', request()->setting)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                             
         }
