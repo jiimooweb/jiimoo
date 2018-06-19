@@ -112,6 +112,13 @@ class MemberController extends Controller
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);  
     }
 
+    public function selectTag()
+    {
+        $member_id = request('member_id');
+        $tags = MiniMember::getNotHasTags($member_id);
+        return response()->json(['status' => 'success', 'data' => $tags]);   
+    }
+
     public function addTag()
     {
         if(MemberTag::create(request()->all())) {
