@@ -121,4 +121,16 @@ class MemberController extends Controller
         return response()->json(['status' => 'error', 'msg' => '添加失败！']);  
     }
 
+    public function deleteTag()
+    {
+        $member_id = request('member_id');
+        $tag_id = request('tag_id');
+        
+        if(MemberTag::where(['member_id' => $member_id, 'tag_id' => $tag_id])->delete()) {
+            return response()->json(['status' => 'success', 'msg' => '添加成功！']);  
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '添加失败！']); 
+    }
+
 }
