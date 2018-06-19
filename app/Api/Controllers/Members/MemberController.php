@@ -123,10 +123,7 @@ class MemberController extends Controller
 
     public function deleteTag()
     {
-        $member_id = request('member_id');
-        $tag_id = request('tag_id');
-        
-        if(MemberTag::where(['member_id' => $member_id, 'tag_id' => $tag_id])->delete()) {
+        if(MemberTag::where(request()->all())->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);  
         }
 
