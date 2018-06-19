@@ -127,10 +127,10 @@ class MemberController extends Controller
         $tag_id = request('tag_id');
         
         if(MemberTag::where(['member_id' => $member_id, 'tag_id' => $tag_id])->delete()) {
-            return response()->json(['status' => 'success', 'msg' => '添加成功！']);  
+            return response()->json(['status' => 'success', 'msg' => '删除成功！']);  
         }
 
-        return response()->json(['status' => 'error', 'msg' => '添加失败！']); 
+        return response()->json(['status' => 'error', 'msg' => '删除失败！']); 
     }
 
 }
