@@ -46,7 +46,7 @@ class ProductController extends Controller
 
     public function show()
     {
-        $coupons = 'asa';
+        $coupons = null;
 
         if(request()->client_type == 'app') {
             $uid = Token::getUid();
@@ -55,8 +55,7 @@ class ProductController extends Controller
 
         $product = Product::where('id', request()->product)->with(['coupons' => function ($query) use ($coupons){
             $query->when($coupons, function($query) use ($coupons) {
-                dd($coupons);
-                return $query->where('id', 12);
+                return $query->whereIn('coupons.id', $coupons);
             })->select('coupons.id', 'coupons.name')->get();
         }])->first();
         $product->load('category');  
