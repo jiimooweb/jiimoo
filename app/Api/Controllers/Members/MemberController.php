@@ -25,7 +25,7 @@ class MemberController extends Controller
         })->with(['tags' => function ($query) use ($tag_id){
             $query->when($tag_id, function($query) use ($tag_id) {
                 return $query->where('tag_id', $tag_id);
-            });
+            })->select('tag.id', 'tag.name');
         }])->get()->toArray();
         
         if($tag_id) {
@@ -52,7 +52,9 @@ class MemberController extends Controller
 
     public function show()
     {
-        $member = MiniMember::find(request()->member);
+        $member = MiniMember::with(['tags' => function ($query){
+            $query->select('member_tags.id', 'member_tags.name');
+        }])->find(request()->member);
         $status = $member ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $member]);   
     }

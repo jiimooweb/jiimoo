@@ -42,7 +42,6 @@ class CouponController extends Controller
         }
 
         $data = request()->all();
-        $data['exact_product'] = json_encode($data['exact_product']);
 
         if(Coupon::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                             
@@ -84,7 +83,6 @@ class CouponController extends Controller
         }
 
         $data = request()->all();
-        $data['exact_product'] = json_encode($data['exact_product']);
 
         if(Coupon::where('id', request()->coupon)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                             
