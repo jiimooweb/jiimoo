@@ -17,6 +17,7 @@ Route::post('/qiniuUpload', function() {
 Route::post('/qiniuDelete', function() {
     $url = parse_url(request('url'))['path'];
     $filename = substr($url, 1, strlen($url));
+    dd($filename);
     $disk = \zgldh\QiniuStorage\QiniuStorage::disk('qiniu');
     if($disk->delete($filename)) {
         return response()->json(['status' => 'success', 'msg' => '删除成功']);
