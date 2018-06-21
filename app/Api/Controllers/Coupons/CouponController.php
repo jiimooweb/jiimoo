@@ -12,7 +12,7 @@ class CouponController extends Controller
     
     public function index() 
     {
-        $coupons = Coupon::orderBy('created_at','desc')->paginate(config('common.pagesize'));   
+        $coupons = Coupon::orderBy('created_at','desc')->paginate(config('common.pagesize'))->toArray();   
         return response()->json(['status' => 'success', 'data' => $coupons]);   
     }
 
@@ -20,7 +20,6 @@ class CouponController extends Controller
     {   
         $validator = Validator::make(request()->all(), [
             'name' => 'required',
-            'module' => 'required',
             'use_price' => 'required',
             'price' => 'required',
             'thumb' => 'required',
@@ -37,11 +36,15 @@ class CouponController extends Controller
         $validator->sometimes(['startat', 'time_limit'], 'required|integer', function ($input) {
             return $input->time_type == 1;
         });
+
         if($validator->errors()->count()) {
             return response()->json(['status' => 'error', 'data' => $validator->errors()]);                       
         }
 
-        if(Coupon::create(request()->all())) {
+        $data = request()->all();
+        $data['exact_product'] = json_encode($data['exact_product']);
+
+        if(Coupon::create($data)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                             
         }
 
@@ -60,7 +63,6 @@ class CouponController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             'name' => 'required',
-            'module' => 'required',
             'use_price' => 'required',
             'price' => 'required',
             'thumb' => 'required',
@@ -81,7 +83,10 @@ class CouponController extends Controller
             return response()->json(['status' => 'error', 'data' => $validator->errors()]);                       
         }
 
-        if(Coupon::where('id', request()->coupon)->update(request()->all())) {
+        $data = request()->all();
+        $data['exact_product'] = json_encode($data['exact_product']);
+
+        if(Coupon::where('id', request()->coupon)->update($data)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                             
         }
 
