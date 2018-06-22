@@ -44,6 +44,7 @@ class MiniProgramController extends Controller
         $userInfo = request('userInfo');
         $userInfo['xcx_id'] = session('xcx_id');
         $userInfo['nickname'] = $userInfo['nickName'];
+        $userInfo['status'] = 1;
         
         unset($userInfo['nickName']);
 
