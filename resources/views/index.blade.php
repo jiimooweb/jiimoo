@@ -23,7 +23,7 @@
 <body>
     <div class="head">
     	<div class="content">
-    		<div class="logo"><img src="logo3.png" height="100%" alt=""></div>
+    		<div class="logo"><img src="{{asset('rdoorweb/logo3.png')}}" height="100%" alt=""></div>
     		<!-- <div class="login-box">
     			<a href="login.html"  class="n2">登录</a>
     			<a href="register.html" class="n1">注册</a>
@@ -60,7 +60,7 @@
     	</div>
     </div>
     <div class="banner">
-    	<img src="banner.jpg" height="668" width="1919" alt="">
+    	<img src="{{asset('rdoorweb/banner.jpg')}}" height="668" width="1919" alt="">
     </div>
     <div class="p-box">
     	<div class="content">
@@ -77,7 +77,7 @@
     		<ul>
     			<li class="trangle">
     				<a href="">
-    					<img src="img1.png" height="215" width="198" alt="">
+    					<img src="{{asset('rdoorweb/img1.png')}}" height="215" width="198" alt="">
     					<span>
     						<h2>小程序定制开发</h2>
     						<p>根据客户门店实际运用情况，进行专业的符合客户实际需求的功能定制，满足并提高客户的工作效率。</p>
@@ -86,7 +86,7 @@
     			</li>
     			<li class="trangle">
     				<a href="">
-    					<img src="img2.png" height="215" width="198" alt="">
+    					<img src="{{asset('rdoorweb/img2.png')}}" height="215" width="198" alt="">
     					<span>
     						<h2>网站定制开发</h2>
     						<p>给中小型公司提供多功能型网站开发，并在上线后进行维护。</p>
@@ -95,7 +95,7 @@
     			</li>
     			<li class="trangle">
     				<a href="">
-    					<img src="img3.png" height="215" width="198" alt="">
+    					<img src="{{asset('rdoorweb/img3.png')}}" height="215" width="198" alt="">
     					<span>
     						<h2>高端系统定制开发</h2>
     						<p>基于web端技术实现客户的系统需求，如类ERP，OA系统。</p>
@@ -110,35 +110,35 @@
     		<h1>小程序场景化应用</h1>
     		<ul style="margin-top:40px;display:inline-block">
     			<li class="trangle scen">
-    				<img src="icon1.png" height="68" width="68" alt="">
+    				<img src="{{asset('rdoorweb/icon1.png')}}" height="68" width="68" alt="">
     				<span>
 						<h2>商品展示</h2>
 						<p>丰富的模板快速套用，页面模版组件，灵活配置，支持多种商品形态，支持微信支付，安全可靠</p>
     				</span>
     			</li>
     			<li class="trangle scen">
-    				<img src="icon2.png" height="68" width="68" alt="">
+    				<img src="{{asset('rdoorweb/icon2.png')}}" height="68" width="68" alt="">
 					<span>
 						<h2>活动营销</h2>
 						<p>会员卡、优惠券、拼团、秒杀等，高效获客，团购、返现等，转化率飙升</p>
 					</span>
     			</li>
     			<li class="trangle scen">
-    				<img src="icon3.png" height="68" width="68" alt="">
+    				<img src="{{asset('rdoorweb/icon3.png')}}" height="68" width="68" alt="">
 					<span>
 						<h2>推广需求</h2>
 						<p>依托微信10亿用户，共享流量分红，海量好货资源，快速、低门槛地在周边展示商家，吸引用户</p>
 					</span>
     			</li>
     			<li class="trangle scen">
-    				<img src="icon4.png" height="68" width="68" alt="">
+    				<img src="{{asset('rdoorweb/icon4.png')}}" height="68" width="68" alt="">
 					<span>
 						<h2>客户管理</h2>
 						<p>支付即会员，强大的积分体制，粘住老客户最佳途径，标签管理，精准分组</p>
 					</span>
     			</li>
     			<li class="trangle scen">
-    				<img src="icon5.png" height="68" width="68" alt="">
+    				<img src="{{asset('rdoorweb/icon5.png')}}" height="68" width="68" alt="">
 					<span>
 						<h2>数据分析</h2>
 						<p>多维度分析会员与分销商，商品流量实时统计，订单管理，一目了然，销量统计，提升转换</p>
@@ -153,7 +153,7 @@
     		<h3>
     			针对不同行业的门店，通过需求分析对不同的店家进行专业定制，给你最合适的解决方案，并且无需维护，没有后顾之忧
     		</h3>
-    		<img src="ban1.png" height="271" width="410" alt="">
+    		<img src="{{asset('rdoorweb/ban1.png')}}" height="271" width="410" alt="">
     	</div>
     </div>
     <div class="p-box advantage">
