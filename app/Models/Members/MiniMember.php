@@ -3,6 +3,7 @@
 namespace App\Models\Members;
 
 use App\Models\Model;
+use App\Models\Members\MemberTag;
 
 class MiniMember extends Model
 {
@@ -27,5 +28,11 @@ class MiniMember extends Model
         $self = self::find($member_id);
         $self->money = $self->money + $value;
         $self->save();
+    }
+
+    public static function getNotHasTags($member_id)
+    {
+        $memberTags = MemberTag::where('member_id', $member_id)->get()->pluck('tag_id')->toArray();
+        return Tag::whereNotIn('id', $memberTags)->get();
     }
 }

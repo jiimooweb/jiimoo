@@ -4,8 +4,9 @@ namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
 use App\Models\Commons\Product;
-use App\Models\Commons\ProductCate;
 use App\Api\Controllers\Controller;
+use App\Models\Commons\ProductCate;
+use App\Models\Coupons\CouponRecord;
 use App\Http\Requests\Commons\ProductRequest;
 
 class ProductController extends Controller
@@ -19,7 +20,9 @@ class ProductController extends Controller
             $cate_ids = (new ProductCate)->getChildrens($request->cate_id);
             $cate_ids[] = (int)$request->cate_id;
             return $query->whereIn('cate_id', $cate_ids);
-        })->orderBy('created_at','desc')->paginate(config('common.pagesize'));
+        })->orderBy('created_at','desc')->with(['coupons' => function ($query) {
+            $query->select('coupons.id', 'coupons.name')->get();
+        }])->paginate(config('common.pagesize'));
         $products->load('category');                
         foreach($products as &$product) {
             $product->banner = json_decode($product->banner);
@@ -30,10 +33,11 @@ class ProductController extends Controller
     public function store(ProductRequest $request) 
     {   
         $data = request()->all();
-
         $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
-
-        if(Product::create($data)) {
+        $coupons = $data['coupons'];
+        unset($data['coupons']);
+        $product = Product::create($data);
+        if($product && Product::processCoupon($product->id, $coupons)) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);   
         }
 
@@ -42,21 +46,34 @@ class ProductController extends Controller
 
     public function show()
     {
-        $product = Product::where('id', request()->product)->first();
+        $coupons = null;
+
+        if(request()->client_type == 'app') {
+            $uid = Token::getUid();
+            $coupons = CouponRecord::getUserHasCoupons($uid)->pluck('id');
+        }
+
+        $product = Product::where('id', request()->product)->with(['coupons' => function ($query) use ($coupons){
+            $query->when($coupons, function($query) use ($coupons) {
+                return $query->whereIn('coupons.id', $coupons);
+            })->select('coupons.id', 'coupons.name')->get();
+        }])->first();
         $product->load('category');  
-        $data['banner'] = json_decode($data['banner']);   
+        $product['banner'] = json_decode($product['banner']);   
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
     }
-
 
     public function update(ProductRequest $request) 
     {
         $data = request()->all();   
 
         $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
-             
-        if(Product::where('id', request()->product)->update($data)) {
+        $coupons = explode(',', $data['coupons']) ;       
+        unset($data['coupons']);
+        
+        $product = Product::where('id', request()->product)->update($data);
+        if($product && Product::processCoupon(request()->product, $coupons)) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
         }
 
@@ -72,4 +89,8 @@ class ProductController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
+
+
+
+    
 }
