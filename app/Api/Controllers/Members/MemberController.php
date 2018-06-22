@@ -25,7 +25,7 @@ class MemberController extends Controller
         })->with(['tags' => function ($query) use ($tag_id){
             $query->when($tag_id, function($query) use ($tag_id) {
                 return $query->where('tag_id', $tag_id);
-            })->select('tag.id', 'tag.name');
+            })->select('member_tags.id', 'member_tags.name');
         }])->get()->toArray();
         
         if($tag_id) {
