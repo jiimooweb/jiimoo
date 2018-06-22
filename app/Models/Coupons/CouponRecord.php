@@ -7,7 +7,8 @@ use App\Models\Model;
 class CouponRecord extends Model
 {
 
-    public static function boot() {
+    public static function boot() 
+    {
         $date = date('Y-m-d',time());
 
         parent::boot();
@@ -27,7 +28,7 @@ class CouponRecord extends Model
         return $this->belongsTo(\App\Models\Commons\Fan::class);
     }
 
-    public static function getUserHasCoupons($uid) 
+    public static function getUserHasCoupons(int $uid) : CouponRecord
     {
         if(iseet($uid)) {
             return '用户ID不能为空';

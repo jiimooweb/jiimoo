@@ -15,7 +15,7 @@ class MiniMember extends Model
     }
 
 
-    public static function changeIntegral($member_id, $value)
+    public static function changeIntegral(int $member_id, int $value)
     {
         $self = self::find($member_id);
         $self->integral = $self->integral + $value;
@@ -23,14 +23,14 @@ class MiniMember extends Model
         $self->save();
     }
 
-    public static function changeMoney($member_id, $value)
+    public static function changeMoney(int $member_id, int $value)
     {
         $self = self::find($member_id);
         $self->money = $self->money + $value;
         $self->save();
     }
 
-    public static function getNotHasTags($member_id)
+    public static function getNotHasTags(int $member_id) : Tag
     {
         $memberTags = MemberTag::where('member_id', $member_id)->get()->pluck('tag_id')->toArray();
         return Tag::whereNotIn('id', $memberTags)->get();

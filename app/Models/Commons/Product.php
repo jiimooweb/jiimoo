@@ -17,7 +17,7 @@ class Product extends Model
         return $this->belongsToMany(\App\Models\Coupons\Coupon::class, 'coupon_products', 'product_id', 'coupon_id')->withoutGlobalScopes();
     }
 
-    public static function processCoupon($product_id, $coupons)
+    public static function processCoupon(int $product_id, int $coupons) : bool
     {
         $couponProducts = CouponProduct::where('product_id', $product_id)->get()->pluck('coupon_id')->toArray();
 
