@@ -69,7 +69,7 @@ class ProductController extends Controller
         $data = request()->all();   
 
         $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
-        $coupons = explode(',', $data['coupons']) ;       
+        $coupons = $data['coupons'];       
         unset($data['coupons']);
         
         $product = Product::where('id', request()->product)->update($data);
