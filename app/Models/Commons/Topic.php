@@ -7,7 +7,7 @@ use App\Models\Model;
 class Topic extends Model
 {
 
-    public static function formatTopic(Topic $topic) : array
+    public static function formatTopic($topic) : array
     {
         $products = [];
         $topic = $topic->toArray();
