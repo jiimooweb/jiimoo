@@ -325,10 +325,16 @@ class OpenPlatformController extends Controller
     }
 
     
-    
     public function summary_trend(){
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->data_cube->summaryTrend();
+    }
+
+    public function get_webview()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        $data = ["action" =>  'get'];
+        return $miniProgram->domain->webview($data);
     }
     
     public function callback($app_id)
