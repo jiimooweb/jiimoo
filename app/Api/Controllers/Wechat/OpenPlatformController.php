@@ -325,27 +325,78 @@ class OpenPlatformController extends Controller
     }
 
     
+    
+    public function summary_trend(){
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->data_cube->summaryTrend();
+    }
+    
+    // public function callback($app_id)
+    // {
+    //     $openPlatform = OpenPlatform::getApp();
+    //     $server      = $openPlatform->server;
+
+    //     $msg = $server->getMessage();
+
+    //     $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+    //     $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
+
+    //     if ($msg['MsgType'] == 'text') {
+    //         if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+    //             $miniProgram->customer_service->message($msg['Content'] . '_callback')
+    //                 ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+    //             die;
+    //         }
+    //     } elseif ($msg['MsgType'] == 'event') {
+
+    //         if($msg['Event'] == 'weapp_audit_success') {
+    //             OpenPlatform::saveAudit($app_id, $msg, 0);
+    //         }
+
+    //         if($msg['Event'] == 'weapp_audit_fail') {
+    //             OpenPlatform::saveAudit($app_id, $msg, 1);
+    //         }
+            
+    //         die;
+    //     }
+
+    //     return $openPlatform->server->serve();
+    // }
+
     public function callback($app_id)
     {
         $openPlatform = OpenPlatform::getApp();
         $server      = $openPlatform->server;
 
-        // $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
-
         $msg = $server->getMessage();
 
-        $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
-        $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
-
         if ($msg['MsgType'] == 'text') {
-            // if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
-            //     $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
-            //     $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
-            //     $miniProgram->customer_service->message($msg['Content'] . '_callback')
-            //         ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
-            //     die;
-            // }
+            if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+                $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+                $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
+                $miniProgram->customer_service->message($msg['Content'] . '_callback')
+                    ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+                die;
+            } elseif (strpos($msg['Content'], 'QUERY_AUTH_CODE') == 0) {
+                echo '';
+                $code           = substr($msg['Content'], 16);
+                $authorizerInfo = $openPlatform->handleAuthorize($code)['authorization_info'];
+                Redis::set(
+                    $authorizerInfo['authorizer_appid'], 
+                    $authorizerInfo['authorizer_refresh_token']
+                );
+                $miniProgram = $openPlatform->miniProgram(
+                    $authorizerInfo['authorizer_appid'], 
+                    $authorizerInfo['authorizer_refresh_token']
+                );
+                $miniProgram->customer_service->message($code . "_from_api")
+                            ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+            }
         } elseif ($msg['MsgType'] == 'event') {
+            $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+            $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
+            $miniProgram->customer_service->message($msg['Event'] . 'from_callback')
+                ->to($msg['FromUserName'])->from($msg['ToUserName'])->send();
 
             if($msg['Event'] == 'weapp_audit_success') {
                 OpenPlatform::saveAudit($app_id, $msg, 0);
@@ -360,10 +411,4 @@ class OpenPlatformController extends Controller
 
         return $openPlatform->server->serve();
     }
-
-    public function summary_trend(){
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->data_cube->summaryTrend();
-    }
-
 }
