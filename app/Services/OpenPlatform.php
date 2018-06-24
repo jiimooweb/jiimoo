@@ -75,7 +75,6 @@ class OpenPlatform
         if($method == 'get') {
             $data = ["action" =>  $method];
         }else {
-            
             $data = [
                 "action" =>  $method,
                 "requestdomain" => ['https://'. $url, 'https://'. $url],
@@ -140,7 +139,7 @@ class OpenPlatform
         return json_encode($ext);
     }
 
-    public static function saveAudit(string $app_id, array $msg, int $status) : Audit
+    public static function saveAudit(string $app_id, array $msg, int $status)
     {
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
