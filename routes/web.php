@@ -70,10 +70,18 @@ Route::get('ticket', function() {
 Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
 
 Route::get('/', function() {
-    return view('welcome');
+    return view('index');
+});
+
+Route::get('time', function() {
+    return date('Y-m-d H:i', time());
 });
 
 Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
+
+
+
+
 
 
 
