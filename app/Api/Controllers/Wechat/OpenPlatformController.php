@@ -60,8 +60,8 @@ class OpenPlatformController extends Controller
 
         $url = $openPlatform->getPreAuthorizationUrl('https://www.rdoorweb.com/wechat/'. $xcx_id. '/save_miniprogram');
 
-        // return response()->json(['status' => 'unauthorize', 'data' => $url]);
-        return view('wechat',['url' => $url]);
+        return response()->json(['status' => 'unauthorize', 'data' => $url]);
+        // return view('wechat',['url' => $url]);
     }
 
     public function save_miniprogram() 
