@@ -338,7 +338,7 @@ class OpenPlatformController extends Controller
         //     "action" =>  'add',
         //     "webviewdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
         // ];
-        return $miniProgram->domain->webview($data);
+        return Wechat::retMsg($miniProgram->domain->webview($data));
     }
     
     public function callback($app_id)
