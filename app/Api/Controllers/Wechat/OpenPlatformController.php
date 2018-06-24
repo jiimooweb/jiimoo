@@ -333,7 +333,11 @@ class OpenPlatformController extends Controller
     public function get_webview()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        $data = ["action" =>  'get'];
+        // $data = ["action" =>  'get'];
+        $data = [
+            "action" =>  'add',
+            "webviewdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+        ];
         return $miniProgram->domain->webview($data);
     }
     
