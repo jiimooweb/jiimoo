@@ -24,7 +24,7 @@ class VoteUpdateRequest extends CommonRequest
         $num = $arr['num'];
         $type = $info->type;
         $rules = [
-            'title' => 'bail|required|max:3',
+            'title' => 'bail|required|max:50',
             'description' => 'bail|required|max:5000',
             'vote_start_date' => "bail|required",
             'vote_due_date' => "bail|required|after_or_equal:{$now}|after:{$voteStartDate}",
