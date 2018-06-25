@@ -12,3 +12,4 @@ yarn-error.log
 .env
 /public/adminlte
 /public/wechat
+/.vscode
