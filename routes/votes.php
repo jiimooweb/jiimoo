@@ -2,8 +2,8 @@
 
 Route::group(['prefix'=>'votes'],function (){
     //总投票基本信息
-    Route::apiResource('/infos','\App\Api\Controllers\Votes\VoteInfoController');
     Route::post('/infos/voteOpt','\App\Api\Controllers\Votes\VoteInfoController@voteAndOptStore');
+    Route::apiResource('/infos','\App\Api\Controllers\Votes\VoteInfoController');
 
     //选手信息
     Route::post('/{voteID}/applicants', '\App\Api\Controllers\Votes\ApplicantInfoController@index');
