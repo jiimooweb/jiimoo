@@ -12,4 +12,9 @@ class ProductCate extends Model
     {
         return $this->hasMany(Product::class, 'cate_id', 'id')->orderBy('created_at','desc');
     }
+
+    public function getChildrens(int $pid) : ProductCate
+    {
+        return $this->where('pid', $pid)->get()->pluck('id')->toArray();
+    }
 }

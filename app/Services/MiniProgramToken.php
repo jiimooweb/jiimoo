@@ -14,12 +14,12 @@ class MiniProgramToken extends Token
     public function getToken(array $data) : string
     {
         $openid = $data['openid'];
-        // $unionid = $data['unionid'];
+        $unionid = $data['unionid'] ?? '';
         $fans = Fan::getByOpenID($openid);
         if (!$fans)
         {
-            $uid = $this->newUser($openid);
-            // $uid = $this->newUser($openid, $unionid);
+            // $uid = $this->newUser($openid);
+            $uid = $this->newUser($openid, $unionid);
         }
         else {
             $uid = $fans->id;

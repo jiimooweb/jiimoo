@@ -11,6 +11,7 @@ class Xcx extends Model
     //
     protected $guarded=[];
     protected $table = 'xcxs';
+    protected $hidden = ['app_secret'];
 
     public function user()
     {
@@ -41,7 +42,7 @@ class Xcx extends Model
     }
 
     //获取小程序实例
-    public static function getApp($xcx_id, $type='array') 
+    public static function getApp(int $xcx_id, string $type='array')
     {
         $miniProgram = self::find($xcx_id);
         

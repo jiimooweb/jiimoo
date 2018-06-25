@@ -7,13 +7,15 @@ use App\Models\Model;
 
 class Coupon extends Model
 {
+    protected $hidden = ['updated_at', 'created_at'];
+    
     public function records() 
     {
         return $this->hasMany(CouponRecord::class);
     }
 
 
-    public static function getTime($id) {
+    public static function getTime(int $id) {
         $time = [];
         $coupon = self::find($id);
         if($coupon->all()) {
@@ -26,6 +28,11 @@ class Coupon extends Model
             }
         }
         return $time;
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(\App\Models\Commons\Product::class, 'coupon_products', 'coupon_id', 'product_id')->withoutGlobalScopes();
     }
 
 }

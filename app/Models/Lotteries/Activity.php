@@ -4,6 +4,7 @@ namespace App\Models\Lotteries;
 
 use App\Models\Model;
 use App\Models\Lotteries\Prize;
+use App\Models\Commons\Fan;
 class Activity extends Model
 {
     //
@@ -24,5 +25,10 @@ class Activity extends Model
     public function detachPrize($prize)
     {
         return $this->prizes()->detach($prize);
+    }
+
+    public function fans(){
+        return $this->belongsToMany(Fan::class,'lottery_activity_fan',
+            'activity_id','fan_id');
     }
 }

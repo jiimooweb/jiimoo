@@ -33,7 +33,7 @@ class SwiperController extends Controller
 
     public function show()
     {
-        $swiper = Swiper::find('id', request()->swiper);
+        $swiper = Swiper::find(request()->swiper);
         $status = $swiper ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $swiper]);
     }

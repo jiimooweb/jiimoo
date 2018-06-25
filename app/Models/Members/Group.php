@@ -16,7 +16,7 @@ class Group extends Model
         return Group::orderBy('value', 'asc')->get();
     }
 
-    public static function changeGroupLevel($uid) 
+    public static function changeGroupLevel(int $uid) 
     {
         $member = MiniMember::find($uid);
         $groups = self::getGroup();

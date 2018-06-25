@@ -7,13 +7,19 @@ use App\Api\Controllers\Controller;
 use App\Models\Wechat\Template;
 use App\Http\Requests\Commons\TemplateRequest;
 
-class NoticeTemplateController extends Controller
+class TemplateController extends Controller
 {
     
     public function index() 
     {
         $templates = Template::get();
         return response()->json(['status' => 'success', 'data' => $templates]);
+    }
+
+    public function show()
+    {
+        $template = Template::find(request()->template);
+        return response()->json(['status' => 'success', 'data' => $template]);
     }
 
     public function store(TemplateRequest $request) 

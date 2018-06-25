@@ -35,6 +35,8 @@ Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], functio
     Route::get('get_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@get_template');
     Route::get('get_templates', '\App\Api\Controllers\Wechat\OpenPlatformController@get_templates');
     Route::get('del_template/{template_id}', '\App\Api\Controllers\Wechat\OpenPlatformController@del_template');
+    
+    Route::get('get_webview', '\App\Api\Controllers\Wechat\OpenPlatformController@get_webview');
 });
 
 Route::group(['prefix' => 'wechat', 'middleware' => ['token']], function () {

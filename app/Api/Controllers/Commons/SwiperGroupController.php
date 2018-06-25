@@ -3,16 +3,17 @@
 namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
-use App\Models\Commons\SwiperGroup;
-use App\Models\Commons\ProductCate;
 use App\Api\Controllers\Controller;
+use App\Models\Commons\ProductCate;
+use App\Models\Commons\SwiperGroup;
+use App\Http\Requests\Commons\SwiperGroupRequest;
 
 class SwiperGroupController extends Controller
 {
     
     public function index() 
     {
-        $groups = SwiperGroup::orderBy('display','asc')->get();
+        $groups = SwiperGroup::orderBy('display','desc')->get();
 
         return response()->json(['status' => 'success', 'data' => $groups]);
     }
@@ -30,15 +31,16 @@ class SwiperGroupController extends Controller
 
     public function show()
     {
-        $group = SwiperGroup::find('id', request()->swiper_group);
-        $status = $swiper ? 'success' : 'error';
+        $group = SwiperGroup::find(request()->swiper_group)->load('swipers');
+        $status = $group ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $group]);
     }
 
     public function update(SwiperGroupRequest $request) 
     {
         // TODO:判断更新权限
-        
+        SwiperGroup::where('xcx_id', session('xcx_id'))->update(['display' => 0]);
+
         $data = request()->all();
         
         if(SwiperGroup::where('id', request()->swiper_group)->update($data)) {

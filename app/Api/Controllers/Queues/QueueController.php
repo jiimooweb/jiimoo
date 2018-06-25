@@ -107,6 +107,7 @@ class QueueController extends Controller
     {
         $data = $request()->all();
 
+        return '呼叫成功';
         //TODO: 呼叫的方法
 
         // if(QueueFan::create($data)) {
@@ -119,7 +120,7 @@ class QueueController extends Controller
     {
         if(QueueFan::where('id', request()->fan)->update(['status' => 1])) {
             $queue_id = QueueFan::where('id', request()->fan)->first()->queue_id;
-            dispatch(new SendQueueNotice(session('xcx_id'), $queue_id));
+            // dispatch(new SendQueueNotice(session('xcx_id'), $queue_id));
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);                         
         }  
     }

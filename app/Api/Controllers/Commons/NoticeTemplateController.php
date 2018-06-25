@@ -16,6 +16,12 @@ class NoticeTemplateController extends Controller
         return response()->json(['status' => 'success', 'data' => $templates]);
     }
 
+    public function show()
+    {
+        $template = NoticeTemplate::find(request()->notice_template);
+        return response()->json(['status' => 'success', 'data' => $template]);
+    }
+
     public function store(NoticeTemplateRequest $request) 
     {   
         $data = request()->all();
@@ -25,6 +31,18 @@ class NoticeTemplateController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);   
+        
+    }
+
+    public function update(NoticeTemplateRequest $request) 
+    {   
+        $data = request()->all();
+        
+        if(NoticeTemplate::where('id', $request->notice_template)->update($data)) {
+            return response()->json(['status' => 'success', 'msg' => '更新成功！']);   
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '更新失败！']);   
         
     }
 
