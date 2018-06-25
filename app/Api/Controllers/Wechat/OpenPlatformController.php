@@ -325,12 +325,26 @@ class OpenPlatformController extends Controller
     }
 
     
+    public function summary_trend(){
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->data_cube->summaryTrend();
+    }
+
+    public function get_webview()
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        // $data = ["action" =>  'get'];
+        $data = [
+            "action" =>  'add',
+            "webviewdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+        ];
+        return Wechat::retMsg($miniProgram->domain->webview($data));
+    }
+    
     public function callback($app_id)
     {
         $openPlatform = OpenPlatform::getApp();
         $server      = $openPlatform->server;
-
-        // $server->push(EventHandler::class, Message::EVENT); // 检测中，这个是没什么用的
 
         $msg = $server->getMessage();
 
@@ -338,13 +352,11 @@ class OpenPlatformController extends Controller
         $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
 
         if ($msg['MsgType'] == 'text') {
-            // if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
-            //     $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
-            //     $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
-            //     $miniProgram->customer_service->message($msg['Content'] . '_callback')
-            //         ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
-            //     die;
-            // }
+            if ($msg['Content'] == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+                $miniProgram->customer_service->message($msg['Content'] . '_callback')
+                    ->from($msg['ToUserName'])->to($msg['FromUserName'])->send();
+                die;
+            }
         } elseif ($msg['MsgType'] == 'event') {
 
             if($msg['Event'] == 'weapp_audit_success') {
@@ -359,11 +371,6 @@ class OpenPlatformController extends Controller
         }
 
         return $openPlatform->server->serve();
-    }
-
-    public function summary_trend(){
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->data_cube->summaryTrend();
     }
 
 }

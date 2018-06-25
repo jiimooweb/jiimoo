@@ -44,7 +44,8 @@ class OpenPlatform
         $miniProgram = $openPlatform->miniProgram($info['authorizer_appid'], $info['authorizer_refresh_token']);
         //设置域名
         $miniProgram->domain->modify(self::miniProgramModifyDomain('add'));
-        
+        //设置业务域名
+        $miniProgram->domain->webview(self::miniProgramWebView('add'));
         //获取小程序信息
         $miniProgramInfo = $openPlatform->getAuthorizer($info['authorizer_appid']);        
         //保存
@@ -69,17 +70,31 @@ class OpenPlatform
         Xcx::where('app_id', $app_id)->update(['authorization_status' => -1]);   
     }
 
-    public static function miniProgramModifyDomain(string $method)
+    public static function miniProgramModifyDomain(string $method, string $url = 'www.rdoorweb.com', string $socket_url= 'www.rdoorweb.com')
     {
         if($method == 'get') {
             $data = ["action" =>  $method];
         }else {
             $data = [
                 "action" =>  $method,
-                "requestdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-                "wsrequestdomain" => ["wss://www.rdoorweb.com","wss://www.rdoorweb.com"],
-                "uploaddomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-                "downloaddomain"=> ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
+                "requestdomain" => ['https://'. $url, 'https://'. $url],
+                "wsrequestdomain" => ['wss://'. $socket_url,'wss://'. $socket_url],
+                "uploaddomain" => ['https://'. $url, 'https://'. $url],
+                "downloaddomain"=> ['https://'. $url, 'https://'. $url],
+            ];
+        }
+
+        return $data;
+    }
+
+    public function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
+    {
+        if($method == 'get') {
+            $data = ["action" =>  $method];
+        }else {
+            $data = [
+                "action" =>  $method,
+                "webviewdomain" => ['https://'. $url, 'https://'. $url],
             ];
         }
 
@@ -124,7 +139,7 @@ class OpenPlatform
         return json_encode($ext);
     }
 
-    public static function saveAudit(string $app_id, array $msg, int $status) : Audit
+    public static function saveAudit(string $app_id, array $msg, int $status)
     {
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
