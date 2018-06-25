@@ -11,6 +11,7 @@ class Xcx extends Model
     //
     protected $guarded=[];
     protected $table = 'xcxs';
+    protected $hidden = ['app_secret'];
 
     public function user()
     {
