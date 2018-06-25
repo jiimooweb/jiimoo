@@ -18,13 +18,13 @@ include_once('wechat.php');
 */
 
 Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token', 'client', 'cors']], function () {
+    include_once('votes.php');
     include_once('displays.php');
     include_once('coupons.php');
     include_once('answers.php');
     include_once('members.php');
     include_once('commons.php');
     include_once('queues.php');
-    include_once('votes.php');
     include_once('lotteries.php');
 });
 
