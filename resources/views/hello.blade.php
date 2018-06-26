@@ -7,6 +7,7 @@
     <title>Hello</title>
 </head>
 <body>
+    <h1>123</h1>
 <div id="app">
 
 </div>

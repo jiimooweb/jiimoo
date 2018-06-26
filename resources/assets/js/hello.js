@@ -16,8 +16,11 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import Vue from 'vue'
-import App from './Hello.vue'
+import App from './hello.vue'
 import router from './router/hello.js'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
 const app = new Vue({
     el: '#app',
     router,
