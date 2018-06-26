@@ -32,11 +32,14 @@ class VoteUpdateRequest extends CommonRequest
             'limit' => "bail|required|integer|max:{$num}|min:1",
         ];
         if ($type == 0) {
-            $applyStartDate = $arr['apply_start_date'];
-            $rules['apply_start_date'] = "bail|required|before:{$voteDueDate}";
-            $rules['apply_due_date'] = "bail|required|after:{$applyStartDate}|before_or_equal:{$voteDueDate}";
-            $rules['is_check'] = 'required';
             $rules['is_apply'] = 'required';
+            $isApply = request('is_apply');
+            if($isApply == 1){
+                $applyStartDate = $arr['apply_start_date'];
+                $rules['apply_start_date'] = "bail|required|before:{$voteDueDate}";
+                $rules['apply_due_date'] = "bail|required|after:{$applyStartDate}|before_or_equal:{$voteDueDate}";
+            }
+            $rules['is_check'] = 'required';
         }
         return $rules;
     }
