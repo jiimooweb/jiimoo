@@ -32,7 +32,13 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->call(function (){
             $arr = Redis::hgetall('vote_start');
-            DB::table('votes_infos')->where('id',32)->update(['description'=>hasToString($arr)]);
+            $result = [];
+            foreach ($arr as $id => $value ){
+
+                    array_push($result,$id);
+
+            }
+            DB::table('votes_infos')->where('id',32)->update(['description'=>hasToString($result)]);
         })->everyMinute();
     }
 
