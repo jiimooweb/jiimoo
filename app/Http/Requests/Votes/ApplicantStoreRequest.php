@@ -17,7 +17,7 @@ class ApplicantStoreRequest extends CommonRequest
         return [
             'vote_id' => 'required',
             'name' => 'bail|required|max:20',
-            'phone' => "bail|required|digits:11",
+            'phone' => "bail|required|max:15",
             'address' => "bail|required|max:100",
             'image' => 'bail|required|',
             'description' => "bail|required|max:800",
@@ -45,7 +45,7 @@ class ApplicantStoreRequest extends CommonRequest
             'required'        => ':attribute必填',
             'description.max' => ':attribute不能超过800个字符',
             'name.max'        => ':attribute不能超过20个字符',
-            'phone.digits'    => ':attribute需为11位数字',
+            'phone.max'    => ':attribute不能超过15个字符',
             'address.max'     => ':attribute不能超过100个字符',
             'total.min'       => ':attribute不能小于0',
         ];
