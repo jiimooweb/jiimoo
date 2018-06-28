@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function (){
-            Info::where('id','32')->update(['vote_state'=>'1']);
+            DB::table('votes_infos')->where('id','32')>update(['vote_state'=>'1']);
 
 //            $voteStart = self::taskVotes('vote_start');
 //            $voteDue = self::taskVotes('vote_due');
