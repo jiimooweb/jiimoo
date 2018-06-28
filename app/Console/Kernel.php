@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function (){
+            $updatedAt =  Carbon::now();
             $now = new Carbon( Carbon::now()->format('Y-m-d H:i'));
             $arr = Redis::hgetall('vote_start');
             $result = [];
@@ -41,11 +42,8 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach ($result as $id){
-                 DB::table('votes_infos')->where('id',$id)->update(['vote_state'=>1]);
+                 DB::table('votes_infos')->where('id',$id)->update(['vote_state'=>1,'updated_at'=>$updatedAt]);
              }
-
-
-//            DB::table('votes_infos')->where('id',32)->update(['description'=>$a]);
         })->everyMinute();
     }
 
