@@ -15,7 +15,6 @@ let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/backend.js', 'public/js')
   .extract(['vue', "vue-router", "axios", 'element-ui'])
-  .sass('resources/assets/sass/app.scss', 'public/css')
   .copy('resources/assets/img', 'public/img');
 
 
@@ -28,4 +27,3 @@ mix.webpackConfig({
     }
   }
 });
-mix.browserSync('127.0.0.1:8000');
