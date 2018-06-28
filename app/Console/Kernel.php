@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->call(function (){
             Info::where('id','32')->update(['vote_state'=>'1']);
+
 //            $voteStart = self::taskVotes('vote_start');
 //            $voteDue = self::taskVotes('vote_due');
 //            $applyStart = self::taskVotes('vote_apply_start');
