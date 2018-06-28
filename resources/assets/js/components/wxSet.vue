@@ -103,7 +103,7 @@
 					<span>绑定</span>
 				</div>
 				<div>
-					<el-button @click='intoBind' style="display:block;background:url(Img/weixinLogo.png) no-repeat 10px 5px #62b900;padding-left:55px;background-size:30px;color:#fff;border-color:#62b900;">授权绑定</el-button>
+					<el-button @click='intoBind' style="display:block;background:url(img/weixinLogo.png) no-repeat 10px 5px #62b900;padding-left:55px;background-size:30px;color:#fff;border-color:#62b900;">授权绑定</el-button>
 					<p style="font-size: 14px;color: #5e6d82;line-height: 1.5em;">请点击按钮完成第三方授权绑定</p>
 				</div>
 			</el-card>

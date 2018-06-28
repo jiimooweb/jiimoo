@@ -23,7 +23,7 @@ mix.webpackConfig({
 
     alias: {
       '@': path.resolve(__dirname, 'resources/assets/js'),
-      'Img': path.resolve(__dirname, 'resources/assets/img'),
+      'img': path.resolve(__dirname, 'resources/assets/img'),
     }
   }
 });

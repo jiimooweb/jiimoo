@@ -2,7 +2,7 @@
 <el-row class="headerPage">
             <el-col :span="4">
                 <div class="header-logo">
-                    <img width='40' height='40' style="margin-top:5px;margin-left:5px;" src="Img/logo-w.png" alt="">
+                    <img width='40' height='40' style="margin-top:5px;margin-left:5px;" src="img/logo-w.png" alt="">
                 </div>
                 <span>
                     任意门网络

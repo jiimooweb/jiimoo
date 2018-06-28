@@ -20,7 +20,7 @@
             <el-table-column label="头像" header-align='center' width="120">
                 <template slot-scope='scope'>
                     <img v-if="searchfilter[scope.$index].avatarUrl !== ''" :src="searchfilter[scope.$index].avatarUrl" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
-                    <img v-else src="Img/logo.png" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
+                    <img v-else src="img/logo.png" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
                 </template>
             </el-table-column>
             <el-table-column prop="openid" label="openid" width="300">

@@ -51,7 +51,7 @@
                     <el-table-column width="200">
                         <template slot-scope="scope">
                             <img width="50" height="50" v-if="hasUserList[scope.$index].avatarUrl" :src="hasUserList[scope.$index].avatarUrl">
-                            <img width="50" height="50" v-else src="Img/logo.png">
+                            <img width="50" height="50" v-else src="img/logo.png">
                         </template>
                     </el-table-column>
                     <el-table-column prop="username" label="用户名" width="250">
