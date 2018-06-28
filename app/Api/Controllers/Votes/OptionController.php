@@ -24,39 +24,59 @@ class OptionController extends Controller
         return response()->json(['status' => 'success', 'data' => $data ]);
     }
 
-    public function store(OptionStoreRequest $request)
+    public function store()
     {
+        /*
         $list = request(['vote_id', 'options']);
         $voteID = $list['vote_id'];
         $options = $list['options'];
         $now = Carbon::now();
         $data = [];
        foreach ($options as $option){
-            array_push($data,['vote_id'=>$voteID,'content'=>$option[0],'total'=>$option[1],'created_at'=>$now,'updated_at'=>$now]);
+            array_push($data,['vote_id'=>$voteID,'content'=>$option->content,'total'=>$option->total,'created_at'=>$now,'updated_at'=>$now]);
         }
         $bool = DB::table('votes_options')->insert($data);
         if($bool){
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);
+        */
+        $list = request([ 'vote_id','options']);
+        $voteID = $list['vote_id'];
+        $options = $list['options'];
+        $now = Carbon::now();
+        $data = [];
+        DB::beginTransaction();
+        try{
+            foreach ($options as $option){
+                Option::where('id', $voteID)->delete();
+                array_push($data,['vote_id'=>$voteID,'content'=>$option->content,'total'=>$option->total,'created_at'=>$now,'updated_at'=>$now]);
+            }
+            DB::table('votes_options')->insert($data);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '失败！']);
+        }
+
     }
 
-    public function update(OptionUpdateRequest $request)
-    {
-        $options = request('options');
-        foreach ($options as $option){
-            $data = [];
-            $data['content'] = $option[0];
-            $data['total'] = $option[1];
-            Option::where('id', $option[2])->update($data);
-        }
-    }
-
-    public function destroy()
-    {
-        $options = request('options');
-        foreach ($options as $option){
-            Option::where('id', $option)->delete();
-        }
-    }
+//    public function update(OptionUpdateRequest $request)
+//    {
+//        $options = request('options');
+//        foreach ($options as $option){
+//            $data = [];
+//            $data['content'] = $option->content;
+//            $data['total'] = $option->total;
+//            Option::where('id', $option->id)->update($data);
+//        }
+//    }
+//
+//    public function destroy()
+//    {
+//        $options = request('options');
+//        foreach ($options as $option){
+//            Option::where('id', $option)->delete();
+//        }
+//    }
 }
