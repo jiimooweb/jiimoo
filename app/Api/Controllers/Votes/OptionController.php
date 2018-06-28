@@ -48,8 +48,8 @@ class OptionController extends Controller
         $data = [];
         DB::beginTransaction();
         try{
+            Option::where('vote_id', $voteID)->delete();
             foreach ($options as $option){
-                Option::where('vote_id', $voteID)->delete();
                 array_push($data,['vote_id'=>$voteID,'content'=>$option['content'],'total'=>$option['total'],'created_at'=>$now,'updated_at'=>$now]);
             }
             DB::table('votes_options')->insert($data);
