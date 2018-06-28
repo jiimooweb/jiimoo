@@ -16,6 +16,4 @@ Route::group(['prefix'=>'votes'],function (){
     Route::put('/options', '\App\Api\Controllers\Votes\OptionController@update');
     Route::post('/options/destroy','\App\Api\Controllers\Votes\OptionController@destroy');
 
-
-
 });
