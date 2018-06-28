@@ -31,15 +31,21 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function (){
+            $now = new Carbon( Carbon::now()->format('Y-m-d H:i'));
             $arr = Redis::hgetall('vote_start');
             $result = [];
             foreach ($arr as $id => $value ){
-
+                $date = new Carbon($value);
+                if($now->gte($date)){
                     array_push($result,$id);
-
+                }
             }
-            $a = (string)$result[0];
-            DB::table('votes_infos')->where('id',32)->update(['description'=>$a]);
+            foreach ($result as $id){
+                 DB::table('votes_infos')->where('id',$id)->update(['vote_state'=>1]);
+             }
+
+
+//            DB::table('votes_infos')->where('id',32)->update(['description'=>$a]);
         })->everyMinute();
     }
 
@@ -67,7 +73,7 @@ class Kernel extends ConsoleKernel
         $result = [];
         foreach ($arr as $id => $value ){
             $date = new Carbon($value);
-            if($date->gte($now)){
+            if($now->gte($date)){
                 array_push($result,$id);
             }
         }
