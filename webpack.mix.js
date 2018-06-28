@@ -1,5 +1,7 @@
 let mix = require('laravel-mix');
 
+
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,5 +13,17 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix.js('resources/assets/js/backend.js', 'public/js')
+  .extract(['vue', "vue-router", "axios", 'element-ui'])
+  .copy('resources/assets/img', 'public/img');
+
+
+mix.webpackConfig({
+  resolve: {
+
+    alias: {
+      '@': path.resolve(__dirname, 'resources/assets/js'),
+      'img': path.resolve(__dirname, 'resources/assets/img'),
+    }
+  }
+});

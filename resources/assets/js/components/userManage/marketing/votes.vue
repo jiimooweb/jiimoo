@@ -1,0 +1,732 @@
+<template>
+    <el-main>
+        <el-row v-show='votesType === 0'>
+            <el-button style="margin-bottom:20px;" type='primary' @click="openAddDialog()" size="small">新增</el-button>
+            <el-table :data='votesList' border style="min-width:1200px;">
+                <el-table-column prop="id" label="投票编号" width="50" align='center'></el-table-column>
+                <el-table-column label="投票状态" width="100" align="center">
+                    <template slot-scope="scope">
+                        <p v-if='votesList[scope.$index].vote_state === 0'>
+                            <el-tag color='#409EFF' style="color:#fff;">未开始</el-tag>
+                        </p>
+                        <p v-if='votesList[scope.$index].vote_state === 1'>
+                            <el-tag color='#26CD4A' style="color:#fff;" type="success">已开始</el-tag>
+                        </p>
+                        <p v-if='votesList[scope.$index].vote_state === -1'>
+                            <el-tag color="#BBBBBB" style="color:#fff;" type="info">已结束</el-tag>
+                        </p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="title" label="投票标题"></el-table-column>
+                <el-table-column label="投票类型" width="100" align="center">
+                    <template slot-scope="scope">
+                        <p v-if='votesList[scope.$index].type === 1'>一般</p>
+                        <p v-else>活动</p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="vote_start_date" label="投票开始时间" width="200" align="center"></el-table-column>
+                <el-table-column prop="vote_due_date" label="投票结束时间" width="200" align="center"></el-table-column>
+                <el-table-column label="操作" width="220" align="center">
+                    <template slot-scope="scope">
+                        <el-row>
+                            <el-col>
+                                <el-button-group style="width:100%;">
+                                    <el-button type="success" size="small" @click="intoPlayers(scope.$index)">选手/选项</el-button>
+                                    <el-button type="primary" size="small" @click="intoDialog(scope.$index)">编辑</el-button>
+                                    <el-button type="danger" size="small">删除</el-button>
+                                </el-button-group>
+                            </el-col>
+                        </el-row>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-row>
+        <!-- 一般选项列表 -->
+        <el-row v-show='votesType === 1'>
+            <!-- <p>一般选项列表</p> -->
+            <el-button style="margin-bottom:20px;" @click="intoVotesList()" size="small">
+                <<返回</el-button>
+                    <p>投票标题:{{votesGeneralData.title}}</p>
+                    <p>投票类型:{{votesGeneralData.type}}</p>
+                    <el-button style="margin-bottom:20px;" @click="addGeneralItem(1)" type="primary" size="small">新增</el-button>
+                    <el-table :data='votesGeneralList' border style="min-width:1200px;">
+                        <el-table-column label="选项内容">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesGeneralList[scope.$index].content"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="选项票数">
+                            <template slot-scope="scope">
+                                <el-input-number v-model="votesGeneralList[scope.$index].total" style="width:100%;" :min="0"></el-input-number>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-button @click="editGeneralList()">保存</el-button>
+        </el-row>
+        <!-- 活动选手列表 -->
+        <el-row v-show='votesType === 2'>
+            <!-- <p>活动选手列表</p> -->
+            <el-button style="margin-bottom:20px;" @click="intoVotesList()" size="small">
+                <<返回</el-button>
+                    <p>投票标题 : {{votesGeneralData.title}}</p>
+                    <p>投票类型 : {{votesGeneralData.type}}</p>
+                    <el-button style="margin-bottom:20px;" @click="addGeneralItem(0)" type="primary" size="small">新增</el-button>
+                    <el-table :data='votesPlayersList' border style="min-width:1200px;">
+                        <el-table-column label="姓名">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesPlayersList[scope.$index].name"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="图片">
+                            <template slot-scope="scope">
+                                <el-upload style="width:100px;height:100px;" class="avatar-uploader" :headers="headers" action="/qiniuUpload" :show-file-list="false" :on-success="handleAvatarSuccess">
+                                    <img v-if="votesPlayersList[scope.$index].image" :src="votesPlayersList[scope.$index].image" class="avatar" width="100" height='100'>
+                                    <i v-else class="el-icon-plus avatar-uploader-icon" style="margin:0 auto;display:block;"></i>
+                                </el-upload>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="联系方式">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesPlayersList[scope.$index].phone"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="地址">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesPlayersList[scope.$index].address"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="描述">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesPlayersList[scope.$index].description"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="票数">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesPlayersList[scope.$index].total"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="是否审核">
+                            <template slot-scope="scope">
+                                <el-input v-model="votesPlayersList[scope.$index].total"></el-input>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+        </el-row>
+
+        <!-- 选项投票信息dialog -->
+        <el-dialog :visible.sync='GeneralDialog' :title="dialogTitle">
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    投票标题
+                </el-col>
+                <el-col :span="19">
+                    <el-input v-model="GeneralData.title"></el-input>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    投票类型
+                </el-col>
+                <el-col :span="19">
+                    <template>
+                        <el-radio v-model="GeneralData.type" :label="1">一般</el-radio>
+                        <el-radio v-model="GeneralData.type" :label="0">活动</el-radio>
+                    </template>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    投票描述
+                </el-col>
+                <el-col :span="19">
+                    <el-input v-model="GeneralData.description"></el-input>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    投票时间
+                </el-col>
+                <el-col :span="19">
+                    <el-date-picker :picker-options="pickerOptions" v-model="voteTime" format="yyyy-MM-dd" type="daterange" @change="changeVoteTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-col>
+                <el-col :offset="5" :span="8">
+                    <el-time-select @change="changeVoteTime()" style="width:100%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col>
+                <el-col :offset="1" :span="8">
+                    <el-time-select @change="changeVoteTime()" style="width:100%;display:block;margin-left:-7px;" placeholder="结束时间" v-model="endTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    投票周期
+                </el-col>
+                <el-col :span="19">
+                    <template>
+                        <el-radio v-model="GeneralData.cycle" :label="0">活动时间可投票数唯一</el-radio>
+                        <el-radio v-model="GeneralData.cycle" :label="1">每天恢复可投票数</el-radio>
+                    </template>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    可投票数
+                </el-col>
+                <el-col :span="19">
+                    <el-input-number v-model="GeneralData.num" :min="1"></el-input-number>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    可投上限（每次投票）
+                </el-col>
+                <el-col :span="19">
+                    <el-input-number v-model="GeneralData.limit" :min="1" :max="GeneralData.num||1"></el-input-number>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;" v-if='GeneralData.type === 0'>
+                <el-col :span="5" style="text-align:center;">
+                    允许报名
+                </el-col>
+                <el-col :span="19">
+                    <template>
+                        <el-radio v-model="GeneralData.is_apply" :label="1">是</el-radio>
+                        <el-radio v-model="GeneralData.is_apply" :label="0">否</el-radio>
+                    </template>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;" v-if='GeneralData.type === 0 && GeneralData.is_apply === 1'>
+                <el-col :span="5" style="text-align:center;">
+                    报名时间
+                </el-col>
+                <el-col :span="19">
+                    <el-date-picker :picker-options="pickerOptions1" v-model="applyTime" format="yyyy-MM-dd" type="daterange" @change="changeApplyTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-col>
+                <el-col :offset="5" :span="8">
+                    <el-time-select @change="changeApplyTime()" style="width:100%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col>
+                <el-col :offset="1" :span="8">
+                    <el-time-select @change="changeApplyTime()" style="width:100%;display:block;margin-left:-7px;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;" v-if='GeneralData.type === 0 && GeneralData.is_apply === 1'>
+                <el-col :span="5" style="text-align:center;">
+                    选手审核
+                </el-col>
+                <el-col :span="19">
+                    <template>
+                        <el-radio v-model="GeneralData.is_check" :label="1">是</el-radio>
+                        <el-radio v-model="GeneralData.is_check" :label="0">否</el-radio>
+                    </template>
+                </el-col>
+            </el-row>
+            <el-button @click="editGeneralData()" type="primary" size="small" style="margin:0 auto;display:block;">提交</el-button>
+        </el-dialog>
+
+        <!-- 选项信息dialog1 -->
+        <el-dialog :visible.sync='PlayersDialog1'>
+        </el-dialog>
+        <!-- 选手信息dialog2 -->
+        <el-dialog :visible.sync='PlayersDialog2'>
+
+        </el-dialog>
+    </el-main>
+</template>
+<script>
+import store from "@/vuex/store";
+import axios from "axios";
+import VueAxios from "vue-axios";
+export default {
+    data() {
+        return {
+            startTime1: "00:00",
+            endTime1: "00:00",
+            startTime2: "00:00",
+            endTime2: "00:00",
+            votesList: [],
+            votesType: 0, //0 列表状态，1 一般选项列表，2 活动选手列表
+            dialogTitle: "",
+            isNewVotes: false,
+            applyIsTrue: false,
+            //一般选项列表
+            voteTime: [],
+            applyTime: [],
+            thisGeneralIndex: "",
+            GeneralDialog: false,
+            GeneralData: "",
+            votesGeneralList: [],
+            votesGeneralData: {
+                title: "1",
+                type: "1"
+            },
+            //活动选手列表
+            thisPlayersIndex: "",
+            PlayersDialog1: false,
+            PlayersDialog2: false,
+            PlayersData: "",
+            votesPlayersList: [],
+            pickerOptions: {
+                disabledDate: (time)=> {
+                    return time.getTime() < Date.now();
+                }
+            },
+            pickerOptions1: {
+                disabledDate: (time) => {
+                        return time.getTime() < this.voteTime[0] || time.getTime() > this.voteTime[1]
+                }
+            }
+        };
+    },
+    computed: {
+        headers() {
+            return {
+                token: localStorage.token
+            };
+        }
+    },
+    methods: {
+        //获取所有投票
+        getVotesList() {
+            axios
+                .get(
+                    "/web/" + store.state.xcx_flag.xcx_flag + "/api/votes/infos"
+                )
+                .then(res => {
+                    this.votesList = res.data.data.data;
+                    console.log(this.votesList);
+                });
+        },
+        //判断并进入对应的选手列表
+        intoPlayers(index) {
+            if (this.votesList[index].type === 1) {
+                //进入一般选项页面
+                this.votesType = 1;
+                this.votesGeneralData.title = this.votesList[index].title;
+                this.votesGeneralData.type = "一般";
+                axios
+                    .post(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/votes/" +
+                            this.votesList[index].id +
+                            "/options"
+                    )
+                    .then(res => {
+                        this.votesGeneralList = res.data.data;
+                    });
+            } else {
+                //进入活动选首页面
+                this.votesType = 2;
+                this.votesGeneralData.title = this.votesList[index].title;
+                this.votesGeneralData.type = "活动";
+                axios
+                    .post(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/votes/" +
+                            this.votesList[index].id +
+                            "/applicants"
+                    )
+                    .then(res => {
+                        this.votesPlayersList = res.data.data.all;
+                    });
+            }
+        },
+        //选手列表返回votes列表
+        intoVotesList() {
+            this.votesType = 0;
+            this.votesGeneralList = [];
+            this.votesPlayersList = [];
+            this.getVotesList();
+        },
+        //新建投票
+        openAddDialog() {
+            this.GeneralData = {
+                type: 0,
+                title: "",
+                description: "",
+                vote_start_date: "",
+                vote_due_date: "",
+                cycle: 1,
+                num: "",
+                limit: "",
+                vote_state: "",
+                is_apply: 1,
+                apply_start_date: "",
+                apply_due_date: "",
+                is_check: 1,
+                startTime1: "00:00",
+                endTime1: "00:00",
+                startTime2: "00:00",
+                endTime2: "00:00",
+            };
+            this.voteTime = [];
+            this.applyTime = [];
+            this.GeneralDialog = true;
+            this.dialogTitle = "新建投票信息";
+            this.isNewVotes = true;
+        },
+        //进入投票编辑页面
+        intoDialog(index) {
+            this.dialogTitle = "编辑投票信息";
+            this.isNewVotes = false;
+            if (this.votesList[index].type === 1) {
+                this.GeneralDialog = true;
+                this.GeneralData = this.votesList[index];
+                if (this.votesList[index].type === null) {
+                    this.votesList[index].type = 0;
+                }
+                if (this.votesList[index].cycle === null) {
+                    this.votesList[index].cycle = 1;
+                }
+                if (this.votesList[index].is_apply === null) {
+                    this.votesList[index].is_apply = 1;
+                }
+                if (this.votesList[index].is_check === null) {
+                    this.votesList[index].is_check = 1;
+                }
+                this.voteTime = [
+                    this.votesList[index].vote_start_date,
+                    this.votesList[index].vote_due_date
+                ];
+            } else {
+                this.GeneralDialog = true;
+                this.GeneralData = this.votesList[index];
+                if (this.votesList[index].type === null) {
+                    this.votesList[index].type = 0;
+                }
+                if (this.votesList[index].cycle === null) {
+                    this.votesList[index].cycle = 1;
+                }
+                if (this.votesList[index].is_apply === null) {
+                    this.votesList[index].is_apply = 1;
+                }
+                if (this.votesList[index].is_check === null) {
+                    this.votesList[index].is_check = 1;
+                }
+                this.voteTime = [
+                    this.votesList[index].vote_start_date,
+                    this.votesList[index].vote_due_date
+                ];
+                this.applyTime = [
+                    this.votesList[index].apply_start_date,
+                    this.votesList[index].apply_due_date
+                ];
+            }
+        },
+        //保存投票编辑信息
+        editGeneralData() {
+            if (this.isNewVotes) {
+                if (this.GeneralData.type === 1) {
+                    if(!this.isPassed()){
+                        return false
+                        console.log(123);
+                        
+                    }
+                    
+                    axios
+                        .post(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/votes/infos",
+                            {
+                                type: this.GeneralData.type,
+                                title: this.GeneralData.title,
+                                description: this.GeneralData.description,
+                                vote_start_date: this.formatDate(
+                                    this.GeneralData.vote_start_date
+                                ),
+                                vote_due_date: this.formatDate(
+                                    this.GeneralData.vote_due_date
+                                ),
+                                num: this.GeneralData.num,
+                                limit: this.GeneralData.limit
+                            }
+                        )
+                        .then(res => {
+                            this.showMessage("success", "新建成功");
+                            this.GeneralDialog = false;
+                            this.getVotesList();
+                        });
+                } else {
+                    if(!this.isPassed()){
+                        return false
+                    }
+                    if (!this.applyIsTrue && this.GeneralData.is_apply === 1) {
+                        this.showMessage(
+                            "error",
+                            "报名时间不能大于活动结束时间"
+                        );
+                        return false;
+                    }
+                    axios
+                        .post(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/votes/infos",
+                            {
+                                type: this.GeneralData.type,
+                                title: this.GeneralData.title,
+                                description: this.GeneralData.description,
+                                vote_start_date: this.formatDate(
+                                    this.GeneralData.vote_start_date
+                                ),
+                                vote_due_date: this.formatDate(
+                                    this.GeneralData.vote_due_date
+                                ),
+                                num: this.GeneralData.num,
+                                limit: this.GeneralData.limit,
+                                is_apply: this.GeneralData.is_apply,
+                                apply_start_date: this.formatDate(
+                                    this.GeneralData.apply_start_date
+                                ),
+                                apply_due_date: this.formatDate(
+                                    this.GeneralData.apply_due_date
+                                ),
+                                is_check: this.GeneralData.is_check
+                            }
+                        )
+                        .then(res => {
+                            this.showMessage("success", "新建成功");
+                            this.GeneralDialog = false;
+                            this.getVotesList();
+                        });
+                }
+            } else {
+                if (this.GeneralData.type === 1) {
+                    if(!this.isPassed()){
+                        return false
+                    }
+                    axios
+                        .put(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/votes/infos/" +
+                                this.GeneralData.id,
+                            {
+                                type: this.GeneralData.type,
+                                title: this.GeneralData.title,
+                                description: this.GeneralData.description,
+                                vote_start_date: this.formatDate(
+                                    this.GeneralData.vote_start_date
+                                ),
+                                vote_due_date: this.formatDate(
+                                    this.GeneralData.vote_due_date
+                                ),
+                                num: this.GeneralData.num,
+                                limit: this.GeneralData.limit
+                            }
+                        )
+                        .then(res => {
+                            this.showMessage("success", "提交成功");
+                            this.GeneralDialog = false;
+                            this.getVotesList();
+                        });
+                } else {
+                    if(!this.isPassed()){
+                        return false
+                    }
+                    if (!this.applyIsTrue && this.GeneralData.is_apply === 1) {
+                        this.showMessage(
+                            "error",
+                            "报名时间不能大于活动结束时间"
+                        );
+                        return false;
+                    }
+                    axios
+                        .put(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/votes/infos/" +
+                                this.GeneralData.id,
+                            {
+                                type: this.GeneralData.type,
+                                title: this.GeneralData.title,
+                                description: this.GeneralData.description,
+                                vote_start_date: this.formatDate(
+                                    this.GeneralData.vote_start_date
+                                ),
+                                vote_due_date: this.formatDate(
+                                    this.GeneralData.vote_due_date
+                                ),
+                                num: this.GeneralData.num,
+                                limit: this.GeneralData.limit,
+                                is_apply: this.GeneralData.is_apply,
+                                apply_start_date: this.formatDate(
+                                    this.GeneralData.apply_start_date
+                                ),
+                                apply_due_date: this.formatDate(
+                                    this.GeneralData.apply_due_date
+                                ),
+                                is_check: this.GeneralData.is_check
+                            }
+                        )
+                        .then(res => {
+                            this.showMessage("success", "提交成功");
+                            this.GeneralDialog = false;
+                            this.getVotesList();
+                        });
+                }
+            }
+        },
+        //更改时间
+        changeVoteTime() {
+            // this.voteTime = [this.formatDate(this.formatDate(this.voteTime[0],"YY-MM-DD")+" "+this.startTime1),this.formatDate(this.formatDate(this.voteTime[1],"YY-MM-DD")+" "+this.endTime1)]
+            // this.voteTime[0] = this.formatDate(this.voteTime[0],"YY-MM-DD")
+            // this.voteTime[1] = this.formatDate(this.voteTime[1],"YY-MM-DD")
+            
+            this.GeneralData.vote_start_date = this.formatDate(this.voteTime[0],"YY-MM-DD")+" "+this.startTime1;
+            this.GeneralData.vote_due_date = this.formatDate(this.voteTime[1],"YY-MM-DD")+" "+this.endTime1;
+            if (this.GeneralData.apply_due_date != "") {
+                if (
+                    this.GeneralData.vote_due_date <
+                    this.GeneralData.apply_due_date
+                ) {
+                    this.showMessage("error", "报名时间不能大于活动结束时间");
+                    this.applyIsTrue = false;
+                } else {
+                    this.applyIsTrue = true;
+                }
+
+                if(
+                    this.GeneralData.vote_start_date >
+                    this.GeneralData.apply_start_date
+                ) {
+                    this.showMessage("error", "报名时间不能小于活动结束时间");
+                    this.applyIsTrue = false;
+                } else {
+                    this.applyIsTrue = true;
+                }
+            }
+        },
+        changeApplyTime() {
+            // this.applyTime[0] = this.formatDate(this.formatDate(this.applyTime[0],"YY-MM-DD")+" "+this.startTime2);
+            // this.applyTime[1] = this.formatDate(this.formatDate(this.applyTime[1],"YY-MM-DD")+" "+this.endTime2);
+            // this.applyTime[0] = this.formatDate(this.applyTime[0]
+            // this.applyTime[1] = this.formatDate(this.applyTime[1]
+            this.GeneralData.apply_start_date = this.formatDate(this.applyTime[0],"YY-MM-DD")+" "+this.startTime2;
+            this.GeneralData.apply_due_date = this.formatDate(this.applyTime[1],"YY-MM-DD")+" "+this.endTime2;
+            if (this.GeneralData.apply_due_date != "") {
+                if (
+                    this.GeneralData.vote_due_date <
+                    this.GeneralData.apply_due_date
+                ) {
+                    this.showMessage("error", "报名时间不能大于活动结束时间");
+                    this.applyIsTrue = false;
+                } else {
+                    this.applyIsTrue = true;
+                }
+
+                if(
+                    this.GeneralData.vote_start_date >
+                    this.GeneralData.apply_start_date
+                ) {
+                    this.showMessage("error", "报名时间不能小于活动结束时间");
+                    this.applyIsTrue = false;
+                } else {
+                    this.applyIsTrue = true;
+                }
+            }
+        },
+        showMessage(type, msg) {
+            this.$message({
+                message: msg,
+                type: type
+            });
+        },
+
+        //新增选项1
+        addGeneralItem(i) {
+            if (i === 1) {
+                this.votesGeneralList.push({
+                    content: "",
+                    total: 0
+                });
+            } else {
+                this.votesPlayersList.push({
+                    name: "",
+                    phone: "",
+                    address: "",
+                    image: "",
+                    description: "",
+                    total: "",
+                    is_pass: true
+                });
+            }
+        },
+        //保存当前选项列表
+        editGeneralList() {
+            axios.put(
+                "/web/" + store.state.xcx_flag.xcx_flag + "/api/votes/options",
+                {
+                    void_id: "",
+                    options: this.votesGeneralList
+                }
+            );
+        },
+        //format time
+        formatDate(time, format = "YY-MM-DD hh:mm:ss") {
+            var date = new Date(time);
+
+            var year = date.getFullYear(),
+                month = date.getMonth() + 1, //月份是从0开始的
+                day = date.getDate(),
+                hour = date.getHours(),
+                min = date.getMinutes(),
+                sec = date.getSeconds();
+            var preArr = Array.apply(null, Array(10)).map(function(
+                elem,
+                index
+            ) {
+                return "0" + index;
+            }); ////开个长度为10的数组 格式为 00 01 02 03
+
+            var newTime = format
+                .replace(/YY/g, year)
+                .replace(/MM/g, preArr[month] || month)
+                .replace(/DD/g, preArr[day] || day)
+                .replace(/hh/g, preArr[hour] || hour)
+                .replace(/mm/g, preArr[min] || min)
+                .replace(/ss/g, preArr[sec] || sec);
+
+            return newTime;
+        },
+        //通用表单验证
+        isPassed() {
+            if (this.GeneralData.title == "") {
+                this.showMessage("error", "标题不能为空");
+                return false
+            }
+            if (this.GeneralData.description == "") {
+                this.showMessage("error", "描述不能为空");
+                return false;
+            }
+            if (this.GeneralData.vote_start_date == "") {
+                if(this.GeneralData.apply_start_date == "" && this.GeneralData.type === 0){
+                    this.showMessage("error", "时间不能为空");
+                }
+                this.showMessage("error", "时间不能为空");
+                return false;
+            }
+            return true
+        },
+        //上传图片
+        handleAvatarSuccess(response, file, fileList) {
+            axios
+                .post("/qiniuDelete", {
+                    url: this.votesPlayersList[scope.$index].image
+                })
+                .then(res => {
+                    this.votesPlayersList[scope.$index].image = response.url;
+                });
+        }
+    },
+    mounted() {
+        this.getVotesList();
+    }
+};
+</script>
+
+<style scoped>
+</style>

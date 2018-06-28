@@ -34,11 +34,14 @@ class VoteAndOptStoreRequest extends CommonRequest
             'options.*.1' => 'bail|required|integer|min:0',
         ];
         if ($type == 0) {
-            $applyStartDate = $arr['apply_start_date'];
-            $rules['apply_start_date'] = "bail|required|after_or_equal:{$now}|before:{$voteDueDate}";
-            $rules['apply_due_date'] = "bail|required|after:{$applyStartDate}|before_or_equal:{$voteDueDate}";
-            $rules['is_check'] = 'required';
             $rules['is_apply'] = 'required';
+            $isApply = request('is_apply');
+            if($isApply == 1){
+                $applyStartDate = $arr['apply_start_date'];
+                $rules['apply_start_date'] = "bail|required|after_or_equal:{$now}|before:{$voteDueDate}";
+                $rules['apply_due_date'] = "bail|required|after:{$applyStartDate}|before_or_equal:{$voteDueDate}";
+            }
+            $rules['is_check'] = 'required';
         }
 
         return $rules;

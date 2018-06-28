@@ -3,6 +3,7 @@
 namespace App\Api\Controllers\Votes;
 
 use App\Http\Requests\Votes\VoteAndOptStoreRequest;
+use App\Models\Votes\Applicant;
 use App\Models\Votes\Option;
 use App\Services\Token;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use App\Http\Requests\Votes\VoteStoreRequest;
 use App\Http\Requests\Votes\VoteUpdateRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 
 class VoteInfoController extends Controller
@@ -67,19 +69,48 @@ class VoteInfoController extends Controller
         $voteStartDate = new Carbon($list['vote_start_date']);//投票开始时间
         if($now->gte($voteStartDate)) {
             $list['vote_state'] = 1; //投票开始
+        }else{
+            $list['vote_state'] = 0; //投票开始
         }
         $type = $list['type'];
         if ($type == 0) {//投票类型为活动
-            $applyStartDate = new Carbon($list['apply_start_date']); //报名开始时间
-            if($now->gte($applyStartDate)) {
-                $list['apply_state'] = 1; //报名开始
+            if($list['is_apply'] == 1){
+                $applyStartDate = new Carbon($list['apply_start_date']); //报名开始时间
+                if($now->gte($applyStartDate)) {
+                    $list['apply_state'] = 1; //报名开始
+                }else{
+                    $list['apply_state'] = 0; //报名开始
+                }
             }
         }
+        \DB::beginTransaction();
+        try{
+            $info = Info::create($list);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '新增失败！','Exception'=>$e]);
+        }
+        if ($info) {
+            if($list['vote_state'] == 0){
+                 Redis::hset('vote_start',$info->id,$list['vote_start_date']);
+                 Redis::hset('vote_due',$info->id,$list['vote_due_date']);
 
-        if (Info::create($list)) {
+            }else if($list['vote_state'] == 1){
+                Redis::hset('vote_due',$info->id,$list['vote_due_date']);
+            }
+            if ($type == 0) {//投票类型为活动
+                if($list['is_apply'] == 1){
+                    if($list['apply_state'] == 0) {
+                        Redis::hset('vote_apply_start',$info->id,$list['apply_start_date']);
+                        Redis::hset('vote_apply_due',$info->id,$list['apply_due_date']);
+                    }else if($list['apply_state'] == 1){
+                        Redis::hset('vote_apply_due',$info->id,$list['apply_due_date']);
+                    }
+                }
+            }
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
-        return response()->json(['status' => 'error', 'msg' => '新增失败！']);
     }
 
     public function voteAndOptStore(VoteAndOptStoreRequest $request)
@@ -94,7 +125,7 @@ class VoteInfoController extends Controller
             $list['vote_state'] = 1; //投票开始
         }
 
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try{
             $info = Info::create($list);
             $voteID = $info->id;
@@ -109,7 +140,7 @@ class VoteInfoController extends Controller
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }catch (\Exception $e){
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '新增失败！','Exception'=>$e]);
+            return response()->json(['status' => 'error', 'msg' => '新增失败！']);
         }
     }
 
@@ -167,10 +198,23 @@ class VoteInfoController extends Controller
 
     public function destroy()
     {
-        if (Info::where('id', request()->info)->delete()) {
+        $id = request()->info;
+        $data = Info::find($id);
+        $type = $data->type;
+        DB::beginTransaction();
+        try{
+            Info::where('id', $id)->delete();
+            if($type == 0){
+                Applicant::where('vote_id',$id)->delete();
+            }else{
+                Option::where('vote_id',$id)->delete();
+            }
+            DB::commit();
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '删除失败！']);
         }
-        return response()->json(['status' => 'error', 'msg' => '删除失败！']);
     }
 
 }

@@ -29,10 +29,6 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token',
     include_once('foods.php');
 });
 
-Route::get('login',function() {
-    return '这是登录页';
-});
-
 
 Route::group(['prefix' => '{client_type}/{xcx_flag}/api/wechat','middleware'=>['client', 'cors']], function() {
     Route::post('token/getToken', '\App\Api\Controllers\Wechat\MiniProgramController@getToken');
@@ -81,9 +77,9 @@ Route::get('time', function() {
 
 Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
 
-
-
-
+Route::get('/backend', function () {
+    return view('backend');
+});
 
 
 
