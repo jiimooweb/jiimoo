@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
 //                    DB::rollBack();
 //                }
  ///           }
-        })->everyMinute()->withoutOverlapping();;
+        })->everyMinute();
     }
 
     /**
