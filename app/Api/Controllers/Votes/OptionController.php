@@ -46,7 +46,7 @@ class OptionController extends Controller
         $options = $list['options'];
         $now = Carbon::now();
         $data = [];
-        DB::beginTransaction()
+        DB::beginTransaction();
         try{
             foreach ($options as $option){
                 Option::where('id', $voteID)->delete();
