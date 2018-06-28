@@ -8,12 +8,12 @@
                             <span>小程序数据助手</span>
                         </div>
                         <div class="text item">
-                            <img src="Img/a0.png" width='300px' height='300px' style="display:block;float:left;margin-top:100px;">
+                            <img src="img/a0.png" width='300px' height='300px' style="display:block;float:left;margin-top:100px;">
                             <div style="width:700px;display:block;float:left;margin-left:80px;">
                                 <p style="font-size:14px;color:#999;">使用说明:</p>
                                 <p style="font-size:14px;color:#999;">小程序管理员：扫描上面的小程序码即可打开“小程序数据助手”，可以选择查看已绑定小程序的数据。其他微信用户：经管理员授权后可以查看已授权小程序的数据</p>
                             </div>
-                            <img src="Img/a0test.png" width='700px'  style="display:block;margin:50px 0 0 80px;float:left;">
+                            <img src="img/a0test.png" width='700px'  style="display:block;margin:50px 0 0 80px;float:left;">
                         </div>
                         
                     </el-card>

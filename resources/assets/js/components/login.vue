@@ -2,7 +2,7 @@
 	<div class="dialog" v-loading="loading">
 		<div class="loginPage">
 			<div>
-				<img src="Img/logo.png" width='200px' style="display:block;margin:0 auto;">
+				<img src="img/logo.png" width='200px' style="display:block;margin:0 auto;">
 				<h4 style="margin-top:10px;font-size:30px;color:#333;font-weight:100;text-align:center;">任意门后台管理系统</h4>
 				<el-form class="loginform" :model="loginInfo" :rules="rules" ref="loginInfo">
 					<el-form-item prop="user">
