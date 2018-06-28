@@ -31,34 +31,35 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function (){
-            $voteStart = self::taskVotes('vote_start');
-            $voteDue = self::taskVotes('vote_due');
-            $applyStart = self::taskVotes('vote_apply_start');
-            $applyDue = self::taskVotes('vote_apply_due');
-            if(count($voteStart)>0||count($voteDue)>0||count($applyStart)>0||count($applyDue)>0){
-                DB::beginTransaction();
-                try{
-                    foreach ($voteStart as $id){
-                        Info::where('id',$id)->update(['vote_state'=>'1']);
-                        Redis::hdel('vote_start',$id);
-                    }
-                    foreach ($voteDue as $id){
-                        Info::where('id',$id)->update(['vote_state'=>'-1']);
-                        Redis::hdel('vote_due',$id);
-                    }
-                    foreach ($applyStart as $id){
-                        Info::where('id',$id)->update(['apply_state'=>'-1']);
-                        Redis::hdel('vote_apply_start',$id);
-                    }
-                    foreach ($applyDue as $id){
-                        Info::where('id',$id)->update(['apply_state'=>'-1']);
-                        Redis::hdel('vote_apply_due',$id);
-                    }
-                    DB::commit();
-                }catch (\Exception $e){
-                    DB::rollBack();
-                }
-            }
+            Info::where('id','32')->update(['vote_state'=>'1']);
+//            $voteStart = self::taskVotes('vote_start');
+//            $voteDue = self::taskVotes('vote_due');
+//            $applyStart = self::taskVotes('vote_apply_start');
+//            $applyDue = self::taskVotes('vote_apply_due');
+//            if(count($voteStart)>0||count($voteDue)>0||count($applyStart)>0||count($applyDue)>0){
+//                DB::beginTransaction();
+//                try{
+//                    foreach ($voteStart as $id){
+//                        Info::where('id',$id)->update(['vote_state'=>'1']);
+//                        Redis::hdel('vote_start',$id);
+//                    }
+//                    foreach ($voteDue as $id){
+//                        Info::where('id',$id)->update(['vote_state'=>'-1']);
+//                        Redis::hdel('vote_due',$id);
+//                    }
+//                    foreach ($applyStart as $id){
+//                        Info::where('id',$id)->update(['apply_state'=>'-1']);
+//                        Redis::hdel('vote_apply_start',$id);
+//                    }
+//                    foreach ($applyDue as $id){
+//                        Info::where('id',$id)->update(['apply_state'=>'-1']);
+//                        Redis::hdel('vote_apply_due',$id);
+//                    }
+//                    DB::commit();
+//                }catch (\Exception $e){
+//                    DB::rollBack();
+//                }
+ ///           }
         })->everyMinute()->withoutOverlapping();;
     }
 
