@@ -46,12 +46,13 @@ class OptionController extends Controller
         $options = $list['options'];
         $now = Carbon::now();
         $data = [];
-        foreach ($options as $option){
-                Option::where('id', $voteID)->delete();
-                array_push($data,['vote_id'=>$voteID,'content'=>$option->content,'total'=>$option->total,'created_at'=>$now,'updated_at'=>$now]);
-            }
-         return $data;
-//        DB::beginTransaction();
+        $typeOptions = gettype($options);
+        $typeOption = gettype($options[0]);
+        array_push($data,$typeOptions,$typeOption);
+        return $data;
+//        DB::table('votes_options')->insert($data);
+//         return $data;
+//        DB::beginTransaction()
 //        try{
 //            foreach ($options as $option){
 //                Option::where('id', $voteID)->delete();
