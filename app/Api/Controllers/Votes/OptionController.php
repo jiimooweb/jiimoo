@@ -46,18 +46,23 @@ class OptionController extends Controller
         $options = $list['options'];
         $now = Carbon::now();
         $data = [];
-        DB::beginTransaction();
-        try{
-            foreach ($options as $option){
+        foreach ($options as $option){
                 Option::where('id', $voteID)->delete();
                 array_push($data,['vote_id'=>$voteID,'content'=>$option->content,'total'=>$option->total,'created_at'=>$now,'updated_at'=>$now]);
             }
-            DB::table('votes_options')->insert($data);
-            DB::commit();
-        }catch (\Exception $e){
-            DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '失败！']);
-        }
+         return $data;
+//        DB::beginTransaction();
+//        try{
+//            foreach ($options as $option){
+//                Option::where('id', $voteID)->delete();
+//                array_push($data,['vote_id'=>$voteID,'content'=>$option->content,'total'=>$option->total,'created_at'=>$now,'updated_at'=>$now]);
+//            }
+//            DB::table('votes_options')->insert($data);
+//            DB::commit();
+//        }catch (\Exception $e){
+//            DB::rollBack();
+//            return response()->json(['status' => 'error', 'msg' => '失败！']);
+//        }
 
     }
 
