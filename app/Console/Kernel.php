@@ -38,7 +38,8 @@ class Kernel extends ConsoleKernel
                     array_push($result,$id);
 
             }
-            DB::table('votes_infos')->where('id',32)->update(['description'=>hasToString($result)]);
+            $a = (string)$result[0];
+            DB::table('votes_infos')->where('id',32)->update(['description'=>$a]);
         })->everyMinute();
     }
 
