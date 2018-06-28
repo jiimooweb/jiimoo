@@ -46,25 +46,19 @@ class OptionController extends Controller
         $options = $list['options'];
         $now = Carbon::now();
         $data = [];
-        $typeOptions = gettype($options);
-        $typeOption = gettype($options[0]);
-        array_push($data,$typeOptions,$typeOption);
-        return $data;
-//        DB::table('votes_options')->insert($data);
-//         return $data;
-//        DB::beginTransaction()
-//        try{
-//            foreach ($options as $option){
-//                Option::where('id', $voteID)->delete();
-//                array_push($data,['vote_id'=>$voteID,'content'=>$option->content,'total'=>$option->total,'created_at'=>$now,'updated_at'=>$now]);
-//            }
-//            DB::table('votes_options')->insert($data);
-//            DB::commit();
-//        }catch (\Exception $e){
-//            DB::rollBack();
-//            return response()->json(['status' => 'error', 'msg' => '失败！']);
-//        }
-
+        DB::beginTransaction()
+        try{
+            foreach ($options as $option){
+                Option::where('id', $voteID)->delete();
+                array_push($data,['vote_id'=>$voteID,'content'=>$option['content'],'total'=>$option['total'],'created_at'=>$now,'updated_at'=>$now]);
+            }
+            DB::table('votes_options')->insert($data);
+            DB::commit();
+            return response()->json(['status' => 'success', 'msg' => '成功！']);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '失败！']);
+        }
     }
 
 //    public function update(OptionUpdateRequest $request)
