@@ -4,6 +4,7 @@ namespace App\Api\Controllers\Foods;
 
 use App\Services\Token;
 use App\Models\Foods\Order;
+use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
 use Illuminate\Support\Facades\DB;
@@ -93,6 +94,12 @@ class OrderController extends Controller
             $order->price = $data['price_total'];
             $order->save();
             
+            if($order->pay_way == 0) {
+                $order =  $order->toArray();
+                $order['body'] = '任意门微信支付';
+                return WechatPay::unify($order);
+            }
+
             return $order;
 
         }, 5);
