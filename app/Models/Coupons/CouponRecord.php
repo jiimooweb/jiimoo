@@ -59,4 +59,13 @@ class CouponRecord extends Model
         }
         return $result;
     }
+
+    public static function use($id)
+    {
+        if(self::where('id', $id)->update(['status' => 1, 'use_time' => date('Y-m-d H:i:s', time())])){
+            return 'success';
+        }
+
+        return 'error';
+    }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Api\Controllers\Foods;
 
-use App\Models\Foods\Cate;
+use App\Services\Token;
+use App\Models\Foods\Order;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
-use App\Models\Coupons\Coupon;
+use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
 use App\Models\Coupons\CouponRecord;
 use App\Http\Requests\Foods\CateRequest;
@@ -15,14 +16,14 @@ class OrderController extends Controller
     
     public function index() 
     {
-        $cates = Cate::withCount('products')->get();
+        $cates = Order::withCount('products')->get();
         
         return response()->json(['status' => 'success', 'data' => $cates]);
     }
 
     public function store(CateRequest $requset) 
     {   
-        $cate = Cate::create(request(['name']));
+        $cate = Order::create(request(['name']));
         if($cate) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $cate]);               
         }
@@ -32,14 +33,14 @@ class OrderController extends Controller
     
     public function show() 
     {
-        $cate = Cate::withCount('products')->find(request()->cate);             
+        $cate = Order::withCount('products')->find(request()->cate);             
         $status = $cate ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $cate]);
     }
 
     public function update(CateRequest $requset) 
     {
-        if(Cate::where('id', request()->cate)->update(request(['name']))) {
+        if(Order::where('id', request()->cate)->update(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
@@ -49,7 +50,7 @@ class OrderController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(Cate::where('id', request()->cate)->delete()) {
+        if(Order::where('id', request()->cate)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
         }
         
@@ -68,5 +69,38 @@ class OrderController extends Controller
         $coupons = CouponRecord::getUserAccordCoupons(1 ,$price_total);
 
         return response()->json(['status' => 'success', 'price_total' => $price_total,'coupons' => $coupons]);     
+    }
+
+    public function commit() 
+    {
+        $result = DB::transaction(function (){
+
+            $products = request('products');
+            $record_id = request('record_id') ?? 0;
+
+            $order = new Order;
+            $order->order_no = $order->generateOrderNo();
+            $order->pay_way = request('pay_way');
+            //TODO UID
+            $order->fan_id = 1;
+            $order->status = 0;
+            $order->remark = request('remark');
+            $order->save();
+
+            $data = $order->calcOrderPrice($order->id, $products, $record_id);
+            
+            $order->coupon_offer = $data['coupon_offer'];
+            $order->price = $data['price_total'];
+            $order->save();
+            
+            return $order;
+
+        }, 5);
+
+        if($result) {
+            return response()->json(['status' => 'success', 'data' => $result]);    
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '出现未知错误，请重试']); 
     }
 }
