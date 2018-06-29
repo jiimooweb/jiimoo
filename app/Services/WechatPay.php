@@ -33,9 +33,7 @@ class WechatPay extends Model
             'openid' => 'owuH05Uoc0ItjqhGVjK62Acp5CkI',
         ]);
         
-        $sign = $app->jssdk->appConfig($result['prepay_id']);
-        dd($sign);
-        return $result;
+        return $app->jssdk->appConfig($result['prepay_id']);
     }
  
     
