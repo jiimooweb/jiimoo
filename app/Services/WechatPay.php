@@ -14,6 +14,7 @@ class WechatPay extends Model
             'app_id'    => config('wechat.payment.default.app_id'),
             'mch_id'    => config('wechat.payment.default.mch_id'),
             'key'   => config('wechat.payment.default.key'),   // API 密钥
+            'notify_url' => 'https://www.rdoorweb.com/wechat/notify',
         ];
 
         $app = Factory::payment($config);
@@ -38,5 +39,5 @@ class WechatPay extends Model
 
         return $result;
     }
-
+ 
 }
