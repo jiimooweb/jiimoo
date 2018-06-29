@@ -60,7 +60,7 @@ class ProductController extends Controller
 
     public function list()
     {
-        $cates = Cate::orderBy('id')->get()->pluck('name');
+        $cates = Cate::orderBy('id')->get();
         $products = Cate::with(['products' => function($query) {
             return $query->where('display', 1)->orderBy('c_price', 'asc');
         }])->orderBy('id')->get();
