@@ -106,10 +106,10 @@ return [
      */
     'payment' => [
         'default' => [
-            'sandbox'   => env('WECHAT_PAYMENT_SANDBOX', false),
+            'sandbox'   => env('WECHAT_PAYMENT_SANDBOX', true),
             'app_id'    => env('WECHAT_PAYMENT_APPID', 'wxc1fb7bd6c21cb0cc'),
             'mch_id'    => env('WECHAT_PAYMENT_MCH_ID', '1504036131'),
-            'key'       => env('WECHAT_PAYMENT_KEY', '1504036131@1504036131'),
+            'key'       => env('WECHAT_PAYMENT_KEY', 'wi1wdn29zl0vWN1sj2j0384sVMLI26hs'),
             'cert_path' => env('WECHAT_PAYMENT_CERT_PATH', ''),    // XXX: 绝对路径！！！！
             'key_path'  => env('WECHAT_PAYMENT_KEY_PATH', ''),      // XXX: 绝对路径！！！！
             'notify_url'=> 'https://www.rdoorweb.com/notify',                           // 默认支付结果通知地址

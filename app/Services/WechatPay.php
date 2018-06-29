@@ -39,5 +39,4 @@ class WechatPay extends Model
 
         return $result;
     }
- 
 }
