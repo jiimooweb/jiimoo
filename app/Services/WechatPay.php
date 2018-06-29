@@ -32,7 +32,11 @@ class WechatPay extends Model
             'trade_type' => 'JSAPI',
             'openid' => 'owuH05Uoc0ItjqhGVjK62Acp5CkI',
         ]);
+        
+        $result['sign'] = $app->jssdk->appConfig($result['prepay_id']);
 
         return $result;
     }
+ 
+    
 }
