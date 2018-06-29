@@ -7,5 +7,10 @@ Route::group(['prefix' => 'foods'], function () {
     Route::get('/products/list', '\App\Api\Controllers\Foods\ProductController@list');
     Route::apiResource('/products', '\App\Api\Controllers\Foods\ProductController');
 
+    Route::post('/orders/init', '\App\Api\Controllers\Foods\OrderController@init');
+    Route::apiResource('/orders', '\App\Api\Controllers\Foods\OrderController');
+    
+    Route::apiResource('/settings', '\App\Api\Controllers\Foods\SettingController', ['only' => ['index', 'store', 'update']]);
+
 });
 
