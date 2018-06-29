@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -46,33 +46,60 @@ class Kernel extends ConsoleKernel
 //             }
 //        })->everyMinute();
 
-        $schedule->call(function (){
+        $schedule->call(function () {
+            $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
+            $updatedAt = Carbon::now();
+            $voteStart = Redis::hgetall('vote_start');
+            $voteDue = Redis::hgetall('vote_due');
+            $applyStart = Redis::hgetall('vote_apply_start');
+            $applyDue = Redis::hgetall('vote_apply_due');
+            //ID数组，V：投票；A：报名；S：开始；D：结束。
+            $resultVS = [];
+            $resultVD = [];
+            $resultAS = [];
+            $resultAD = [];
+            foreach ($voteStart as $id => $value) {
+                $date = new Carbon($value);
+                if ($now->gte($date)) {
+                    array_push($resultVS, $id);
+                }
+            }
+            foreach ($voteDue as $id => $value) {
+                $date = new Carbon($value);
+                if ($now->gte($date)) {
+                    array_push($resultVD, $id);
+                }
+            }
+            foreach ($applyStart as $id => $value) {
+                $date = new Carbon($value);
+                if ($now->gte($date)) {
+                    array_push($resultAS, $id);
+                }
+            }
+            foreach ($applyDue as $id => $value) {
+                $date = new Carbon($value);
+                if ($now->gte($date)) {
+                    array_push($resultAD, $id);
+                }
+            }
 
-            $voteStart = self::taskVotes('vote_start');
-            $voteDue = self::taskVotes('vote_due');
-            $applyStart = self::taskVotes('vote_apply_start');
-            $applyDue = self::taskVotes('vote_apply_due');
-            if(count($voteStart)>0||count($voteDue)>0||count($applyStart)>0||count($applyDue)>0){
+            if (count($resultVS) > 0||count($resultVD) > 0||count($resultAS) > 0||count($resultAD) > 0) {
                 DB::beginTransaction();
-                try{
-                    foreach ($voteStart as $id){
-                        Info::where('id',$id)->update(['vote_state'=>1]);
-                        Redis::hdel('vote_start',$id);
+                try {
+                    foreach ($resultVS as $id) {
+                        DB::table('votes_infos')->where('id', $id)->update(['vote_state' => 1, 'updated_at' => $updatedAt]);
                     }
-                    foreach ($voteDue as $id){
-                        Info::where('id',$id)->update(['vote_state'=>-1]);
-                        Redis::hdel('vote_due',$id);
+                    foreach ($resultVD as $id) {
+                        DB::table('votes_infos')->where('id', $id)->update(['vote_state' => -1, 'updated_at' => $updatedAt]);
                     }
-                    foreach ($applyStart as $id){
-                        Info::where('id',$id)->update(['apply_state'=>1]);
-                        Redis::hdel('vote_apply_start',$id);
+                    foreach ($resultAS as $id) {
+                        DB::table('votes_infos')->where('id', $id)->update(['vote_state' => 1, 'updated_at' => $updatedAt]);
                     }
-                    foreach ($applyDue as $id){
-                        Info::where('id',$id)->update(['apply_state'=>-1]);
-                        Redis::hdel('vote_apply_due',$id);
+                    foreach ($resultAD as $id) {
+                        DB::table('votes_infos')->where('id', $id)->update(['vote_state' => -1, 'updated_at' => $updatedAt]);
                     }
                     DB::commit();
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     DB::rollBack();
                 }
             }
@@ -86,27 +113,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
-    }
-
-    /**
-     * 自定义function
-     * 依传入参数查询redis，回传日期大于当前日期的ID结果集
-     * @param string $str
-     * @return array $result
-     */
-    protected function taskVotes($str){
-        $now = new Carbon( Carbon::now()->format('Y-m-d H:i'));
-        $arr = Redis::hgetall($str);
-        $result = [];
-        foreach ($arr as $id => $value ){
-            $date = new Carbon($value);
-            if($now->gte($date)){
-                array_push($result,$id);
-            }
-        }
-        return $result;
     }
 }
