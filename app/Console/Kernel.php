@@ -93,10 +93,10 @@ class Kernel extends ConsoleKernel
                         DB::table('votes_infos')->where('id', $id)->update(['vote_state' => -1, 'updated_at' => $updatedAt]);
                     }
                     foreach ($resultAS as $id) {
-                        DB::table('votes_infos')->where('id', $id)->update(['vote_state' => 1, 'updated_at' => $updatedAt]);
+                        DB::table('votes_infos')->where('id', $id)->update(['apply_state' => 1, 'updated_at' => $updatedAt]);
                     }
                     foreach ($resultAD as $id) {
-                        DB::table('votes_infos')->where('id', $id)->update(['vote_state' => -1, 'updated_at' => $updatedAt]);
+                        DB::table('votes_infos')->where('id', $id)->update(['apply_state' => -1, 'updated_at' => $updatedAt]);
                     }
                     DB::commit();
                 } catch (\Exception $e) {

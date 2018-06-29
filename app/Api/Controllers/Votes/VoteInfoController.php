@@ -89,7 +89,7 @@ class VoteInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '新增失败！');
+            return response()->json(['status' => 'error', 'msg' => '新增失败']);
         }
         if ($info) {
             if ($list['vote_state'] == 0) {
@@ -198,7 +198,7 @@ class VoteInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '修改失败！');
+            return response()->json(['status' => 'error', 'msg' => '修改失败！']);
         }
 
         if ($Info) {
