@@ -40,7 +40,7 @@ class WechatPay extends Model
         $result = $app->order->unify([
             'body' => $order['body'],
             'out_trade_no' => $order['order_no'],
-            'total_fee' => $order['price'],
+            'total_fee' => $order['price'] * 100,
             'trade_type' => 'JSAPI',
             'openid' => $order['openid'],
         ]);
