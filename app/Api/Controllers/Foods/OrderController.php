@@ -8,6 +8,7 @@ use App\Models\Foods\Order;
 use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
+use App\Models\Foods\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
 use App\Models\Coupons\CouponRecord;
@@ -43,6 +44,7 @@ class OrderController extends Controller
     {   
         // TODO:判断删除权限
         if(Order::where('id', request()->order)->delete()) {
+            OrderProduct::where('order_id', request()->order)->delete();
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
         }
         
