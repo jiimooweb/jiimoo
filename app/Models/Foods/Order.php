@@ -51,9 +51,9 @@ class Order extends Model
 
     public static function getStatusCount(int $fans_id) 
     {
-        $unpay = self::where(['fan_id' => $fans_id, 'status' => 0])->get()->count;
-        $confirm = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count;
-        $distribution = self::where(['fan_id' => $fans_id, 'status' => 2])->get()->count;
+        $unpay = self::where(['fan_id' => $fans_id, 'status' => 0])->get()->count();
+        $confirm = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count();
+        $distribution = self::where(['fan_id' => $fans_id, 'status' => 2])->get()->count();
         return ['unpay' => $unpay, 'confirm' => $confirm, 'distribution' => $distribution];
     }
 }
