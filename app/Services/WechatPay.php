@@ -42,7 +42,7 @@ class WechatPay extends Model
             'out_trade_no' => $order['order_no'],
             'total_fee' => $order['price'],
             'trade_type' => 'JSAPI',
-            'openid' => 'owuH05Uoc0ItjqhGVjK62Acp5CkI',
+            'openid' => $order['openid'],
         ]);
         
         $result =  $app->jssdk->bridgeConfig($result['prepay_id'], false);
@@ -50,9 +50,6 @@ class WechatPay extends Model
         return $result;
     }
 
-    public static function notify($callback, $array) {
-        return call_user_func_array($callback, $array);
-    }
     
     
 }

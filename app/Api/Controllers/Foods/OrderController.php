@@ -84,7 +84,7 @@ class OrderController extends Controller
             $order->order_no = $order->generateOrderNo();
             $order->pay_way = request('pay_way');
             //TODO UID
-            $order->fan_id = 1;
+            $order->fan_id = Token::getUid();
             $order->status = OrderStatus::UNPAID;
             $order->remark = request('remark');
             $order->save();
@@ -96,8 +96,9 @@ class OrderController extends Controller
             $order->save();
             
             if($order->pay_way == 0) {
-                $order =  $order->toArray();
+                $order = $order->toArray();
                 $order['body'] = '任意门微信支付';
+                $order['openid'] = Token::getCurrentTokenVar('openid');
                 $wechatPay = new WechatPay(config('notify.wechat.foods'));
                 return $wechatPay->unify($order);
             }
