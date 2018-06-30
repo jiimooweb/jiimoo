@@ -37,6 +37,7 @@ class WechatPay extends Model
     public function unify($order)
     {
         $app = $this->getApp();
+
         $result = $app->order->unify([
             'body' => $order->body,
             'out_trade_no' => $order->order_no,
@@ -45,9 +46,9 @@ class WechatPay extends Model
             'openid' => $order->openid,
         ]);
         
-        $result =  $app->jssdk->bridgeConfig($result['prepay_id'], false);
+        $payment =  $app->jssdk->bridgeConfig($result['prepay_id'], false);
 
-        return array_merge($result,$result['prepay_id']);
+        return array_merge($payment,$result['prepay_id']);
     }
 
     
