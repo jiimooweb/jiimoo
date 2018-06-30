@@ -126,8 +126,7 @@ class OrderController extends Controller
 
     public function status_count()
     {
-        $fan_id = Token::getUid();
-        $result = Order::getStatusCount($fan_id);
+        $result = Order::getStatusCount(Token::getUid());
         return response()->json(['status' => 'success', 'data' => $result]);    
     }
 }
