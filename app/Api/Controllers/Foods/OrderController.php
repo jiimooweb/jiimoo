@@ -43,10 +43,15 @@ class OrderController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(Order::where('id', request()->order)->delete()) {
-            OrderProduct::where('order_id', request()->order)->delete();
-            return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
-        }
+        $result = DB::transaction(function (){
+            if(Order::where('id', request()->order)->delete()) {
+                OrderProduct::where('order_id', request()->order)->delete();
+            }
+            return ['status' => 'success', 'msg' => '删除成功！'];               
+        }, 5);
+
+        return response()->json($result);               
+       
         
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);         
     }
