@@ -19,7 +19,7 @@ class FoodPayController extends Controller
         $app = $wechatPay->getApp();
 
         $response = $app->handlePaidNotify(function($message, $fail){
-
+            \Log::info($message);
             $order = Order::where('order_no', $message['out_trade_no'])->first();
         
             if (!$order || $order->pay_time) { // 如果订单不存在 或者 订单已经支付过了
@@ -46,7 +46,7 @@ class FoodPayController extends Controller
             return true; // 返回处理完成
         });
         
-        
+
         return $response;
     }
 }
