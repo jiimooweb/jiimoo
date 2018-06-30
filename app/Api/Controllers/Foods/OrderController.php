@@ -18,31 +18,21 @@ class OrderController extends Controller
     
     public function index() 
     {
-        $cates = Order::withCount('products')->get();
+        $cates = Order::get();
         
         return response()->json(['status' => 'success', 'data' => $cates]);
-    }
-
-    public function store(CateRequest $requset) 
-    {   
-        $cate = Order::create(request(['name']));
-        if($cate) {
-            return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $cate]);               
-        }
-
-        return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
     }
     
     public function show() 
     {
-        $cate = Order::withCount('products')->find(request()->cate);             
-        $status = $cate ? 'success' : 'error';
-        return response()->json(['status' => $status, 'data' => $cate]);
+        $order = Order::find(request()->order);             
+        $status = $order ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $order]);
     }
 
     public function update(CateRequest $requset) 
     {
-        if(Order::where('id', request()->cate)->update(request(['name']))) {
+        if(Order::where('id', request()->order)->update(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
@@ -52,7 +42,7 @@ class OrderController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(Order::where('id', request()->cate)->delete()) {
+        if(Order::where('id', request()->order)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
         }
         
