@@ -2,6 +2,6 @@
 
 return [
     'wechat' => [
-        'foods' => config('app.url'). '/pay_notify/foods'
+        'foods' => config('app.url'). '/wechat/pay_notify/foods'
     ],
 ];
