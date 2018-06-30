@@ -17,7 +17,6 @@ class WechatPay extends Model
 
     public function getApp()
     {
-        dd($this->notify_url);
         if(!$this->notify_url) {
             return '回调地址不能为空';
         }
