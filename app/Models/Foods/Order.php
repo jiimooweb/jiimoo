@@ -54,6 +54,6 @@ class Order extends Model
         $unpay = self::where(['fan_id' => $fans_id, 'status' => 0])->get()->count;
         $confirm = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count;
         $distribution = self::where(['fan_id' => $fans_id, 'status' => 2])->get()->count;
-        return compact(['unpay' => $unpay, 'confirm' => $confirm, 'distribution' => $distribution])
+        return ['unpay' => $unpay, 'confirm' => $confirm, 'distribution' => $distribution];
     }
 }
