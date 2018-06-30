@@ -97,7 +97,7 @@ class OrderController extends Controller
                 $order->openid = Token::getCurrentTokenVar('openid');
                 $wechatPay = new WechatPay(config('notify.wechat.foods'));
                 //保存prepayid
-                // $payOrder = $wechatPay->unify($order);
+                $payOrder = $wechatPay->unify($order);
                 return array_merge($payOrder,['order_id' => $order->id]);
                 
             }
