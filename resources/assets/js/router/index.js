@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 import login from '@/components/login'
 import userList from '@/components/userList'
 import userManage from '@/components/userManage'
@@ -16,6 +16,9 @@ import queue from '@/components/userManage/marketing/queue'
 import vip from '@/components/userManage/marketing/vip'
 import votes from '@/components/userManage/marketing/votes'
 import coupons from '@/components/userManage/marketing/coupons'
+import ECommerce from '@/components/userManage/ECommerce/ECommerce'
+import eating from '@/components/userManage/ECommerce/eating'
+import shoping from '@/components/userManage/ECommerce/shoping'
 import Personnel from '@/components/userManage/Personnel/Personnel'
 import PersonnelType from '@/components/userManage/Personnel/PersonnelType'
 import PersonnelList from '@/components/userManage/Personnel/PersonnelList'
@@ -26,11 +29,10 @@ import moduleSet from '@/components/systemSet/moduleSet'
 import user from '@/components/user'
 import fans from '@/components/userManage/fans'
 
+Vue.use(Router)
 
-Vue.use(VueRouter)
-
-export default new VueRouter({
-    routes: [
+export default new Router({
+	routes: [
 		{path: '/',redirect: '/userList',meta: {CName: '首页'}},
 		{path: '/userList',name: 'userList',component: userList,meta: {CName: '首页'}},
 		{path: '/manageSet',name: 'manageSet',component: manageSet,meta: {CName: '模块管理'}},
@@ -56,6 +58,11 @@ export default new VueRouter({
 					{path:'coupons',name: 'coupons',meta: {CName: '优惠券'},component: coupons},
 					{path:'votes',name: 'votes',meta: {CName: '投票'},component: votes}
 				]},
+				//电商管理
+				{path: 'ECommerce',name: 'ECommerce',meta: {CName: '电商管理'},component:ECommerce,children:[
+					{path:'eating',name: 'eating',meta: {CName: '点餐管理'},component: eating},
+					{path:'shoping',name: 'shoping',meta: {CName: '商城管理'},component: shoping}
+				]},
 				//人员管理
 				{path: 'Personnel',name: 'Personnel',component: Personnel,meta:{CName:'人员管理'},children:[
 					{path:'PersonnelType',name:'PersonnelType',meta: {CName: '人员类别'},component:PersonnelType},
@@ -74,4 +81,5 @@ export default new VueRouter({
 		{path: '/moduleSet',name:'moduleSet',meta: {CName: '模板设置'},component:moduleSet},
 		
 	],
+	
 })

@@ -55,7 +55,7 @@
         },
         mounted(){
             // this.getuserInfo()
-            if(store.state.identity.identity == 'Admin'){
+            if(store.state.identity.identity == 'Admin' || localStorage.getItem('identity') == 'Admin'){
                 this.isAdmin = true
             }else{
                 this.isAdmin = false

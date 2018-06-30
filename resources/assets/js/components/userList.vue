@@ -248,7 +248,7 @@ export default {
         if (localStorage.token) {
             this.getList();
             this.newXCX.user_id = store.state.userId;
-            if (store.state.identity.identity == "Admin") {
+            if(store.state.identity.identity == 'Admin' || localStorage.getItem('identity') == 'Admin'){
                 this.isAdmin = true;
             } else {
                 this.isAdmin = false;

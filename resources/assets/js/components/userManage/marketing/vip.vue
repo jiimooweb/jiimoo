@@ -123,7 +123,7 @@
                     <el-col>
                         <!-- <el-button :disabled='!vipSet.status' style="margin-top:20px;margin-bottom:20px;" @click="isTableOne()" type='primary' size='small'>新增</el-button> -->
                     </el-col>
-                    <el-col style="margin-top:30px;border-bottom:1px solid #eee;padding-bottom:30px;">
+                    <el-col :span="13" style="margin-top:30px;border-bottom:1px solid #eee;padding-bottom:30px;">
                         <el-table border v-show='vipSet.offer_status==2' :data='offerTable0'>
                             <el-table-column label="等级">
                                 <template slot-scope="scope">
