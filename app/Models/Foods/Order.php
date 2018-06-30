@@ -49,7 +49,7 @@ class Order extends Model
         return ['price_total' => $price_total, 'offer' => $offer,'coupon_offer' => $coupon_offer];
     }
 
-    public function getStatusCount(int $fans_id) 
+    public static function getStatusCount(int $fans_id) 
     {
         $unpay = self::where(['fan_id' => $fans_id, 'status' => 0])->get()->count;
         $confirm = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count;
