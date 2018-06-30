@@ -100,14 +100,17 @@ class OrderController extends Controller
                 $order['body'] = '任意门微信支付';
                 $order['openid'] = Token::getCurrentTokenVar('openid');
                 $wechatPay = new WechatPay(config('notify.wechat.foods'));
-                return $wechatPay->unify($order);
+                return array_merge($wechatPay->unify($order),['order_id' => $order['id']]);
             }
 
             return $order;
 
         }, 5);
 
+        
+
         if($result) {
+
             return response()->json(['status' => 'success', 'data' => $result]);    
         }
 
