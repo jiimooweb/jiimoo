@@ -47,7 +47,7 @@ class WechatPay extends Model
         
         $result =  $app->jssdk->bridgeConfig($result['prepay_id'], false);
 
-        return $result;
+        return array_merge($result,$result['prepay_id']);
     }
 
     
