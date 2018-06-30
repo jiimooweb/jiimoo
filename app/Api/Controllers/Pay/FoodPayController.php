@@ -3,6 +3,7 @@
 namespace App\Api\Controllers\Pay;
 
 use App\Utils\OrderStatus;
+use App\Models\Foods\Order;
 use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
@@ -17,7 +18,7 @@ class FoodPayController extends Controller
 
         $response = $app->handlePaidNotify(function($message, $fail){
 
-            $order = \App\Models\Foods\Order::where('order_no', $message['out_trade_no'])->first();
+            $order = Order::where('order_no', $message['out_trade_no'])->first();
         
             if (!$order || $order->pay_time) { // 如果订单不存在 或者 订单已经支付过了
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
