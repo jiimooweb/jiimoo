@@ -3,9 +3,12 @@
 namespace App\Api\Controllers\Foods;
 
 use App\Services\Token;
+use App\Utils\OrderStatus;
 use App\Models\Foods\Order;
+use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
+use App\Models\Foods\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
 use App\Models\Coupons\CouponRecord;
@@ -16,31 +19,21 @@ class OrderController extends Controller
     
     public function index() 
     {
-        $cates = Order::withCount('products')->get();
+        $cates = Order::get();
         
         return response()->json(['status' => 'success', 'data' => $cates]);
-    }
-
-    public function store(CateRequest $requset) 
-    {   
-        $cate = Order::create(request(['name']));
-        if($cate) {
-            return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $cate]);               
-        }
-
-        return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
     }
     
     public function show() 
     {
-        $cate = Order::withCount('products')->find(request()->cate);             
-        $status = $cate ? 'success' : 'error';
-        return response()->json(['status' => $status, 'data' => $cate]);
+        $order = Order::find(request()->order);             
+        $status = $order ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $order]);
     }
 
     public function update(CateRequest $requset) 
     {
-        if(Order::where('id', request()->cate)->update(request(['name']))) {
+        if(Order::where('id', request()->order)->update(request(['name']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
@@ -50,9 +43,15 @@ class OrderController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(Order::where('id', request()->cate)->delete()) {
-            return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
-        }
+        $result = DB::transaction(function (){
+            if(Order::where('id', request()->order)->delete()) {
+                OrderProduct::where('order_id', request()->order)->delete();
+            }
+            return ['status' => 'success', 'msg' => '删除成功！'];               
+        }, 5);
+
+        return response()->json($result);               
+       
         
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);         
     }
@@ -82,8 +81,8 @@ class OrderController extends Controller
             $order->order_no = $order->generateOrderNo();
             $order->pay_way = request('pay_way');
             //TODO UID
-            $order->fan_id = 1;
-            $order->status = 0;
+            $order->fan_id = Token::getUid();
+            $order->status = OrderStatus::UNPAID;
             $order->remark = request('remark');
             $order->save();
 
@@ -93,11 +92,28 @@ class OrderController extends Controller
             $order->price = $data['price_total'];
             $order->save();
             
+            if($order->pay_way == 0) {
+                
+                $order->body = '任意门微信支付';
+                $order->openid = Token::getCurrentTokenVar('openid');
+                $wechatPay = new WechatPay(config('notify.wechat.foods'));
+
+                //保存prepayid
+                $payOrder = $wechatPay->unify($order);
+                Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
+                //返回结果
+                return array_merge($payOrder,['order_id' => $order->id]);
+                
+            }
+
             return $order;
 
         }, 5);
 
+        
+
         if($result) {
+
             return response()->json(['status' => 'success', 'data' => $result]);    
         }
 

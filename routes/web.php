@@ -75,7 +75,9 @@ Route::get('time', function() {
     return date('Y-m-d H:i', time());
 });
 
-Route::get('test', '\App\Api\Controllers\Wechat\MiniProgramController@test');
+Route::get('notify', function() {
+    return config('notify.wechat.foods');
+});
 
 Route::get('/backend', function () {
     return view('backend');
