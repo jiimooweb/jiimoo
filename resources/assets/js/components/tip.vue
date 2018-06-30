@@ -22,7 +22,7 @@ export default {
     .tip>p{
             font-size: 14px;
             color: #5e6d82;
-            line-height: 1.5em;
+            line-height: 1em;
     }
     .tip.default{
         border-left: 5px solid #505050;
