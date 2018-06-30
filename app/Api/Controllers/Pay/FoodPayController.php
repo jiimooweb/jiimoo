@@ -13,7 +13,7 @@ class FoodPayController extends Controller
     public function notify()
     {
         \Log::info('notify');
-        
+
         $wechatPay = new WechatPay(config('notify.wechat.foods'));
         
         $app = $wechatPay->getApp();
@@ -46,6 +46,6 @@ class FoodPayController extends Controller
             return true; // 返回处理完成
         });
         
-        return $app;
+        return $response;
     }
 }
