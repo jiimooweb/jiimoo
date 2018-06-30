@@ -28,7 +28,7 @@ class FoodPayController extends Controller
                 // 用户是否支付成功
                 if (array_get($message, 'result_code') === 'SUCCESS') {
                     $order->pay_time = data('Y-m-d H:i:s', time()); // 更新支付时间为当前时间
-                    $order->trans_no = $message['out_trade_no']; // 更新支付时间为当前时间
+                    $order->trans_no = $message['transaction_id']; // 更新支付时间为当前时间
                     $order->status = OrderStatus::PAID;
         
                 // 用户支付失败
