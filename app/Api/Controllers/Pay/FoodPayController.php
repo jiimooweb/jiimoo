@@ -12,8 +12,6 @@ class FoodPayController extends Controller
 {
     public function notify()
     {
-        
-
         $wechatPay = new WechatPay(config('notify.wechat.foods'));
         
         $app = $wechatPay->getApp();
