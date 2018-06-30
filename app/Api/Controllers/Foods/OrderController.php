@@ -93,11 +93,11 @@ class OrderController extends Controller
             $order->save();
             
             if($order->pay_way == 0) {
-                $order = $order->toArray();
-                $order['body'] = '任意门微信支付';
-                $order['openid'] = Token::getCurrentTokenVar('openid');
+                $order->body = '任意门微信支付';
+                $order->openid = Token::getCurrentTokenVar('openid');
                 $wechatPay = new WechatPay(config('notify.wechat.foods'));
-                return array_merge($wechatPay->unify($order),['order_id' => $order['id']]);
+                $pay = array_merge($wechatPay->unify($order),['order_id' => $order['id']]);
+                
             }
 
             return $order;

@@ -38,11 +38,11 @@ class WechatPay extends Model
     {
         $app = $this->getApp();
         $result = $app->order->unify([
-            'body' => $order['body'],
-            'out_trade_no' => $order['order_no'],
-            'total_fee' => $order['price'] * 100,
+            'body' => $order->body,
+            'out_trade_no' => $order->order_no,
+            'total_fee' => $order->price * 100,
             'trade_type' => 'JSAPI',
-            'openid' => $order['openid'],
+            'openid' => $order->openid,
         ]);
         
         $result =  $app->jssdk->bridgeConfig($result['prepay_id'], false);
