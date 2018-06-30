@@ -9,7 +9,7 @@ class WechatPay extends Model
 {
     private $notify_url;
 
-    public function __construct(string $notify_url)
+    public function __construct($notify_url)
     {
         $this->notify_url = $notify_url;
     }
