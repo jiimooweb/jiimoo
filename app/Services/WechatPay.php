@@ -45,10 +45,12 @@ class WechatPay extends Model
             'trade_type' => 'JSAPI',
             'openid' => $order->openid,
         ]);
-        
-        $payment =  $app->jssdk->bridgeConfig($result['prepay_id'], false);
 
-        return array_merge($payment,$result['prepay_id']);
+        $prepay_id = $result['prepay_id'];
+        
+        $payment =  $app->jssdk->bridgeConfig($perpay_id, false);
+
+        return array_merge($payment,['prepay_id' => $prepay_id]);
     }
 
     
