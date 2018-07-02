@@ -19,9 +19,19 @@ class OrderController extends Controller
     
     public function index() 
     {
-        $cates = Order::get();
+        $status = request()->status;
+        $fan_id = request()->fan_id;
+        $order_no = request()->order_no;
         
-        return response()->json(['status' => 'success', 'data' => $cates]);
+        $orders = Order::when($status, function($query) use ($status){
+            return $query->where('status', $status);
+        })->when($fan_id, function($query) use ($fan_id){
+            return $query->where('fan_id', $fan_id);
+        })->when($order_no, function($query) use ($order_no){
+            return $query->where('order_no', 'like', '%'.$order_no.'%');
+        })->get();
+
+        return response()->json(['status' => 'success', 'data' => $orders]);
     }
     
     public function show() 
@@ -80,7 +90,6 @@ class OrderController extends Controller
             $order = new Order;
             $order->order_no = $order->generateOrderNo();
             $order->pay_way = request('pay_way');
-            //TODO UID
             $order->fan_id = Token::getUid();
             $order->status = OrderStatus::UNPAID;
             $order->remark = request('remark');
@@ -93,7 +102,7 @@ class OrderController extends Controller
             $order->save();
             
             if($order->pay_way == 0) {
-                
+
                 $order->body = '任意门微信支付';
                 $order->openid = Token::getCurrentTokenVar('openid');
                 $wechatPay = new WechatPay(config('notify.wechat.foods'));
@@ -102,21 +111,22 @@ class OrderController extends Controller
                 $payOrder = $wechatPay->unify($order);
                 Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
                 //返回结果
-                return array_merge($payOrder,['order_id' => $order->id]);
-                
+                return array_merge($payOrder,['order_id' => $order->id]);  
             }
 
             return $order;
-
         }, 5);
 
-        
-
         if($result) {
-
             return response()->json(['status' => 'success', 'data' => $result]);    
         }
 
         return response()->json(['status' => 'error', 'msg' => '出现未知错误，请重试']); 
+    }
+
+    public function status_count()
+    {
+        $result = Order::getStatusCount(Token::getUid());
+        return response()->json(['status' => 'success', 'data' => $result]);    
     }
 }
