@@ -83,7 +83,7 @@ class OrderController extends Controller
     //接单，确认订单
     public function confirm() 
     {
-        dd(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM]));
+        dd(Order::where('id', request()->id)->first());
         if(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM])){
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
         }
