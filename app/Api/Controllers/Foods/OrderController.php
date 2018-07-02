@@ -29,7 +29,7 @@ class OrderController extends Controller
             return $query->where('fan_id', $fan_id);
         })->when($order_no, function($query) use ($order_no){
             return $query->where('order_no', 'like', '%'.$order_no.'%');
-        })->get();
+        })->with(['products'])->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
