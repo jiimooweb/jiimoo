@@ -21,7 +21,7 @@ class OrderController extends Controller
     {
         $status = request()->status;
         $order_no = request()->order_no;
-        $fan_id = iseet(request()->fan_id) && request()->client_type == 'web' ? request()->fan_id : Token::getUid();
+        $fan_id = isset(request()->fan_id) && request()->client_type == 'web' ? request()->fan_id : Token::getUid();
         
         $orders = Order::when($status >= 0, function($query) use ($status){
             return $query->where('status', $status);
