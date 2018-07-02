@@ -147,12 +147,12 @@ class OrderController extends Controller
     public function cancel_order()
     {
         $order = Order::find(request()->id);
-        if($order->pay_way == 0) {
+        if($order->pay_way == 0 && $order->status == 1) {
             $wechatPay = new WechatPay(config('notify.wechat.foods'));
-            $wechatPay->refund($order);
+            $result = $wechatPay->refund($order);
         }
         $order->update(['status' => -1]);
-        return response()->json(['status' => 'success']);            
+        return response()->json(['status' => 'success', 'result' => $result]);            
     }
 
     public function pay_order()
