@@ -58,8 +58,8 @@ class Order extends Model
     public static function getStatusCount(int $fans_id) 
     {
         $unpay = self::where(['fan_id' => $fans_id, 'status' => 0])->get()->count();
-        $confirm = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count();
+        $receive = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count();
         $receipt = self::where(['fan_id' => $fans_id, 'status' => 2])->get()->count();
-        return ['unpay' => $unpay, 'confirm' => $confirm, 'receipt' => $receipt];
+        return ['unpay' => $unpay, 'receive' => $receive, 'receipt' => $receipt];
     }
 }
