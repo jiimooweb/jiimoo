@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach ($voteStart as $id => $value) {
-                if (array_key_exists($id, $voteDue)) {
+                if (array_key_exists($id, $resultVD)) {
                     Redis::hdel('vote_start', $id);
                 } else {
                     $date = new Carbon($value);
@@ -67,7 +67,7 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach ($applyStart as $id => $value) {
-                if (array_key_exists($id, $applyDue)) {
+                if (array_key_exists($id, $resultAD)) {
                     Redis::hdel('vote_apply_start', $id);
                 } else {
                     $date = new Carbon($value);
