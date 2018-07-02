@@ -101,6 +101,7 @@ class Kernel extends ConsoleKernel
                 }
             }
         })->everyThirtyMinutes()->at('11:30');
+
     }
 
     /**
