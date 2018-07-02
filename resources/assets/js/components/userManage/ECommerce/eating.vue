@@ -83,9 +83,68 @@
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
+                <!-- 基础设置 -->
+                <el-tab-pane label="基础设置">
+                    <el-row style="margin:20px 0 0;">
+                        <el-col :span="3">
+                            店名
+                        </el-col>
+                        <el-col :span="10">
+                            <el-input></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:20px 0 0;">
+                        <el-col :span="3">
+                            封面
+                        </el-col>
+                        <el-col :span="10">
+                            <el-upload style="width:100px;height:100px;" class="avatar-uploader" :headers="headers" action="/qiniuUpload" :show-file-list="false" :on-success="handleAvatarBaseSuccess">
+                                <img v-if="baseSetData.thumb" :src="baseSetData.thumb" class="avatar" width="100" height='100'>
+                                <i v-else class="el-icon-plus avatar-uploader-icon" style="margin:0 auto;display:block;"></i>
+                            </el-upload>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:20px 0 0;">
+                        <el-col :span="3">
+                            公告
+                        </el-col>
+                        <el-col :span="10">
+                            <el-input v-model="baseSetData.notice"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:20px 0 0;">
+                        <el-col :span="3">
+                            是否开启满减优惠
+                        </el-col>
+                        <el-col :span="10">
+                            <el-switch v-model="baseSetData.offer_status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                            </el-switch>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:30px 0 0;">
+                        <el-col :span="3">
+                            优惠内容
+                        </el-col>
+                        <el-col :span="10">
+                            <el-button type="primary" size="small">添加规则</el-button>
+                            <el-table :data='baseSetData.offer'>
+                                <el-table-column label="满减条件"> 
+                                    <template slot-scope="scope">
+                                        <el-input v-model="baseSetData.offer[scope.$index].condition"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="满减优惠"> 
+                                    <template slot-scope="scope">
+                                        <el-input v-model="baseSetData.offer[scope.$index].reduce"></el-input>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-col>
+                    </el-row>
+                    <el-button style="margin:20px 0 0;" type="primary" size="small">保存</el-button>
+                </el-tab-pane>
             </el-tabs>
         </el-row>
-
 
         <!-- dialog -->
         <el-dialog :visible.sync="productsDialog" :title='productsDialogTitle' width='900px'>
@@ -158,13 +217,12 @@
             <el-row style="margin-bottom:20px;">
                 <el-col :span="3">商品详情</el-col>
                 <el-col :span="20">
-                   <quill-editor style="height:400px;" ref="myTextEditor" :content="productsData.content" @change="onEditorChange($event)">
+                    <quill-editor style="height:400px;" ref="myTextEditor" :content="productsData.content" @change="onEditorChange($event)">
                     </quill-editor>
                 </el-col>
             </el-row>
             <el-button type="primary" size="small" style="margin:100px auto 0;display:block;" @click="inputProductData()">提交</el-button>
         </el-dialog>
-
 
         <!-- type dialog -->
         <el-dialog :visible.sync="typeDialog" :title='typeDialogTitle' width="500px">
@@ -193,29 +251,37 @@ export default {
             search: {
                 type: ""
             },
-            productsDialog:false,
-            productsDialogTitle:'',
-            isNewProdutc:false,
-            thisProductIndex:'',
-            productsData:{
-                name:'',
-                thumb:'',
-                intro:'',
-                o_price:'',
-                c_price:'',
-                oversell:'',
-                content:'',
-                hot:'',
-                display:'',
-                recommend:'',
-                cate_id:''
+            productsDialog: false,
+            productsDialogTitle: "",
+            isNewProdutc: false,
+            thisProductIndex: "",
+            productsData: {
+                name: "",
+                thumb: "",
+                intro: "",
+                o_price: "",
+                c_price: "",
+                oversell: "",
+                content: "",
+                hot: "",
+                display: "",
+                recommend: "",
+                cate_id: ""
             },
 
-            thisTypeIndex:'',
-            typeDialog:false,
-            typeDialogTitle:'',
-            typeName:'',
-            isNewType:false
+            thisTypeIndex: "",
+            typeDialog: false,
+            typeDialogTitle: "",
+            typeName: "",
+            isNewType: false,
+
+            baseSetData: {
+                name: "",
+                thumb: "",
+                notice: "",
+                offer_status: "",
+                offer: []
+            }
         };
     },
     computed: {
@@ -271,109 +337,139 @@ export default {
                     "/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/cates"
                 )
                 .then(res => {
-                    this.productsTypeList = []
-                    this.searchTypeList = []
-                    this.searchTypeList.push({name:'所有商品',id:''})
-                    for(let i in res.data.data){
+                    this.productsTypeList = [];
+                    this.searchTypeList = [];
+                    this.searchTypeList.push({ name: "所有商品", id: "" });
+                    for (let i in res.data.data) {
                         this.productsTypeList.push(res.data.data[i]);
                         this.searchTypeList.push(res.data.data[i]);
                     }
                 });
         },
         //打开新增商品
-        openNewProducts(index){
-            this.productsDialog = true
-            this.productsDialogTitle = '新增商品'
-            this.isNewProdutc = true
+        openNewProducts(index) {
+            this.productsDialog = true;
+            this.productsDialogTitle = "新增商品";
+            this.isNewProdutc = true;
 
             this.productsData = {
-                name:'',
-                thumb:'',
-                intro:'',
-                o_price:'',
-                c_price:'',
-                oversell:'',
-                content:'',
-                hot:'',
-                display:'',
-                recommend:'',
-                cate_id:''
-            }
+                name: "",
+                thumb: "",
+                intro: "",
+                o_price: "",
+                c_price: "",
+                oversell: "",
+                content: "",
+                hot: "",
+                display: "",
+                recommend: "",
+                cate_id: ""
+            };
         },
         //打开商品编辑
-        openEditProducts(index){
-            this.productsDialog = true
-            this.productsDialogTitle = '编辑商品'
-            this.isNewProdutc = false
-            this.thisProductIndex = index
+        openEditProducts(index) {
+            this.productsDialog = true;
+            this.productsDialogTitle = "编辑商品";
+            this.isNewProdutc = false;
+            this.thisProductIndex = index;
 
-            this.productsData = this.productsList[index]
+            this.productsData = this.productsList[index];
         },
         //保存dialogdata
-        inputProductData(){
-            if(this.isNewProdutc){
-                axios.post("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/products",{
-                        name:this.productsData.name,
-                        thumb:this.productsData.thumb,
-                        cate_id:this.productsData.cate_id,
-                        intro:this.productsData.intro,
-                        o_price:this.productsData.o_price,
-                        c_price:this.productsData.c_price,
-                        oversell:this.productsData.oversell,
-                        content:this.productsData.content,
-                        hot:this.productsData.hot,
-                        display:this.productsData.display,
-                        recommend:this.productsData.recommend
-                }).then(res=>{
-                    this.showMessage('success','新增成功')
-                    this.productsDialog = false
-                    this.getProductsList()
-                })
-            }else{
-                axios.put("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/products/"+ this.productsList[this.thisProductIndex].id,{
-                        name:this.productsData.name,
-                        thumb:this.productsData.thumb,
-                        cate_id:this.productsData.cate_id,
-                        intro:this.productsData.intro,
-                        o_price:this.productsData.o_price,
-                        c_price:this.productsData.c_price,
-                        oversell:this.productsData.oversell,
-                        content:this.productsData.content,
-                        hot:this.productsData.hot,
-                        display:this.productsData.display,
-                        recommend:this.productsData.recommend
-                }).then(res=>{
-                    this.showMessage('success','修改成功')
-                    this.productsDialog = false
-                    this.getProductsList()
-                })
+        inputProductData() {
+            if (this.isNewProdutc) {
+                axios
+                    .post(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/foods/products",
+                        {
+                            name: this.productsData.name,
+                            thumb: this.productsData.thumb,
+                            cate_id: this.productsData.cate_id,
+                            intro: this.productsData.intro,
+                            o_price: this.productsData.o_price,
+                            c_price: this.productsData.c_price,
+                            oversell: this.productsData.oversell,
+                            content: this.productsData.content,
+                            hot: this.productsData.hot,
+                            display: this.productsData.display,
+                            recommend: this.productsData.recommend
+                        }
+                    )
+                    .then(res => {
+                        this.showMessage("success", "新增成功");
+                        this.productsDialog = false;
+                        this.getProductsList();
+                    });
+            } else {
+                axios
+                    .put(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/foods/products/" +
+                            this.productsList[this.thisProductIndex].id,
+                        {
+                            name: this.productsData.name,
+                            thumb: this.productsData.thumb,
+                            cate_id: this.productsData.cate_id,
+                            intro: this.productsData.intro,
+                            o_price: this.productsData.o_price,
+                            c_price: this.productsData.c_price,
+                            oversell: this.productsData.oversell,
+                            content: this.productsData.content,
+                            hot: this.productsData.hot,
+                            display: this.productsData.display,
+                            recommend: this.productsData.recommend
+                        }
+                    )
+                    .then(res => {
+                        this.showMessage("success", "修改成功");
+                        this.productsDialog = false;
+                        this.getProductsList();
+                    });
             }
         },
         //删除商品
-        removeProduct(index){
-            axios.delete("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/products/"+this.productsList[index].id).then(res=>{
-                this.showMessage('success','删除成功')
-                this.getProductsList()  
-            })
+        removeProduct(index) {
+            axios
+                .delete(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/products/" +
+                        this.productsList[index].id
+                )
+                .then(res => {
+                    this.showMessage("success", "删除成功");
+                    this.getProductsList();
+                });
         },
         //商品switch改变
-        changeSwitch(index){
-            axios.put("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/products/"+ this.productsList[index].id,{
-                name:this.productsList[index].name,
-                thumb:this.productsList[index].thumb,
-                cate_id:this.productsList[index].cate_id,
-                intro:this.productsList[index].intro,
-                o_price:this.productsList[index].o_price,
-                c_price:this.productsList[index].c_price,
-                oversell:this.productsList[index].oversell,
-                content:this.productsList[index].content,
-                hot:this.productsList[index].hot,
-                display:this.productsList[index].display,
-                recommend:this.productsList[index].recommend
-            }).then(res=>{
-                this.showMessage('success','修改成功')
-                this.getProductsList()
-            })
+        changeSwitch(index) {
+            axios
+                .put(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/products/" +
+                        this.productsList[index].id,
+                    {
+                        name: this.productsList[index].name,
+                        thumb: this.productsList[index].thumb,
+                        cate_id: this.productsList[index].cate_id,
+                        intro: this.productsList[index].intro,
+                        o_price: this.productsList[index].o_price,
+                        c_price: this.productsList[index].c_price,
+                        oversell: this.productsList[index].oversell,
+                        content: this.productsList[index].content,
+                        hot: this.productsList[index].hot,
+                        display: this.productsList[index].display,
+                        recommend: this.productsList[index].recommend
+                    }
+                )
+                .then(res => {
+                    this.showMessage("success", "修改成功");
+                    this.getProductsList();
+                });
         },
         //上传图片
         handleAvatarSuccess(response, file, fileList) {
@@ -383,56 +479,87 @@ export default {
                     this.productsData.thumb = response.url;
                 });
         },
+        handleAvatarBaseSuccess(response, file, fileList) {
+            axios
+                .post("/qiniuDelete", { url: this.productsData.thumb })
+                .then(res => {
+                    this.baseSetData.thumb = response.url;
+                });
+        },
         //新增商品分类
-        openNewType(){
-            this.typeName = ''
-            this.typeDialog = true
-            this.isNewType = true
-            this.typeDialogTitle = '新增分类'
+        openNewType() {
+            this.typeName = "";
+            this.typeDialog = true;
+            this.isNewType = true;
+            this.typeDialogTitle = "新增分类";
         },
         //编辑商品分类
-        openEditType(index){
-            this.typeName = this.productsTypeList[index].name
-            this.typeDialog = true
-            this.isNewType = false
-            this.typeDialogTitle = '编辑分类'
-            this.thisTypeIndex = index
+        openEditType(index) {
+            this.typeName = this.productsTypeList[index].name;
+            this.typeDialog = true;
+            this.isNewType = false;
+            this.typeDialogTitle = "编辑分类";
+            this.thisTypeIndex = index;
         },
         //保存商品分类
-        inputProductType(){
-            if(this.isNewType){
-                axios.post("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/cates",{
-                    name:this.typeName
-                }).then(res=>{
-                    this.showMessage('success','新增成功')
-                    this.typeDialog = false
-                    this.getProductsType()
-                })
-            }else{
-                axios.put("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/cates/"+this.productsTypeList[this.thisTypeIndex].id,{
-                    name:this.typeName
-                }).then(res=>{
-                    this.showMessage('success','新增成功')
-                    this.typeDialog = false
-                    this.getProductsType()
-                })
+        inputProductType() {
+            if (this.isNewType) {
+                axios
+                    .post(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/foods/cates",
+                        {
+                            name: this.typeName
+                        }
+                    )
+                    .then(res => {
+                        this.showMessage("success", "新增成功");
+                        this.typeDialog = false;
+                        this.getProductsType();
+                    });
+            } else {
+                axios
+                    .put(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/foods/cates/" +
+                            this.productsTypeList[this.thisTypeIndex].id,
+                        {
+                            name: this.typeName
+                        }
+                    )
+                    .then(res => {
+                        this.showMessage("success", "新增成功");
+                        this.typeDialog = false;
+                        this.getProductsType();
+                    });
             }
         },
         //删除商品分类
-        removeType(index){
-            if(this.productsTypeList[index].products_count !== 0){
-                this.showMessage('error','商品分类存在商品无法删除，请先删除分类底下的商品再删除分类')
-            }else{
-                axios.delete("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/cates/"+this.productsTypeList[index].id).then(res=>{
-                    this.showMessage('success','删除成功')
-                    this.getProductsType()
-                })
-            }   
-            
+        removeType(index) {
+            if (this.productsTypeList[index].products_count !== 0) {
+                this.showMessage(
+                    "error",
+                    "商品分类存在商品无法删除，请先删除分类底下的商品再删除分类"
+                );
+            } else {
+                axios
+                    .delete(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/foods/cates/" +
+                            this.productsTypeList[index].id
+                    )
+                    .then(res => {
+                        this.showMessage("success", "删除成功");
+                        this.getProductsType();
+                    });
+            }
         },
         showMessage(type, msg) {
             this.$message({
-            message: msg,
+                message: msg,
                 type: type
             });
         }

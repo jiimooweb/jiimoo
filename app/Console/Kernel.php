@@ -30,22 +30,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-//        $schedule->call(function (){
-//            $updatedAt =  Carbon::now();
-//            $now = new Carbon( Carbon::now()->format('Y-m-d H:i'));
-//            $arr = Redis::hgetall('vote_start');
-//            $result = [];
-//            foreach ($arr as $id => $value ){
-//                $date = new Carbon($value);
-//                if($now->gte($date)){
-//                    array_push($result,$id);
-//                }
-//            }
-//            foreach ($result as $id){
-//                 DB::table('votes_infos')->where('id',$id)->update(['vote_state'=>1,'updated_at'=>$updatedAt]);
-//             }
-//        })->everyMinute();
-
         $schedule->call(function () {
             $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
             $updatedAt = Carbon::now();
@@ -53,27 +37,26 @@ class Kernel extends ConsoleKernel
             $voteDue = Redis::hgetall('vote_due');
             $applyStart = Redis::hgetall('vote_apply_start');
             $applyDue = Redis::hgetall('vote_apply_due');
-            //ID数组，V：投票；A：报名；S：开始；D：结束。
-            $resultVS = [];
+            //ID数组，V：投票；A：报名；D：结束；S：开始。
             $resultVD = [];
-            $resultAS = [];
+            $resultVS = [];
             $resultAD = [];
-            foreach ($voteStart as $id => $value) {
-                $date = new Carbon($value);
-                if ($now->gte($date)) {
-                    array_push($resultVS, $id);
-                }
-            }
+            $resultAS = [];
             foreach ($voteDue as $id => $value) {
                 $date = new Carbon($value);
                 if ($now->gte($date)) {
                     array_push($resultVD, $id);
                 }
             }
-            foreach ($applyStart as $id => $value) {
-                $date = new Carbon($value);
-                if ($now->gte($date)) {
-                    array_push($resultAS, $id);
+            foreach ($voteStart as $id => $value) {
+                if(array_key_exists($id,$voteDue)){
+                    Redis::hdel('vote_start',$id);
+                }else{
+                    $date = new Carbon($value);
+                    if ($now->gte($date)) {
+                       array_push($resultVS, $id);
+                    }
+
                 }
             }
             foreach ($applyDue as $id => $value) {
@@ -82,28 +65,43 @@ class Kernel extends ConsoleKernel
                     array_push($resultAD, $id);
                 }
             }
+            foreach ($applyStart as $id => $value) {
+                if(array_key_exists($id,$applyDue)){
+                    Redis::hdel('vote_apply_start',$id);
+                }else{
+                    $date = new Carbon($value);
+                    if ($now->gte($date)) {
+                        array_push($resultAS, $id);
+                    }
+                }
+            }
 
             if (count($resultVS) > 0||count($resultVD) > 0||count($resultAS) > 0||count($resultAD) > 0) {
                 DB::beginTransaction();
                 try {
                     foreach ($resultVS as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['vote_state' => 1, 'updated_at' => $updatedAt]);
+                        Redis::hdel('vote_start',$id);
                     }
                     foreach ($resultVD as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['vote_state' => -1, 'updated_at' => $updatedAt]);
+                        Redis::hdel('vote_due',$id);
                     }
                     foreach ($resultAS as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['apply_state' => 1, 'updated_at' => $updatedAt]);
+                        Redis::hdel('vote_apply_start',$id);
                     }
                     foreach ($resultAD as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['apply_state' => -1, 'updated_at' => $updatedAt]);
+                        Redis::hdel('vote_apply_due',$id);
                     }
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();
                 }
             }
-        })->everyMinute();
+        })->everyThirtyMinutes()->at('11:30');
+
     }
 
     /**

@@ -134,7 +134,7 @@
             <el-row>
                 <el-col>
                     <el-select v-model="deleteValue" placeholder="模块">
-                        <el-option v-for="(item,index) in modelList" :key="index" :label="item.desc+'('+ item.name +')'" :value="item.id">
+                        <el-option v-for="(item,index) in allModelList" :key="index" :label="item.desc+'('+ item.name +')'" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-col>
@@ -238,6 +238,13 @@ export default {
         };
     },
     methods: {
+        handletabClick(tab, event) {
+            if (tab.index == 0) {
+                this.getProductsList();
+            } else if (tab.index == 1) {
+                this.getUserList();
+            }
+        },
         //获得小程序列表
         getList() {
             axios.get("api/xcx").then(
@@ -259,9 +266,9 @@ export default {
         },
         //切换前执行
         handletabClick(tab, event) {
-            if (tab.index == 0) {
+            if (tab.index == 1) {
                 this.getUserList();
-            } else if (tab.index == 1) {
+            } else if (tab.index == 2) {
                 this.getModule();
             }
         },
@@ -422,6 +429,8 @@ export default {
         },
         //获取第一第二层module
         getAModule() {
+            this.allModelList = []
+            this.deleteValue = ''
             this.modelList = [];
             this.modelChildList = [];
             axios.get("api/module").then(res => {
