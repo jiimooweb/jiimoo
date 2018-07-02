@@ -13,3 +13,5 @@ yarn-error.log
 /public/adminlte
 /public/wechat
 /.vscode
+public/js/backend.js
+public/js/vendor.js
