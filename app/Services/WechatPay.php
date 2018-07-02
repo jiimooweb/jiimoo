@@ -53,6 +53,19 @@ class WechatPay extends Model
         return array_merge($payment,['prepay_id' => $prepay_id]);
     }
 
+    public function refund($order) 
+    {
+        $app = $this->getApp();
+        
+        $result = $app->refund->byOutTradeNumber($order->trans_no, 'TK'.$order->order_id, $order->price, $order->price, [
+            // 可在此处传入其他参数，详细参数见微信支付文档
+            'refund_desc' => '用户取消订单',
+        ]);
+
+        return $result;
+    }
+    
+
     
     
 }
