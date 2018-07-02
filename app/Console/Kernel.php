@@ -100,7 +100,7 @@ class Kernel extends ConsoleKernel
                     DB::rollBack();
                 }
             }
-        })->everyMinute();
+        })->everyThirtyMinutes();
     }
 
     /**
