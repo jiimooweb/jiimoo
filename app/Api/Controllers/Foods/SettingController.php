@@ -13,8 +13,8 @@ class SettingController extends Controller
     public function index() 
     {
         $setting = Setting::first();
-        
-        if($setting) {
+
+        if(empty($setting)) {
             $setting['offer'] = isset($setting['offer']) ? json_decode($setting['offer']) : null;
         }
         
