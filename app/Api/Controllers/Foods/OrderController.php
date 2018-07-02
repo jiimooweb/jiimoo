@@ -20,10 +20,10 @@ class OrderController extends Controller
     public function index() 
     {
         $status = request()->status;
-        $fan_id = request()->fan_id;
         $order_no = request()->order_no;
+        $fan_id = isset(request()->fan_id) && request()->client_type == 'web' ? request()->fan_id : Token::getUid();
         
-        $orders = Order::when($status, function($query) use ($status){
+        $orders = Order::when($status >= 0, function($query) use ($status){
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
             return $query->where('fan_id', $fan_id);
