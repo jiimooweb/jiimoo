@@ -23,7 +23,7 @@ class OrderController extends Controller
         $fan_id = request()->fan_id;
         $order_no = request()->order_no;
         
-        $orders = Order::when($status > -2, function($query) use ($status){
+        $orders = Order::when($status >= 0, function($query) use ($status){
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
             return $query->where('fan_id', $fan_id);
