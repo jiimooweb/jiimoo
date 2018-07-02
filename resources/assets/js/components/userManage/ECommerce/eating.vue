@@ -126,8 +126,8 @@
                             优惠内容
                         </el-col>
                         <el-col :span="10">
-                            <el-button type="primary" size="small">添加规则</el-button>
-                            <el-table :data='baseSetData.offer'>
+                            <el-button type="primary" size="small" style="margin:0 0 20px;">添加规则</el-button>
+                            <el-table :data='baseSetData.offer' border>
                                 <el-table-column label="满减条件"> 
                                     <template slot-scope="scope">
                                         <el-input v-model="baseSetData.offer[scope.$index].condition"></el-input>
@@ -313,6 +313,8 @@ export default {
                 this.getProductsList();
             } else if (tab.index == 1) {
                 this.getProductsType();
+            } else if (tab.index == 2){
+                this.getbaseSet()
             }
         },
         onEditorChange({ editor, html, text }) {
@@ -562,6 +564,15 @@ export default {
                 message: msg,
                 type: type
             });
+        },
+
+        //基础设置
+
+        //获取基础设置
+        getbaseSet(){
+            axios.get("/web/" + store.state.xcx_flag.xcx_flag + "/api/foods/settings").then(res=>{
+                this.baseSetData = res.data.data
+            })
         }
     },
     mounted() {

@@ -19,7 +19,7 @@ class OrderController extends Controller
     
     public function index() 
     {
-        $status = request()->status;
+        $status = request()->status ?? null;
         $fan_id = request()->fan_id;
         $order_no = request()->order_no;
         
@@ -29,7 +29,7 @@ class OrderController extends Controller
             return $query->where('fan_id', $fan_id);
         })->when($order_no, function($query) use ($order_no){
             return $query->where('order_no', 'like', '%'.$order_no.'%');
-        })->get();
+        })->with(['products'])->orderBy('id', 'desc')->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }

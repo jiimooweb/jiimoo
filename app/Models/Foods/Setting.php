@@ -6,6 +6,6 @@ use App\Models\Model;
 
 class Setting extends Model
 {
-    protected $table = 'food_setting';
+    protected $table = 'food_settings';
 
 }
