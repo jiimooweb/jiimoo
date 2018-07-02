@@ -26,7 +26,7 @@ class OrderController extends Controller
         $orders = Order::when($status >= 0, function($query) use ($status){
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
-            return $query->where('fan_id', $fan_id);
+            return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
         })->when($order_no, function($query) use ($order_no){
             return $query->where('order_no', 'like', '%'.$order_no.'%');
         })->with(['products'])->orderBy('id', 'desc')->get();
@@ -133,6 +133,6 @@ class OrderController extends Controller
     public function change_status()
     {
         $result = Order::where('id', request()->id)->update(['status' => request()->status]);
-        return response()->json(['status' => 'success', 'data' => $result]);            
+        return response()->json(['status' => 'success']);            
     }
 }
