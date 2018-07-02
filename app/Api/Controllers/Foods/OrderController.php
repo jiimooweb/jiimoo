@@ -149,4 +149,17 @@ class OrderController extends Controller
         $result = Order::where('id', request()->id)->update(['status' => request()->status]);
         return response()->json(['status' => 'success']);            
     }
+
+    public function pay_order()
+    {
+        $order = Order::find(request()->id);
+        $order->body = '任意门微信支付';
+        $order->openid = Token::getCurrentTokenVar('openid');
+        $wechatPay = new WechatPay(config('notify.wechat.foods'));
+        //保存prepayid
+        $payOrder = $wechatPay->unify($order);
+        Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
+        //返回结果
+        return array_merge($payOrder,['order_id' => $order->id]); 
+    }
 }
