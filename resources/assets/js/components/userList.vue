@@ -238,6 +238,8 @@ export default {
             store.commit("SET_XCXFLAG", {
                 xcx_flag: this.userListT[index].xcx_flag
             });
+            localStorage.setItem('XCXID',this.userListT[index].id)
+            localStorage.setItem('XCXFLAG',this.userListT[index].xcx_flag)
             store.commit("SET_NICKNAME", {
                 nick_name: this.userListT[index].nick_name
             });
@@ -248,7 +250,7 @@ export default {
         if (localStorage.token) {
             this.getList();
             this.newXCX.user_id = store.state.userId;
-            if(store.state.identity.identity == 'Admin' || localStorage.getItem('identity') == 'Admin'){
+            if (store.state.identity.identity == 'Admin' || localStorage.getItem('identity') == 'Admin') {
                 this.isAdmin = true;
             } else {
                 this.isAdmin = false;
