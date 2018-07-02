@@ -29,14 +29,15 @@ class Order extends Model
 
         foreach($products as $row) {
             $product_id = $row['product_id'];
+            $count = $row['count'];
             $product = Product::find($product_id);
-            $price_total += $product['c_price'] * $row['count'];
+            $price_total += $product['c_price'] * $count;
 
             if($product['o_price'] > 0) {
-                $offer += ($product['o_price'] - $product['c_price']) * $row['count'];
+                $offer += ($product['o_price'] - $product['c_price']) * $count;
             }
 
-            OrderProduct::create(['order_id' => $order_id, 'product_id' => $product_id, 'count' => $row['count']]);
+            OrderProduct::create(['order_id' => $order_id, 'product_id' => $product_id, 'count' => $count, 'name' => $product['name'], 'thumb' => $product['thumb'], 'c_price' => $product['c_price'] * $count, 'o_price' => ($product['o_price'] ?? 0) * $count]);
         }
 
         if($record_id) {
