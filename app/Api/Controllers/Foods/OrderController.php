@@ -133,6 +133,6 @@ class OrderController extends Controller
     public function change_status()
     {
         $result = Order::where('id', request()->id)->update(['status' => request()->status]);
-        return response()->json(['status' => 'success']);            
+        return response()->json(['status' => 'success', 'status' => request()->status]);            
     }
 }
