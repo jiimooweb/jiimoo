@@ -80,6 +80,16 @@ class OrderController extends Controller
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);         
     }
 
+    //接单，确认订单
+    public function confirm() 
+    {
+        if(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM])){
+            return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '确认失败']);         
+    }
+
     public function init() 
     {
         $carts = request('cart');
@@ -151,7 +161,7 @@ class OrderController extends Controller
             $wechatPay = new WechatPay(config('notify.wechat.foods'));
             $result = $wechatPay->refund($order);
         }
-        $order->update(['status' => -1]);
+        $order->update(['status' => OrderStatus::CANCEL]);
         return response()->json(['status' => 'success', 'result' => $result]);            
     }
 
@@ -174,8 +184,9 @@ class OrderController extends Controller
         if($order->status == 0) {
             $order->delete();
         }else {
-            $order->update(['del_status' => '1']);
+            $order->update(['del_status' => 1]);
         }
         return response()->json(['status' => 'success']);            
     }
+
 }
