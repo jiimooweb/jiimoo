@@ -25,6 +25,7 @@
                     <el-menu-item v-if='ifValue[0].child[1].childIf' index="/userManage/marketing/queue">排队</el-menu-item>
                     <el-menu-item v-if='ifValue[0].child[2].childIf' index="/userManage/marketing/coupons">优惠券</el-menu-item>
                     <!-- <el-menu-item v-if='ifValue[0].child[3].childIf' index="/">积分</el-menu-item> -->
+                    <el-menu-item v-if='ifValue[0].child[3].childIf' index="/userManage/marketing/reservation">预约</el-menu-item>
                     <el-menu-item v-if='ifValue[0].child[4].childIf' index="/userManage/marketing/votes">投票</el-menu-item>
                 </el-submenu>
                 <!-- <el-submenu index="3">
