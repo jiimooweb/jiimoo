@@ -188,6 +188,15 @@ class OrderController extends Controller
         
     }
 
+    public function success() 
+    {
+        if(Order::where('id', request()->id)->update(['status' => OrderStatus::SUCCESS])){
+            return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '确认失败！']); 
+    }
+
     public function delete()
     {
         $order = Order::find(request()->id);
