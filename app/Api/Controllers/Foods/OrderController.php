@@ -19,7 +19,7 @@ class OrderController extends Controller
     
     public function index() 
     {
-        $status = request()->status ?? null;
+        $status = request()->status;
         $fan_id = request()->fan_id;
         $order_no = request()->order_no;
         
