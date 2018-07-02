@@ -129,4 +129,10 @@ class OrderController extends Controller
         $result = Order::getStatusCount(Token::getUid());
         return response()->json(['status' => 'success', 'data' => $result]);    
     }
+
+    public function change_status()
+    {
+        $result = Order::where('id', request()->id)->update(['status' => request()->status]);
+        return response()->json(['status' => 'success', 'data' => $result]);            
+    }
 }
