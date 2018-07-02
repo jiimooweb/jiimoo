@@ -14,7 +14,7 @@ class SettingController extends Controller
     {
         $setting = Setting::first();
 
-        if($setting->count()) {
+        if(isset($setting)) {
             $setting['offer'] = isset($setting['offer']) ? json_decode($setting['offer']) : null;
         }
         
