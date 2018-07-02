@@ -20,16 +20,30 @@ class OrderController extends Controller
     public function index() 
     {
         $status = request()->status;
-        $fan_id = request()->fan_id;
         $order_no = request()->order_no;
+        $fan_id = request()->fan_id;
         
-        $orders = Order::when($status, function($query) use ($status){
+        $orders = Order::when($status >= -1, function($query) use ($status){
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
-            return $query->where('fan_id', $fan_id);
+            return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
         })->when($order_no, function($query) use ($order_no){
             return $query->where('order_no', 'like', '%'.$order_no.'%');
-        })->get();
+        })->with(['products'])->orderBy('id', 'desc')->get();
+
+        return response()->json(['status' => 'success', 'data' => $orders]);
+    }
+
+    public function app_index() 
+    {
+        $status = request()->status;
+        $fan_id = Token::getUid();
+        
+        $orders = Order::when($status >= 0, function($query) use ($status){
+            return $query->where('status', $status);
+        })->when($fan_id, function($query) use ($fan_id){
+            return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
+        })->with(['products'])->orderBy('id', 'desc')->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -128,5 +142,29 @@ class OrderController extends Controller
     {
         $result = Order::getStatusCount(Token::getUid());
         return response()->json(['status' => 'success', 'data' => $result]);    
+    }
+
+    public function cancel_order()
+    {
+        $order = Order::find(request()->id);
+        if($order->pay_way == 0) {
+            $wechatPay = new WechatPay(config('notify.wechat.foods'));
+            $wechatPay->refund($order);
+        }
+        $order->update(['status' => -1]);
+        return response()->json(['status' => 'success']);            
+    }
+
+    public function pay_order()
+    {
+        $order = Order::find(request()->id);
+        $order->body = '任意门微信支付';
+        $order->openid = Token::getCurrentTokenVar('openid');
+        $wechatPay = new WechatPay(config('notify.wechat.foods'));
+        //保存prepayid
+        $payOrder = $wechatPay->unify($order);
+        Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
+        //返回结果
+        return array_merge($payOrder,['order_id' => $order->id]); 
     }
 }

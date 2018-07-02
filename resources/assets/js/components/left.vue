@@ -25,6 +25,7 @@
                     <el-menu-item v-if='ifValue[0].child[1].childIf' index="/userManage/marketing/queue">排队</el-menu-item>
                     <el-menu-item v-if='ifValue[0].child[2].childIf' index="/userManage/marketing/coupons">优惠券</el-menu-item>
                     <!-- <el-menu-item v-if='ifValue[0].child[3].childIf' index="/">积分</el-menu-item> -->
+                    <el-menu-item v-if='ifValue[0].child[3].childIf' index="/userManage/marketing/reservation">预约</el-menu-item>
                     <el-menu-item v-if='ifValue[0].child[4].childIf' index="/userManage/marketing/votes">投票</el-menu-item>
                 </el-submenu>
                 <!-- <el-submenu index="3">
@@ -192,8 +193,10 @@ export default {
                         this.modelChildList.push(res.data.data.data[i]);
                     }
                 }
+                
                 for(let i=0;i<this.modelList.length;i++){
                     for(let j=0;j<this.modelList[i].children.length;j++){
+                        console.log(this.modelList[i].children);
                         if(this.modelList[i].children[j].has){
                             this.ifValue[i].parentIf = true
                             this.ifValue[i].child[j].childIf = true

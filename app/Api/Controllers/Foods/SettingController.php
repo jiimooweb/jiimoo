@@ -14,7 +14,9 @@ class SettingController extends Controller
     {
         $setting = Setting::first();
 
-        $setting['offer'] = $setting['offer'] ? json_decode($setting['offer']) : null;
+        if(isset($setting)) {
+            $setting['offer'] = isset($setting['offer']) ? json_decode($setting['offer']) : null;
+        }
         
         return response()->json(['status' => 'success', 'data' => $setting]);
     }
@@ -22,7 +24,7 @@ class SettingController extends Controller
     public function store(SettingRequest $requset) 
     {   
         $data = request()->all();
-        $data['offer'] = $data['offer'] ? json_encode($data['offer']) : null;
+        $data['offer'] = isset($data['offer']) ? json_encode($data['offer']) : null;
         
         $setting = Setting::create($data);
 

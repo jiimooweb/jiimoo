@@ -126,14 +126,14 @@
                             优惠内容
                         </el-col>
                         <el-col :span="10">
-                            <el-button type="primary" size="small">添加规则</el-button>
-                            <el-table :data='baseSetData.offer'>
-                                <el-table-column label="满减条件"> 
+                            <el-button type="primary" size="small" style="margin:0 0 20px;" @click="addRulesSale()">添加规则</el-button>
+                            <el-table :data='baseSetData.offer' border>
+                                <el-table-column label="满减条件">
                                     <template slot-scope="scope">
                                         <el-input v-model="baseSetData.offer[scope.$index].condition"></el-input>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="满减优惠"> 
+                                <el-table-column label="满减优惠">
                                     <template slot-scope="scope">
                                         <el-input v-model="baseSetData.offer[scope.$index].reduce"></el-input>
                                     </template>
@@ -141,7 +141,7 @@
                             </el-table>
                         </el-col>
                     </el-row>
-                    <el-button style="margin:20px 0 0;" type="primary" size="small">保存</el-button>
+                    <el-button style="margin:20px 0 0;" type="primary" size="small" @click="editBaseSet()">保存</el-button>
                 </el-tab-pane>
             </el-tabs>
         </el-row>
@@ -313,6 +313,8 @@ export default {
                 this.getProductsList();
             } else if (tab.index == 1) {
                 this.getProductsType();
+            } else if (tab.index == 2) {
+                this.getbaseSet();
             }
         },
         onEditorChange({ editor, html, text }) {
@@ -562,6 +564,55 @@ export default {
                 message: msg,
                 type: type
             });
+        },
+
+        //基础设置
+
+        //获取基础设置
+        getbaseSet() {
+            axios
+                .get(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/settings"
+                )
+                .then(res => {
+                    this.baseSetData = res.data.data
+                    this.baseSetData.offer = $.parseJSON(res.data.data.offer)
+                });
+        },
+        //保存基础设置
+        editBaseSet(){
+            axios.post("/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/settings",{
+                            name:this.baseSetData.name,
+                            thumb:this.baseSetData.thumb,
+                            notice:this.baseSetData.notice,
+                            offer_status:this.baseSetData.offer_status,
+                            offer:this.baseSetData.offer
+                        }).then(res=>{
+                            this.showMessage('success','保存成功')
+            })
+        },
+        //新增满减规则
+        addRulesSale() {
+            if (this.baseSetData.offer.length !== 0 && this.baseSetData.offer != null) {
+                if (
+                    this.baseSetData.offer[this.baseSetData.offer.length].condition ==
+                        "" ||
+                    this.baseSetData.offer[this.baseSetData.offer.length].reduce == ""
+                ) {
+                    this.showMessage(
+                        "error",
+                        "上一条规则没有填写完整，无法新增规则"
+                    );
+                } else {
+                    this.baseSetData.offer.push({ condition: "", reduce: "" });
+                }
+            }else{
+                this.baseSetData.offer.push({ condition: "", reduce: "" })
+            }
         }
     },
     mounted() {
