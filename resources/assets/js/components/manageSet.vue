@@ -134,7 +134,7 @@
             <el-row>
                 <el-col>
                     <el-select v-model="deleteValue" placeholder="模块">
-                        <el-option v-for="(item,index) in modelChildList" :key="index" :label="item.desc+'('+ item.name +')'" :value="item.id">
+                        <el-option v-for="(item,index) in modelList" :key="index" :label="item.desc+'('+ item.name +')'" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-col>

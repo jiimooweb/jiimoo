@@ -8,6 +8,8 @@ Route::group(['prefix' => 'foods'], function () {
     Route::apiResource('/products', '\App\Api\Controllers\Foods\ProductController');
 
     Route::post('/orders/init', '\App\Api\Controllers\Foods\OrderController@init');
+    Route::post('/orders/commit', '\App\Api\Controllers\Foods\OrderController@commit');
+    Route::get('/orders/status_count', '\App\Api\Controllers\Foods\OrderController@status_count');
     Route::apiResource('/orders', '\App\Api\Controllers\Foods\OrderController');
     
     Route::apiResource('/settings', '\App\Api\Controllers\Foods\SettingController', ['only' => ['index', 'store', 'update']]);

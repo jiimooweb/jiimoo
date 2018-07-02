@@ -33,7 +33,7 @@
                                 <el-button-group style="width:100%;">
                                     <el-button type="success" size="small" @click="intoPlayers(scope.$index)">选手/选项</el-button>
                                     <el-button type="primary" size="small" @click="intoDialog(scope.$index)">编辑</el-button>
-                                    <el-button type="danger" size="small">删除</el-button>
+                                    <el-button type='danger' size="small" @click="getRemoveIndex(scope.$index)">删除</el-button>
                                 </el-button-group>
                             </el-col>
                         </el-row>
@@ -41,6 +41,7 @@
                 </el-table-column>
             </el-table>
         </el-row>
+        
         <!-- 一般选项列表 -->
         <el-row v-show='votesType === 1'>
             <!-- <p>一般选项列表</p> -->
@@ -49,7 +50,7 @@
                     <p>投票标题:{{votesGeneralData.title}}</p>
                     <p>投票类型:{{votesGeneralData.type}}</p>
                     <el-button style="margin-bottom:20px;" @click="addGeneralItem(1)" type="primary" size="small">新增</el-button>
-                    <el-table :data='votesGeneralList' border style="min-width:1200px;">
+                    <el-table :data='votesGeneralList' border style="width:800px;">
                         <el-table-column label="选项内容">
                             <template slot-scope="scope">
                                 <el-input v-model="votesGeneralList[scope.$index].content"></el-input>
@@ -60,8 +61,13 @@
                                 <el-input-number v-model="votesGeneralList[scope.$index].total" style="width:100%;" :min="0"></el-input-number>
                             </template>
                         </el-table-column>
+                        <el-table-column label="选项票数" width="80px">
+                            <template slot-scope="scope">
+                                <el-button type="danger" size="small" @click="removeGeneralItem(scope.$index)">删除</el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
-                    <el-button @click="editGeneralList()">保存</el-button>
+                    <el-button @click="editGeneralList()" type="primary" size="small" style="margin:20px 0 0 0;display:block;">提交</el-button>
         </el-row>
         <!-- 活动选手列表 -->
         <el-row v-show='votesType === 2'>
@@ -72,42 +78,30 @@
                     <p>投票类型 : {{votesGeneralData.type}}</p>
                     <el-button style="margin-bottom:20px;" @click="addGeneralItem(0)" type="primary" size="small">新增</el-button>
                     <el-table :data='votesPlayersList' border style="min-width:1200px;">
-                        <el-table-column label="姓名">
+                        <el-table-column prop="name" label="姓名">
+                        </el-table-column>
+                        <el-table-column label="图片" width="103px">
                             <template slot-scope="scope">
-                                <el-input v-model="votesPlayersList[scope.$index].name"></el-input>
+                                <img :src="votesPlayersList[scope.$index].image" width='80px' height='80px'>
                             </template>
                         </el-table-column>
-                        <el-table-column label="图片">
+                        <el-table-column prop="phone" label="联系方式">
+                        </el-table-column>
+                        <el-table-column prop="address" label="地址">
+                        </el-table-column>
+                        <!-- <el-table-column prop="description" label="描述">
+                        </el-table-column> -->
+                        <el-table-column prop="total" label="票数">
+                        </el-table-column>
+                        <el-table-column prop="is_pass" label="是否审核">
                             <template slot-scope="scope">
-                                <el-upload style="width:100px;height:100px;" class="avatar-uploader" :headers="headers" action="/qiniuUpload" :show-file-list="false" :on-success="handleAvatarSuccess">
-                                    <img v-if="votesPlayersList[scope.$index].image" :src="votesPlayersList[scope.$index].image" class="avatar" width="100" height='100'>
-                                    <i v-else class="el-icon-plus avatar-uploader-icon" style="margin:0 auto;display:block;"></i>
-                                </el-upload>
+                                <el-switch @change='changePlayerSwitch(scope.$index)' v-model="votesPlayersList[scope.$index].is_pass" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                             </template>
                         </el-table-column>
-                        <el-table-column label="联系方式">
+                        <el-table-column label="操作" width='160px'>
                             <template slot-scope="scope">
-                                <el-input v-model="votesPlayersList[scope.$index].phone"></el-input>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="地址">
-                            <template slot-scope="scope">
-                                <el-input v-model="votesPlayersList[scope.$index].address"></el-input>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="描述">
-                            <template slot-scope="scope">
-                                <el-input v-model="votesPlayersList[scope.$index].description"></el-input>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="票数">
-                            <template slot-scope="scope">
-                                <el-input v-model="votesPlayersList[scope.$index].total"></el-input>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="是否审核">
-                            <template slot-scope="scope">
-                                <el-input v-model="votesPlayersList[scope.$index].total"></el-input>
+                                <el-button @click="openEditPlayer(scope.$index)" type="primary" size="small">编辑</el-button>
+                                <el-button @click="removePlayer(scope.$index)" type="danger" size="small">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -136,25 +130,17 @@
             </el-row>
             <el-row style="margin-bottom:20px;">
                 <el-col :span="5" style="text-align:center;">
-                    投票描述
-                </el-col>
-                <el-col :span="19">
-                    <el-input v-model="GeneralData.description"></el-input>
-                </el-col>
-            </el-row>
-            <el-row style="margin-bottom:20px;">
-                <el-col :span="5" style="text-align:center;">
                     投票时间
                 </el-col>
-                <el-col :span="19">
-                    <el-date-picker :picker-options="pickerOptions" v-model="voteTime" format="yyyy-MM-dd" type="daterange" @change="changeVoteTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                <el-col :span="10">
+                    <el-date-picker style="width:100%;" :picker-options="pickerOptions" v-model="voteTime" format="yyyy-MM-dd" type="daterange" @change="changeVoteTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                 </el-col>
-                <el-col :offset="5" :span="8">
-                    <el-time-select @change="changeVoteTime()" style="width:100%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                <el-col :offset="5" :span="5">
+                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
                 </el-col>
-                <el-col :offset="1" :span="8">
-                    <el-time-select @change="changeVoteTime()" style="width:100%;display:block;margin-left:-7px;" placeholder="结束时间" v-model="endTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                <el-col :span="5">
+                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
                 </el-col>
             </el-row>
             <el-row style="margin-bottom:20px;">
@@ -199,15 +185,15 @@
                 <el-col :span="5" style="text-align:center;">
                     报名时间
                 </el-col>
-                <el-col :span="19">
-                    <el-date-picker :picker-options="pickerOptions1" v-model="applyTime" format="yyyy-MM-dd" type="daterange" @change="changeApplyTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                <el-col :span="10">
+                    <el-date-picker style="width:100%;" :picker-options="pickerOptions1" v-model="applyTime" format="yyyy-MM-dd" type="daterange" @change="changeApplyTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                 </el-col>
-                <el-col :offset="5" :span="8">
-                    <el-time-select @change="changeApplyTime()" style="width:100%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                <el-col :offset="5" :span="5">
+                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
                 </el-col>
-                <el-col :offset="1" :span="8">
-                    <el-time-select @change="changeApplyTime()" style="width:100%;display:block;margin-left:-7px;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                <el-col :span="5">
+                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
                 </el-col>
             </el-row>
             <el-row style="margin-bottom:20px;" v-if='GeneralData.type === 0 && GeneralData.is_apply === 1'>
@@ -221,7 +207,16 @@
                     </template>
                 </el-col>
             </el-row>
-            <el-button @click="editGeneralData()" type="primary" size="small" style="margin:0 auto;display:block;">提交</el-button>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
+                    投票描述
+                </el-col>
+                <el-col :span="19">
+                    <quill-editor style="height:400px;" ref="myTextEditor" :content="GeneralData.description" @change="onEditorChange1($event)">
+                    </quill-editor>
+                </el-col>
+            </el-row>
+            <el-button @click="editGeneralData()" type="primary" size="small" style="margin:100px auto 0;display:block;">提交</el-button>
         </el-dialog>
 
         <!-- 选项信息dialog1 -->
@@ -229,14 +224,92 @@
         </el-dialog>
         <!-- 选手信息dialog2 -->
         <el-dialog :visible.sync='PlayersDialog2'>
+            <el-row>
+                <el-col>
+                    名字
+                </el-col>
+                <el-col>
+                    <el-input v-model="PlayersData.name"></el-input>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    图片
+                </el-col>
+                <el-col>
+                    <el-upload style="margin:0 auto;display:block;" class="avatar-uploader" :headers="headers" action="/qiniuUpload" :show-file-list="false" :on-success="handleAvatarSuccess">
+                        <img v-if="PlayersData.image" :src="PlayersData.image" class="avatar" width="100" height='100'>
+                        <i v-else class="el-icon-plus avatar-uploader-icon" style="margin:0 auto;display:block;"></i>
+                    </el-upload>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    联系方式
+                </el-col>
+                <el-col>
+                    <el-input v-model="PlayersData.phone"></el-input>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    地址
+                </el-col>
+                <el-col>
+                    <el-input v-model="PlayersData.address"></el-input>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    票数
+                </el-col>
+                <el-col>
+                    <el-input v-model="PlayersData.total"></el-input>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    是否通过审核
+                </el-col>
+                <el-col>
+                    <el-switch v-model="PlayersData.is_pass" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                    </el-switch>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    描述
+                </el-col>
+                <el-col>
+                    <quill-editor style="height:280px;" ref="myTextEditor" :content="PlayersData.description" @change="onEditorChange($event)">
+                    </quill-editor>
+                </el-col>
+            </el-row>
 
+            <el-row style="margin-top:90px;">
+                <el-button @click="editPlayersList()" type="primary" size="small" style="margin:0 auto 0;display:block;">提交</el-button>
+            </el-row>
+        </el-dialog>
+        <!-- removeVotesDialog -->
+        <el-dialog :visible.sync='removeVotesDialog' width="400px">
+            <el-row>
+                <p style="text-align:center;">是否确认删除投票</p>
+                <!-- <p style="text-align:center;color:red;">{{votesList.length === 0?'':votesList[removeIndex].title}}</p> -->
+            </el-row>
+            <el-row>
+
+            <el-button style='float:right' @click="removeVotesDialog = false" size="small">取消</el-button>
+            <el-button style='float:right;margin-right:10px;' @click="removeVotes(removeIndex)" type="primary" size="small">确定</el-button>
+            </el-row>
         </el-dialog>
     </el-main>
+    
 </template>
 <script>
 import store from "@/vuex/store";
 import axios from "axios";
 import VueAxios from "vue-axios";
+import { quillEditor } from "vue-quill-editor";
 export default {
     data() {
         return {
@@ -249,6 +322,9 @@ export default {
             dialogTitle: "",
             isNewVotes: false,
             applyIsTrue: false,
+
+            removeVotesDialog:false,
+            removeIndex:'',
             //一般选项列表
             voteTime: [],
             applyTime: [],
@@ -258,22 +334,35 @@ export default {
             votesGeneralList: [],
             votesGeneralData: {
                 title: "1",
-                type: "1"
+                type: "1",
+                id: ""
             },
             //活动选手列表
+            isNewPlayer: false,
             thisPlayersIndex: "",
             PlayersDialog1: false,
             PlayersDialog2: false,
-            PlayersData: "",
+            PlayersData: {
+                name: "",
+                image: "",
+                phone: "",
+                address: "",
+                total: "",
+                is_pass: 0,
+                description: ""
+            },
             votesPlayersList: [],
             pickerOptions: {
-                disabledDate: (time)=> {
-                    return time.getTime() < Date.now();
+                disabledDate: time => {
+                    return Date.now() - 8.64e7 > time.getTime();
                 }
             },
             pickerOptions1: {
-                disabledDate: (time) => {
-                        return time.getTime() < this.voteTime[0] || time.getTime() > this.voteTime[1]
+                disabledDate: time => {
+                    return (
+                        time.getTime() < this.voteTime[0] ||
+                        time.getTime() > this.voteTime[1]
+                    );
                 }
             }
         };
@@ -286,6 +375,49 @@ export default {
         }
     },
     methods: {
+        getRemoveIndex(index){
+            this.removeIndex = index
+            this.removeVotesDialog = true
+        },
+        //
+        onEditorChange1({ editor, html, text }) {
+            this.GeneralData.description = html;
+        },
+        onEditorChange({ editor, html, text }) {
+            this.PlayersData.description = html;
+        },
+        changePlayerSwitch(index) {
+            axios
+                .put(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/votes/applicants/" +
+                        this.votesPlayersList[index].id,
+                    {
+                        vote_id: this.votesGeneralData.id,
+                        name: this.votesPlayersList[index].name,
+                        phone: this.votesPlayersList[index].phone,
+                        address: this.votesPlayersList[index].address,
+                        image: this.votesPlayersList[index].image,
+                        description: this.votesPlayersList[index].description,
+                        total: this.votesPlayersList[index].total,
+                        is_pass: this.votesPlayersList[index].is_pass
+                    }
+                )
+                .then(res => {
+                    axios
+                        .post(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/votes/" +
+                                this.votesGeneralData.id +
+                                "/applicants"
+                        )
+                        .then(res => {
+                            this.votesPlayersList = res.data.data.all;
+                        });
+                });
+        },
         //获取所有投票
         getVotesList() {
             axios
@@ -304,6 +436,7 @@ export default {
                 this.votesType = 1;
                 this.votesGeneralData.title = this.votesList[index].title;
                 this.votesGeneralData.type = "一般";
+                this.votesGeneralData.id = this.votesList[index].id;
                 axios
                     .post(
                         "/web/" +
@@ -320,6 +453,7 @@ export default {
                 this.votesType = 2;
                 this.votesGeneralData.title = this.votesList[index].title;
                 this.votesGeneralData.type = "活动";
+                this.votesGeneralData.id = this.votesList[index].id;
                 axios
                     .post(
                         "/web/" +
@@ -359,7 +493,7 @@ export default {
                 startTime1: "00:00",
                 endTime1: "00:00",
                 startTime2: "00:00",
-                endTime2: "00:00",
+                endTime2: "00:00"
             };
             this.voteTime = [];
             this.applyTime = [];
@@ -390,6 +524,14 @@ export default {
                     this.votesList[index].vote_start_date,
                     this.votesList[index].vote_due_date
                 ];
+                this.startTime1 = this.formatDate(
+                    this.votesList[index].vote_start_date,
+                    "hh:mm"
+                );
+                this.endTime1 = this.formatDate(
+                    this.votesList[index].vote_due_date,
+                    "hh:mm"
+                );
             } else {
                 this.GeneralDialog = true;
                 this.GeneralData = this.votesList[index];
@@ -413,18 +555,33 @@ export default {
                     this.votesList[index].apply_start_date,
                     this.votesList[index].apply_due_date
                 ];
+                this.startTime1 = this.formatDate(
+                    this.votesList[index].vote_start_date,
+                    "hh:mm"
+                );
+                this.endTime1 = this.formatDate(
+                    this.votesList[index].vote_due_date,
+                    "hh:mm"
+                );
+                this.startTime2 = this.formatDate(
+                    this.votesList[index].apply_start_date,
+                    "hh:mm"
+                );
+                this.endTime2 = this.formatDate(
+                    this.votesList[index].apply_due_date,
+                    "hh:mm"
+                );
             }
         },
         //保存投票编辑信息
         editGeneralData() {
             if (this.isNewVotes) {
                 if (this.GeneralData.type === 1) {
-                    if(!this.isPassed()){
-                        return false
+                    if (!this.isPassed()) {
+                        return false;
                         console.log(123);
-                        
                     }
-                    
+
                     axios
                         .post(
                             "/web/" +
@@ -450,8 +607,8 @@ export default {
                             this.getVotesList();
                         });
                 } else {
-                    if(!this.isPassed()){
-                        return false
+                    if (!this.isPassed()) {
+                        return false;
                     }
                     if (!this.applyIsTrue && this.GeneralData.is_apply === 1) {
                         this.showMessage(
@@ -495,8 +652,8 @@ export default {
                 }
             } else {
                 if (this.GeneralData.type === 1) {
-                    if(!this.isPassed()){
-                        return false
+                    if (!this.isPassed()) {
+                        return false;
                     }
                     axios
                         .put(
@@ -524,8 +681,8 @@ export default {
                             this.getVotesList();
                         });
                 } else {
-                    if(!this.isPassed()){
-                        return false
+                    if (!this.isPassed()) {
+                        return false;
                     }
                     if (!this.applyIsTrue && this.GeneralData.is_apply === 1) {
                         this.showMessage(
@@ -570,14 +727,45 @@ export default {
                 }
             }
         },
+        //删除投票信息
+        removeVotes(index) {
+            axios
+                .delete(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/votes/infos/" +
+                        this.votesList[index].id
+                )
+                .then(res => {
+                    this.showMessage("success", "删除成功");
+                    this.getVotesList();
+                    this.removeVotesDialog = false
+                });
+        },
         //更改时间
         changeVoteTime() {
-            // this.voteTime = [this.formatDate(this.formatDate(this.voteTime[0],"YY-MM-DD")+" "+this.startTime1),this.formatDate(this.formatDate(this.voteTime[1],"YY-MM-DD")+" "+this.endTime1)]
-            // this.voteTime[0] = this.formatDate(this.voteTime[0],"YY-MM-DD")
-            // this.voteTime[1] = this.formatDate(this.voteTime[1],"YY-MM-DD")
-            
-            this.GeneralData.vote_start_date = this.formatDate(this.voteTime[0],"YY-MM-DD")+" "+this.startTime1;
-            this.GeneralData.vote_due_date = this.formatDate(this.voteTime[1],"YY-MM-DD")+" "+this.endTime1;
+            this.GeneralData.vote_start_date =
+                this.formatDate(this.voteTime[0], "YY-MM-DD") +
+                " " +
+                this.startTime1;
+            this.GeneralData.vote_due_date =
+                this.formatDate(this.voteTime[1], "YY-MM-DD") +
+                " " +
+                this.endTime1;
+            // console.log(Date.parse(this.formatDate(nowTime,"YY-MM-DD hh:mm")));
+            // console.log(Date.parse(this.GeneralData.vote_start_date));
+
+            let nowTime = new Date();
+            if (
+                Date.parse(this.GeneralData.vote_start_date) <
+                Date.parse(this.formatDate(nowTime, "YY-MM-DD hh:mm"))
+            ) {
+                this.showMessage("error", "报名时间不能小于当前");
+                this.applyIsTrue = false;
+                return false;
+            } else {
+                this.applyIsTrue = true;
+            }
             if (this.GeneralData.apply_due_date != "") {
                 if (
                     this.GeneralData.vote_due_date <
@@ -589,7 +777,7 @@ export default {
                     this.applyIsTrue = true;
                 }
 
-                if(
+                if (
                     this.GeneralData.vote_start_date >
                     this.GeneralData.apply_start_date
                 ) {
@@ -605,8 +793,14 @@ export default {
             // this.applyTime[1] = this.formatDate(this.formatDate(this.applyTime[1],"YY-MM-DD")+" "+this.endTime2);
             // this.applyTime[0] = this.formatDate(this.applyTime[0]
             // this.applyTime[1] = this.formatDate(this.applyTime[1]
-            this.GeneralData.apply_start_date = this.formatDate(this.applyTime[0],"YY-MM-DD")+" "+this.startTime2;
-            this.GeneralData.apply_due_date = this.formatDate(this.applyTime[1],"YY-MM-DD")+" "+this.endTime2;
+            this.GeneralData.apply_start_date =
+                this.formatDate(this.applyTime[0], "YY-MM-DD") +
+                " " +
+                this.startTime2;
+            this.GeneralData.apply_due_date =
+                this.formatDate(this.applyTime[1], "YY-MM-DD") +
+                " " +
+                this.endTime2;
             if (this.GeneralData.apply_due_date != "") {
                 if (
                     this.GeneralData.vote_due_date <
@@ -618,7 +812,7 @@ export default {
                     this.applyIsTrue = true;
                 }
 
-                if(
+                if (
                     this.GeneralData.vote_start_date >
                     this.GeneralData.apply_start_date
                 ) {
@@ -639,31 +833,180 @@ export default {
         //新增选项1
         addGeneralItem(i) {
             if (i === 1) {
-                this.votesGeneralList.push({
-                    content: "",
-                    total: 0
-                });
+                if (this.votesGeneralList.length == 0) {
+                    this.votesGeneralList.push({
+                        content: "",
+                        total: 0
+                    });
+                } else {
+                    for (let i = 0; i < this.votesGeneralList.length; i++) {
+                        if (this.votesGeneralList[i].content == "") {
+                            this.showMessage(
+                                "error",
+                                "新增选项前请填写好前面的选项内容"
+                            );
+                            return;
+                        } else {
+                            if (i == this.votesGeneralList.length - 1) {
+                                this.votesGeneralList.push({
+                                    content: "",
+                                    total: 0
+                                });
+                                return;
+                            }
+                        }
+                    }
+                }
             } else {
-                this.votesPlayersList.push({
+                this.PlayersDialog2 = true;
+                this.isNewPlayer = true;
+                this.PlayersData = {
                     name: "",
+                    image: "",
                     phone: "",
                     address: "",
-                    image: "",
-                    description: "",
                     total: "",
-                    is_pass: true
-                });
+                    is_pass: 0,
+                    description: ""
+                };
             }
+        },
+        //编辑选手
+        openEditPlayer(index) {
+            this.PlayersDialog2 = true;
+            this.thisPlayersIndex = index;
+            this.isNewPlayer = false;
+            this.PlayersData = {
+                name: this.votesPlayersList[index].name,
+                image: this.votesPlayersList[index].image,
+                phone: this.votesPlayersList[index].phone,
+                address: this.votesPlayersList[index].address,
+                total: this.votesPlayersList[index].total,
+                is_pass: this.votesPlayersList[index].is_pass,
+                description: this.votesPlayersList[index].description
+            };
+        },
+        //获取选手列表
+        getVotesPlayersList() {
+            axios
+                .post(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/votes/" +
+                        this.votesGeneralData.id +
+                        "/applicants"
+                )
+                .then(res => {
+                    this.votesPlayersList = res.data.data.all;
+                });
         },
         //保存当前选项列表
         editGeneralList() {
-            axios.put(
-                "/web/" + store.state.xcx_flag.xcx_flag + "/api/votes/options",
-                {
-                    void_id: "",
-                    options: this.votesGeneralList
+            for (let i = 0; i < this.votesGeneralList.length; i++) {
+                if (this.votesGeneralList[i].content == "") {
+                    this.showMessage("error", "选项内容不能为空");
+                    return false;
                 }
-            );
+            }
+            axios
+                .post(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/votes/options",
+                    {
+                        vote_id: this.votesGeneralData.id,
+                        options: this.votesGeneralList
+                    }
+                )
+                .then(res => {
+                    this.showMessage("success", "保存成功");
+                    axios
+                        .post(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/votes/" +
+                                this.votesGeneralData.id +
+                                "/options"
+                        )
+                        .then(res => {
+                            this.votesGeneralList = res.data.data;
+                        });
+                });
+        },
+        editPlayersList() {
+            for (let item in this.PlayersData) {
+                if (
+                    this.PlayersData[item] === "" ||
+                    this.PlayersData[item] === undefined
+                ) {
+                    this.showMessage("error", "选手资料不完整");
+                    return false;
+                }
+            }
+            if (this.isNewPlayer) {
+                //新增
+                axios
+                    .post(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/votes/applicants",
+                        {
+                            vote_id: this.votesGeneralData.id,
+                            name: this.PlayersData.name,
+                            phone: this.PlayersData.phone,
+                            address: this.PlayersData.address,
+                            image: this.PlayersData.image,
+                            description: this.PlayersData.description,
+                            total: this.PlayersData.total,
+                            is_pass: this.PlayersData.is_pass
+                        }
+                    )
+                    .then(res => {
+                        this.PlayersDialog2 = false;
+                        this.getVotesPlayersList();
+                    });
+            } else {
+                axios
+                    .put(
+                        "/web/" +
+                            store.state.xcx_flag.xcx_flag +
+                            "/api/votes/applicants/" +
+                            this.votesPlayersList[this.thisPlayersIndex].id,
+                        {
+                            vote_id: this.votesGeneralData.id,
+                            name: this.PlayersData.name,
+                            phone: this.PlayersData.phone,
+                            address: this.PlayersData.address,
+                            image: this.PlayersData.image,
+                            description: this.PlayersData.description,
+                            total: this.PlayersData.total,
+                            is_pass: this.PlayersData.is_pass
+                        }
+                    )
+                    .then(res => {
+                        this.showMessage("success", "编辑成功");
+                        this.getVotesPlayersList();
+                        this.PlayersDialog2 = false;
+                    });
+            }
+        },
+        //删除当前选项
+        removeGeneralItem(index) {
+            this.votesGeneralList.splice(index, 1);
+        },
+        //删除当前选手
+        removePlayer(index) {
+            axios
+                .delete(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/votes/applicants/" +
+                        this.votesPlayersList[index].id
+                )
+                .then(res => {
+                    this.showMessage("success", "删除成功");
+                    this.getVotesPlayersList();
+                });
         },
         //format time
         formatDate(time, format = "YY-MM-DD hh:mm:ss") {
@@ -696,29 +1039,48 @@ export default {
         isPassed() {
             if (this.GeneralData.title == "") {
                 this.showMessage("error", "标题不能为空");
-                return false
+                return false;
             }
             if (this.GeneralData.description == "") {
                 this.showMessage("error", "描述不能为空");
                 return false;
             }
             if (this.GeneralData.vote_start_date == "") {
-                if(this.GeneralData.apply_start_date == "" && this.GeneralData.type === 0){
+                if (
+                    this.GeneralData.apply_start_date == "" &&
+                    this.GeneralData.type === 0
+                ) {
                     this.showMessage("error", "时间不能为空");
                 }
                 this.showMessage("error", "时间不能为空");
                 return false;
             }
-            return true
+            // console.log(Date.parse(this.formatDate(nowTime,"YY-MM-DD hh:mm")));
+            // console.log(Date.parse(this.GeneralData.vote_start_date));
+            if (this.isNewVotes) {
+                let nowTime = new Date();
+                if (
+                    Date.parse(this.GeneralData.vote_start_date) <
+                    Date.parse(this.formatDate(nowTime, "YY-MM-DD hh:mm"))
+                ) {
+                    this.showMessage("error", "报名时间不能小于当前");
+                    this.applyIsTrue = false;
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            return true;
         },
         //上传图片
         handleAvatarSuccess(response, file, fileList) {
             axios
                 .post("/qiniuDelete", {
-                    url: this.votesPlayersList[scope.$index].image
+                    url: this.PlayersData.image
                 })
                 .then(res => {
-                    this.votesPlayersList[scope.$index].image = response.url;
+                    this.PlayersData.image = response.url;
                 });
         }
     },
@@ -729,4 +1091,30 @@ export default {
 </script>
 
 <style scoped>
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+}
+.avatar-uploader-icon {
+    border: 1px solid #ddd;
+    font-size: 28px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    margin: 0 auto;
+}
+.avatar {
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+    display: block;
+}
 </style>

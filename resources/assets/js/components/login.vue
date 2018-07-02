@@ -88,6 +88,7 @@ export default {
             store.commit("SET_IDENTITY", {
               identity: response.data.user.identity
             });
+            localStorage.setItem('identity',response.data.user.identity)
             this.loading = true;
             return this.$router.push({ path: "/" });
           },
