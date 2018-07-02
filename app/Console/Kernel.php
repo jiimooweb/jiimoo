@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class Kernel extends ConsoleKernel
@@ -98,9 +99,14 @@ class Kernel extends ConsoleKernel
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();
+                    Log::critical("投票定时任务出现错误：".$e);
                 }
             }
-        })->everyThirtyMinutes()->at('11:30');
+        })->everyThirtyMinutes()->at('17:30')->before(function (){
+            Log::info("投票定时任务开始");
+        })->after(function (){
+            Log::info("投票定时任务结束");
+        });
 
     }
 

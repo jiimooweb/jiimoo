@@ -26,6 +26,8 @@ class WechatPay extends Model
             'app_id'    => config('wechat.payment.default.app_id'),
             'mch_id'    => config('wechat.payment.default.mch_id'),
             'key'   => config('wechat.payment.default.key'),   // API 密钥
+            'cert_path' => '/usr/local/wechat/ssl/33/apiclient_cert.pem',
+            'key_path'  => '/usr/local/wechat/ssl/33/apiclient_key.pem',  
             'notify_url' => $this->notify_url,
         ];
 
@@ -52,6 +54,18 @@ class WechatPay extends Model
 
         return array_merge($payment,['prepay_id' => $prepay_id]);
     }
+
+    public function refund($order) 
+    {
+        $app = $this->getApp();
+        $result = $app->refund->byTransactionId($order->trans_no, 'TK'.$order->order_no, $order->price * 100, $order->price * 100, [
+            // 可在此处传入其他参数，详细参数见微信支付文档
+            'refund_desc' => '用户取消订单',
+        ]);
+
+        return $result;
+    }
+    
 
     
     

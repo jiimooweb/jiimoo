@@ -11,7 +11,7 @@ Route::group(['prefix' => 'foods'], function () {
     Route::post('/orders/init', '\App\Api\Controllers\Foods\OrderController@init');
     Route::post('/orders/commit', '\App\Api\Controllers\Foods\OrderController@commit');
     Route::get('/orders/status_count', '\App\Api\Controllers\Foods\OrderController@status_count');
-    Route::post('/orders/change_status', '\App\Api\Controllers\Foods\OrderController@change_status');
+    Route::post('/orders/cancel_order', '\App\Api\Controllers\Foods\OrderController@cancel_order');
     Route::post('/orders/pay_order', '\App\Api\Controllers\Foods\OrderController@pay_order');
     Route::apiResource('/orders', '\App\Api\Controllers\Foods\OrderController');
     
