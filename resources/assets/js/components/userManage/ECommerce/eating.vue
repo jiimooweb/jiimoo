@@ -90,7 +90,7 @@
                             店名
                         </el-col>
                         <el-col :span="10">
-                            <el-input></el-input>
+                            <el-input v-model="baseSetData.name"></el-input>
                         </el-col>
                     </el-row>
                     <el-row style="margin:20px 0 0;">
@@ -121,7 +121,7 @@
                             </el-switch>
                         </el-col>
                     </el-row>
-                    <el-row style="margin:30px 0 0;">
+                    <el-row style="margin:30px 0 0;" v-if="baseSetData.offer_status">
                         <el-col :span="3">
                             优惠内容
                         </el-col>
@@ -275,6 +275,7 @@ export default {
             typeName: "",
             isNewType: false,
 
+            isNewBaseData:false,
             baseSetData: {
                 name: "",
                 thumb: "",
@@ -578,12 +579,37 @@ export default {
                 )
                 .then(res => {
                     this.baseSetData = res.data.data
-                    this.baseSetData.offer = $.parseJSON(res.data.data.offer)
+                    
+                    if(this.baseSetData.offer === null || this.baseSetData.offer.length === 0){
+                        this.baseSetData = {
+                            name: "",
+                            thumb: "",
+                            notice: "",
+                            offer_status: 1,
+                            offer: []
+                        }
+                        this.isNewBaseData = true
+                    }else{
+                        this.isNewBaseData = false
+                        this.baseSetData.offer = $.parseJSON(res.data.data.offer)
+                    }
+                    
                 });
         },
         //保存基础设置
         editBaseSet(){
-            axios.put("/web/" +
+            if(this.baseSetData.name == ''){
+                this.showMessage('error','店铺名称未填写')
+                return
+            }else if(this.baseSetData.thumb == ''){
+                this.showMessage('error','未上传店铺封面')
+                return
+            }else if(this.baseSetData.offer_status && this.baseSetData.offer == []){
+                this.showMessage('error','未填写满减规则')
+                return
+            }
+            if(this.isNewBaseData){
+                axios.post("/web/" +
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/settings",{
                             name:this.baseSetData.name,
@@ -593,15 +619,29 @@ export default {
                             offer:this.baseSetData.offer
                         }).then(res=>{
                             this.showMessage('success','保存成功')
-            })
+                })
+            }else{
+                axios.put("/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/settings/"+this.baseSetData.id,{
+                            name:this.baseSetData.name,
+                            thumb:this.baseSetData.thumb,
+                            notice:this.baseSetData.notice,
+                            offer_status:this.baseSetData.offer_status,
+                            offer:this.baseSetData.offer
+                        }).then(res=>{
+                            this.showMessage('success','保存成功')
+                })
+            }
+            
         },
         //新增满减规则
         addRulesSale() {
             if (this.baseSetData.offer.length !== 0 && this.baseSetData.offer != null) {
                 if (
-                    this.baseSetData.offer[this.baseSetData.offer.length].condition ==
+                    this.baseSetData.offer[this.baseSetData.offer.length-1].condition ==
                         "" ||
-                    this.baseSetData.offer[this.baseSetData.offer.length].reduce == ""
+                    this.baseSetData.offer[this.baseSetData.offer.length-1].reduce == ""
                 ) {
                     this.showMessage(
                         "error",
