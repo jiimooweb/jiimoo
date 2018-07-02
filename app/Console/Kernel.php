@@ -100,7 +100,7 @@ class Kernel extends ConsoleKernel
                     DB::rollBack();
                 }
             }
-        })->everyThirtyMinutes();
+        })->everyThirtyMinutes()->at('11:30');
     }
 
     /**
