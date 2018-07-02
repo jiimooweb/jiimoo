@@ -43,7 +43,7 @@ class OrderController extends Controller
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
             return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
-        })->with(['products'])->orderBy('id', 'desc')->get();
+        })->where('del_status', 0)->orderBy('id', 'desc')->with(['products'])->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -166,5 +166,16 @@ class OrderController extends Controller
         Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
         //返回结果
         return array_merge($payOrder,['order_id' => $order->id]); 
+    }
+
+    public function delete()
+    {
+        $order = Order::find(request()->id);
+        if($order->status == 0) {
+            $order->delete();
+        }else {
+            $order->update(['del_status' => '1']);
+        }
+        return response()->json(['status' => 'success']);            
     }
 }
