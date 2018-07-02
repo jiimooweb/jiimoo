@@ -178,6 +178,16 @@ class OrderController extends Controller
         return array_merge($payOrder,['order_id' => $order->id]); 
     }
 
+    public function refund_order()
+    {
+        if(Order::where('id', request()->id)->update(['status' => OrderStatus::REFUND, 'refund_reason' => request()->reason])){
+            return response()->json(['status' => 'success', 'msg' => '申请退款成功！']);         
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '申请退款失败！']);  
+        
+    }
+
     public function delete()
     {
         $order = Order::find(request()->id);
