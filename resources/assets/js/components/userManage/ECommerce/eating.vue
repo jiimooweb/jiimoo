@@ -583,7 +583,7 @@ export default {
         },
         //保存基础设置
         editBaseSet(){
-            axios.post("/web/" +
+            axios.put("/web/" +
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/settings",{
                             name:this.baseSetData.name,
