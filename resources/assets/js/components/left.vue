@@ -196,7 +196,6 @@ export default {
                 
                 for(let i=0;i<this.modelList.length;i++){
                     for(let j=0;j<this.modelList[i].children.length;j++){
-                        console.log(this.modelList[i].children);
                         if(this.modelList[i].children[j].has){
                             this.ifValue[i].parentIf = true
                             this.ifValue[i].child[j].childIf = true

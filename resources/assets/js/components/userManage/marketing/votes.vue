@@ -224,63 +224,63 @@
         </el-dialog>
         <!-- 选手信息dialog2 -->
         <el-dialog :visible.sync='PlayersDialog2'>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     名字
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="PlayersData.name"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     图片
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-upload style="margin:0 auto;display:block;" class="avatar-uploader" :headers="headers" action="/qiniuUpload" :show-file-list="false" :on-success="handleAvatarSuccess">
                         <img v-if="PlayersData.image" :src="PlayersData.image" class="avatar" width="100" height='100'>
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="margin:0 auto;display:block;"></i>
                     </el-upload>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     联系方式
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="PlayersData.phone"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     地址
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="PlayersData.address"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     票数
                 </el-col>
-                <el-col>
-                    <el-input v-model="PlayersData.total"></el-input>
+                <el-col :span='20'>
+                    <el-input-number v-model="PlayersData.total" :min="0"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     是否通过审核
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-switch v-model="PlayersData.is_pass" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                     </el-switch>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin:20px 0 0;">
+                <el-col :span='3'>
                     描述
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <quill-editor style="height:280px;" ref="myTextEditor" :content="PlayersData.description" @change="onEditorChange($event)">
                     </quill-editor>
                 </el-col>
@@ -347,7 +347,7 @@ export default {
                 image: "",
                 phone: "",
                 address: "",
-                total: "",
+                total: 0,
                 is_pass: 0,
                 description: ""
             },
@@ -865,7 +865,7 @@ export default {
                     image: "",
                     phone: "",
                     address: "",
-                    total: "",
+                    total: 0,
                     is_pass: 0,
                     description: ""
                 };
