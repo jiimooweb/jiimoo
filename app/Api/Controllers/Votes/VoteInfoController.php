@@ -2,8 +2,11 @@
 
 namespace App\Api\Controllers\Votes;
 
+use App\Http\Requests\Votes\VoteAndOptStoreRequest;
 use App\Models\Votes\Applicant;
 use App\Models\Votes\Option;
+use App\Services\Token;
+use Illuminate\Http\Request;
 use App\Models\Votes\Info;
 use App\Api\Controllers\Controller;
 use App\Http\Requests\Votes\VoteStoreRequest;
@@ -110,11 +113,39 @@ class VoteInfoController extends Controller
         }
     }
 
+    public function voteAndOptStore(VoteAndOptStoreRequest $request)
+    {
+        $list = request([
+            'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
+        ]);
+        //状态判定
+        $now = new Carbon(Carbon::now()->format('Y-m-d H:i')); //当前时间去除秒
+        $voteStartDate = new Carbon($list['vote_start_date']);//投票开始时间
+        if ($now->gte($voteStartDate)) {
+            $list['vote_state'] = 1; //投票开始
+        }
+
+        DB::beginTransaction();
+        try {
+            $info = Info::create($list);
+            $voteID = $info->id;
+            $options = request('options');
+            $now2 = Carbon::now();
+            $data = [];
+            foreach ($options as $option) {
+                array_push($data, ['vote_id' => $voteID, 'content' => $option[0], 'total' => $option[1], 'created_at' => $now2, 'updated_at' => $now2]);
+            }
+            DB::table('votes_options')->insert($data);
+            DB::commit();
+            return response()->json(['status' => 'success', 'msg' => '新增成功！']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '新增失败！']);
+        }
+    }
+
     public function show()
     {
-        $data = Info::find(request()->info);
-        $status = $data ? 'success' : 'error';
-        return response()->json(['status' => $status, 'data' => $data]);
         /*
         $data = Info::with(['options' => function ($query) {
                                 $query->withCount('fans');
@@ -131,6 +162,9 @@ class VoteInfoController extends Controller
         $status = $data ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $data]);
         */
+        $data = Info::find(request()->info);
+        $status = $data ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $data]);
     }
 
     public function update(VoteUpdateRequest $request)
@@ -208,7 +242,6 @@ class VoteInfoController extends Controller
         Redis::hdel('vote_due', $id);
         Redis::hdel('vote_apply_start', $id);
         Redis::hdel('vote_apply_due', $id);
-        return response()->json(['status' => 'success', 'msg' => '删除成功！']);
     }
 
 }

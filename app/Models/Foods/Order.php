@@ -11,11 +11,6 @@ class Order extends Model
 {
     protected $table = 'food_orders';
 
-    public function fan()
-    {
-        return $this->hasOne(\App\Models\Commons\Fan::class, 'id', 'fan_id');
-    }
-
     public function generateOrderNo() 
     {
         return date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
@@ -47,13 +42,5 @@ class Order extends Model
         } 
 
         return ['price_total' => $price_total, 'offer' => $offer,'coupon_offer' => $coupon_offer];
-    }
-
-    public static function getStatusCount(int $fans_id) 
-    {
-        $unpay = self::where(['fan_id' => $fans_id, 'status' => 0])->get()->count();
-        $confirm = self::where(['fan_id' => $fans_id, 'status' => 1])->get()->count();
-        $receipt = self::where(['fan_id' => $fans_id, 'status' => 2])->get()->count();
-        return ['unpay' => $unpay, 'confirm' => $confirm, 'receipt' => $receipt];
     }
 }

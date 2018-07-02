@@ -145,7 +145,7 @@ export default {
         },
         getModule() {
             axios
-                .get("/api/xcx/choice/" + store.state.xcx_flag.xcx_flag||localStorage.getItem('XCXFLAG'))
+                .get("/api/xcx/choice/" + store.state.xcx_flag.xcx_flag)
                 .then(res => {
                     this.hasCombo = res.data.data.hasCombo;
                     this.getAModule();
@@ -219,9 +219,6 @@ export default {
 </script>
 
 <style>
-html,body{
-    margin:0 !important;
-}
 *{
     padding: 0;
 }
