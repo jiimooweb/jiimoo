@@ -22,6 +22,11 @@ class Order extends Model
         return $this->hasMany(OrderProduct::class, 'order_id', 'id');
     }
 
+    public function record()
+    {
+        return $this->hasOne(\App\Models\Coupons\CouponRecord::class, 'id', 'record_id');
+    }
+
     public function generateOrderNo() 
     {
         return date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
