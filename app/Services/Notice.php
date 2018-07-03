@@ -23,7 +23,7 @@ class Notice extends Model
      * @param string $pay_time 支付时间
      * @return void
      */
-    public static function pay_success_notice(int $xcx_id, string $openid, $page = '/pages/index/index', string $prepay_id, string $order_no, $product_name = '任意门奶茶', float $product_price, string $order_status,float $pay_price, string $pay_time)
+    public static function pay_success_notice(int $xcx_id, string $openid, string $page, string $prepay_id, string $order_no, string $product_name, float $product_price, string $order_status,float $pay_price, string $pay_time)
     {
         $template_id = NoticeTemplate::getTemplateIdByMark('PAY_SUCCESS');
         $app = OpenPlatform::getMiniProgram($xcx_id);
