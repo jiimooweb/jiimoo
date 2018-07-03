@@ -67,6 +67,7 @@ class VoteInfoController extends Controller
             'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
         ]);
 
+        $log->addInfo('投票资料：'.$list);
         //状态判定
         $now = new Carbon(Carbon::now()->format('Y-m-d H:i')); //当前时间去除秒
         $voteStartDate = new Carbon($list['vote_start_date']);//投票开始时间

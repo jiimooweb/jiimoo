@@ -4,6 +4,7 @@ namespace App\Models\Foods;
 
 use App\Models\Model;
 use App\Models\Foods\Product;
+use App\Models\Foods\Setting;
 use App\Models\Foods\OrderProduct;
 use App\Models\Coupons\CouponRecord;
 
@@ -31,6 +32,7 @@ class Order extends Model
         $price_total = 0;
         $offer = 0;
         $coupon_offer = 0;
+        $mj_offer = 0;
 
         foreach($products as $row) {
             $product_id = $row['product_id'];
@@ -44,15 +46,26 @@ class Order extends Model
 
             OrderProduct::create(['order_id' => $order_id, 'product_id' => $product_id, 'count' => $count, 'name' => $product['name'], 'thumb' => $product['thumb'], 'c_price' => $product['c_price'] * $count, 'o_price' => ($product['o_price'] ?? 0) * $count]);
         }
-
+        //满减 
+        $setting = Setting::firsr();
+        if($setting->offer_status == 1) {
+            foreach($setting->offer as $offer) {
+                if($price_total > $offer['condition']) {
+                    $mj_offer = $offer['condition'];
+                }
+            }
+        }
+        //优惠券
         if($record_id) {
             CouponRecord::use($record_id);
             $coupon = CouponRecord::find($record_id)->coupon;
             $coupon_offer = intval($coupon['price']);
-            $price_total = $price_total - $coupon_offer;
         } 
 
-        return ['price_total' => $price_total, 'offer' => $offer,'coupon_offer' => $coupon_offer];
+        $price_total = $price_total - $coupon_offer - $mj_offer;
+        
+
+        return ['price_total' => $price_total, 'offer' => $offer,'coupon_offer' => $coupon_offer, 'mj_offer' => $mj_offer];
     }
 
     public static function getStatusCount(int $fans_id) 
