@@ -143,6 +143,65 @@
                     </el-row>
                     <el-button style="margin:20px 0 0;" type="primary" size="small" @click="editBaseSet()">保存</el-button>
                 </el-tab-pane>
+                <el-tab-pane label="订单管理">
+                    <el-tabs tab-position="left">
+                        <el-tab-pane label="全部订单">
+                            <el-table :data='orderList' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
+                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="已完成">
+                            <el-table :data='filterOrderForOut' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
+                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="已支付">
+                            <el-table :data='filterOrderForPaid' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
+                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="未支付">
+                            <el-table :data='filterOrderForUnPaid' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
+                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="退款审核">
+                            <el-table :data='filterOrderForOnRefund' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
+                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="退款成功">
+                            <el-table :data='filterOrderForAfterRefund' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
+                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                    </el-tabs>
+                    
+                </el-tab-pane>
             </el-tabs>
         </el-row>
 
@@ -282,7 +341,10 @@ export default {
                 notice: "",
                 offer_status: "",
                 offer: []
-            }
+            },
+
+
+            orderList:[]
         };
     },
     computed: {
@@ -301,6 +363,83 @@ export default {
             }
             return this.productsList;
         },
+        //已完成
+        filterOrderForOut(){
+            let filterCondition = '3'
+            if (filterCondition) {
+                return this.orderList.filter(function(orderList) {
+                    return ["status"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase()
+                                .indexOf(filterCondition) > -1
+                        );
+                    });
+                });
+            }
+        },
+        //已支付
+        filterOrderForPaid(){
+            let filterCondition = '1'
+            if (filterCondition) {
+                return this.orderList.filter(function(orderList) {
+                    return ["status"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase()
+                                .indexOf(filterCondition) > -1 && String(orderList[key])
+                                .toLowerCase()
+                                .indexOf('-') == -1
+                        );
+                    });
+                });
+            }
+        },
+        //未支付
+        filterOrderForUnPaid(){
+            let filterCondition = '0'
+            if (filterCondition) {
+                return this.orderList.filter(function(orderList) {
+                    return ["status"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase()
+                                .indexOf(filterCondition) > -1
+                        );
+                    });
+                });
+            }
+        },
+        //退款审核
+        filterOrderForOnRefund(){
+            let filterCondition = '-2'
+            if (filterCondition) {
+                return this.orderList.filter(function(orderList) {
+                    return ["status"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase()
+                                .indexOf(filterCondition) > -1
+                        );
+                    });
+                });
+            }
+        },
+        //退款成功
+        filterOrderForAfterRefund(){
+            let filterCondition = '-3'
+            if (filterCondition) {
+                return this.orderList.filter(function(orderList) {
+                    return ["status"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase()
+                                .indexOf(filterCondition) > -1
+                        );
+                    });
+                });
+            }
+        },
         headers() {
             return {
                 token: localStorage.token
@@ -316,6 +455,8 @@ export default {
                 this.getProductsType();
             } else if (tab.index == 2) {
                 this.getbaseSet();
+            } else if(tab.index == 3){
+                this.getOrdersList()
             }
         },
         onEditorChange({ editor, html, text }) {
@@ -653,6 +794,18 @@ export default {
             }else{
                 this.baseSetData.offer.push({ condition: "", reduce: "" })
             }
+        },
+
+
+        //订单管理
+
+        //获取订单列表
+        getOrdersList(){
+            axios.get("/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/orders").then(res=>{
+                this.orderList = res.data.data
+            })
         }
     },
     mounted() {

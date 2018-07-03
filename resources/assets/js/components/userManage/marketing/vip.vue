@@ -284,6 +284,7 @@ export default {
             //
             isNewVip: false,
             isNewGroup: false,
+            isNewTag:false,
             vipList: [
                 {
                     integral: "",
@@ -308,6 +309,7 @@ export default {
             },
             thisVipIndex: "",
             thisGroupIndex: "",
+            thisTagIndex:'',
             vipSet: {
                 status: "",
                 scale: "", //小程序消费积分比
@@ -931,30 +933,55 @@ export default {
             this.tagDialog = true;
             if (i === 0) {
                 this.tagInput = "";
+                this.isNewTag = true
             } else {
                 this.tagInput = this.vipTagList[index].name;
+                this.isNewTag = false
+                this.thisTagIndex = index
             }
         },
         //提交新的tag
         inputNewTag() {
-            if (this.tagInput != "") {
-                axios
-                    .post(
-                        "/web/" +
-                            store.state.xcx_flag.xcx_flag +
-                            "/api/members/tags",
-                        {
-                            name: this.tagInput
-                        }
-                    )
-                    .then(res => {
-                        this.showMessage("success", "标签新建成功");
-                        this.tagDialog = false;
-                        this.getVipTag();
-                    });
-            } else {
-                this.showMessage("error", "标签名称不能为空");
+            if(this.isNewTag){
+                if (this.tagInput != "") {
+                    axios
+                        .post(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/members/tags",
+                            {
+                                name: this.tagInput
+                            }
+                        )
+                        .then(res => {
+                            this.showMessage("success", "标签新建成功");
+                            this.tagDialog = false;
+                            this.getVipTag();
+                        });
+                } else {
+                    this.showMessage("error", "标签名称不能为空");
+                }
+            }else{
+                if (this.tagInput != "") {
+                    axios
+                        .put(
+                            "/web/" +
+                                store.state.xcx_flag.xcx_flag +
+                                "/api/members/tags/"+this.vipTagList[this.thisTagIndex].id,
+                            {
+                                name: this.tagInput
+                            }
+                        )
+                        .then(res => {
+                            this.showMessage("success", "标签修改成功");
+                            this.tagDialog = false;
+                            this.getVipTag();
+                        });
+                } else {
+                    this.showMessage("error", "标签名称不能为空");
+                }
             }
+            
         },
         //删除Tag
         removeTag(index) {

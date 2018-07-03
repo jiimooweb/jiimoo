@@ -1,26 +1,34 @@
 <template>
     <el-main>
-        <el-button type="primary" style="margin-bottom:20px;" @click="openCouponsDialog(0)">新增优惠券</el-button>
-        <el-row style="min-width:1200px;">
-            <el-col :span="7" :offset="1" v-for="(item,key) in couponsList" :key='key' class="couponsCard">
-                <el-card :body-style="{ padding: '10px' }">
-                    <div class="imgPPage">
-                        <div class="imagePage">
-                            <img :src="item.thumb" class="image">
-                        </div>
-                    </div>
-                    <div style="padding: 14px 14px 0 14px;">
-                        <span class="cardName">{{item.name}}</span>
-                        <br>
-                        <time class="time">2018-8-8</time>
-                        <div class="bottom clearfix">
-                            <el-button class="button" @click="removeCoupons(key)" style="margin-top:20px;width:60px;height:30px;" type="danger">删除</el-button>
-                            <el-button class="button" @click="openCouponsDialog(1,key)" style="margin-top:20px;width:60px;height:30px;" type="primary">编辑</el-button>
-                        </div>
-                    </div>
-                </el-card>
-            </el-col>
-        </el-row>
+        <el-tabs type="border-card">
+            <el-tab-pane label="优惠券管理">
+                <el-button type="primary" style="margin:20px 0;" @click="openCouponsDialog(0)">新增优惠券</el-button>
+                <el-row style="min-width:1200px;">
+                    <el-col :span="7" :offset="1" v-for="(item,key) in couponsList" :key='key' class="couponsCard">
+                        <el-card :body-style="{ padding: '10px' }">
+                            <div class="imgPPage">
+                                <div class="imagePage">
+                                    <img :src="item.thumb" class="image">
+                                </div>
+                            </div>
+                            <div style="padding: 14px 14px 0 14px;">
+                                <span class="cardName">{{item.name}}</span>
+                                <br>
+                                <time class="time">2018-8-8</time>
+                                <div class="bottom clearfix">
+                                    <el-button class="button" @click="removeCoupons(key)" style="margin-top:20px;width:60px;height:30px;" type="danger">删除</el-button>
+                                    <el-button class="button" @click="openCouponsDialog(1,key)" style="margin-top:20px;width:60px;height:30px;" type="primary">编辑</el-button>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="优惠券派发">
+                
+            </el-tab-pane>
+        </el-tabs>
+        
         <el-dialog :visible.sync="couponsDialog" class="couponsDialog" width='500px' :title='couponsDialogTitle'>
             <el-row>
                 <el-col>
