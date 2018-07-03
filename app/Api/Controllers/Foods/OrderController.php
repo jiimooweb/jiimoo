@@ -43,7 +43,7 @@ class OrderController extends Controller
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
             return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
-        })->with(['products'])->orderBy('id', 'desc')->get();
+        })->where('del_status', 0)->orderBy('id', 'desc')->with(['products'])->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -78,6 +78,16 @@ class OrderController extends Controller
        
         
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);         
+    }
+
+    //接单，确认订单
+    public function confirm() 
+    {
+        if(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM])){
+            return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '确认失败']);         
     }
 
     public function init() 
@@ -151,7 +161,7 @@ class OrderController extends Controller
             $wechatPay = new WechatPay(config('notify.wechat.foods'));
             $result = $wechatPay->refund($order);
         }
-        $order->update(['status' => -1]);
+        $order->update(['status' => OrderStatus::CANCEL]);
         return response()->json(['status' => 'success', 'result' => $result]);            
     }
 
@@ -167,4 +177,35 @@ class OrderController extends Controller
         //返回结果
         return array_merge($payOrder,['order_id' => $order->id]); 
     }
+
+    public function refund_order()
+    {
+        if(Order::where('id', request()->id)->update(['status' => OrderStatus::REFUND, 'refund_reason' => request()->reason])){
+            return response()->json(['status' => 'success', 'msg' => '申请退款成功！']);         
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '申请退款失败！']);  
+        
+    }
+
+    public function success() 
+    {
+        if(Order::where('id', request()->id)->update(['status' => OrderStatus::SUCCESS])){
+            return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
+        }
+
+        return response()->json(['status' => 'error', 'msg' => '确认失败！']); 
+    }
+
+    public function delete()
+    {
+        $order = Order::find(request()->id);
+        if($order->status == 0) {
+            $order->delete();
+        }else {
+            $order->update(['del_status' => 1]);
+        }
+        return response()->json(['status' => 'success']);            
+    }
+
 }
