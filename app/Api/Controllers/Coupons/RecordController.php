@@ -62,4 +62,11 @@ class RecordController extends Controller
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
     }
 
+    public function get_user_coupons()
+    {
+        $use = CouponRecord::getUserHasCoupons(Token::getUid());
+        $used = CouponRecord::getUserCouponsByUsed(Token::getUid());
+        return response()->json(['status' => 'success', 'use' => $use, 'used' => $used]);    
+    }
+
 }
