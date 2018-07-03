@@ -8,6 +8,7 @@ use App\Models\Foods\Order;
 use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
+use App\Models\Foods\Setting;
 use App\Models\Foods\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
@@ -121,7 +122,7 @@ class OrderController extends Controller
         }
 
         //满减 
-        $setting = \App\Models\Foods\Setting::first();
+        $setting = Setting::first();
         if($setting->offer_status == 1) {
             foreach($setting->offer as $offer) {
                 if($price_total >= $offer['condition']) {
