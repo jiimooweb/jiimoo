@@ -8,6 +8,7 @@ use App\Models\Foods\Order;
 use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
+use App\Models\Foods\Setting;
 use App\Models\Foods\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
@@ -114,14 +115,26 @@ class OrderController extends Controller
     {
         $carts = request('cart');
         $price_total = 0;
+        $mj_offer = 0;
         foreach($carts as $cart) {
             $price = Product::find($cart['product_id']);
             $price_total += $price['c_price'] * $cart['count'];
         }
 
-        $coupons = CouponRecord::getUserAccordCoupons(1 ,$price_total);
+        //满减 
+        $setting = Setting::first();
+        if($setting->offer_status == 1) {
+            $offers = json_decode($setting->offer, true);
+            foreach($offers as $offer) {
+                if($price_total >= $offer['condition']) {
+                    $mj_offer = intval($offer['reduce']);
+                }
+            }
+        }
 
-        return response()->json(['status' => 'success', 'price_total' => $price_total,'coupons' => $coupons]);     
+        $coupons = CouponRecord::getUserAccordCoupons(Token::getUid() ,$price_total);
+
+        return response()->json(['status' => 'success', 'price_total' => $price_total - $mj_offer, 'mj_offer' => $mj_offer,'coupons' => $coupons]);     
     }
 
     public function commit() 
@@ -137,6 +150,7 @@ class OrderController extends Controller
             $order->fan_id = Token::getUid();
             $order->status = OrderStatus::UNPAID;
             $order->remark = request('remark');
+            $order->record_id = $record_id;            
             $order->save();
 
             $data = $order->calcOrderPrice($order->id, $products, $record_id);
@@ -183,6 +197,9 @@ class OrderController extends Controller
             $result = $wechatPay->refund($order);
             if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
                 if($order->update(['status' => OrderStatus::CANCEL])){
+                    if($order->record_id) {
+                        CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
+                    }
                     return response()->json(['status' => 'success', 'result' => $result]);         
                 }
             }
@@ -226,7 +243,11 @@ class OrderController extends Controller
     {
         $order = Order::find(request()->id);
         if($order->status == 0) {
-            $result = DB::transaction(function (){
+            $result = DB::transaction(function () use ($order){
+                //退回优惠券
+                if($order->record_id) {
+                    CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
+                }
                 if($order->delete()) {
                     OrderProduct::where('order_id', request()->id)->delete();
                 }
