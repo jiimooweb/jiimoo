@@ -9,7 +9,8 @@ Route::group(['prefix' => 'foods'], function () {
 
     Route::post('/orders/confirm', '\App\Api\Controllers\Foods\OrderController@confirm');
     Route::post('/orders/confirm_refund', '\App\Api\Controllers\Foods\OrderController@confirm_refund');
-    
+
+    Route::get('/orders/send', '\App\Api\Controllers\Foods\OrderController@send');
     Route::get('/orders/app_index', '\App\Api\Controllers\Foods\OrderController@app_index');
     Route::get('/orders/status_count', '\App\Api\Controllers\Foods\OrderController@status_count');
     Route::post('/orders/delete', '\App\Api\Controllers\Foods\OrderController@delete');

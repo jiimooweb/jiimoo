@@ -9,7 +9,7 @@
 						<el-input type="text" id="user" v-model="loginInfo.user" placeholder="账号："></el-input>
 					</el-form-item>
 					<el-form-item prop="password">
-						<el-input type="password" id="password" v-model="loginInfo.password" placeholder="密码："></el-input>
+						<el-input type="password" id="password" v-model="loginInfo.password" placeholder="密码：" @keyup.enter.native="submitRules('loginInfo')"></el-input>
 					</el-form-item>
 					<el-button class="loginbtn" type="primary" @click="submitRules('loginInfo')">登录</el-button>
 				</el-form>
@@ -38,10 +38,10 @@ export default {
       rules: Rules,
       loading: false,
       loginInfo: {
-        user: "admin",
-        // user: "",
-        password: "Adminjiimoo",
-        // password: "",
+        // user: "admin",
+        user: "",
+        // password: "Adminjiimoo",
+        password: "",
         beDisabled: false
       },
       user_id: store.state.userId

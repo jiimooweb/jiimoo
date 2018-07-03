@@ -68,4 +68,8 @@ class CouponRecord extends Model
 
         return 'error';
     }
+
+    public static function getCouponById($id) {
+        return self::where(['id' => $id])->with(['coupon'])->get();
+    }
 }

@@ -139,13 +139,13 @@
                     
                 </el-col>
                 <el-col :span="5">
-                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:03',end: '24:00'}"></el-time-select>
                 </el-col>
                 <el-col :offset="5" :span="5">
                     <el-date-picker @change="changeVoteTime()" style="width:100%;" :picker-options="pickerOptionsb" v-model="voteTime[1]" type="date" format="yyyy-MM-dd" placeholder="结束日期"></el-date-picker>
                 </el-col>
                 <el-col :span="5">
-                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime1" :picker-options="{start: '00:00',step: '00:03',end: '24:00'}"></el-time-select>
                 </el-col>
             </el-row>
             <el-row style="margin-bottom:20px;">
@@ -205,13 +205,13 @@
                     <el-date-picker @change="changeApplyTime()" style="width:100%;" :picker-options="pickerOptionsc" v-model="applyTime[0]" type="date" format="yyyy-MM-dd" placeholder="开始日期"></el-date-picker>
                 </el-col>
                 <el-col :span="5">
-                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:03',end: '24:00'}"></el-time-select>
                 </el-col>
                 <el-col :offset="5" :span="5">
                     <el-date-picker @change="changeApplyTime()" style="width:100%;" :picker-options="pickerOptionsd" v-model="applyTime[1]" type="date" format="yyyy-MM-dd" placeholder="结束日期"></el-date-picker>
                 </el-col>
                 <el-col :span="5">
-                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:03',end: '24:00'}"></el-time-select>
                 </el-col>
             </el-row>
             <el-row style="margin-bottom:20px;" v-if='GeneralData.type === 0 && GeneralData.is_apply === 1'>

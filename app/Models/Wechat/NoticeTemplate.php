@@ -31,4 +31,16 @@ class NoticeTemplate extends Model
 
         return $templates;
     }
+
+    public static function getTemplateIdByMark($mark) {
+        $xcx_id = session('xcx_id');
+        $template = \App\Models\Commons\NoticeTemplate::where('mark', $mark)->with(['xcx_notice_templates'])->first();
+        foreach($template->xcx_notice_templates as $xcx_template) {
+            if($xcx_template->xcx_id == $xcx_id) {
+                $template_id = $xcx_template->template_id;
+                break;
+            }
+        }
+        return $template_id;
+    }
 }
