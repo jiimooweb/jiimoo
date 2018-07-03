@@ -48,8 +48,9 @@ class Order extends Model
         }
         //满减 
         $setting = Setting::first();
+        $offers = json_decode($setting->offer);
         if($setting->offer_status == 1) {
-            foreach($setting->offer as $offer) {
+            foreach($offers as $offer) {
                 if($price_total >= $offer['condition']) {
                     $mj_offer = $offer['reduce'];
                 }
