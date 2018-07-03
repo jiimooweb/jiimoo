@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        /*
         $schedule->call(function () {
             $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
             $updatedAt = Carbon::now();
@@ -113,7 +115,16 @@ class Kernel extends ConsoleKernel
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务结束');
         });
+        */
 
+        $schedule->call(function () {
+            $updatedAt = Carbon::now();
+            DB::table('votes_infos')->where('id', 39)->update(['description' => $updatedAt]);
+            Log::info("投票测试");
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+            $log->addInfo('投票定时任务开始');
+        })->everyMinute();
     }
 
     /**
