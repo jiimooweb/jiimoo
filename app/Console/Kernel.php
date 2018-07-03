@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel
                     $log->addInfo('投票定时任务出现错误：'.$e);
                 }
             }
-        })->everyMinute()->before(function () {
+        })->at("15:25")->everyMinute()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务开始');
