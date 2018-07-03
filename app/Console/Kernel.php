@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        /*
+
         $schedule->call(function () {
             $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
             $updatedAt = Carbon::now();
@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel
                     $log->addInfo('投票定时任务出现错误：'.$e);
                 }
             }
-        })->at('09:30')->everyThirtyMinutes()->before(function () {
+        })->everyMinute()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务开始');
@@ -115,16 +115,16 @@ class Kernel extends ConsoleKernel
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务结束');
         });
-        */
 
-        $schedule->call(function () {
-            $updatedAt = Carbon::now();
-            DB::table('votes_infos')->where('id', 39)->update(['description' => $updatedAt]);
-            Log::info("投票测试");
-            $log = new Logger('vote');
-            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
-            $log->addInfo('投票定时任务开始');
-        })->everyMinute();
+
+//        $schedule->call(function () {
+//            $updatedAt = Carbon::now();
+//            DB::table('votes_infos')->where('id', 39)->update(['description' => $updatedAt]);
+//            Log::info("投票测试");
+//            $log = new Logger('vote');
+//            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+//            $log->addInfo('投票定时任务开始');
+//        })->everyMinute();
     }
 
     /**
