@@ -303,7 +303,8 @@ export default {
                     // console.log(this.convertBase64UrlToBlob(res.data));
 
                     // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
-                    this.preViewQrcode = res.data;
+                    this.preViewQrcode = window.URL.createObjectURL(res.data);
+                    console.log(this.preViewQrcode);
                     console.log(res.data);
                     
                 },res=>{
