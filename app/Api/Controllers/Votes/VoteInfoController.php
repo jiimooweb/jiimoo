@@ -66,8 +66,9 @@ class VoteInfoController extends Controller
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
             'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
         ]);
+        $string = implode('!', $list);
+        $log->addInfo('投票资料1：'.$string);
 
-        $log->addInfo('投票资料：'.(string)$list);
         //状态判定
         $now = new Carbon(Carbon::now()->format('Y-m-d H:i')); //当前时间去除秒
         $voteStartDate = new Carbon($list['vote_start_date']);//投票开始时间
@@ -87,7 +88,8 @@ class VoteInfoController extends Controller
                 }
             }
         }
-        $log->addInfo('投票资料：'.(string)$list);
+        $string = implode('!', $list);
+        $log->addInfo('投票资料2：'.$string);
 
         DB::beginTransaction();
         try {
@@ -119,6 +121,7 @@ class VoteInfoController extends Controller
             $log->addInfo('投票新增成功');
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
+
     }
 
     public function show()
