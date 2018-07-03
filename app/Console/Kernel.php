@@ -81,10 +81,10 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-            $log->addInfo('$voteDue: '.implode(",", $voteDue));
-            $log->addInfo('$voteStart: '.implode(",", $voteStart));
-            $log->addInfo('$applyDue: '.implode(",", $applyDue));
-            $log->addInfo('$applyStart: '.implode(",", $applyStart));
+            $log->addInfo('$resultVD: '.implode(",", $resultVD));
+            $log->addInfo('$resultVS: '.implode(",", $resultVS));
+            $log->addInfo('$resultAD: '.implode(",", $resultAD));
+            $log->addInfo('$resultAS: '.implode(",", $resultAS));
 /*
             if (count($resultVS) > 0 || count($resultVD) > 0 || count($resultAS) > 0 || count($resultAD) > 0) {
                 DB::beginTransaction();
@@ -114,7 +114,7 @@ class Kernel extends ConsoleKernel
                 }
             }
 */
-        })->at("17:15")->everyFiveMinutes()->before(function () {
+        })->at("17:20")->everyFiveMinutes()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务开始');
