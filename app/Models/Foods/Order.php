@@ -47,7 +47,7 @@ class Order extends Model
             OrderProduct::create(['order_id' => $order_id, 'product_id' => $product_id, 'count' => $count, 'name' => $product['name'], 'thumb' => $product['thumb'], 'c_price' => $product['c_price'] * $count, 'o_price' => ($product['o_price'] ?? 0) * $count]);
         }
         //满减 
-        $setting = Setting::firsr();
+        $setting = Setting::first();
         if($setting->offer_status == 1) {
             foreach($setting->offer as $offer) {
                 if($price_total >= $offer['condition']) {
