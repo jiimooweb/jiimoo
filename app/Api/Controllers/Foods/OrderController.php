@@ -142,6 +142,7 @@ class OrderController extends Controller
             $data = $order->calcOrderPrice($order->id, $products, $record_id);
             
             $order->coupon_offer = $data['coupon_offer'];
+            $order->mj_offer = $data['mj_offer'];
             $order->price = $data['price_total'];
             $order->save();
             
