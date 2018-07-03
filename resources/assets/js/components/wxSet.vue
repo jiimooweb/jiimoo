@@ -303,6 +303,8 @@ export default {
                     // console.log(this.convertBase64UrlToBlob(res.data));
 
                     this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
+                },res=>{
+                    this.showMessage('error','二维码获取错误，请联系管理员,或者稍后再重新获取')
                 });
         },
         //获取体验者列表
