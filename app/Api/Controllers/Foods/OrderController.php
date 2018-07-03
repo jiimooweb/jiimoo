@@ -197,6 +197,9 @@ class OrderController extends Controller
             $result = $wechatPay->refund($order);
             if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
                 if($order->update(['status' => OrderStatus::CANCEL])){
+                    if($order->record_id) {
+                        CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
+                    }
                     return response()->json(['status' => 'success', 'result' => $result]);         
                 }
             }
