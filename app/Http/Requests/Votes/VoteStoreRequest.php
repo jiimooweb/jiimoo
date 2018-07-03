@@ -15,7 +15,7 @@ class VoteStoreRequest extends CommonRequest
      */
     public function rules()
     {
-        $now = new Carbon( Carbon::now()->format('Y-m-d H:i'));//当前时间 去秒
+//        $now = new Carbon( Carbon::now()->format('Y-m-d H:i'));//当前时间 去秒
         $arr = request(['vote_start_date', 'vote_due_date', 'apply_start_date', 'num', 'type']);
         $voteStartDate = $arr['vote_start_date'];
         $voteDueDate = $arr['vote_due_date'];
@@ -23,9 +23,11 @@ class VoteStoreRequest extends CommonRequest
         $type = $arr['type']; //判断投票类型：0:活动。1:一般。
         $rules = [
             'title' => 'bail|required|max:50',
-            'description' => 'bail|required|max:5000',
-            'vote_start_date' => "bail|required|after_or_equal:{$now}",
-            'vote_due_date' => "bail|required|after_or_equal:{$now}|after:{$voteStartDate}",
+            'description' => 'bail|required',
+//            'vote_start_date' => "bail|required|after_or_equal:{$now}",
+//            'vote_due_date' => "bail|required|after_or_equal:{$now}|after:{$voteStartDate}",
+            'vote_due_date' => "bail|required|after:{$voteStartDate}",
+            'vote_start_date' => "required",
             'num' => 'bail|required|integer|min:1',
             'limit' => "bail|required|integer|max:{$num}|min:1",
         ];
@@ -34,7 +36,8 @@ class VoteStoreRequest extends CommonRequest
             $isApply = request('is_apply');
             if($isApply == 1){
                 $applyStartDate = $arr['apply_start_date'];
-                $rules['apply_start_date'] = "bail|required|after_or_equal:{$now}|before:{$voteDueDate}";
+//                $rules['apply_start_date'] = "bail|required|after_or_equal:{$now}|before:{$voteDueDate}";
+                $rules['apply_start_date'] = "bail|before:{$voteDueDate}";
                 $rules['apply_due_date'] = "bail|required|after:{$applyStartDate}|before_or_equal:{$voteDueDate}";
             }
             $rules['is_check'] = 'required';
@@ -64,14 +67,14 @@ class VoteStoreRequest extends CommonRequest
             'required'                       => ':attribute必填',
             'integer'                        => ':attribute仅能输入数字',
             'title.max'                      => ':attribute不能超过50个字符',
-            'description.max'                => 'attribute不能超过5000个字符',
-            'vote_start_date.after_or_equal' => ':attribute不能小于当前时间',
-            'vote_due_date.after_or_equal'   => ':attribute不能小于当前时间',
+//            'description.max'                => 'attribute不能超过5000个字符',
+//            'vote_start_date.after_or_equal' => ':attribute不能小于当前时间',
+//            'vote_due_date.after_or_equal'   => ':attribute不能小于当前时间',
             'vote_due_date.after'            => ':attribute不能小于投票开始时间',
             'num.min'                        => ':attribute不能小于1',
             'limit.max'                      => ':attribute不能超过可投票数',
             'limit.min'                      => ':attribute不能小于1',
-            'apply_start_date.after_or_equal'=> ':attribute不能小于当前时间',
+//            'apply_start_date.after_or_equal'=> ':attribute不能小于当前时间',
             'apply_start_date.before'        => ':attribute不能超过投票截止时间',
             'apply_due_date.after'           => ':attribute不能小于报名开始时间',
             'apply_due_date.before_or_equal' => ':attribute不能超过投票截止时间',

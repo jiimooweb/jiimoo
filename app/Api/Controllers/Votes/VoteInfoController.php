@@ -9,14 +9,19 @@ use App\Api\Controllers\Controller;
 use App\Http\Requests\Votes\VoteStoreRequest;
 use App\Http\Requests\Votes\VoteUpdateRequest;
 use Carbon\Carbon;
+use Monolog\Handler\StreamHandler;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Monolog\Logger;
 
 
 class VoteInfoController extends Controller
 {
     public function index()
     {
+        $log = new Logger('vote');
+        $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+        $log->addInfo('投票任务开始');
         $data = Info::withCount('fans')->with('applicants')->with('options')
             ->orderBy('vote_state', 'desc')->orderBy('created_at', 'desc')->paginate(config('common.pagesize'));
 
@@ -86,6 +91,9 @@ class VoteInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+            $log->addInfo('投票新增失败：$e');
             return response()->json(['status' => 'error', 'msg' => '新增失败']);
         }
         if ($info) {
