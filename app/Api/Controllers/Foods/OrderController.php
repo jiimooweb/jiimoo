@@ -80,14 +80,16 @@ class OrderController extends Controller
     public function confirm_refund()
     {
         $order = Order::find(request()->id);
-        $wechatPay = new WechatPay(config('notify.wechat.foods'));
-        $result = $wechatPay->refund($order);
-        if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
-            if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
-                return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
-            }
+        if($order->pay == 0 && $order->status == OrderStatus::REFUND) {
+            $wechatPay = new WechatPay(config('notify.wechat.foods'));
+            $result = $wechatPay->refund($order);
+            if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
+                if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
+                    return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
+                }
+            }    
         }
-        
+
         return response()->json(['status' => 'error', 'msg' => '确认退款失败！']);         
         
     }
