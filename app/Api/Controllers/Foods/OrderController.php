@@ -121,7 +121,7 @@ class OrderController extends Controller
         }
 
         //满减 
-        $setting = Setting::first();
+        $setting = \App\Models\Foods\Setting::first();
         if($setting->offer_status == 1) {
             foreach($setting->offer as $offer) {
                 if($price_total >= $offer['condition']) {
