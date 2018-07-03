@@ -230,6 +230,23 @@ class OrderController extends Controller
         $wechatPay = new WechatPay(config('notify.wechat.foods'));
         //保存prepayid
         $payOrder = $wechatPay->unify($order);
+
+        $template_id = \App\Models\Wechat\NoticeTemplate::getTemplateIdByMark('PAY_SUCCESS');
+        $app = OpenPlatform::getMiniProgram($order->xcx_id);
+        $app->template_message->send([
+            'touser' => $openid,
+            'template_id' => $template_id,
+            'page' => '/pages/index/index',
+            'form_id' => $payOrder['prepay_id'],
+            'data' => [
+                'keyword1' => $order->order_no,
+                'keyword2' => '任意门奶茶',
+                'keyword3' => $order->price,
+                'keyword4' => '支付成功',
+                'keyword5' => $order->price,
+                'keyword6' => $order->pay_time,
+            ],
+        ]);
         Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
         //返回结果
         return array_merge($payOrder,['order_id' => $order->id]); 
@@ -280,7 +297,6 @@ class OrderController extends Controller
             $query->select('id','openid');
         }])->find(165);
         $template_id = \App\Models\Wechat\NoticeTemplate::getTemplateIdByMark('PAY_SUCCESS');
-
         // dd(NoticeTemplate::getTemplate(session('xcx_id')));
         $app = OpenPlatform::getMiniProgram($order->xcx_id);
         $reslut = $app->template_message->send([
