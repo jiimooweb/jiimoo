@@ -283,7 +283,7 @@ class OrderController extends Controller
 
         // dd(NoticeTemplate::getTemplate(session('xcx_id')));
         $app = OpenPlatform::getMiniProgram($order->xcx_id);
-        $app->template_message->send([
+        $reslut = $app->template_message->send([
             'touser' => $order->fan->openid,
             'template_id' => $template_id,
             'page' => '/pages/index/index',
@@ -297,6 +297,8 @@ class OrderController extends Controller
                 'keyword6' => $order->pay_time,
             ],
         ]);
+
+        return $reslut;
         
     }
 
