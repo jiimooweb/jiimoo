@@ -109,7 +109,7 @@
 			</el-card>
 		</el-main>
 		<el-dialog title="使用微信扫描二维码" :visible.sync="qrcodePreview" width="400px">
-			<img :src="preViewQrcode" style="margin:0 auto;display:block;">
+			<img :src="preViewQrcode" style="margin:0 auto;display:block;width:100%;">
 		</el-dialog>
 		<el-dialog title="添加体验者" :visible.sync="dialogVisible" width="30%">
 			<el-row>
@@ -295,7 +295,7 @@ export default {
         },
         getPreviewQrcode() {
             axios
-                .get("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode/")
+                .get("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode/",{responseType:'blob'})
                 .then(res => {
                     this.qrcodePreview = true;
                     // this.preViewQrcode = "data:image/png;base64," + res.data;
@@ -305,7 +305,7 @@ export default {
                     // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
                     console.log(res.data);
                     window.URL.revokeObjectURL(this.preViewQrcode)
-                    this.preViewQrcode = window.URL.createObjectURL(res);
+                    this.preViewQrcode = window.URL.createObjectURL(res.data);
                     console.log(this.preViewQrcode);
                     
                 },res=>{
