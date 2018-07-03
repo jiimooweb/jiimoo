@@ -295,7 +295,7 @@ export default {
         },
         getPreviewQrcode() {
             axios
-                .get("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode/")
+                .get("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode/",{responseType:'blob'})
                 .then(res => {
                     this.qrcodePreview = true;
                     // this.preViewQrcode = "data:image/png;base64," + res.data;
@@ -305,7 +305,7 @@ export default {
                     // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
                     console.log(res.data);
                     window.URL.revokeObjectURL(this.preViewQrcode)
-                    this.preViewQrcode = window.URL.createObjectURL(res.data);
+                    this.preViewQrcode = window.URL.createObjectURL(res);
                     console.log(this.preViewQrcode);
                     
                 },res=>{

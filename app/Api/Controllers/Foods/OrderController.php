@@ -8,6 +8,7 @@ use App\Models\Foods\Order;
 use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
+use App\Models\Foods\Setting;
 use App\Models\Foods\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
@@ -114,14 +115,26 @@ class OrderController extends Controller
     {
         $carts = request('cart');
         $price_total = 0;
+        $mj_offer = 0;
         foreach($carts as $cart) {
             $price = Product::find($cart['product_id']);
             $price_total += $price['c_price'] * $cart['count'];
         }
 
+        //满减 
+        $setting = Setting::first();
+        if($setting->offer_status == 1) {
+            $offers = json_decode($setting->offer, true);
+            foreach($offers as $offer) {
+                if($price_total >= $offer['condition']) {
+                    $mj_offer = $offer['reduce'];
+                }
+            }
+        }
+
         $coupons = CouponRecord::getUserAccordCoupons(1 ,$price_total);
 
-        return response()->json(['status' => 'success', 'price_total' => $price_total,'coupons' => $coupons]);     
+        return response()->json(['status' => 'success', 'price_total' => $price_total - $mj_offer, 'mj_offer' => $mj_offer,'coupons' => $coupons]);     
     }
 
     public function commit() 
