@@ -287,7 +287,7 @@ class OrderController extends Controller
             'touser' => $order->fan->openid,
             'template_id' => $template_id,
             'page' => '/pages/index/index',
-            'form_id' => 'wx02212940840899422628fe1b2674707885',
+            'form_id' => 'wx03180648228789c82bac17463678742005',
             'data' => [
                 'keyword1' => $order->order_no,
                 'keyword2' => '任意门奶茶',
