@@ -302,7 +302,10 @@ export default {
                     var reader = new FileReader();
                     // console.log(this.convertBase64UrlToBlob(res.data));
 
-                    this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
+                    // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
+                    this.preViewQrcode = res.data;
+                    console.log(res.data);
+                    
                 },res=>{
                     this.showMessage('error','二维码获取错误，请联系管理员,或者稍后再重新获取')
                 });
