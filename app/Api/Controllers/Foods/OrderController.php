@@ -243,7 +243,7 @@ class OrderController extends Controller
     {
         $order = Order::find(request()->id);
         if($order->status == 0) {
-            $result = DB::transaction(function (){
+            $result = DB::transaction(function () use ($order){
                 //退回优惠券
                 if($order->record_id) {
                     CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
