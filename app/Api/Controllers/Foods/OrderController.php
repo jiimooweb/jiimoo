@@ -244,6 +244,10 @@ class OrderController extends Controller
         $order = Order::find(request()->id);
         if($order->status == 0) {
             $result = DB::transaction(function (){
+                //退回优惠券
+                if($order->record_id) {
+                    CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
+                }
                 if($order->delete()) {
                     OrderProduct::where('order_id', request()->id)->delete();
                 }
