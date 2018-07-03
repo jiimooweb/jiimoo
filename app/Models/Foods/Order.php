@@ -51,7 +51,7 @@ class Order extends Model
         if($setting->offer_status == 1) {
             foreach($setting->offer as $offer) {
                 if($price_total > $offer['condition']) {
-                    $mj_offer = $offer['condition'];
+                    $mj_offer = $offer['reduce'];
                 }
             }
         }
