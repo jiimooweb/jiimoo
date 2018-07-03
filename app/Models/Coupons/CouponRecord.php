@@ -45,7 +45,7 @@ class CouponRecord extends Model
             return '用户ID不能为空';
         }
 
-        return self::where(['fan_id' => $uid])->whereIn('status', [-1, 1])->with(['coupon'])->withoutGlobalScope()->get()->toArray();
+        return self::where(['fan_id' => $uid])->whereIn('status', [-1, 1])->with(['coupon'])->withoutGlobalScope('data')->get()->toArray();
     }
 
     //获取用户符合条件的优惠券    
