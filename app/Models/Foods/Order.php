@@ -50,7 +50,7 @@ class Order extends Model
         $setting = Setting::firsr();
         if($setting->offer_status == 1) {
             foreach($setting->offer as $offer) {
-                if($price_total > $offer['condition']) {
+                if($price_total >= $offer['condition']) {
                     $mj_offer = $offer['reduce'];
                 }
             }
