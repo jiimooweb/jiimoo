@@ -2,10 +2,11 @@
 
 namespace App\Api\Controllers\Coupons;
 
+use App\Services\Token;
 use Illuminate\Http\Request;
 use App\Models\Coupons\Coupon;
-use App\Models\Coupons\CouponRecord;
 use App\Api\Controllers\Controller;
+use App\Models\Coupons\CouponRecord;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Coupons\RecordRequest;
 
