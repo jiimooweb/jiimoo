@@ -225,7 +225,12 @@ class OrderController extends Controller
     {
         $order = Order::find(request()->id);
         if($order->status == 0) {
-            $order->delete();
+            $result = DB::transaction(function (){
+                if($order->delete()) {
+                    OrderProduct::where('order_id', request()->id)->delete();
+                }
+                return ['status' => 'success', 'msg' => '删除成功！'];               
+            }, 5);
         }else {
             $order->update(['del_status' => 1]);
         }
