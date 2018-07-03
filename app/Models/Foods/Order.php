@@ -52,7 +52,7 @@ class Order extends Model
         if($setting->offer_status == 1) {
             foreach($offers as $offer) {
                 if($price_total >= $offer['condition']) {
-                    $mj_offer = $offer['reduce'];
+                    $mj_offer = intval($offer['reduce']);
                 }
             }
         }
