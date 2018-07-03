@@ -86,7 +86,11 @@ class VoteInfoController extends Controller
                 } else {
                     $list['apply_state'] = 0; //报名开始
                 }
+            }else{
+                unset($list['apply_start_date'],$list['apply_due_date']);
             }
+        }else{
+            unset($list['apply_start_date'],$list['apply_due_date']);
         }
         $string = implode('!', $list);
         $log->addInfo('投票资料2：'.$string);
