@@ -58,16 +58,10 @@ class VoteInfoController extends Controller
 
     public function store(VoteStoreRequest $request)
     {
-        $log = new Logger('vote');
-        $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
-        $log->addInfo('投票执行保存');
-
         $list = request([
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
             'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
         ]);
-        $string = implode('!', $list);
-        $log->addInfo('投票资料1：'.$string);
 
         //状态判定
         $now = new Carbon(Carbon::now()->format('Y-m-d H:i')); //当前时间去除秒
@@ -92,8 +86,6 @@ class VoteInfoController extends Controller
         }else{
             unset($list['apply_start_date'],$list['apply_due_date']);
         }
-        $string = implode('!', $list);
-        $log->addInfo('投票资料2：'.$string);
 
         DB::beginTransaction();
         try {
@@ -101,6 +93,8 @@ class VoteInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票新增失败：'.$e);
             return response()->json(['status' => 'error', 'msg' => '新增失败']);
         }
@@ -122,7 +116,6 @@ class VoteInfoController extends Controller
                     }
                 }
             }
-            $log->addInfo('投票新增成功');
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
 
@@ -167,12 +160,19 @@ class VoteInfoController extends Controller
         }
         $type = $list['type'];
         if ($type == 0) {//投票类型为活动
-            $applyStartDate = new Carbon($list['apply_start_date']); //报名开始时间
-            if ($now->gte($applyStartDate)) {
-                $list['apply_state'] = 1; //报名开始
-            } else {
-                $list['apply_state'] = 0;
+            if ($list['is_apply'] == 1) {
+                $applyStartDate = new Carbon($list['apply_start_date']); //报名开始时间
+                if ($now->gte($applyStartDate)) {
+                    $list['apply_state'] = 1; //报名开始
+                } else {
+                    $list['apply_state'] = 0;
+                }
+            }else{
+                unset($list['apply_start_date'],$list['apply_due_date']);
             }
+
+        }else{
+            unset($list['apply_start_date'],$list['apply_due_date']);
         }
 
         $id = request()->info;
@@ -181,6 +181,9 @@ class VoteInfoController extends Controller
             $Info = Info::where('id', $id)->update($list);
             DB::commit();
         } catch (\Exception $e) {
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+            $log->addInfo('投票新增失败：'.$e);
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => '修改失败！']);
         }
