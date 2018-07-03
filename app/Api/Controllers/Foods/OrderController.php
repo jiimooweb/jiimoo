@@ -124,9 +124,11 @@ class OrderController extends Controller
         //满减 
         $setting = Setting::first();
         if($setting->offer_status == 1) {
-            $offers = json_decode($setting->offer);
+            $offers = json_decode($setting->offer, true);
             foreach($offers as $offer) {
-                var_dump($offer);
+                if($price_total >= $offer['condition']) {
+                    $mj_offer = $offer['reduce'];
+                }
             }
         }
 
