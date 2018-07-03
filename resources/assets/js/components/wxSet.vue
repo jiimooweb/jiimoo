@@ -302,7 +302,14 @@ export default {
                     var reader = new FileReader();
                     // console.log(this.convertBase64UrlToBlob(res.data));
 
-                    this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
+                    // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
+                    console.log(res.data);
+                    window.URL.revokeObjectURL(this.preViewQrcode)
+                    this.preViewQrcode = window.URL.createObjectURL(res.data);
+                    console.log(this.preViewQrcode);
+                    
+                },res=>{
+                    this.showMessage('error','二维码获取错误，请联系管理员,或者稍后再重新获取')
                 });
         },
         //获取体验者列表

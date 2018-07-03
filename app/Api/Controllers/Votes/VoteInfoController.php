@@ -9,8 +9,10 @@ use App\Api\Controllers\Controller;
 use App\Http\Requests\Votes\VoteStoreRequest;
 use App\Http\Requests\Votes\VoteUpdateRequest;
 use Carbon\Carbon;
+use Monolog\Handler\StreamHandler;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Monolog\Logger;
 
 
 class VoteInfoController extends Controller
@@ -56,6 +58,10 @@ class VoteInfoController extends Controller
 
     public function store(VoteStoreRequest $request)
     {
+        $log = new Logger('vote');
+        $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+        $log->addInfo('投票执行保存');
+
         $list = request([
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
             'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
@@ -80,12 +86,15 @@ class VoteInfoController extends Controller
                 }
             }
         }
+        $log->addInfo('投票资料：'.$list);
+
         DB::beginTransaction();
         try {
             $info = Info::create($list);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            $log->addInfo('投票新增失败：'.$e);
             return response()->json(['status' => 'error', 'msg' => '新增失败']);
         }
         if ($info) {
@@ -106,6 +115,7 @@ class VoteInfoController extends Controller
                     }
                 }
             }
+            $log->addInfo('投票新增成功：');
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);
         }
     }
