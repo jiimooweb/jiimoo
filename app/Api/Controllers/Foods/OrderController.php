@@ -3,6 +3,7 @@
 namespace App\Api\Controllers\Foods;
 
 use App\Services\Token;
+use App\Services\Notice;
 use App\Utils\OrderStatus;
 use App\Models\Foods\Order;
 use App\Services\WechatPay;
@@ -77,8 +78,10 @@ class OrderController extends Controller
     //接单，确认订单
     public function confirm() 
     {
-        if(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM])){
+        $order = Order::with('fan')->find(request()->id);
+        if($order->update(['status' => OrderStatus::CONFIRM])){
             //发送模板消息
+            Notice::pay_success_notice($order->id, $order->fan->openid, null, $order->prepay_id, $order->order_no, null,$order->price, '已确认订单,待收货', $order->price, $order->pay_time);
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
         }
 
@@ -230,23 +233,6 @@ class OrderController extends Controller
         $wechatPay = new WechatPay(config('notify.wechat.foods'));
         //保存prepayid
         $payOrder = $wechatPay->unify($order);
-
-        $template_id = \App\Models\Wechat\NoticeTemplate::getTemplateIdByMark('PAY_SUCCESS');
-        $app = OpenPlatform::getMiniProgram($order->xcx_id);
-        $app->template_message->send([
-            'touser' => $openid,
-            'template_id' => $template_id,
-            'page' => '/pages/index/index',
-            'form_id' => $payOrder['prepay_id'],
-            'data' => [
-                'keyword1' => $order->order_no,
-                'keyword2' => '任意门奶茶',
-                'keyword3' => $order->price,
-                'keyword4' => '支付成功',
-                'keyword5' => $order->price,
-                'keyword6' => $order->pay_time,
-            ],
-        ]);
         Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);
         //返回结果
         return array_merge($payOrder,['order_id' => $order->id]); 
