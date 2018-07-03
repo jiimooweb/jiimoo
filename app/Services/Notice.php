@@ -35,9 +35,9 @@ class Notice extends Model
             'data' => [
                 'keyword1' => $order_no,
                 'keyword2' => $product_name,
-                'keyword3' => $product_price,
+                'keyword3' => $product_price . '元',
                 'keyword4' => $order_status,
-                'keyword5' => $pay_price,
+                'keyword5' => $pay_price . '元',
                 'keyword6' => $pay_time,
             ],
         ]);
