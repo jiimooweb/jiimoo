@@ -28,4 +28,8 @@ mix.webpackConfig({
   }
 });
 
-mix.browserSync('127.0.0.1:8000');
+// mix.browserSync('127.0.0.1:8000');
+
+if (mix.config.inProduction) {
+  mix.version();
+}
