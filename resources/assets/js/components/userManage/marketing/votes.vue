@@ -41,7 +41,7 @@
                 </el-table-column>
             </el-table>
         </el-row>
-        
+
         <!-- 一般选项列表 -->
         <el-row v-show='votesType === 1'>
             <!-- <p>一般选项列表</p> -->
@@ -108,7 +108,7 @@
         </el-row>
 
         <!-- 选项投票信息dialog -->
-        <el-dialog :visible.sync='GeneralDialog' :title="dialogTitle">
+        <el-dialog :visible.sync='GeneralDialog' :title="dialogTitle" width="950px">
             <el-row style="margin-bottom:20px;">
                 <el-col :span="5" style="text-align:center;">
                     投票标题
@@ -132,12 +132,17 @@
                 <el-col :span="5" style="text-align:center;">
                     投票时间
                 </el-col>
-                <el-col :span="10">
-                    <el-date-picker style="width:100%;" :picker-options="pickerOptions" v-model="voteTime" format="yyyy-MM-dd" type="daterange" @change="changeVoteTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-                    </el-date-picker>
+                <el-col :span="5">
+                    <!-- <el-date-picker style="width:100%;" :picker-options="pickerOptions" v-model="voteTime" format="yyyy-MM-dd" type="daterange" @change="changeVoteTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                    </el-date-picker> -->
+                    <el-date-picker @change="changeVoteTime()" style="width:100%;" :picker-options="pickerOptionsa" v-model="voteTime[0]" type="date" format="yyyy-MM-dd" placeholder="开始日期"></el-date-picker>
+                    
+                </el-col>
+                <el-col :span="5">
+                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
                 </el-col>
                 <el-col :offset="5" :span="5">
-                    <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                    <el-date-picker @change="changeVoteTime()" style="width:100%;" :picker-options="pickerOptionsb" v-model="voteTime[1]" type="date" format="yyyy-MM-dd" placeholder="结束日期"></el-date-picker>
                 </el-col>
                 <el-col :span="5">
                     <el-time-select @change="changeVoteTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime1" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
@@ -185,12 +190,25 @@
                 <el-col :span="5" style="text-align:center;">
                     报名时间
                 </el-col>
-                <el-col :span="10">
+                <!-- <el-col :span="10">
                     <el-date-picker style="width:100%;" :picker-options="pickerOptions1" v-model="applyTime" format="yyyy-MM-dd" type="daterange" @change="changeApplyTime()" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                 </el-col>
                 <el-col :offset="5" :span="5">
                     <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col>
+                <el-col :span="5">
+                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col> -->
+
+                <el-col :span="5">
+                    <el-date-picker @change="changeApplyTime()" style="width:100%;" :picker-options="pickerOptionsc" v-model="applyTime[0]" type="date" format="yyyy-MM-dd" placeholder="开始日期"></el-date-picker>
+                </el-col>
+                <el-col :span="5">
+                    <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="起始时间" format='HH:mm' v-model="startTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
+                </el-col>
+                <el-col :offset="5" :span="5">
+                    <el-date-picker @change="changeApplyTime()" style="width:100%;" :picker-options="pickerOptionsd" v-model="applyTime[1]" type="date" format="yyyy-MM-dd" placeholder="结束日期"></el-date-picker>
                 </el-col>
                 <el-col :span="5">
                     <el-time-select @change="changeApplyTime()" align='center' style="width:90%;display:block;float:right;" placeholder="结束时间" v-model="endTime2" :picker-options="{start: '00:00',step: '00:30',end: '24:00'}"></el-time-select>
@@ -298,12 +316,12 @@
             </el-row>
             <el-row>
 
-            <el-button style='float:right' @click="removeVotesDialog = false" size="small">取消</el-button>
-            <el-button style='float:right;margin-right:10px;' @click="removeVotes(removeIndex)" type="primary" size="small">确定</el-button>
+                <el-button style='float:right' @click="removeVotesDialog = false" size="small">取消</el-button>
+                <el-button style='float:right;margin-right:10px;' @click="removeVotes(removeIndex)" type="primary" size="small">确定</el-button>
             </el-row>
         </el-dialog>
     </el-main>
-    
+
 </template>
 <script>
 import store from "@/vuex/store";
@@ -323,8 +341,8 @@ export default {
             isNewVotes: false,
             applyIsTrue: false,
 
-            removeVotesDialog:false,
-            removeIndex:'',
+            removeVotesDialog: false,
+            removeIndex: "",
             //一般选项列表
             voteTime: [],
             applyTime: [],
@@ -352,9 +370,24 @@ export default {
                 description: ""
             },
             votesPlayersList: [],
-            pickerOptions: {
+            pickerOptionsa:{
                 disabledDate: time => {
-                    return Date.now() - 8.64e7 > time.getTime();
+                    return Date.now() - 8.64e7 > time.getTime() || Date.parse(new Date(this.voteTime[1])) < time.getTime();
+                }
+            },
+            pickerOptionsb:{
+                disabledDate: time => {
+                    return Date.parse(new Date(this.voteTime[0])) > time.getTime() || Date.now() - 8.64e7 > time.getTime();
+                }
+            },
+            pickerOptionsc:{
+                disabledDate: time => {
+                    return Date.parse(new Date(this.voteTime[1])) < time.getTime() || Date.parse(new Date(this.voteTime[0])) > time.getTime() || Date.now() - 8.64e7 > time.getTime() || Date.parse(new Date(this.applyTime[1])) < time.getTime();
+                }
+            },
+            pickerOptionsd:{
+                disabledDate: time => {
+                    return Date.parse(new Date(this.voteTime[1])) < time.getTime() || Date.parse(new Date(this.applyTime[0])) > time.getTime() || Date.now() - 8.64e7 > time.getTime();
                 }
             },
             pickerOptions1: {
@@ -375,9 +408,9 @@ export default {
         }
     },
     methods: {
-        getRemoveIndex(index){
-            this.removeIndex = index
-            this.removeVotesDialog = true
+        getRemoveIndex(index) {
+            this.removeIndex = index;
+            this.removeVotesDialog = true;
         },
         //
         onEditorChange1({ editor, html, text }) {
@@ -739,7 +772,7 @@ export default {
                 .then(res => {
                     this.showMessage("success", "删除成功");
                     this.getVotesList();
-                    this.removeVotesDialog = false
+                    this.removeVotesDialog = false;
                 });
         },
         //更改时间
@@ -753,18 +786,25 @@ export default {
                 " " +
                 this.endTime1;
             // console.log(Date.parse(this.formatDate(nowTime,"YY-MM-DD hh:mm")));
-            // console.log(Date.parse(this.GeneralData.vote_start_date));
+            // console.log(Date.parse(this.GeneralData.vote_due_date));
+            console.log( Date.parse(this.GeneralData.vote_due_date) < Date.parse(this.GeneralData.vote_start_date));
+            
 
             let nowTime = new Date();
             if (
                 Date.parse(this.GeneralData.vote_start_date) <
                 Date.parse(this.formatDate(nowTime, "YY-MM-DD hh:mm"))
             ) {
-                this.showMessage("error", "报名时间不能小于当前");
+                this.showMessage("error", "活动时间不能小于当前时间");
                 this.applyIsTrue = false;
                 return false;
             } else {
                 this.applyIsTrue = true;
+            }
+            if( Date.parse(this.GeneralData.vote_due_date) < Date.parse(this.GeneralData.vote_start_date)){
+                 this.showMessage("error", "投票开始时间不能大于投票结束时间");
+                this.applyIsTrue = false;
+                return false;
             }
             if (this.GeneralData.apply_due_date != "") {
                 if (
@@ -820,6 +860,11 @@ export default {
                     this.applyIsTrue = false;
                 } else {
                     this.applyIsTrue = true;
+                }
+                if( Date.parse(this.GeneralData.apply_start_date) > Date.parse(this.GeneralData.apply_due_date)){
+                    this.showMessage("error", "报名开始时间不能大于报名结束时间");
+                    this.applyIsTrue = false;
+                    return false;
                 }
             }
         },
