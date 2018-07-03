@@ -305,7 +305,7 @@ export default {
                     // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
                     console.log(res.data);
                     window.URL.revokeObjectURL(this.preViewQrcode)
-                    this.preViewQrcode = window.URL.createObjectURL(res);
+                    this.preViewQrcode = window.URL.createObjectURL(res.data);
                     console.log(this.preViewQrcode);
                     
                 },res=>{
