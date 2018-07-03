@@ -125,12 +125,11 @@ class OrderController extends Controller
         $setting = Setting::first();
         if($setting->offer_status == 1) {
             $offers = json_decode($setting->offer);
-            dd($offers);
-            // foreach($offers as $offer) {
-            //     if($price_total >= $offer['condition']) {
-            //         $mj_offer = $offer['reduce'];
-            //     }
-            // }
+            foreach($offers as $offer) {
+                if($price_total >= $offer['condition']) {
+                    $mj_offer = $offer['reduce'];
+                }
+            }
         }
 
         $coupons = CouponRecord::getUserAccordCoupons(1 ,$price_total);
