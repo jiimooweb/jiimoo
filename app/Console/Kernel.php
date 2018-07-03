@@ -34,6 +34,9 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         $schedule->call(function () {
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+
             $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
             $updatedAt = Carbon::now();
             $voteStart = Redis::hgetall('vote_start');
@@ -78,7 +81,11 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-
+            $log->addInfo('$voteDue: '.implode(",", $voteDue));
+            $log->addInfo('$voteStart: '.implode(",", $voteStart));
+            $log->addInfo('$applyDue: '.implode(",", $applyDue));
+            $log->addInfo('$applyStart: '.implode(",", $applyStart));
+/*
             if (count($resultVS) > 0 || count($resultVD) > 0 || count($resultAS) > 0 || count($resultAD) > 0) {
                 DB::beginTransaction();
                 try {
@@ -106,7 +113,8 @@ class Kernel extends ConsoleKernel
                     $log->addInfo('投票定时任务出现错误：'.$e);
                 }
             }
-        })->at("16:45")->everyFiveMinutes()->before(function () {
+*/
+        })->at("17:15")->everyFiveMinutes()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务开始');
