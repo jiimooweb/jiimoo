@@ -41,11 +41,11 @@ export default {
     data() {
         return {
             fansList: [],
-            statusFilter:'',
+            statusFilter:1,
             statusList:[
                 {value:'',label:'所有用户'},
-                {value:1,label:'已授权'},
-                {value:0,label:'未授权'}
+                {value:'1',label:'已授权'},
+                {value:'0',label:'未授权'}
                 ]
         };
     },

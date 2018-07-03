@@ -408,7 +408,7 @@ export default {
                         thumb: this.fixMoudle.fileUrl,
                         author: this.fixMoudle.author,
                         content: this.content,
-                        cate_id: this.value
+                        cate_id: this.fixMoudle.cate_id
                     }
                 )
                 .then(res => {
