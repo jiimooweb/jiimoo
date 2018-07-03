@@ -81,11 +81,9 @@ class OrderController extends Controller
         $order = Order::with('fan')->find(request()->id);
         if($order->update(['status' => OrderStatus::CONFIRM])){
             //发送模板消息
-            Notice::pay_success_notice($order->id, $order->fan->openid, null, $order->prepay_id, $order->order_no, null,$order->price, '已确认订单,待收货', $order->price, $order->pay_time);
+            Notice::pay_success_notice($order->id, $order->fan->openid, '', $order->prepay_id, $order->order_no, '',$order->price, '已确认订单,待收货', $order->price, $order->pay_time);
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
         }
-
-        
 
         return response()->json(['status' => 'error', 'msg' => '确认失败']);         
     }
