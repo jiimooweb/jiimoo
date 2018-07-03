@@ -127,7 +127,7 @@ class OrderController extends Controller
             $offers = json_decode($setting->offer, true);
             foreach($offers as $offer) {
                 if($price_total >= $offer['condition']) {
-                    $mj_offer = $offer['reduce'];
+                    $mj_offer = intval($offer['reduce']);
                 }
             }
         }
