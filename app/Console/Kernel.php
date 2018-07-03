@@ -34,6 +34,9 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         $schedule->call(function () {
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+
             $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
             $updatedAt = Carbon::now();
             $voteStart = Redis::hgetall('vote_start');
@@ -105,8 +108,10 @@ class Kernel extends ConsoleKernel
                     $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
                     $log->addInfo('投票定时任务出现错误：'.$e);
                 }
+            }else{
+                $log->addInfo('投票定时任务皆完成');
             }
-        })->everyMinute()->before(function () {
+        })->at("17:25")->everyFiveMinutes()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务开始');
@@ -116,15 +121,6 @@ class Kernel extends ConsoleKernel
             $log->addInfo('投票定时任务结束');
         });
 
-
-//        $schedule->call(function () {
-//            $updatedAt = Carbon::now();
-//            DB::table('votes_infos')->where('id', 39)->update(['description' => $updatedAt]);
-//            Log::info("投票测试");
-//            $log = new Logger('vote');
-//            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
-//            $log->addInfo('投票定时任务开始');
-//        })->everyMinute();
     }
 
     /**

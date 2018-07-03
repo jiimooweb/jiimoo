@@ -6,6 +6,7 @@ use App\Http\Requests\Votes\ApplicantStoreRequest;
 use App\Models\Votes\Applicant;
 use App\Models\Votes\Info;
 use App\Api\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantInfoController extends Controller
 {
@@ -55,7 +56,6 @@ class ApplicantInfoController extends Controller
         } else {
             $list['num'] = Applicant::where('vote_id', $list['vote_id'])->max('num') + 1;
         }
-
         DB::beginTransaction();
         try {
             Applicant::create($list);

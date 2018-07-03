@@ -9,10 +9,12 @@ use App\Services\WechatPay;
 use Illuminate\Http\Request;
 use App\Models\Foods\Product;
 use App\Models\Foods\Setting;
+use App\Services\OpenPlatform;
 use App\Models\Foods\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use App\Api\Controllers\Controller;
 use App\Models\Coupons\CouponRecord;
+use App\Models\Wechat\NoticeTemplate;
 use App\Http\Requests\Foods\CateRequest;
 
 class OrderController extends Controller
@@ -30,7 +32,11 @@ class OrderController extends Controller
             return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
         })->when($order_no, function($query) use ($order_no){
             return $query->where('order_no', 'like', '%'.$order_no.'%');
-        })->with(['products'])->orderBy('id', 'desc')->get();
+        })->with(['products'])->with(['record' => function($query) {
+            $query->with(['coupon' => function($query) {
+                $query->select('id','name');
+            }])->select('id','coupon_id','title');
+        }])->orderBy('id', 'desc')->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -72,8 +78,11 @@ class OrderController extends Controller
     public function confirm() 
     {
         if(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM])){
+            //发送模板消息
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
         }
+
+        
 
         return response()->json(['status' => 'error', 'msg' => '确认失败']);         
     }
@@ -81,18 +90,24 @@ class OrderController extends Controller
     public function confirm_refund()
     {
         $order = Order::find(request()->id);
-        if($order->pay == 0 && $order->status == OrderStatus::REFUND) {
-            $wechatPay = new WechatPay(config('notify.wechat.foods'));
-            $result = $wechatPay->refund($order);
-            if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
-                if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
-                    return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
-                }
-            }    
+        
+        if(requset()->review  == 'agree'){
+            if($order->pay == 0 && $order->status == OrderStatus::REFUND) {
+                $wechatPay = new WechatPay(config('notify.wechat.foods'));
+                $result = $wechatPay->refund($order);
+                if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
+                    if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
+                        return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
+                    }
+                }    
+            }
+        }else{
+            if($order->update(['status' => OrderStatus::REFUND_FAIL])){
+                return response()->json(['status' => 'success', 'msg' => '拒绝退款成功！']);         
+            }
         }
 
-        return response()->json(['status' => 'error', 'msg' => '确认退款失败！']);         
-        
+        return response()->json(['status' => 'error', 'msg' => '确认退款失败！']);            
     }
 
     //——————小程序————————
@@ -257,6 +272,34 @@ class OrderController extends Controller
             $order->update(['del_status' => 1]);
         }
         return response()->json(['status' => 'success']);            
+    }
+
+    public function send() {
+        //165
+        $order = Order::with(['fan' => function($query) {
+            $query->select('id','openid');
+        }])->find(165);
+        $template_id = \App\Models\Wechat\NoticeTemplate::getTemplateIdByMark('PAY_SUCCESS');
+
+        // dd(NoticeTemplate::getTemplate(session('xcx_id')));
+        $app = OpenPlatform::getMiniProgram($order->xcx_id);
+        $reslut = $app->template_message->send([
+            'touser' => $order->fan->openid,
+            'template_id' => $template_id,
+            'page' => '/pages/index/index',
+            'form_id' => 'wx02212940840899422628fe1b2674707885',
+            'data' => [
+                'keyword1' => $order->order_no,
+                'keyword2' => '任意门奶茶',
+                'keyword3' => $order->price,
+                'keyword4' => '已接单',
+                'keyword5' => $order->price,
+                'keyword6' => $order->pay_time,
+            ],
+        ]);
+
+        return $reslut;
+        
     }
 
 }

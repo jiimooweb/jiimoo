@@ -4,6 +4,7 @@ namespace App\Utils;
 
 class OrderStatus
 {
+    const REFUND_FAIL = -4;  //退款失败
     const REFUND_SUCCESS = -3;  //退款成功
     const REFUND = -2;  //退款
     const CANCEL = -1;  //取消
