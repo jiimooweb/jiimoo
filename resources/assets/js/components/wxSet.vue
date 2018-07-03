@@ -109,7 +109,7 @@
 			</el-card>
 		</el-main>
 		<el-dialog title="使用微信扫描二维码" :visible.sync="qrcodePreview" width="400px">
-			<img :src="preViewQrcode" style="margin:0 auto;display:block;">
+			<img :src="preViewQrcode" style="margin:0 auto;display:block;width:100%;">
 		</el-dialog>
 		<el-dialog title="添加体验者" :visible.sync="dialogVisible" width="30%">
 			<el-row>
