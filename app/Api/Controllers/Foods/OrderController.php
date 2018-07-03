@@ -132,7 +132,7 @@ class OrderController extends Controller
             }
         }
 
-        $coupons = CouponRecord::getUserAccordCoupons(1 ,$price_total);
+        $coupons = CouponRecord::getUserAccordCoupons(Token::getUid() ,$price_total);
 
         return response()->json(['status' => 'success', 'price_total' => $price_total - $mj_offer, 'mj_offer' => $mj_offer,'coupons' => $coupons]);     
     }
