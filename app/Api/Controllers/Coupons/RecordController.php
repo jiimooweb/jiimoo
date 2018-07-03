@@ -2,10 +2,11 @@
 
 namespace App\Api\Controllers\Coupons;
 
+use App\Services\Token;
 use Illuminate\Http\Request;
 use App\Models\Coupons\Coupon;
-use App\Models\Coupons\CouponRecord;
 use App\Api\Controllers\Controller;
+use App\Models\Coupons\CouponRecord;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Coupons\RecordRequest;
 
@@ -60,6 +61,13 @@ class RecordController extends Controller
         }
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);     
+    }
+
+    public function get_user_coupons()
+    {
+        $use = CouponRecord::getUserHasCoupons(Token::getUid());
+        $used = CouponRecord::getUserCouponsByUsed(Token::getUid());
+        return response()->json(['status' => 'success', 'use' => $use, 'used' => $used]);    
     }
 
 }

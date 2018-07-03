@@ -2,13 +2,14 @@
 
 namespace App\Console;
 
-use App\Models\Votes\Info;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class Kernel extends ConsoleKernel
 {
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
         $schedule->call(function () {
             $now = new Carbon(Carbon::now()->format('Y-m-d H:i'));
             $updatedAt = Carbon::now();
@@ -50,12 +52,12 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach ($voteStart as $id => $value) {
-                if(array_key_exists($id,$voteDue)){
-                    Redis::hdel('vote_start',$id);
-                }else{
+                if (array_key_exists($id, $resultVD)) {
+                    Redis::hdel('vote_start', $id);
+                } else {
                     $date = new Carbon($value);
                     if ($now->gte($date)) {
-                       array_push($resultVS, $id);
+                        array_push($resultVS, $id);
                     }
 
                 }
@@ -67,9 +69,9 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach ($applyStart as $id => $value) {
-                if(array_key_exists($id,$applyDue)){
-                    Redis::hdel('vote_apply_start',$id);
-                }else{
+                if (array_key_exists($id, $resultAD)) {
+                    Redis::hdel('vote_apply_start', $id);
+                } else {
                     $date = new Carbon($value);
                     if ($now->gte($date)) {
                         array_push($resultAS, $id);
@@ -77,37 +79,52 @@ class Kernel extends ConsoleKernel
                 }
             }
 
-            if (count($resultVS) > 0||count($resultVD) > 0||count($resultAS) > 0||count($resultAD) > 0) {
+            if (count($resultVS) > 0 || count($resultVD) > 0 || count($resultAS) > 0 || count($resultAD) > 0) {
                 DB::beginTransaction();
                 try {
                     foreach ($resultVS as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['vote_state' => 1, 'updated_at' => $updatedAt]);
-                        Redis::hdel('vote_start',$id);
+                        Redis::hdel('vote_start', $id);
                     }
                     foreach ($resultVD as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['vote_state' => -1, 'updated_at' => $updatedAt]);
-                        Redis::hdel('vote_due',$id);
+                        Redis::hdel('vote_due', $id);
                     }
                     foreach ($resultAS as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['apply_state' => 1, 'updated_at' => $updatedAt]);
-                        Redis::hdel('vote_apply_start',$id);
+                        Redis::hdel('vote_apply_start', $id);
                     }
                     foreach ($resultAD as $id) {
                         DB::table('votes_infos')->where('id', $id)->update(['apply_state' => -1, 'updated_at' => $updatedAt]);
-                        Redis::hdel('vote_apply_due',$id);
+                        Redis::hdel('vote_apply_due', $id);
                     }
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    Log::critical("投票定时任务出现错误：".$e);
+                    $log = new Logger('vote');
+                    $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+                    $log->addInfo('投票定时任务出现错误：'.$e);
                 }
             }
-        })->everyThirtyMinutes()->at('17:30')->before(function (){
-            Log::info("投票定时任务开始");
-        })->after(function (){
-            Log::info("投票定时任务结束");
+        })->everyMinute()->before(function () {
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+            $log->addInfo('投票定时任务开始');
+        })->after(function () {
+            $log = new Logger('vote');
+            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+            $log->addInfo('投票定时任务结束');
         });
 
+
+//        $schedule->call(function () {
+//            $updatedAt = Carbon::now();
+//            DB::table('votes_infos')->where('id', 39)->update(['description' => $updatedAt]);
+//            Log::info("投票测试");
+//            $log = new Logger('vote');
+//            $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
+//            $log->addInfo('投票定时任务开始');
+//        })->everyMinute();
     }
 
     /**
