@@ -37,7 +37,7 @@ class OrderController extends Controller
             $query->with(['coupon' => function($query) {
                 $query->select('id','name');
             }])->select('id','coupon_id','title');
-        }])->with(['memebr'])->orderBy('id', 'desc')->get()->paginate(30);
+        }])->with(['memebr'])->orderBy('id', 'desc')->paginate(30);
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }

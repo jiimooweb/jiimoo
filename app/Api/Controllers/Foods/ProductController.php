@@ -17,7 +17,7 @@ class ProductController extends Controller
             return $query->where('name', 'like', '%'.$request->keyword.'%');
         })->when($request->cate_id, function($query) use ($request) {
             return $query->where('cate_id', $request->cate_id);
-        })->get()->paginate(config('common.pagesize'));
+        })->paginate(config('common.pagesize'));
         return response()->json(['status' => 'success', 'data' => $products]);
     }
 

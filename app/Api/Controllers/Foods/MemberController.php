@@ -12,14 +12,14 @@ class MemberController extends Controller
     
     public function index() 
     {
-        $members = Member::withCount('products')->get();
+        $members = Member::get();
         
         return response()->json(['status' => 'success', 'data' => $members]);
     }
 
     public function store(MemberRequest $requset) 
     {   
-        $member = Member::create(request(['name']));
+        $member = Member::create(request()->all());
         if($member) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $member]);               
         }
@@ -36,7 +36,7 @@ class MemberController extends Controller
 
     public function update(MemberRequest $requset) 
     {
-        if(Member::where('id', request()->member)->update(request(['name']))) {
+        if(Member::where('id', request()->member)->update(request()->all())) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
