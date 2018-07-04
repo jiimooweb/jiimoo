@@ -55,4 +55,15 @@ class MemberController extends Controller
         
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);         
     }
+
+    public function getuser()
+    {
+        $member = Member::where('fan_id', Token::getUid())->first();
+        if(isset($member)) {
+            return response()->json(['status' => 'success']);               
+        }
+
+        return response()->json(['status' => 'error']);               
+        
+    }
 }

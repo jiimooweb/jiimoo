@@ -24,6 +24,7 @@ Route::group(['prefix' => 'foods'], function () {
     
     Route::apiResource('/settings', '\App\Api\Controllers\Foods\SettingController', ['only' => ['index', 'store', 'update']]);
 
+    Route::apiResource('/members/getuser', '\App\Api\Controllers\Foods\MemberController@getuser');
     Route::apiResource('/members', '\App\Api\Controllers\Foods\MemberController');
 
 });
