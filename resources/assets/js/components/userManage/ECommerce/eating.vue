@@ -24,37 +24,37 @@
                                 <el-table-column prop="name" label="商品名称"></el-table-column>
                                 <el-table-column label="图片" width="150" align="center">
                                     <template slot-scope="scope">
-                                        <img :src="productsList[scope.$index].thumb" width="80px" height='80px'>
+                                        <img :src="searchfilter[scope.$index].thumb" width="80px" height='80px'>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="c_price" label="现价" width="100" align="center"></el-table-column>
                                 <el-table-column label="原价" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <p style="text-decoration:line-through">{{productsList[scope.$index].o_price}}</p>
+                                        <p style="text-decoration:line-through">{{searchfilter[scope.$index].o_price}}</p>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="intro" label="简介"></el-table-column>
                                 <el-table-column label="上架" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].display" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].display" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="热卖" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].hot" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].hot" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="推荐" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].recommend" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].recommend" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="卖完" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].oversell" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].oversell" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
@@ -85,6 +85,20 @@
                 </el-tab-pane>
                 <!-- 基础设置 -->
                 <el-tab-pane label="基础设置">
+                    <el-row v-if="false">
+                        <audio controls="controls">
+                            <source :src="aUrl">
+                        </audio>
+                    </el-row>
+                    <el-row style="margin:20px 0 0;">
+                        <el-col :span="3">
+                            店铺营业开关
+                        </el-col>
+                        <el-col :span="10">
+                            <el-switch v-model="baseSetData.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                            </el-switch>
+                        </el-col>
+                    </el-row>
                     <el-row style="margin:20px 0 0;">
                         <el-col :span="3">
                             店名
@@ -114,6 +128,15 @@
                     </el-row>
                     <el-row style="margin:20px 0 0;">
                         <el-col :span="3">
+                            用户是否需要填写（电话，地址）
+                        </el-col>
+                        <el-col :span="10">
+                            <el-switch v-model="baseSetData.verify" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                            </el-switch>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:20px 0 0;">
+                        <el-col :span="3">
                             是否开启满减优惠
                         </el-col>
                         <el-col :span="10">
@@ -123,7 +146,7 @@
                     </el-row>
                     <el-row style="margin:30px 0 0;" v-if="baseSetData.offer_status">
                         <el-col :span="3">
-                            优惠内容
+                            满减内容
                         </el-col>
                         <el-col :span="10">
                             <el-button type="primary" size="small" style="margin:0 0 20px;" @click="addRulesSale()">添加规则</el-button>
@@ -139,6 +162,9 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
+                        </el-col>
+                        <el-col :offset="3" :span="10">
+                            <tip slass="primary" value="满减优惠请按从低到高填写"></tip>
                         </el-col>
                     </el-row>
                     <el-button style="margin:20px 0 0;" type="primary" size="small" @click="editBaseSet()">保存</el-button>
@@ -370,10 +396,12 @@
 import store from "@/vuex/store";
 import axios from "axios";
 import VueAxios from "vue-axios";
+import tip from "@/components/tip.vue";
 import { quillEditor } from "vue-quill-editor";
 export default {
     data() {
         return {
+            aUrl:"data:audio/wav;base64,//MoxAAMUFXwAU8QAGePjKfIOJuWMugC2FerhuC4HA3oe7V7PsEDmXB8Hwc+CDsuD5//wff///////8uf4YV1doX2ry2Xv2Y//MoxAkPUcqcAZpoAIFALWcUsZslh6qjJFyCMb2TcK8e5J+h2W6H/oILP//////ppuh//+ggS7wiBP/3B+T///oV//3jKX9U//MoxAYOmhawAdoQADTgGULIPxq41ZkZLK3uzT8/8atJn+ZXb6f///////0dL0pTZtyMhE3nqd2tbQYWepajH7lKQOHHp0yG//MoxAYNKHa8yp5gSABsgGg5FnuPbMBBcIFgTm7dRkTpX6znV////2rRPGb0J2o1hUDCZYdQ+upppRxVX2ZaYI0AbhrWTW71//MoxAwO4IasAG5gSFu2aYTcDaQB2Sf0ll0oGno///2/7BtBYPDmVhtUeVDo0lUUFyQEDsQHaDyC4qShRf4xjimAT+DeBOtS//MoxAsNWa68AJtKlC6i6KYJGUm+nJRv/////////Ipzn+ryFA5yXUCD/BxOEDg4Olj1uxO+oor9BeEgDDBYWm4f/7mFMy26//MoxBAQWKLIAFYeTCoGCf0vAgi2CEHijq/53DfzxALL+UOUIE/aJ7aChMyFTrKqRRpqRf9CDR47/6P1L/01+s4MYAZggiO1//MoxAkNGPrMAJPQcSziU5xHxah6lXF22OleIoH6r1mFuAnAgATBwIVqXeFbuESi4e7hJFxg0BJqECj6Im8BrDGJeTVBH2Dn//MoxA8NGPbMyIPGcR6B/S5X0PFfEyBsiYo2F47OwM1gJiNKpKSVY3G6gkMGBBAbTk9VGkkcu1m2wAHpg4A8lqNisL2Kxma0//MoxBUNQHcaXmtSStQSip8YfNRNEoVGpYCqVP2hqeU3KPNSjShec//U6TPr1qMQnA9XGsc6AUTGxWu1rWGADjB/PSJFP/////MoxBsKaG6wAJZSKP/+V1B4cA3DMOz3sk1RIvcInAdeLp46eCAqFMJs60DII7df7ff///1//////+noQqc/1+/1bxpUQnat//MoxCwM4iqkAKNEmFlPl8tcX0a6EckgAAAEkgHoBJgL5+cOjpOQBHydywxebF///////uLg8XIf1vnDgog+Ik///wNV8hlV//MoxDMLyFL6XmwyJk2ljOvMA1gVamvL6fsRdWBwxCpmKu////+hIsePAJxBKvvFankkKhEg3bbRbaKB/8aTiVZXpLRtVnNR//MoxD4KSFbEAA4wJFV+4YU06DWV7//+tzJZyBEJTpEYHVERKd4ND/////+VVQ2222SPlNXJAP5jCeFJzRbiMBIBMPWm6agq//MoxE8NKHryX0YYAgF4C//s6DDMQBuLg//lxnPF83DmDldgKIMT+S5gaFxnYKYPgah5kA0GE/63T34cwwU7mVlf///rstzp//MoxFUX6mKwy4poALvJf/8vAYgEAYCq/983q7QRlekjnJ6atS8RANhkm4U/W6XlBh0lzcbmmtmNTy+7VNSTmu2f0kkSSqUc//MoxDAQiUbAAdgwAKoapHDSJFFtBQCidQWez6vR9NUVUGuSyQWgAeqKIMBICqcSasZ/TqZikcTfFvQap/+X7+E919Xve1db//MoxCgSYf8KXlPEm9w77xnG9++KXYxkIggOQcggikW9v////X5G3ncjORxC0bVU5YfUdAbhLmZYhuCEPWStdqXPWDCDkzGD//MoxBkRgT7Mym4McFPe/GVQLl/MPCwdBLfBA07O73uVXyIvKqsuiJRJiBhl5SaegyS//0xrxQaCKPxnwrOUKwQcFmkTdlBq//MoxA4O8VbAAJUElABhE4eUZE2aUQ/EcLdQ5JdfzZT+R/QGX0Chn7ASBm1ECjnaYBFnJf8V10LNNlX6YoAA+oo+M/brF5h9//MoxA0LyHq8AJ4gSMmZa2gGBgNAwUt9FZdU1R5uGtK/s/ER5hYSuPKNoNId//Qq/+fgT4CESasm6Tm6hMkaEjIX//v///////MoxBgPUwq4AHhEuf//1c7FkYchU7/T/+U7odGzq5GJ1/t/5FO8ltvI0jXai0BjkVkq///6XWUhm/T+1f+yzqYjurpbv9mq//MoxBULWv68AAAKuX3R6zWKgiPLHnRCOrlOVSlUJiDjhohYu3Uw/AAPkz7/04Y///////////TX60pY51pVu9qy/WtXdJCX//MoxCIMqjLRlAhEmKCGEF/R5Y7SUAwrfsqWlDCC//z96jvDvBThhlzUaEZ5KABO///////////eis/RDNOb//T6lRZjo4MS//MoxCoNOi68AHiEmL/+IkJAxUBG7act1syzqDlIiQCNAr4yJkWSVvQFsNFb/t/6f///////b/UOjgO361YXP6yI5yS27536//MoxDAMqeKwAJqKmLwaSgZ359Zu60RqAOcAHNhbK03brD6CMn/+pH/1Cf/////On/hB7C0sVcW5I97neFXev9vqj//8w/+///MoxDgMgYasyqNElPqR36spUOC00NGdWNEyaOh4Yig5XY5/P/+MiNv9f///jpz/5gUJ/F/i3zn///yFPeHf/VJKH207Dvkg//MoxEENKYacVNqOlFPvqQ8i+eVj869vuNek3n2IThAdHDMRAqJBOB5T/5gGl7hkDssR/9X0Kntv222P1UlGTutVh2UNLh8Q//MoxEcNSJKUK1oYAg5DlFooNWclSTGii4IxDVwDMU3Mz6ReFoBvANJb2om7Mmo3Ljt+i9aSCaaE4h/N3QfcwKhqeBd3nFIy//MoxEwXeWrAy5iIAOOeU/wTP8uFyv/+UHOuLxOHkf//86eB/hfEuZrfEF+nB6C/jhOlWxasYEAaAOwoHIeR0mrXm59BVjnO//MoxCkSiTbQAc9YAOqm6dtu/ZMTU1VT102HLuDAOAkGlJ7Rui//3OuW3//7daowwD/szD//LSMADAEvSpYQrDIgAzkv/7Co//MoxBkNGJ7ZlUkoAHgCHt5kFlO1vI4hna/KjQVAQ+Gv///93///grWfFQj5bGIcM3hEIF5Q1g/6G1PP4wY6jyLhwTgKjORf//MoxB8UIyJwAZtQAAEBBk5P/5k04WNf+IQfoSK//+/U9P//ypOhpOft//+v1mFScux5//////V3nn9XONJ18/9k/Aw33Hdz//MoxAkPWc7Iy5g4ALOzoKWrIGgkd5qc4+ruisko4LCIHAxx+760La8//Ss////v//se7ff/yoy1k+ZFdbn9ZUQKSaOH/+/y//MoxAYMmHq8y9gwAJqLtiAWlAW1xrZ3Ls0mOr9ftLe/+6sHHfZ////2i4SBp61TRAXHqLEzICNC9f/9YzT8Ak0g+AVRefM5//MoxA4MIHqsAMveSDwC4HCAvC4k5RsfcrOyNKuZrk/3f////XUe+wGiP/////l1EETbltFoAoH9HgQDAA01JhIKCAcApZFt//MoxBgNIHruXlpMSpYDBCVf9AnLiYq9RcMht6Rgd//1a/////////j1CTdlu2AGAwHxYACyQEqyMYuT7atito6BVd3J21s///MoxB4NQILuXmvYSlhkbiI85/OsEv///+j/////tqFqhZIDBMckkkAgHohxQA6Jk/chouUtajpFj7TFi8kvhhSqcQOB8Pgg//MoxCQNAIK5H1EQAuESwfEHEC/9X8v//////+j/rw2+Mi18vctDgby/7W4HpFkctEXNwF4hv5I+OAuGigLEJAfY3/oMX03P//MoxCsWUXqwAZiYAJbMpe/9TIsxul/m9i+npESJgdhbQKPz5zKNDZ4V/P1cEgdUSLL/8o6PptAoQeWV///xCBDGPuta68Iy//MoxAwM+WbUAc9oANDnz59GtGyHgJCamrVomISMcjfOGq/1v/V/p/dSZKIL+cX0u4bfqDD+iHeB7f8SEg/5kBXB6j6nUdBv//MoxBMLgXLMAIxKlFEJf1E0YfqIn/3/Wy0uVFB9X3MKel3DfExzmf5mEgEcv6ZDQ2s/9QnoFVNOuoUKFvSH6iZf+j/1/qJH//MoxCAMgXLIAISKlD16AKZmtxI79Y3iLzvUb///6gYz5/hMQCqCibIvpmADwMtP0C+AG41fs7BJDV/1M/0f//3O/U0ep4b6//MoxCkNGVLAyptUcJ/I+32dP+v/FA5ytRIZY5aBaAKB2oGZoASwJKR9e8yMyHFBVv7kgQSwur5oUgr+hv///6hRNz493Jf///MoxC8NMTbqXmrEcv/////QRUSG5BJIIB9SR0Z0AHgGuc5rOaMQCom/xkLR395StXCgLFv/zpJZ36vX6uvWCp0qFYNf//8c//MoxDUNOMqtHpKEcq1ySuwudEQIHmwNm35GeXHVTBQmhA195H/fJ3hoGgClDbrq0wS/57//d////ngm5v///6pMQU1FMy45//MoxDsM8HIoANaSSDkuNaqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//MoxEIAAANIAAAAAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//MoxH0AAANIAAAAAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//MoxLgAAANIAAAAAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
             productsTypeList: [],
             searchTypeList: [],
             productsList: [],
@@ -417,6 +445,7 @@ export default {
             orderList:[]
         };
     },
+    components: { tip },
     computed: {
         searchfilter: function() {
             var search = this.search.type;
@@ -840,6 +869,7 @@ export default {
                 axios.post("/web/" +
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/settings",{
+                            status:this.baseSetData.status,
                             name:this.baseSetData.name,
                             thumb:this.baseSetData.thumb,
                             notice:this.baseSetData.notice,
@@ -852,6 +882,7 @@ export default {
                 axios.put("/web/" +
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/settings/"+this.baseSetData.id,{
+                            status:this.baseSetData.status,
                             name:this.baseSetData.name,
                             thumb:this.baseSetData.thumb,
                             notice:this.baseSetData.notice,
@@ -891,7 +922,7 @@ export default {
             axios.get("/web/" +
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/orders").then(res=>{
-                this.orderList = res.data.data
+                this.orderList = res.data.data.data
             })
         },
 

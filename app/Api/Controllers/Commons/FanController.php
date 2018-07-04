@@ -11,7 +11,7 @@ class FanController extends Controller
     
     public function index() 
     {
-        $fans = Fan::get();
+        $fans = Fan::paginate(config('common.pagesize'));
         return response()->json(['status' => 'success', 'data' => $fans]);
     }
 

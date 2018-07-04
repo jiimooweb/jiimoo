@@ -26,6 +26,8 @@ class OrderController extends Controller
         $status = request()->status;
         $order_no = request()->order_no;
         $fan_id = request()->fan_id;
+        $start_time = request()->start_time;
+        $end_time = request()->end_time;
         
         $orders = Order::when($status >= -1, function($query) use ($status){
             return $query->where('status', $status);
@@ -37,7 +39,7 @@ class OrderController extends Controller
             $query->with(['coupon' => function($query) {
                 $query->select('id','name');
             }])->select('id','coupon_id','title');
-        }])->orderBy('id', 'desc')->get();
+        }])->where([['created_at','>=', $start_time],['updated_at','<=', $end_time]])->orderBy('id', 'desc')->paginate(30);
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -122,7 +124,7 @@ class OrderController extends Controller
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
             return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
-        })->where('del_status', 0)->orderBy('id', 'desc')->with(['products'])->get();
+        })->with(['member'])->where('del_status', 0)->orderBy('id', 'desc')->with(['products'])->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -215,6 +217,10 @@ class OrderController extends Controller
                 if($order->update(['status' => OrderStatus::CANCEL])){
                     if($order->record_id) {
                         CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
+                    }
+                    //TODO 发送通知
+                    if(request()->client_type == 'web') {
+
                     }
                     return response()->json(['status' => 'success', 'result' => $result]);         
                 }
