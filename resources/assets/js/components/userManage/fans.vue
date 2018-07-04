@@ -11,7 +11,6 @@
                 </el-select>
             </el-col>
         </el-row>
-        
         <el-table :data="searchfilter?searchfilter:''" style="width: 100%">
             <el-table-column prop="id" label="ID" width="100">
             </el-table-column>
@@ -23,7 +22,6 @@
                     <p v-if="searchfilter[scope.$index].gender === 1">男</p>
                     <p v-if="searchfilter[scope.$index].gender === 2">女</p>
                 </template>
-                
             </el-table-column>
             <el-table-column label="头像" header-align='center' width="120">
                 <template slot-scope='scope'>
@@ -62,7 +60,7 @@ export default {
             axios
                 .get("/web/" + store.state.xcx_flag.xcx_flag + "/api/fans")
                 .then(res => {
-                    this.fansList = res.data.data;
+                    this.fansList = res.data.data.data;
                 });
         }
     },
