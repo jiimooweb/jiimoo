@@ -24,37 +24,37 @@
                                 <el-table-column prop="name" label="商品名称"></el-table-column>
                                 <el-table-column label="图片" width="150" align="center">
                                     <template slot-scope="scope">
-                                        <img :src="productsList[scope.$index].thumb" width="80px" height='80px'>
+                                        <img :src="searchfilter[scope.$index].thumb" width="80px" height='80px'>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="c_price" label="现价" width="100" align="center"></el-table-column>
                                 <el-table-column label="原价" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <p style="text-decoration:line-through">{{productsList[scope.$index].o_price}}</p>
+                                        <p style="text-decoration:line-through">{{searchfilter[scope.$index].o_price}}</p>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="intro" label="简介"></el-table-column>
                                 <el-table-column label="上架" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].display" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].display" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="热卖" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].hot" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].hot" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="推荐" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].recommend" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].recommend" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="卖完" width="100" align="center">
                                     <template slot-scope="scope">
-                                        <el-switch @change="changeSwitch(scope.$index)" v-model="productsList[scope.$index].oversell" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
+                                        <el-switch @change="changeSwitch(scope.$index)" v-model="searchfilter[scope.$index].oversell" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
                                         </el-switch>
                                     </template>
                                 </el-table-column>
@@ -922,7 +922,7 @@ export default {
             axios.get("/web/" +
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/orders").then(res=>{
-                this.orderList = res.data.data
+                this.orderList = res.data.data.data
             })
         },
 
