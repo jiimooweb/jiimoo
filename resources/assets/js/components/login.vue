@@ -70,27 +70,32 @@ export default {
         })
         .then(
           response => {
-            localStorage.token = response.data.token;
-            var tokenTime = new Date();
-            var Time = tokenTime.getTime();
-            localStorage.tokenTime = Time;
-            store.commit("SET_USERID", { userId: response.data.user.id });
+            if(String(response.data.msg).indexOf('登录成功')==-1){
+              this.$message.error("账号密码不正确!");
+              this.loading = false;
+            }else{
+              localStorage.token = response.data.token;
+              var tokenTime = new Date();
+              var Time = tokenTime.getTime();
+              localStorage.tokenTime = Time;
+              store.commit("SET_USERID", { userId: response.data.user.id });
 
-            store.commit("SET_USERNAME", {
-              userName: response.data.user.username
-            });
-            store.commit("SET_USEREMAIL", {
-              userEmail: response.data.user.email
-            });
-            store.commit("SET_AVATARURL", {
-              avatarUrl: response.data.user.avatarUrl
-            });
-            store.commit("SET_IDENTITY", {
-              identity: response.data.user.identity
-            });
-            localStorage.setItem('identity',response.data.user.identity)
-            this.loading = true;
-            return this.$router.push({ path: "/" });
+              store.commit("SET_USERNAME", {
+                userName: response.data.user.username
+              });
+              store.commit("SET_USEREMAIL", {
+                userEmail: response.data.user.email
+              });
+              store.commit("SET_AVATARURL", {
+                avatarUrl: response.data.user.avatarUrl
+              });
+              store.commit("SET_IDENTITY", {
+                identity: response.data.user.identity
+              });
+              localStorage.setItem('identity',response.data.user.identity)
+              this.loading = true;
+              return this.$router.push({ path: "/" });
+            }
           },
           response => {
             this.$message.error("账号密码不正确!");

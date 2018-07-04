@@ -144,58 +144,128 @@
                     <el-button style="margin:20px 0 0;" type="primary" size="small" @click="editBaseSet()">保存</el-button>
                 </el-tab-pane>
                 <el-tab-pane label="订单管理">
-                    <el-tabs tab-position="left">
-                        <el-tab-pane label="全部订单">
+                    <el-tabs tab-position="left" v-model="articleLeftTab">
+                        <el-tab-pane label="全部订单" name="all">
                             <el-table :data='orderList' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
-                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
-                        <el-tab-pane label="已完成">
+                        <el-tab-pane label="已完成" name="Out">
                             <el-table :data='filterOrderForOut' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
-                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
-                        <el-tab-pane label="已支付">
+                        <el-tab-pane label="已支付" name="Paid">
                             <el-table :data='filterOrderForPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
-                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="status" label="状态"></el-table-column>
+                                <el-table-column label="操作" width="200">
+                                    <template slot-scope="scope">
+                                        <el-button type="primary" size="small" @click="confirmOrder(filterOrderForPaid[scope.$index].id)">确认订单</el-button>
+                                        <el-button type="danger" size="small">取消订单</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="已接单" name="accept">
+                            <el-table :data='filterOrderForAccept' border>
+                                <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
+                                <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
-                        <el-tab-pane label="未支付">
+                        <el-tab-pane label="未支付" name="UnPaid">
                             <el-table :data='filterOrderForUnPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
-                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
-                        <el-tab-pane label="退款审核">
+                        <el-tab-pane label="退款审核" name="Refund">
                             <el-table :data='filterOrderForOnRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
-                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="status" label="状态"></el-table-column>
+                                <el-table-column label="操作" width="200">
+                                    <template slot-scope="scope">
+                                        <el-button type="primary" size="small">确认退款</el-button>
+                                        <el-button type="danger" size="small">取消退款</el-button>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
-                        <el-tab-pane label="退款成功">
+                        <el-tab-pane label="退款成功" name="AfterRefund">
                             <el-table :data='filterOrderForAfterRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="price" label="订单金额"></el-table-column>
+                                <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                                <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="pay_way" label="支付途径"></el-table-column>
-                                <el-table-column prop="price" label="优惠金额"></el-table-column>
+                                <el-table-column label="支付途径">
+                                    <template slot-scope="scope">
+                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
+                                        <p v-else>货到支付</p>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -343,7 +413,7 @@ export default {
                 offer: []
             },
 
-
+            articleLeftTab:'Paid',
             orderList:[]
         };
     },
@@ -381,6 +451,23 @@ export default {
         //已支付
         filterOrderForPaid(){
             let filterCondition = '1'
+            if (filterCondition) {
+                return this.orderList.filter(function(orderList) {
+                    return ["status"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase()
+                                .indexOf(filterCondition) > -1 && String(orderList[key])
+                                .toLowerCase()
+                                .indexOf('-') == -1
+                        );
+                    });
+                });
+            }
+        },
+        //已接单
+        filterOrderForAccept(){
+            let filterCondition = '2'
             if (filterCondition) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
@@ -805,6 +892,18 @@ export default {
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/orders").then(res=>{
                 this.orderList = res.data.data
+            })
+        },
+
+        //确认接单
+        confirmOrder(id){
+            axios.post("/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/orders/confirm",{
+                            id:id
+                        }).then(res=>{
+                            this.showMessage('success','您已成功接单')
+                            this.getOrdersList()
             })
         }
     },
