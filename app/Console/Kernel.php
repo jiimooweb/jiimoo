@@ -81,11 +81,8 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-            $log->addInfo('$resultVD：'.implode($resultVD));
-            $log->addInfo('$resultVS：'.implode($resultVS));
-            $log->addInfo('$resultAD：'.implode($resultAD));
-            $log->addInfo('$resultAS：'.implode($resultAS));
-/*
+
+
             if (count($resultVS) > 0 || count($resultVD) > 0 || count($resultAS) > 0 || count($resultAD) > 0) {
                 DB::beginTransaction();
                 try {
@@ -115,7 +112,7 @@ class Kernel extends ConsoleKernel
             }else{
                 $log->addInfo('投票定时任务皆完成');
             }
-*/
+
         })->everyMinute()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));

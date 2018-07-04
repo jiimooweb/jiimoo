@@ -37,7 +37,7 @@ class OrderController extends Controller
             $query->with(['coupon' => function($query) {
                 $query->select('id','name');
             }])->select('id','coupon_id','title');
-        }])->orderBy('id', 'desc')->get();
+        }])->orderBy('id', 'desc')->get()->paginate(30);
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -215,6 +215,10 @@ class OrderController extends Controller
                 if($order->update(['status' => OrderStatus::CANCEL])){
                     if($order->record_id) {
                         CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
+                    }
+                    //TODO 发送通知
+                    if(request()->client_type == 'web') {
+
                     }
                     return response()->json(['status' => 'success', 'result' => $result]);         
                 }
