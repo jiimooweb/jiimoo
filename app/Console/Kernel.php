@@ -116,7 +116,7 @@ class Kernel extends ConsoleKernel
                 $log->addInfo('投票定时任务皆完成');
             }
 */
-        })->at("17:25")->everyFiveMinutes()->before(function () {
+        })->everyMinute()->before(function () {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
             $log->addInfo('投票定时任务开始');
