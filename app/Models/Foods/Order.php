@@ -17,6 +17,11 @@ class Order extends Model
         return $this->hasOne(\App\Models\Commons\Fan::class, 'id', 'fan_id');
     }
 
+    public function member()
+    {
+        return $this->hasOne(\App\Models\Foods\Member::class, 'fan_id', 'fan_id');        
+    }
+
     public function products()
     {
         return $this->hasMany(OrderProduct::class, 'order_id', 'id');

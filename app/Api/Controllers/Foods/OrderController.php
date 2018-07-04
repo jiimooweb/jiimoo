@@ -37,7 +37,7 @@ class OrderController extends Controller
             $query->with(['coupon' => function($query) {
                 $query->select('id','name');
             }])->select('id','coupon_id','title');
-        }])->orderBy('id', 'desc')->get()->paginate(30);
+        }])->with(['memebr'])->orderBy('id', 'desc')->get()->paginate(30);
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
@@ -122,7 +122,7 @@ class OrderController extends Controller
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
             return $query->where('fan_id', $fan_id)->whereNotIn('status',[-1]);
-        })->where('del_status', 0)->orderBy('id', 'desc')->with(['products'])->get();
+        })->with(['member'])->where('del_status', 0)->orderBy('id', 'desc')->with(['products'])->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
