@@ -17,6 +17,14 @@
             </el-table-column>
             <el-table-column prop="nickname" label="用户名" width="100">
             </el-table-column>
+            <el-table-column prop="gender" label="性别" width="50">
+                <template slot-scope="scope">
+                    <p v-if="searchfilter[scope.$index].gender === 0">未知</p>
+                    <p v-if="searchfilter[scope.$index].gender === 1">男</p>
+                    <p v-if="searchfilter[scope.$index].gender === 2">女</p>
+                </template>
+                
+            </el-table-column>
             <el-table-column label="头像" header-align='center' width="120">
                 <template slot-scope='scope'>
                     <img v-if="searchfilter[scope.$index].avatarUrl !== ''" :src="searchfilter[scope.$index].avatarUrl" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
