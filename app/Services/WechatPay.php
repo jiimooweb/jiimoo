@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use EasyWeChat\Factory;
+use App\Models\Wechat\Pay;
+use Illuminate\Database\Eloquent\Model;
 
 class WechatPay extends Model
 {
@@ -21,13 +22,15 @@ class WechatPay extends Model
             return '回调地址不能为空';
         }
 
+        $pay = Pay::where('xcx_id', session('xcx_id'))->first();
+
         $config = [
             // 必要配置
-            'app_id'    => config('wechat.payment.default.app_id'),
-            'mch_id'    => config('wechat.payment.default.mch_id'),
-            'key'   => config('wechat.payment.default.key'),   // API 密钥
-            'cert_path' => '/usr/local/wechat/ssl/33/apiclient_cert.pem',
-            'key_path'  => '/usr/local/wechat/ssl/33/apiclient_key.pem',  
+            'app_id'    => $pay->app_id,
+            'mch_id'    => $pay->mch_id,
+            'key'   => $pay->key,   // API 密钥
+            'cert_path' => '/usr/local/wechat/ssl/' . $pay->xcx_id . '/apiclient_cert.pem',
+            'key_path'  => '/usr/local/wechat/ssl/' . $pay->xcx_id . '/apiclient_key.pem',  
             'notify_url' => $this->notify_url,
         ];
 
