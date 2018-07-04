@@ -2,6 +2,7 @@
 
 namespace App\Api\Controllers\Foods;
 
+use App\Services\Token;
 use App\Models\Foods\Member;
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
@@ -19,7 +20,9 @@ class MemberController extends Controller
 
     public function store(MemberRequest $requset) 
     {   
-        $member = Member::create(request()->all());
+        $data = request()->all();
+        $data['fan_id'] = Token::getUid();
+        $member = Member::create($data);
         if($member) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $member]);               
         }
@@ -29,7 +32,7 @@ class MemberController extends Controller
     
     public function show() 
     {
-        $member = Member::withCount('products')->find(request()->member);             
+        $member = Member::find(request()->member);             
         $status = $member ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $member]);
     }
