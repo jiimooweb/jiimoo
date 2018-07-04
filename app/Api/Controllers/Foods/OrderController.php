@@ -3,6 +3,7 @@
 namespace App\Api\Controllers\Foods;
 
 use App\Services\Token;
+use App\Services\Notice;
 use App\Utils\OrderStatus;
 use App\Models\Foods\Order;
 use App\Services\WechatPay;
@@ -77,12 +78,12 @@ class OrderController extends Controller
     //接单，确认订单
     public function confirm() 
     {
-        if(Order::where('id', request()->id)->update(['status' => OrderStatus::CONFIRM])){
+        $order = Order::with('fan')->find(request()->id);
+        if($order->update(['status' => OrderStatus::CONFIRM])){
             //发送模板消息
+            Notice::pay_success_notice($order->xcx_id, $order->fan->openid, '/pages/me/me', $order->prepay_id, $order->order_no, '任意门奶茶',$order->price, '已确认订单,待收货', $order->price, $order->pay_time);
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
         }
-
-        
 
         return response()->json(['status' => 'error', 'msg' => '确认失败']);         
     }
@@ -280,7 +281,6 @@ class OrderController extends Controller
             $query->select('id','openid');
         }])->find(165);
         $template_id = \App\Models\Wechat\NoticeTemplate::getTemplateIdByMark('PAY_SUCCESS');
-
         // dd(NoticeTemplate::getTemplate(session('xcx_id')));
         $app = OpenPlatform::getMiniProgram($order->xcx_id);
         $reslut = $app->template_message->send([
