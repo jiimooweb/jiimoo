@@ -15,7 +15,7 @@ class FoodPayController extends Controller
         $notify_url = config('notify.wechat.foods') . '/' . request()->xcx_id;
         $wechatPay = new WechatPay($notify_url);
         
-        $app = $wechatPay->getApp(request()->xcx_id);
+        $app = $wechatPay->getApp(intval(request()->xcx_id));
 
         $response = $app->handlePaidNotify(function($message, $fail){
 
