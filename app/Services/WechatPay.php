@@ -23,10 +23,7 @@ class WechatPay extends Model
             return '回调地址不能为空';
         }
 
-        // $pay = Pay::where('xcx_id', $xcx_id)->first();
         $pay = DB::table('wechat_pay_configs')->where('xcx_id', $xcx_id)->first();
-           
-        \Log::info($pay->app_id);
 
         $config = [
             // 必要配置
