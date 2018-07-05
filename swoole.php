@@ -1,22 +1,18 @@
 <?php
 
-//创建Server对象，监听 127.0.0.1:9502端口
-$serv = new swoole_server("127.0.0.1", 9501); 
+$server = new \swoole_websocket_server("0.0.0.0", 9501);
 
-//监听连接进入事件
-$serv->on('connect', function ($serv, $fd) {  
-    echo "Client: Connect.\n";
+$server->on('open', function ($server, $request) {
+    echo "server: handshake success with fd{$request->fd}\n";
 });
 
-//监听数据发送事件
-$serv->on('receive', function ($serv, $fd, $from_id, $data) {
-    $serv->send($fd, "Server: ".$data);
+$server->on('message', function ($server, $frame) {
+    echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+    $server->push($frame->fd, "this is server");
 });
 
-//监听连接关闭事件
-$serv->on('close', function ($serv, $fd) {
-    echo "Client: Close.\n";
+$server->on('close', function ($ser, $fd) {
+    echo "client {$fd} closed\n";
 });
 
-//启动服务器
-$serv->start(); 
+$server->start();
