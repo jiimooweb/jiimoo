@@ -170,7 +170,7 @@ class OrderController extends Controller
             $order->sign = request('sign');
             $order->name = request('name');
             $order->mobile = request('mobile');
-            $order->address = request('address_name');
+            $order->address = request('address');
             $order->remark = request('remark');
             $order->record_id = $record_id;     
             $order->save();
