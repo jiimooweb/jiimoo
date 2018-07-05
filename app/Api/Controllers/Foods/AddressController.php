@@ -14,7 +14,7 @@ class AddressController extends Controller
     public function index() 
     {
         
-        $address = Address::where('fan_is', Token::getUid())->get();
+        $address = Address::where('fan_id', Token::getUid())->get();
         
         return response()->json(['status' => 'success', 'data' => $address]);
     }
