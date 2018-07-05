@@ -173,7 +173,6 @@ class OrderController extends Controller
             $order->address = request('address_name');
             $order->remark = request('remark');
             $order->record_id = $record_id;     
-
             $order->save();
 
             $data = $order->calcOrderPrice($order->id, $products, $record_id);
