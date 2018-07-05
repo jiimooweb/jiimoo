@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Services\Pay;
 use EasyWeChat\Factory;
+use App\Models\Wechat\Pay;
 use Illuminate\Database\Eloquent\Model;
 
 class WechatPay extends Model
@@ -22,8 +22,13 @@ class WechatPay extends Model
             return '回调地址不能为空';
         }
 
-        $pay = Pay::where('xcx_id', $xcx_id)->first();
-
+        if(Redis::get('wechat_pay_'.$xcx_id)){
+            $pay = Pay::where('xcx_id', $xcx_id)->first();
+            Redis::set('wechat_pay_'.$xcx_id, $pay);
+        }else {
+            $pay = Redis::get('wechat_pay_'.$xcx_id);
+        }
+        
         \Log::info($pay);
 
         $config = [
