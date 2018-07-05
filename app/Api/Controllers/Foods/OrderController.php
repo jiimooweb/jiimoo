@@ -167,6 +167,7 @@ class OrderController extends Controller
             $order->pay_way = request('pay_way');
             $order->fan_id = Token::getUid();
             $order->status = OrderStatus::UNPAID;
+            $order->sign = request('sign');
             $order->remark = request('remark');
             $order->record_id = $record_id;            
             $order->save();
