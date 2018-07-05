@@ -13,7 +13,8 @@ class AddressController extends Controller
     
     public function index() 
     {
-        $address = Address::get();
+        
+        $address = Address::where('fan_is', Token::getUid())->get();
         
         return response()->json(['status' => 'success', 'data' => $address]);
     }
