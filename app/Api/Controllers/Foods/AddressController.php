@@ -40,7 +40,6 @@ class AddressController extends Controller
 
     public function update(AddressRequest $requset) 
     {
-        dd(request()->all());
         if(Address::where('id', request()->address)->update(request()->all())) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }

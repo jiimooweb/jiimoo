@@ -16,7 +16,7 @@ class AddressRequest extends CommonRequest
         return [
             'name' => 'required|string',
             'mobile' => 'required|string',
-            'address' => 'required|string'
+            'address_name' => 'required|string'
         ];
     }
 }
