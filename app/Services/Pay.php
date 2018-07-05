@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Wechat;
+namespace App\Services;
 
 use App\Models\Model;
 
