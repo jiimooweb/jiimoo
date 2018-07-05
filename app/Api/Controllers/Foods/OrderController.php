@@ -81,7 +81,7 @@ class OrderController extends Controller
     public function confirm() 
     {
         $order = Order::with('fan')->find(request()->id);
-        if($order->update(['status' => OrderStatus::CONFIRM])){
+        if($order->update(['status' => OrderStatus::CONFIRM, 'confirm_time' => date('Y-m-d H:i:s', time())])){
             //发送模板消息
             Notice::pay_success_notice($order->xcx_id, $order->fan->openid, '/pages/me/me', $order->prepay_id, $order->order_no, '任意门奶茶',$order->price, '已确认订单,待收货', $order->price, $order->pay_time);
             return response()->json(['status' => 'success', 'msg' => '确认成功！']);         
@@ -96,7 +96,8 @@ class OrderController extends Controller
         
         if(requset()->review  == 'agree'){
             if($order->pay == 0 && $order->status == OrderStatus::REFUND) {
-                $wechatPay = new WechatPay(config('notify.wechat.foods'));
+                $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
+                $wechatPay = new WechatPay($notify_url);
                 $result = $wechatPay->refund($order);
                 if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
                     if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
@@ -186,7 +187,8 @@ class OrderController extends Controller
 
                 $order->body = '任意门微信支付';
                 $order->openid = Token::getCurrentTokenVar('openid');
-                $wechatPay = new WechatPay(config('notify.wechat.foods'));
+                $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
+                $wechatPay = new WechatPay($notify_url);
 
                 //保存prepayid
                 $payOrder = $wechatPay->unify($order);
@@ -215,7 +217,8 @@ class OrderController extends Controller
     {
         $order = Order::find(request()->id);
         if($order->pay_way == 0 && $order->status == OrderStatus::PAID) {
-            $wechatPay = new WechatPay(config('notify.wechat.foods'));
+            $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
+            $wechatPay = new WechatPay($notify_url);
             $result = $wechatPay->refund($order);
             if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
                 if($order->update(['status' => OrderStatus::CANCEL])){
@@ -238,7 +241,8 @@ class OrderController extends Controller
         $order = Order::find(request()->id);
         $order->body = '任意门微信支付';
         $order->openid = Token::getCurrentTokenVar('openid');
-        $wechatPay = new WechatPay(config('notify.wechat.foods'));
+        $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
+        $wechatPay = new WechatPay($notify_url);
         //保存prepayid
         $payOrder = $wechatPay->unify($order);
         Order::where('id', $order->id)->update(['prepay_id' => $payOrder['prepay_id']]);

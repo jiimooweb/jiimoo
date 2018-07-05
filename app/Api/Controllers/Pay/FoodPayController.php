@@ -12,9 +12,10 @@ class FoodPayController extends Controller
 {
     public function notify()
     {
-        $wechatPay = new WechatPay(config('notify.wechat.foods'));
+        $notify_url = config('notify.wechat.foods') . '/' . request()->xcx_id;
+        $wechatPay = new WechatPay($notify_url);
         
-        $app = $wechatPay->getApp();
+        $app = $wechatPay->getApp(request()->xcx_id);
 
         $response = $app->handlePaidNotify(function($message, $fail){
 
