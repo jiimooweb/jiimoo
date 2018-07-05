@@ -2,20 +2,10 @@
 
 namespace App\Http\Requests\Foods;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\CommonRequest;
 
-class AddressRequest extends FormRequest
+class AddressRequest extends CommonRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
