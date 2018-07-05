@@ -24,6 +24,8 @@ class WechatPay extends Model
 
         $pay = Pay::where('xcx_id', $xcx_id)->first();
 
+        \Log::info($pay);
+
         $config = [
             // 必要配置
             'app_id'    => $pay->app_id,
