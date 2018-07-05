@@ -38,7 +38,7 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $server = new swoole_websocket_server("0.0.0.0", 9501);
+        $server = new \swoole_websocket_server("0.0.0.0", 9501);
 
         $server->on('open', function (swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
