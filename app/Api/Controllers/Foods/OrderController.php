@@ -168,8 +168,12 @@ class OrderController extends Controller
             $order->fan_id = Token::getUid();
             $order->status = OrderStatus::UNPAID;
             $order->sign = request('sign');
+            $order->name = request('name');
+            $order->mobile = request('mobile');
+            $order->address = request('address_name');
             $order->remark = request('remark');
-            $order->record_id = $record_id;            
+            $order->record_id = $record_id;     
+
             $order->save();
 
             $data = $order->calcOrderPrice($order->id, $products, $record_id);
