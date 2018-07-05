@@ -38,18 +38,18 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $server = new \swoole_server("127.0.0.1", 9503);
+        $http = new \swoole_http_server("127.0.0.1", 9501);
         echo '连接成功';
-        $server->on('connect', function ($server, $fd){
-            echo "connection open: {$fd}\n";
+
+        $http->on("start", function ($server) {
+            echo "Swoole http server is started at http://127.0.0.1:9501\n";
         });
-        $server->on('receive', function ($server, $fd, $reactor_id, $data) {
-            $server->send($fd, "Swoole: {$data}");
-            $server->close($fd);
+
+        $http->on("request", function ($request, $response) {
+            $response->header("Content-Type", "text/plain");
+            $response->end("Hello World\n");
         });
-        $server->on('close', function ($server, $fd) {
-            echo "connection close: {$fd}\n";
-        });
-        $server->start();
+
+        $http->start();
     }
 }
