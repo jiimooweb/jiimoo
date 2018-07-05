@@ -30,7 +30,7 @@ class WechatPay extends Model
             $pay = Redis::get('wechat_pay_'.$xcx_id);
         }
         
-        \Log::info($pay);
+        \Log::info($pay->app_id);
 
         $config = [
             // 必要配置
