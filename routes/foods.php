@@ -26,8 +26,8 @@ Route::group(['prefix' => 'foods'], function () {
 
     Route::get('/members/getuser', '\App\Api\Controllers\Foods\MemberController@getuser');
     Route::apiResource('/members', '\App\Api\Controllers\Foods\MemberController');
-    
-    Route::apiResource('/address', '\App\Api\Controllers\Foods\AddressController');
+
+    Route::apiResource('/addresss', '\App\Api\Controllers\Foods\AddressController');
 
 });
 
