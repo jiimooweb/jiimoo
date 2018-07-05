@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use EasyWeChat\Factory;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class WechatPay extends Model
