@@ -177,6 +177,8 @@
                         <el-tab-pane label="全部订单" name="all">
                             <el-table :data='orderList' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -193,6 +195,8 @@
                         <el-tab-pane label="已完成" name="Out">
                             <el-table :data='filterOrderForOut' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -209,6 +213,8 @@
                         <el-tab-pane label="已支付" name="Paid">
                             <el-table :data='filterOrderForPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -234,7 +240,7 @@
                                             <p>是否确认取消订单?</p>
                                             <div style="text-align: right; margin: 0">
                                                 <el-button size="mini" type="text" @click="filterOrderForPaid[scope.$index].visible2 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="cancel_order(filterOrderForPaid[scope.$index].id),filterOrderForPaid[scope.$index].visible2 = false">确定</el-button>
+                                                <el-button type="primary" size="mini" @click="cancelOrder(filterOrderForPaid[scope.$index].id),filterOrderForPaid[scope.$index].visible2 = false">确定</el-button>
                                             </div>
                                             <el-button type="danger" slot="reference" size="small">取消订单</el-button>
                                         </el-popover>
@@ -245,6 +251,8 @@
                         <el-tab-pane label="已接单" name="accept">
                             <el-table :data='filterOrderForAccept' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -261,6 +269,8 @@
                         <el-tab-pane label="未支付" name="UnPaid">
                             <el-table :data='filterOrderForUnPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -277,6 +287,8 @@
                         <el-tab-pane label="退款审核" name="Refund">
                             <el-table :data='filterOrderForOnRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -313,6 +325,8 @@
                         <el-tab-pane label="退款成功" name="AfterRefund">
                             <el-table :data='filterOrderForAfterRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
