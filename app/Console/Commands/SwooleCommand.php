@@ -42,7 +42,7 @@ class SwooleCommand extends Command
 
         $server->set([
                 'work_num'=>1,
-                'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/root.crt',
+                'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/chain.crt',
                 'ssl_key_file' => '/usr/local/nginx/conf/ssl/1527670808768.key'
             ]);
 
