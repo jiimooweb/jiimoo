@@ -38,21 +38,17 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $server = new \swoole_websocket_server("0.0.0.0", 9501);
+        $http = new \swoole_http_server("127.0.0.1", 9501);
 
-        $server->on('open', function ($server, $request) {
-            echo "server: handshake success with fd{$request->fd}\n";
+        $http->on("start", function ($server) {
+            echo "Swoole http server is started at http://127.0.0.1:9501\n";
         });
 
-        $server->on('message', function ($server, $frame) {
-            echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
-            $server->push($frame->fd, "this is server");
+        $http->on("request", function ($request, $response) {
+            $response->header("Content-Type", "text/plain");
+            $response->end("Hello World\n");
         });
 
-        $server->on('close', function ($ser, $fd) {
-            echo "client {$fd} closed\n";
-        });
-
-        $server->start();
+        $http->start();
     }
 }
