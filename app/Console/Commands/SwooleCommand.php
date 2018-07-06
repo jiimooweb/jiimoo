@@ -38,7 +38,7 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $server = new \swoole_websocket_server("0.0.0.0", 9501, SWOOLE_BASE, SWOOLE_SOCK_TCP | SWOOLE_SSL);
+        $server = new \swoole_websocket_server("127.0.0.1", 9501, SWOOLE_BASE, SWOOLE_SOCK_TCP | SWOOLE_SSL);
 
         $server->set([
                 'work_num'=>1,
