@@ -172,7 +172,8 @@
                 <el-tab-pane label="订单管理">
                     <el-date-picker v-model="orderSearchTime" type="daterange" value-format='yyyy-MM-dd' range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
-                    <el-tabs tab-position="left" v-model="articleLeftTab">
+                    <el-button type="primary" @click="searchDateOrders()">搜索</el-button>
+                    <el-tabs tab-position="left" v-model="articleLeftTab" style="margin:20px 0 0;">
                         <el-tab-pane label="全部订单" name="all">
                             <el-table :data='orderList' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
@@ -276,14 +277,13 @@
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
                                         <el-popover placement="top" width="160" v-model="visible2">
-                                            <p>这是一段内容这是一段内容确定删除吗？</p>
+                                            <p>是否确认对此订单进行退款?</p>
                                             <div style="text-align: right; margin: 0">
-                                                <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
+                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="orderList[scope.$index].visible2 = false">确定</el-button>
                                             </div>
-                                            <el-button slot="reference">删除</el-button>
+                                            <el-button type="primary" slot="reference" size="small">确认退款</el-button>
                                         </el-popover>
-                                        <el-button type="primary" size="small">确认退款</el-button>
                                         <el-button type="danger" size="small">取消退款</el-button>
                                     </template>
                                 </el-table-column>
@@ -477,7 +477,7 @@ export default {
         //已完成
         filterOrderForOut() {
             let filterCondition = "3";
-            if (filterCondition) {
+            if (filterCondition && this.orderList.length !=0) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
                         return (
@@ -492,7 +492,7 @@ export default {
         //已支付
         filterOrderForPaid() {
             let filterCondition = "1";
-            if (filterCondition) {
+            if (filterCondition && this.orderList.length !=0) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
                         return (
@@ -510,7 +510,7 @@ export default {
         //已接单
         filterOrderForAccept() {
             let filterCondition = "2";
-            if (filterCondition) {
+            if (filterCondition && this.orderList.length !=0) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
                         return (
@@ -528,7 +528,7 @@ export default {
         //未支付
         filterOrderForUnPaid() {
             let filterCondition = "0";
-            if (filterCondition) {
+            if (filterCondition && this.orderList.length !=0) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
                         return (
@@ -543,7 +543,7 @@ export default {
         //退款审核
         filterOrderForOnRefund() {
             let filterCondition = "-2";
-            if (filterCondition) {
+            if (filterCondition && this.orderList.length !=0) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
                         return (
@@ -558,7 +558,7 @@ export default {
         //退款成功
         filterOrderForAfterRefund() {
             let filterCondition = "-3";
-            if (filterCondition) {
+            if (filterCondition && this.orderList.length !=0) {
                 return this.orderList.filter(function(orderList) {
                     return ["status"].some(function(key) {
                         return (
@@ -953,21 +953,35 @@ export default {
 
         //获取订单列表
         getOrdersList() {
-            let start_time = Date.parse(new Date());
-            let end_time = start_time - 8.64e7 * 7;
-            console.log([start_time, end_time]);
-
+            let end_time = Date.parse(new Date());
+            let start_time = end_time - 8.64e7 * 7;
+            this.orderSearchTime = [this.formatDate(start_time,'YY-MM-DD'),this.formatDate(end_time,'YY-MM-DD')]
             axios
                 .get(
                     "/web/" +
                         store.state.xcx_flag.xcx_flag +
-                        "/api/foods/orders"
+                        "/api/foods/orders?start_time="+this.formatDate(start_time,'YY-MM-DD')+"&"+"end_time="+this.formatDate(end_time,'YY-MM-DD')
                 )
                 .then(res => {
-                    this.orderList = res.data.data;
+                    this.orderList = res.data.data.data;
+                    console.log(this.orderList.length);
+                    
+                });
+
+        },
+        //搜索日期
+        searchDateOrders(){
+             axios
+                .get(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/orders?start_time="+this.orderSearchTime[0]+"&"+"end_time="+this.orderSearchTime[1]
+                )
+                .then(res => {
+                    this.orderList = res.data.data.data;
+                    console.log(this.orderList.length);
                 });
         },
-
         //确认接单
         confirmOrder(id) {
             axios
@@ -1000,6 +1014,34 @@ export default {
                     this.showMessage("success", "您已成功接单");
                     this.getOrdersList();
                 });
+        },
+
+
+        formatDate(time, format = "YY-MM-DD hh:mm:ss") {
+            var date = new Date(time);
+
+            var year = date.getFullYear(),
+                month = date.getMonth() + 1, //月份是从0开始的
+                day = date.getDate(),
+                hour = date.getHours(),
+                min = date.getMinutes(),
+                sec = date.getSeconds();
+            var preArr = Array.apply(null, Array(10)).map(function(
+                elem,
+                index
+            ) {
+                return "0" + index;
+            }); ////开个长度为10的数组 格式为 00 01 02 03
+
+            var newTime = format
+                .replace(/YY/g, year)
+                .replace(/MM/g, preArr[month] || month)
+                .replace(/DD/g, preArr[day] || day)
+                .replace(/hh/g, preArr[hour] || hour)
+                .replace(/mm/g, preArr[min] || min)
+                .replace(/ss/g, preArr[sec] || sec);
+
+            return newTime;
         }
     },
     mounted() {
