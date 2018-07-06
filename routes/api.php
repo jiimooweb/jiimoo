@@ -18,4 +18,12 @@ use Illuminate\Http\Request;
 // });
 
 
+Route::get('/ship', function (Request $request)
+{
+    $id = $request->input('id');
+    event(new \App\Events\OrderPaid($id)); // 触发事件
+    return Response::make('Order Shipped!');
+});
+
+
 
