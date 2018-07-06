@@ -46,11 +46,11 @@ class SwooleCommand extends Command
 
         $server->on('receive', function ($server, $fd, $reactor_id, $data) {
             $server->send($fd, "Swoole: {$data}");
-            $server->close($fd);
         });
 
         $server->on('close', function ($server, $fd) {
             echo "connection close: {$fd}\n";
+            $server->close($fd);            
         });
         $server->start();
     }
