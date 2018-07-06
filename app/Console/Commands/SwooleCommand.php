@@ -38,7 +38,7 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $server = new swoole_server("0.0.0.0", 9503);
+        $server = new \swoole_server("0.0.0.0", 9503);
 
         $server->on('connect', function ($server, $fd){
             echo "connection open: {$fd}\n";
@@ -48,7 +48,7 @@ class SwooleCommand extends Command
             $server->send($fd, "Swoole: {$data}");
             $server->close($fd);
         });
-        
+
         $server->on('close', function ($server, $fd) {
             echo "connection close: {$fd}\n";
         });
