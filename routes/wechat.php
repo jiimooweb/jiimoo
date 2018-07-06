@@ -55,7 +55,7 @@ Route::any('wechat/user', function() {
 });
 
 Route::group(['prefix' => 'wechat/pay_notify', ], function () {
-    Route::any('/foods', '\App\Api\Controllers\Pay\FoodPayController@notify');
+    Route::any('/foods/{xcx_id?}', '\App\Api\Controllers\Pay\FoodPayController@notify');
 });
 
 

@@ -3,28 +3,29 @@
 namespace App\Api\Controllers\Foods;
 
 use App\Services\Token;
-use App\Models\Foods\Member;
+use App\Models\Foods\Address;
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
-use App\Http\Requests\Foods\MemberRequest;
+use App\Http\Requests\Foods\AddressRequest;
 
-class MemberController extends Controller
+class AddressController extends Controller
 {
     
     public function index() 
     {
-        $members = Member::get();
         
-        return response()->json(['status' => 'success', 'data' => $members]);
+        $address = Address::where('fan_id', Token::getUid())->get();
+        
+        return response()->json(['status' => 'success', 'data' => $address]);
     }
 
-    public function store(MemberRequest $requset) 
+    public function store(AddressRequest $requset) 
     {   
         $data = request()->all();
         $data['fan_id'] = Token::getUid();
-        $member = Member::create($data);
-        if($member) {
-            return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $member]);               
+        $address = Address::create($data);
+        if($address) {
+            return response()->json(['status' => 'success', 'msg' => '新增成功！', 'data' => $address]);               
         }
 
         return response()->json(['status' => 'error', 'msg' => '新增失败！']);           
@@ -32,14 +33,14 @@ class MemberController extends Controller
     
     public function show() 
     {
-        $member = Member::find(request()->member);             
-        $status = $member ? 'success' : 'error';
-        return response()->json(['status' => $status, 'data' => $member]);
+        $address = Address::find(request()->address);             
+        $status = $address ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $address]);
     }
 
-    public function update(MemberRequest $requset) 
+    public function update(AddressRequest $requset) 
     {
-        if(Member::where('id', request()->member)->update(request()->all())) {
+        if(Address::where('id', request()->address)->update(request()->all())) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);               
         }
 
@@ -49,7 +50,7 @@ class MemberController extends Controller
     public function destroy()
     {   
         // TODO:判断删除权限
-        if(Member::where('id', request()->member)->delete()) {
+        if(Address::where('id', request()->address)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);               
         }
         
@@ -58,8 +59,8 @@ class MemberController extends Controller
 
     public function getuser()
     {
-        $member = Member::where('fan_id', Token::getUid())->first();
-        if(isset($member)) {
+        $address = Address::where('fan_id', Token::getUid())->first();
+        if(isset($address)) {
             return response()->json(['status' => 'success']);               
         }
 

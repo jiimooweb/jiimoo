@@ -8,8 +8,4 @@ class Member extends Model
 {
     protected $table = 'food_members';
 
-    public function products() 
-    {
-        return $this->hasMany(Product::class, 'cate_id', 'id');
-    }
 }

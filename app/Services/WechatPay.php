@@ -4,6 +4,7 @@ namespace App\Services;
 
 use EasyWeChat\Factory;
 use App\Models\Wechat\Pay;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class WechatPay extends Model
@@ -16,13 +17,13 @@ class WechatPay extends Model
     }
 
 
-    public function getApp()
+    public function getApp($xcx_id)
     {
         if(!$this->notify_url) {
             return '回调地址不能为空';
         }
 
-        $pay = Pay::where('xcx_id', session('xcx_id'))->first();
+        $pay = DB::table('wechat_pay_configs')->where('xcx_id', $xcx_id)->first();
 
         $config = [
             // 必要配置
@@ -41,7 +42,7 @@ class WechatPay extends Model
 
     public function unify($order)
     {
-        $app = $this->getApp();
+        $app = $this->getApp($order->xcx_id);
 
         $result = $app->order->unify([
             'body' => $order->body,
@@ -60,7 +61,7 @@ class WechatPay extends Model
 
     public function refund($order) 
     {
-        $app = $this->getApp();
+        $app = $this->getApp($order->xcx_id);
         $result = $app->refund->byTransactionId($order->trans_no, 'TK'.$order->order_no, $order->price * 100, $order->price * 100, [
             // 可在此处传入其他参数，详细参数见微信支付文档
             'refund_desc' => '用户取消订单',
