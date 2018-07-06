@@ -276,15 +276,22 @@
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
-                                        <el-popover placement="top" width="160" v-model="visible2">
+                                        <el-popover placement="top" width="160" v-model="orderList[scope.$index].visible1">
                                             <p>是否确认对此订单进行退款?</p>
                                             <div style="text-align: right; margin: 0">
-                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible2 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="orderList[scope.$index].visible2 = false">确定</el-button>
+                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible1 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmRefundOrder(filterOrderForOnRefund[scope.$index].id),orderList[scope.$index].visible1 = false">确定</el-button>
                                             </div>
                                             <el-button type="primary" slot="reference" size="small">确认退款</el-button>
                                         </el-popover>
-                                        <el-button type="danger" size="small">取消退款</el-button>
+                                        <el-popover placement="top" width="160" v-model="orderList[scope.$index].visible2">
+                                            <p>是否拒绝订单退款?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmRefundOrder1(filterOrderForOnRefund[scope.$index].id),orderList[scope.$index].visible2 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="danger" slot="reference" size="small">取消退款</el-button>
+                                        </el-popover>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -963,8 +970,8 @@ export default {
                         "/api/foods/orders?start_time="+this.formatDate(start_time,'YY-MM-DD')+"&"+"end_time="+this.formatDate(end_time,'YY-MM-DD')
                 )
                 .then(res => {
-                    this.orderList = res.data.data.data;
-                    console.log(this.orderList.length);
+                    this.orderList = res.data.data;
+                    console.log(this.orderList);
                     
                 });
 
@@ -1007,15 +1014,31 @@ export default {
                         store.state.xcx_flag.xcx_flag +
                         "/api/foods/orders/confirm_refund",
                     {
+                        id: id,
+                        review:'agree'
+                    }
+                )
+                .then(res => {
+                    this.showMessage("success", "订单已退款！");
+                    this.getOrdersList();
+                });
+        },
+        //取消订单退款
+        confirmRefundOrder1(id) {
+            axios
+                .post(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/orders/confirm_refund",
+                    {
                         id: id
                     }
                 )
                 .then(res => {
-                    this.showMessage("success", "您已成功接单");
+                    this.showMessage("success", "订单退款已拒绝！");
                     this.getOrdersList();
                 });
         },
-
 
         formatDate(time, format = "YY-MM-DD hh:mm:ss") {
             var date = new Date(time);
