@@ -222,8 +222,22 @@
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
-                                        <el-button type="primary" size="small" @click="confirmOrder(filterOrderForPaid[scope.$index].id)">确认订单</el-button>
-                                        <el-button type="danger" size="small">取消订单</el-button>
+                                        <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible1">
+                                            <p>是否确认此订单?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="filterOrderForPaid[scope.$index].visible1 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmOrder(filterOrderForPaid[scope.$index].id),filterOrderForPaid[scope.$index].visible1 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="primary" slot="reference" size="small">确认订单</el-button>
+                                        </el-popover>
+                                        <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible2">
+                                            <p>是否确认取消订单?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="filterOrderForPaid[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="cancel_order(filterOrderForPaid[scope.$index].id),filterOrderForPaid[scope.$index].visible2 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="danger" slot="reference" size="small">取消订单</el-button>
+                                        </el-popover>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -276,19 +290,19 @@
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
-                                        <el-popover placement="top" width="160" v-model="orderList[scope.$index].visible1">
+                                        <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible1">
                                             <p>是否确认对此订单进行退款?</p>
                                             <div style="text-align: right; margin: 0">
-                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible1 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="confirmRefundOrder(filterOrderForOnRefund[scope.$index].id),orderList[scope.$index].visible1 = false">确定</el-button>
+                                                <el-button size="mini" type="text" @click="filterOrderForOnRefund[scope.$index].visible1 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmRefundOrder(filterOrderForOnRefund[scope.$index].id),filterOrderForOnRefund[scope.$index].visible1 = false">确定</el-button>
                                             </div>
                                             <el-button type="primary" slot="reference" size="small">确认退款</el-button>
                                         </el-popover>
-                                        <el-popover placement="top" width="160" v-model="orderList[scope.$index].visible2">
+                                        <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible2">
                                             <p>是否拒绝订单退款?</p>
                                             <div style="text-align: right; margin: 0">
-                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible2 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="confirmRefundOrder1(filterOrderForOnRefund[scope.$index].id),orderList[scope.$index].visible2 = false">确定</el-button>
+                                                <el-button size="mini" type="text" @click="filterOrderForOnRefund[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmRefundOrder1(filterOrderForOnRefund[scope.$index].id),filterOrderForOnRefund[scope.$index].visible2 = false">确定</el-button>
                                             </div>
                                             <el-button type="danger" slot="reference" size="small">取消退款</el-button>
                                         </el-popover>
@@ -1002,6 +1016,22 @@ export default {
                 )
                 .then(res => {
                     this.showMessage("success", "您已成功接单");
+                    this.getOrdersList();
+                });
+        },
+        //取消接单
+        cancelOrder(id) {
+            axios
+                .post(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/orders/cancel_order",
+                    {
+                        id: id
+                    }
+                )
+                .then(res => {
+                    this.showMessage("success", "您已取消接单");
                     this.getOrdersList();
                 });
         },
