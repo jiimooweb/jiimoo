@@ -15,3 +15,4 @@ yarn-error.log
 /.vscode
 public/js/backend.js
 public/js/vendor.js
+composer.lock
