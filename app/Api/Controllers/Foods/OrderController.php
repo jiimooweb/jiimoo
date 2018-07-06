@@ -40,7 +40,7 @@ class OrderController extends Controller
             $query->select('id','nickname');
         }])->with(['member' => function($query) {
             $query->select('fan_id','name', 'mobile');
-        }])->where([['created_at','>=', $start_time],['created_at','<=', $end_time]])->orderBy('id', 'desc');
+        }])->where([['created_at','>=', $start_time],['created_at','<=', $end_time]])->orderBy('id', 'desc')->get();
 
         return response()->json(['status' => 'success', 'data' => $orders]);
     }
