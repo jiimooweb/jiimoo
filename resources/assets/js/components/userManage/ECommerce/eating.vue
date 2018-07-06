@@ -177,6 +177,8 @@
                         <el-tab-pane label="全部订单" name="all">
                             <el-table :data='orderList' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -193,6 +195,8 @@
                         <el-tab-pane label="已完成" name="Out">
                             <el-table :data='filterOrderForOut' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -209,6 +213,8 @@
                         <el-tab-pane label="已支付" name="Paid">
                             <el-table :data='filterOrderForPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -222,8 +228,22 @@
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
-                                        <el-button type="primary" size="small" @click="confirmOrder(filterOrderForPaid[scope.$index].id)">确认订单</el-button>
-                                        <el-button type="danger" size="small">取消订单</el-button>
+                                        <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible1">
+                                            <p>是否确认此订单?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="filterOrderForPaid[scope.$index].visible1 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmOrder(filterOrderForPaid[scope.$index].id),filterOrderForPaid[scope.$index].visible1 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="primary" slot="reference" size="small">确认订单</el-button>
+                                        </el-popover>
+                                        <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible2">
+                                            <p>是否确认取消订单?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="filterOrderForPaid[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="cancelOrder(filterOrderForPaid[scope.$index].id),filterOrderForPaid[scope.$index].visible2 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="danger" slot="reference" size="small">取消订单</el-button>
+                                        </el-popover>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -231,6 +251,8 @@
                         <el-tab-pane label="已接单" name="accept">
                             <el-table :data='filterOrderForAccept' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -247,6 +269,8 @@
                         <el-tab-pane label="未支付" name="UnPaid">
                             <el-table :data='filterOrderForUnPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -263,6 +287,8 @@
                         <el-tab-pane label="退款审核" name="Refund">
                             <el-table :data='filterOrderForOnRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -276,19 +302,19 @@
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
-                                        <el-popover placement="top" width="160" v-model="orderList[scope.$index].visible1">
+                                        <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible1">
                                             <p>是否确认对此订单进行退款?</p>
                                             <div style="text-align: right; margin: 0">
-                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible1 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="confirmRefundOrder(filterOrderForOnRefund[scope.$index].id),orderList[scope.$index].visible1 = false">确定</el-button>
+                                                <el-button size="mini" type="text" @click="filterOrderForOnRefund[scope.$index].visible1 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmRefundOrder(filterOrderForOnRefund[scope.$index].id),filterOrderForOnRefund[scope.$index].visible1 = false">确定</el-button>
                                             </div>
                                             <el-button type="primary" slot="reference" size="small">确认退款</el-button>
                                         </el-popover>
-                                        <el-popover placement="top" width="160" v-model="orderList[scope.$index].visible2">
+                                        <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible2">
                                             <p>是否拒绝订单退款?</p>
                                             <div style="text-align: right; margin: 0">
-                                                <el-button size="mini" type="text" @click="orderList[scope.$index].visible2 = false">取消</el-button>
-                                                <el-button type="primary" size="mini" @click="confirmRefundOrder1(filterOrderForOnRefund[scope.$index].id),orderList[scope.$index].visible2 = false">确定</el-button>
+                                                <el-button size="mini" type="text" @click="filterOrderForOnRefund[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmRefundOrder1(filterOrderForOnRefund[scope.$index].id),filterOrderForOnRefund[scope.$index].visible2 = false">确定</el-button>
                                             </div>
                                             <el-button type="danger" slot="reference" size="small">取消退款</el-button>
                                         </el-popover>
@@ -299,6 +325,8 @@
                         <el-tab-pane label="退款成功" name="AfterRefund">
                             <el-table :data='filterOrderForAfterRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
+                                <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                                <el-table-column prop="mobile" label="电话"></el-table-column>
                                 <el-table-column prop="price" label="订单金额"></el-table-column>
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
@@ -985,8 +1013,7 @@ export default {
                         "/api/foods/orders?start_time="+this.orderSearchTime[0]+"&"+"end_time="+this.orderSearchTime[1]
                 )
                 .then(res => {
-                    this.orderList = res.data.data.data;
-                    console.log(this.orderList.length);
+                    this.orderList = res.data.data;
                 });
         },
         //确认接单
@@ -1002,6 +1029,22 @@ export default {
                 )
                 .then(res => {
                     this.showMessage("success", "您已成功接单");
+                    this.getOrdersList();
+                });
+        },
+        //取消接单
+        cancelOrder(id) {
+            axios
+                .post(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/foods/orders/cancel_order",
+                    {
+                        id: id
+                    }
+                )
+                .then(res => {
+                    this.showMessage("success", "您已取消接单");
                     this.getOrdersList();
                 });
         },
