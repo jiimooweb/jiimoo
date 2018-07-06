@@ -27,8 +27,8 @@ class OrderController extends Controller
         $order_no = request()->order_no;
         $fan_id = request()->fan_id;
         $start_time = request()->start_time;
-        $end_time = request()->end_time;
-        
+        $end_time = request()->end_time . ' 23:59:59';
+
         $orders = Order::when($status >= -1, function($query) use ($status){
             return $query->where('status', $status);
         })->when($fan_id, function($query) use ($fan_id){
@@ -39,6 +39,10 @@ class OrderController extends Controller
             $query->with(['coupon' => function($query) {
                 $query->select('id','name');
             }])->select('id','coupon_id','title');
+        }])->with(['fan' => function($query) {
+            $query->select('id','nickname');
+        }])->with(['member' => function($query) {
+            $query->select('fan_id','name', 'mobile');
         }])->where([['created_at','>=', $start_time],['created_at','<=', $end_time]])->orderBy('id', 'desc')->paginate(30);
 
         return response()->json(['status' => 'success', 'data' => $orders]);
