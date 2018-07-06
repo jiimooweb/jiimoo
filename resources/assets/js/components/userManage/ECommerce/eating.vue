@@ -169,7 +169,8 @@
                     </el-row>
                     <el-button style="margin:20px 0 0;" type="primary" size="small" @click="editBaseSet()">保存</el-button>
                 </el-tab-pane>
-                <el-tab-pane label="订单管理">
+                <el-tab-pane label="外卖订单" v-if='baseSetData.type === 1 || baseSetData.type === 2'>
+                    <span style="color:#666;margin-left:20px;margin-right:20px;">日期:</span>
                     <el-date-picker v-model="orderSearchTime" type="daterange" value-format='yyyy-MM-dd' range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                     <el-button type="primary" @click="searchDateOrders()">搜索</el-button>
@@ -341,7 +342,17 @@
                             </el-table>
                         </el-tab-pane>
                     </el-tabs>
-
+                </el-tab-pane>
+                <el-tab-pane label="店内订单" v-if='baseSetData.type === 0 || baseSetData.type === 2'>
+                    <el-table :data='filterOrderForOutOrder' border>
+                        <el-table-column prop="sign" label="桌号"></el-table-column>
+                        <el-table-column prop="order_no" label="订单号"></el-table-column>
+                        <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
+                        <el-table-column prop="price" label="订单金额"></el-table-column>
+                        <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
+                        <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
+                        <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                    </el-table>
                 </el-tab-pane>
             </el-tabs>
         </el-row>
@@ -600,6 +611,20 @@ export default {
                             String(orderList[key])
                                 .toLowerCase()
                                 .indexOf(filterCondition) > -1
+                        );
+                    });
+                });
+            }
+        },
+        //线下订单
+        filterOrderForOutOrder() {
+            if (this.orderList.length !=0) {
+                return this.orderList.filter(function(orderList) {
+                    return ["sign"].some(function(key) {
+                        return (
+                            String(orderList[key])
+                                .toLowerCase() !== 'null' && String(orderList[key])
+                                .toLowerCase() !== 'undefined'
                         );
                     });
                 });
@@ -999,10 +1024,22 @@ export default {
                 )
                 .then(res => {
                     this.orderList = res.data.data;
-                    console.log(this.orderList);
-                    
+                    let payNum1 = 0
+                    let payNum2 = 0
+                    for(let i = 0;i<this.orderList.length;i++){
+                        if(this.orderList[i].status === 1){
+                            payNum1++
+                        }
+                        if(String(this.orderList[i].sign).toLowerCase() !== 'null' && String(this.orderList[i].sign).toLowerCase() !== 'undefined'){
+                            payNum2++
+                        }
+                    }
+                    document.querySelector('.el-tabs__nav').classList.add('hasAfter')
+                    document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                    document.querySelector('#tab-4').setAttribute('data-content',payNum2)
+                    document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
                 });
-
+            
         },
         //搜索日期
         searchDateOrders(){
@@ -1113,6 +1150,8 @@ export default {
     mounted() {
         this.getProductsList();
         this.getProductsType();
+        this.getbaseSet()
+        this.getOrdersList()
     }
 };
 </script>
@@ -1141,5 +1180,47 @@ export default {
     width: 100px;
     height: 100px;
     display: block;
+}
+</style>
+
+<style>
+.el-tabs__nav.hasAfter #tab-3::after {
+    content: attr(data-content);
+    position: absolute;
+    background: red;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin-left:-3px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+}
+.el-tabs__nav.hasAfter #tab-4::after {
+    content: attr(data-content);
+    position: absolute;
+    background: red;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin-left:-3px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+}
+.el-tabs__nav #tab-Paid::after{
+    content: attr(data-content);
+    position: absolute;
+    background: red;
+    width: 20px;
+    height: 20px;
+    margin-left:-3px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
 }
 </style>
