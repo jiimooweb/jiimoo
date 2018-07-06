@@ -40,6 +40,12 @@ class SwooleCommand extends Command
     {
         $server = new \swoole_websocket_server("0.0.0.0", 9501);
 
+        $serv->set([
+                'work_num'=>1,
+                'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/www.rdoorweb.com.crt',
+                'ssl_key_file' => '/usr/local/nginx/conf/ssl/www.rdoorweb.com.key'
+            ]);
+
         $server->on('open', function (\swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";
         });
