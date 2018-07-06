@@ -105,6 +105,8 @@ class OrderController extends Controller
                     if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
                         return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
                     }
+                }else {
+                    return response()->json(['status' => 'error', 'msg' => $result['err_code_des']]);  
                 }    
             }
         }else{
