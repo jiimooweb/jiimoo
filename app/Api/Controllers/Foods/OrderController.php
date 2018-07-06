@@ -95,7 +95,7 @@ class OrderController extends Controller
     {
         $order = Order::find(request()->id);
         
-        if(requset()->review  == 'agree'){
+        if(request()->review  == 'agree'){
             if($order->pay == 0 && $order->status == OrderStatus::REFUND) {
                 $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
                 $wechatPay = new WechatPay($notify_url);
