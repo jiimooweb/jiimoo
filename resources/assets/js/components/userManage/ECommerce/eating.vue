@@ -183,12 +183,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -201,12 +201,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -219,12 +219,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
@@ -257,12 +257,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -275,12 +275,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -293,12 +293,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
@@ -331,12 +331,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="支付途径">
+                                <!-- <el-table-column label="支付途径">
                                     <template slot-scope="scope">
                                         <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
                                         <p v-else>货到支付</p>
                                     </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
