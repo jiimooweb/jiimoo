@@ -40,7 +40,7 @@ class SwooleCommand extends Command
     {
         $server = new \swoole_websocket_server("0.0.0.0", 9501);
 
-        $serv->set([
+        $server->set([
                 'work_num'=>1,
                 'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/www.rdoorweb.com.crt',
                 'ssl_key_file' => '/usr/local/nginx/conf/ssl/www.rdoorweb.com.key'
