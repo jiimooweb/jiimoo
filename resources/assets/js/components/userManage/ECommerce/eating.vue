@@ -1013,8 +1013,7 @@ export default {
                         "/api/foods/orders?start_time="+this.orderSearchTime[0]+"&"+"end_time="+this.orderSearchTime[1]
                 )
                 .then(res => {
-                    this.orderList = res.data.data.data;
-                    console.log(this.orderList.length);
+                    this.orderList = res.data.data;
                 });
         },
         //确认接单
