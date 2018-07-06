@@ -42,8 +42,8 @@ class SwooleCommand extends Command
 
         $server->set([
                 'work_num'=>1,
-                'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/1527670808768.crt',
-                'ssl_key_file' => '/usr/local/nginx/conf/ssl/1527670808768.key'
+                'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/ssl.crt',
+                'ssl_key_file' => '/usr/local/nginx/conf/ssl/ssl.key'
             ]);
 
         $server->on('open', function (\swoole_websocket_server $server, $request) {
