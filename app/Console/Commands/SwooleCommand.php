@@ -38,7 +38,13 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $server = new \swoole_websocket_server("0.0.0.0", 9501);
+        $server = new \swoole_websocket_server("0.0.0.0", 9501, SWOOLE_PROCESS, SWOOLE_SOCK_TCP | SWOOLE_SSL);
+
+        $server->set([
+                'work_num'=>1,
+                'ssl_cert_file'=> '/usr/local/nginx/conf/ssl/ssl.crt',
+                'ssl_key_file' => '/usr/local/nginx/conf/ssl/ssl.key'
+            ]);
 
         $server->on('open', function (\swoole_websocket_server $server, $request) {
             echo "server: handshake success with fd{$request->fd}\n";

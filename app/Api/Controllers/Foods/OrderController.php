@@ -99,8 +99,7 @@ class OrderController extends Controller
                 $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
                 $wechatPay = new WechatPay($notify_url);
      
-                $result = $wechatPay->refund($order);
-                dd($result);
+                $result = $wechatPay->refund($order, '用户申请退款');
                 if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
                     if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
                         return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
