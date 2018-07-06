@@ -94,7 +94,7 @@ class OrderController extends Controller
     public function confirm_refund()
     {
         $order = Order::find(request()->id);
-        
+        dd($order);
         if(request()->review  == 'agree'){
             if($order->status == OrderStatus::REFUND) {
                 $notify_url = config('notify.wechat.foods') . '/' . session('xcx_id');
