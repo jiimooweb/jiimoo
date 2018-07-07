@@ -17,6 +17,7 @@ use App\Api\Controllers\Controller;
 use App\Models\Coupons\CouponRecord;
 use App\Models\Wechat\NoticeTemplate;
 use App\Http\Requests\Foods\CateRequest;
+use App\Services\WebSocket;
 
 class OrderController extends Controller
 {
