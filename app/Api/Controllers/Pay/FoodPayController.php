@@ -36,7 +36,7 @@ class FoodPayController extends Controller
                     $order->trans_no = $message['transaction_id']; // 更新支付时间为当前时间
                     $order->status = OrderStatus::PAID;
                     $order->save();
-                    WebSocket::sendOrderMsg('xcx_id'.$xcx_id, $order);
+                    WebSocket::sendOrderMsg('xcx_id_'.$xcx_id, $order);
                 }
             } else {
                 return $fail('通信失败，请稍后再通知我');
