@@ -102,7 +102,6 @@ class OrderController extends Controller
                 $result = $wechatPay->refund($order, '申请退款');
                 if($result['result_code'] == 'SUCCESS' && $result['return_msg'] == 'OK') {
                     if($order->update(['status' => OrderStatus::REFUND_SUCCESS])){
-                        WebSocket::sendOrderMsg('xcx_id_'.$order->xcx_id, $order);
                         return response()->json(['status' => 'success', 'msg' => '确认退款成功！']);         
                     }
                 }else {
@@ -227,8 +226,8 @@ class OrderController extends Controller
                         CouponRecord::where('id', $order->record_id)->update(['status' => 0]);
                     }
                     //TODO 发送通知
-                    if(request()->client_type == 'web') {
-
+                    if(request()->client_type == 'app') {
+                        WebSocket::sendOrderMsg('xcx_id_'.$order->xcx_id, $order);                        
                     }
                     return response()->json(['status' => 'success', 'result' => $result]);         
                 }
