@@ -161,9 +161,7 @@ class Workerman extends Command
 
     protected function getArguments()
     {
-        return array(
-            array('action',InputArgument::REQUIRED,'start|stop|restart'),
-            );
+        return [['action',InputArgument::REQUIRED,'start|stop|restart']];
     }
 
 }
