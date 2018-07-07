@@ -31,23 +31,6 @@ class Workerman extends Command
         parent::__construct();
     }
 
-    public function fire()
-    {
-        $arg = $this->argument('action');
-        switch ($arg) {
-            case 'start':
-                $this->info('workerman observer started');
-                $this->start();
-                break;
-            case 'stop':
-                $this->info('stoped');
-                break;
-            case 'restart':
-                $this->info('restarted');
-                break;
-        }
-    }
-
     /**
      * Execute the console command.
      *
@@ -75,11 +58,57 @@ class Workerman extends Command
         $worker->transport = 'ssl';
 
         // 启动4个进程对外提供服务
-        $worker->count = 4;
-        $handler = \App::make('Handlers\WorkermanHandler');
-        $worker->onConnect = [$handler,"connection"];
-        $worker->onMessage = [$handler,"message"];
-        $worker->onClose = [$handler,"close"];
+        $worker->count = 1;
+        // worker进程启动后创建一个text Worker以便打开一个内部通讯端口
+        $worker->onWorkerStart = function($worker)
+        {
+            // 开启一个内部端口，方便内部系统推送数据，Text协议格式 文本+换行符
+            $inner_text_worker = new Worker('text://0.0.0.0:8150');
+            $inner_text_worker->onMessage = function($connection, $buffer)
+            {
+                // $data数组格式，里面有uid，表示向那个uid的页面推送数据
+                $data = json_decode($buffer, true);
+                $uid = $data['uid'];
+                // 通过workerman，向uid的页面推送数据
+                $ret = $this->sendMessageByUid($uid, $buffer);
+                // 返回推送结果
+                $connection->send($ret ? 'ok' : 'fail');
+            };
+            // ## 执行监听 ##
+            $inner_text_worker->listen();
+        };
+
+        // 新增加一个属性，用来保存uid到connection的映射
+        $worker->uidConnections = array();
+
+        // $handler = \App::make('Handlers\WorkermanHandler');
+        $worker->onMessage = function($connection, $data)
+        {
+            global $worker;
+            // 判断当前客户端是否已经验证,既是否设置了uid
+            if(!isset($connection->uid))
+            {
+               // 没验证的话把第一个包当做uid（这里为了方便演示，没做真正的验证）
+               $connection->uid = $data;
+               /* 保存uid到connection的映射，这样可以方便的通过uid查找connection，
+                * 实现针对特定uid推送数据
+                */
+               $worker->uidConnections[$connection->uid] = $connection;
+               return;
+            }
+        };
+
+        // 当有客户端连接断开时
+        $worker->onClose = function($connection)
+        {
+            global $worker;
+            if(isset($connection->uid))
+            {
+                // 连接断开时删除映射
+                unset($worker->uidConnections[$connection->uid]);
+            }
+        };
+        
 
         Worker::runAll();
     }
@@ -90,7 +119,7 @@ class Workerman extends Command
         global $worker;
         foreach($worker->uidConnections as $connection)
         {
-                $connection->send($message);
+            $connection->send($message);
         }
     }
 
@@ -106,7 +135,6 @@ class Workerman extends Command
         }
         return false;
     }
-
 
     protected function getArguments()
     {
