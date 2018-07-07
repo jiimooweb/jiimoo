@@ -86,7 +86,7 @@
                 <!-- 基础设置 -->
                 <el-tab-pane label="基础设置">
                     <el-row v-if="false">
-                        <audio controls="controls">
+                        <audio ref="messageAudio" controls="controls">
                             <source :src="aUrl">
                         </audio>
                     </el-row>
@@ -144,7 +144,7 @@
                             </el-switch>
                         </el-col>
                     </el-row>
-                    <el-row style="margin:30px 0 0;" v-if="baseSetData.offer_status">
+                    <el-row style="margin:30px 0 0;" v-if="baseSetData.offer_status === 1">
                         <el-col :span="3">
                             满减内容
                         </el-col>
@@ -1136,6 +1136,29 @@ export default {
                 .replace(/ss/g, preArr[sec] || sec);
 
             return newTime;
+        },
+
+        //websocket
+        initWebsocket(){
+            const wsuri = "wss://www.rdoorweb.com:9501";
+            this.websock = new WebSocket(wsuri);
+            this.websock.onopen = this.websocketonOpen;
+            this.websock.onmessage = this.websocketonmessage;
+            this.websock.onclose = this.websocketclose;
+        },  
+        //打开接口
+        websocketonOpen(){
+            console.log('open');
+            this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
+        },
+        //接受数据
+        websocketonmessage(e){
+            this.$refs.messageAudio.play()
+            console.log(e.data);
+        },
+        //关闭websocket
+        websocketclose(e){  //关闭
+            console.log("connection closed");
         }
     },
     mounted() {
@@ -1143,6 +1166,8 @@ export default {
         this.getProductsType();
         this.getbaseSet()
         this.getOrdersList()
+
+        this.initWebsocket()
     }
 };
 </script>
