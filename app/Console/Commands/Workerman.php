@@ -13,14 +13,14 @@ class Workerman extends Command
      *
      * @var string
      */
-    protected $signature = 'workerman:command {action} {-d}';
+    protected $signature = 'workerman:command {action}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Workerman websocket server';
 
     /**
      * Create a new command instance.
@@ -41,7 +41,9 @@ class Workerman extends Command
     {
         global $argv;
         $arg = $this->argument('action');
-        $argv [1] = $arg;
+        echo $arg;
+        $argv[1] = $arg;
+        // $argv[2] = isset($argv[3]) ? "-{$argv[3]}" : '';
 
         define('HEARTBEAT_TIME', 30);
 
