@@ -41,7 +41,6 @@ class Workerman extends Command
     {
         global $argv;
         $arg = $this->argument('action');
-        echo $arg;
         $argv[1] = $arg;
         // $argv[2] = isset($argv[3]) ? "-{$argv[3]}" : '';
 
@@ -68,6 +67,7 @@ class Workerman extends Command
         // worker进程启动后创建一个text Worker以便打开一个内部通讯端口
         $worker->onWorkerStart = function($worker)
         {
+            var_dump($argv);
             Timer::add(1, function()use($worker){
                 $time_now = time();
                 foreach($worker->connections as $connection) {
