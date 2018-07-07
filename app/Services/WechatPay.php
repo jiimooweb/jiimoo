@@ -59,7 +59,7 @@ class WechatPay extends Model
         return array_merge($payment,['prepay_id' => $prepay_id]);
     }
 
-    public function refund($order, $desc = '用户取消订单') 
+    public function refund($order, $desc = '取消订单') 
     {
         $app = $this->getApp($order->xcx_id);
         $result = $app->refund->byTransactionId($order->trans_no, 'TK'.$order->order_no, $order->price * 100, $order->price * 100, [
