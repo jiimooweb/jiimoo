@@ -1152,7 +1152,7 @@ export default {
             console.log('open');
             this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
             this.wensocketTimeout = setTimeout(function(){
-                this.wsuri.send('xcx_id_'+localStorage.getItem('XCXID'))
+                this.websock.send('xcx_id_'+localStorage.getItem('XCXID'))
             },25000)
         },
         //接受数据
