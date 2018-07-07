@@ -1153,6 +1153,8 @@ export default {
             this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
             this.wensocketTimeout = setTimeout(()=>{
                 this.websock.send('xcx_id_'+localStorage.getItem('XCXID'))
+                console.log(123);
+                
             },20000)
         },
         //接受数据
