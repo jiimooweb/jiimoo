@@ -231,6 +231,9 @@ class OrderController extends Controller
                     }
                     return response()->json(['status' => 'success', 'result' => $result]);         
                 }
+            }else {
+                return response()->json(['status' => 'error', 'msg' => $result['err_code_des']]);         
+                
             }
         }
         return response()->json(['status' => 'error', 'msg' => '取消订单失败']);            

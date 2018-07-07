@@ -74,6 +74,7 @@ class Workerman extends Command
         // 设置transport开启ssl，websocket+ssl即wss
         $worker->transport = 'ssl';
         $worker->onMessage = function($con, $msg) {
+            echo $msg;
             $con->send('ok');
         };
 
