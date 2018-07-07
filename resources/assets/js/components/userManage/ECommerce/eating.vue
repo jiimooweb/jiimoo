@@ -174,9 +174,9 @@
                     <el-date-picker v-model="orderSearchTime" type="daterange" value-format='yyyy-MM-dd' range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                     <el-button type="primary" @click="searchDateOrders()">搜索</el-button>
-                    <el-tabs tab-position="left" v-model="articleLeftTab" style="margin:20px 0 0;">
+                    <el-tabs @tab-click="handletabClick1" tab-position="left" v-model="articleLeftTab" style="margin:20px 0 0;">
                         <el-tab-pane label="全部订单" name="all">
-                            <el-table :data='orderList' border>
+                            <el-table :data='ordersSign[0] && orderList' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -184,11 +184,10 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已完成" name="Out">
-                            <el-table :data='filterOrderForOut' border>
+                            <el-table :data='ordersSign[1] && filterOrderForOut' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -196,11 +195,10 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已支付" name="Paid">
-                            <el-table :data='filterOrderForPaid' border>
+                            <el-table :data='ordersSign[2] && filterOrderForPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -208,7 +206,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
                                         <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible1">
@@ -232,7 +229,7 @@
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已接单" name="accept">
-                            <el-table :data='filterOrderForAccept' border>
+                            <el-table :data='ordersSign[3] && filterOrderForAccept' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -240,11 +237,10 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="未支付" name="UnPaid">
-                            <el-table :data='filterOrderForUnPaid' border>
+                            <el-table :data='ordersSign[4] && filterOrderForUnPaid' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -252,11 +248,10 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="退款审核" name="Refund">
-                            <el-table :data='filterOrderForOnRefund' border>
+                            <el-table :data='ordersSign[5] && filterOrderForOnRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -264,7 +259,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
                                         <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible1">
@@ -288,7 +282,7 @@
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="退款成功" name="AfterRefund">
-                            <el-table :data='filterOrderForAfterRefund' border>
+                            <el-table :data='ordersSign[6] && filterOrderForAfterRefund' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
                                 <el-table-column prop="fan.nickname" label="微信名"></el-table-column>
                                 <el-table-column prop="mobile" label="电话"></el-table-column>
@@ -296,7 +290,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
                     </el-tabs>
@@ -478,7 +471,10 @@ export default {
 
             articleLeftTab: "Paid",
             orderList: [],
-            orderSearchTime: []
+            orderSearchTime: [],
+
+            //订单竖向标签页
+            ordersSign:[false,false,true,false,false,false,false]
         };
     },
     components: { tip },
@@ -625,6 +621,25 @@ export default {
                 this.getbaseSet();
             } else if (tab.index == 3) {
                 this.getOrdersList();
+            }
+        },
+        //切换前执行
+        handletabClick1(tab, event) {
+            this.ordersSign = [false,false,false,false,false,false,false]
+            if (tab.index == 0) {
+                this.ordersSign[0] = true
+            } else if (tab.index == 1) {
+                this.ordersSign[1] = true
+            } else if (tab.index == 2) {
+                this.ordersSign[2] = true
+            } else if (tab.index == 3) {
+                this.ordersSign[3] = true
+            } else if (tab.index == 4) {
+                this.ordersSign[4] = true
+            } else if (tab.index == 5) {
+                this.ordersSign[5] = true
+            } else if (tab.index == 6) {
+                this.ordersSign[6] = true
             }
         },
         onEditorChange({ editor, html, text }) {
