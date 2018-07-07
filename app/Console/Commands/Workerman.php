@@ -73,9 +73,13 @@ class Workerman extends Command
         $worker = new Worker('websocket://0.0.0.0:9501', $context);
         // 设置transport开启ssl，websocket+ssl即wss
         $worker->transport = 'ssl';
-        $worker->onMessage = function($con, $msg) {
-            $con->send('ok');
-        };
+
+        // 启动4个进程对外提供服务
+        $worker->count = 4;
+        $handler = \App::make('Handlers\WorkermanHandler');
+        $worker->onConnect = [$handler,"connection"];
+        $worker->onMessage = [$handler,"message"];
+        $worker->onClose = [$handler,"close"];
 
         Worker::runAll();
     }
