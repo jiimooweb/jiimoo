@@ -1153,8 +1153,8 @@ export default {
         },
         //接受数据
         websocketonmessage(e){
-            document.querySelector('#messageAudio').play()
             console.log(e.data);
+            document.querySelector('#messageAudio').play()
         },
         //关闭websocket
         websocketclose(e){  //关闭
