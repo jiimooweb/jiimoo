@@ -1151,7 +1151,7 @@ export default {
         websocketonOpen(){
             console.log('open');
             this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
-            this.wensocketTimeout = setTimeout(()=>{
+            this.wensocketTimeout = setInterval(()=>{
                 this.websock.send('xcx_id_'+localStorage.getItem('XCXID'))
                 console.log(123);
                 
@@ -1165,7 +1165,7 @@ export default {
         //关闭websocket
         websocketclose(e){  //关闭
             console.log("connection closed");
-            clearTimeout(this.wensocketTimeout)
+            clearInterval(this.wensocketTimeout)
         }
     },
     mounted() {
