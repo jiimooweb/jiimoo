@@ -13,7 +13,7 @@ class Workerman extends Command
      *
      * @var string
      */
-    protected $signature = 'workerman:command {action}';
+    protected $signature = 'workerman:command {action} {-d}';
 
     /**
      * The console command description.
