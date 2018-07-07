@@ -84,6 +84,30 @@ class Workerman extends Command
         Worker::runAll();
     }
 
+    // 向所有验证的用户推送数据
+    function broadcast($message)
+    {
+        global $worker;
+        foreach($worker->uidConnections as $connection)
+        {
+                $connection->send($message);
+        }
+    }
+
+    // 针对uid推送数据
+    function sendMessageByUid($uid, $message)
+    {
+        global $worker;
+        if(isset($worker->uidConnections[$uid]))
+        {
+            $connection = $worker->uidConnections[$uid];
+            $connection->send($message);
+            return true;
+        }
+        return false;
+    }
+
+
     protected function getArguments()
     {
         return array(
