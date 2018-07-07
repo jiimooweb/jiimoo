@@ -20,7 +20,7 @@
             <el-menu :default-active="menu.activeIndex" :router="menu.router" :collapse="menu.collapse" style="width:100%;">
                 <el-menu-item index="/userManage/p1">数据分析 </el-menu-item>
                 <el-submenu index="2" v-if='ifValue[0].parentIf'>
-                    <template slot="title">营销管理>></template>
+                    <template slot="title">营销管理</template>
                     <el-menu-item v-if='ifValue[0].child[0].childIf' index="/userManage/marketing/vip">会员卡</el-menu-item>
                     <el-menu-item v-if='ifValue[0].child[1].childIf' index="/userManage/marketing/queue">排队</el-menu-item>
                     <el-menu-item v-if='ifValue[0].child[2].childIf' index="/userManage/marketing/coupons">优惠券</el-menu-item>
@@ -34,7 +34,7 @@
                 </el-submenu> -->
                 <el-menu-item index="/userManage/fans">用户列表 </el-menu-item>
                 <el-submenu index="4" v-if='ifValue[1].parentIf'>
-                    <template slot="title">展示管理>></template>
+                    <template slot="title">展示管理</template>
                     <!-- <el-menu-item v-if='ifValue[1].child[0].childIf' index="4-2">信息管理</el-menu-item> -->
                     <!-- <el-menu-item v-if='ifValue[1].child[1].childIf' index="/userManage/content/articleType/">文章分类</el-menu-item> -->
                     <el-menu-item v-if='ifValue[1].child[2].childIf' index="/userManage/content/articles/">文章管理</el-menu-item>
@@ -43,12 +43,12 @@
                     <el-menu-item v-if='ifValue[1].child[5].childIf' index="/userManage/content/Carousel">轮播图管理</el-menu-item>
                 </el-submenu>
                 <el-submenu index="5" v-if='ifValue[2].parentIf'>
-                    <template slot="title">电商管理>></template>
+                    <template slot="title">电商管理</template>
                     <el-menu-item v-if='ifValue[2].child[0].childIf' index="/userManage/ECommerce/eating">点餐管理</el-menu-item>
                     <!-- <el-menu-item v-if='ifValue[2].child[1].childIf' index="/userManage/ECommerce/shoping">商城管理</el-menu-item> -->
                 </el-submenu>
                 <el-submenu index="6" v-if='ifValue[3].parentIf'>
-                    <template slot="title">人员管理>></template>
+                    <template slot="title">人员管理</template>
                     <el-menu-item v-if='ifValue[3].child[0].childIf' index="/userManage/Personnel/PersonnelType">人员类别</el-menu-item>
                     <el-menu-item v-if='ifValue[3].child[1].childIf' index="/userManage/Personnel/PersonnelList">人员列表</el-menu-item>
                 </el-submenu>
