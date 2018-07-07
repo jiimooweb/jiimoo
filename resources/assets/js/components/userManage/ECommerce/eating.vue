@@ -85,8 +85,8 @@
                 </el-tab-pane>
                 <!-- 基础设置 -->
                 <el-tab-pane label="基础设置">
-                    <el-row v-if="false">
-                        <audio ref="messageAudio" controls="controls">
+                    <el-row v-show="false">
+                        <audio id='messageAudio' controls="controls">
                             <source :src="aUrl">
                         </audio>
                     </el-row>
@@ -1153,7 +1153,7 @@ export default {
         },
         //接受数据
         websocketonmessage(e){
-            this.$refs.messageAudio.play()
+            document.querySelector('#messageAudio').play()
             console.log(e.data);
         },
         //关闭websocket
