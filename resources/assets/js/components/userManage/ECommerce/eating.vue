@@ -184,12 +184,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -202,12 +196,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -220,12 +208,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
@@ -258,12 +240,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -276,12 +252,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -294,12 +264,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
@@ -332,12 +296,6 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <!-- <el-table-column label="支付途径">
-                                    <template slot-scope="scope">
-                                        <p v-if='orderList[scope.$index].pay_way === 0'>微信支付</p>
-                                        <p v-else>货到支付</p>
-                                    </template>
-                                </el-table-column> -->
                                 <el-table-column prop="status" label="状态"></el-table-column>
                             </el-table>
                         </el-tab-pane>
@@ -352,6 +310,26 @@
                         <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                         <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                         <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                        <el-table-column label="操作" width="200">
+                                    <template slot-scope="scope">
+                                        <el-popover placement="top" width="160" v-model="filterOrderForOutOrder[scope.$index].visible1">
+                                            <p>是否确认此订单?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="filterOrderForOutOrder[scope.$index].visible1 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="confirmOrder(filterOrderForOutOrder[scope.$index].id),filterOrderForOutOrder[scope.$index].visible1 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="primary" slot="reference" size="small">确认订单</el-button>
+                                        </el-popover>
+                                        <el-popover placement="top" width="160" v-model="filterOrderForOutOrder[scope.$index].visible2">
+                                            <p>是否确认取消订单?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="filterOrderForOutOrder[scope.$index].visible2 = false">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="cancelOrder(filterOrderForOutOrder[scope.$index].id),filterOrderForOutOrder[scope.$index].visible2 = false">确定</el-button>
+                                            </div>
+                                            <el-button type="danger" slot="reference" size="small">取消订单</el-button>
+                                        </el-popover>
+                                    </template>
+                                </el-table-column>
                     </el-table>
                 </el-tab-pane>
             </el-tabs>
@@ -925,9 +903,7 @@ export default {
                         this.isNewBaseData = true;
                     } else {
                         this.isNewBaseData = false;
-                        this.baseSetData.offer = $.parseJSON(
-                            res.data.data.offer
-                        );
+                        this.baseSetData.offer = res.data.data.offer
                     }
                 });
         },
