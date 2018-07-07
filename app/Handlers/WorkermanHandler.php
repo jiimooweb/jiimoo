@@ -16,7 +16,7 @@ class WorkermanHandler
 
     //当客户端连上来时分配uid,并保存链接,并通知所有客户端
     public function connection($connection){
-      
+        echo '成功连接';
     }
 
     //当客户端发送消息过来时,转发给所有人
