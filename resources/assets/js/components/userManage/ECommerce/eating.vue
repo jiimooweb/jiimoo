@@ -425,6 +425,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import tip from "@/components/tip.vue";
 import { quillEditor } from "vue-quill-editor";
+import { setTimeout } from 'timers';
 export default {
     data() {
         return {
@@ -1150,6 +1151,9 @@ export default {
         websocketonOpen(){
             console.log('open');
             this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
+            setTimeout(function(){
+                this.wsuri.send('xcx_id_'+localStorage.getItem('XCXID'))
+            },25000)
         },
         //接受数据
         websocketonmessage(e){
