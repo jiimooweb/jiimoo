@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Workerman\Worker;
+use Workerman\Lib\Timer;
 use Illuminate\Console\Command;
 
 class Workerman extends Command
@@ -42,6 +43,9 @@ class Workerman extends Command
         $arg = $this->argument('action');
         $argv [1] = $arg;
 
+        define('HEARTBEAT_TIME', 30);
+
+
         $context = array(
             // 更多ssl选项请参考手册 http://php.net/manual/zh/context.ssl.php
             'ssl' => array(
@@ -62,6 +66,21 @@ class Workerman extends Command
         // worker进程启动后创建一个text Worker以便打开一个内部通讯端口
         $worker->onWorkerStart = function($worker)
         {
+            Timer::add(1, function()use($worker){
+                $time_now = time();
+                foreach($worker->connections as $connection) {
+                    // 有可能该connection还没收到过消息，则lastMessageTime设置为当前时间
+                    if (empty($connection->lastMessageTime)) {
+                        $connection->lastMessageTime = $time_now;
+                        continue;
+                    }
+                    // 上次通讯时间间隔大于心跳间隔，则认为客户端已经下线，关闭连接
+                    if ($time_now - $connection->lastMessageTime > HEARTBEAT_TIME) {
+                        $connection->close();
+                    }
+                }
+            });
+            
             // 开启一个内部端口，方便内部系统推送数据，Text协议格式 文本+换行符
             $inner_text_worker = new Worker('text://0.0.0.0:8150');
             $inner_text_worker->onMessage = function($connection, $buffer)
@@ -85,6 +104,9 @@ class Workerman extends Command
         $worker->onMessage = function($connection, $data)
         {
             global $worker;
+
+            $connection->lastMessageTime = time();
+            
             // 判断当前客户端是否已经验证,既是否设置了uid
             if(!isset($connection->uid))
             {
@@ -112,6 +134,7 @@ class Workerman extends Command
 
         Worker::runAll();
     }
+
 
     // 向所有验证的用户推送数据
     function broadcast($message)
