@@ -33,8 +33,8 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" v-if="reviewV[0].status !== 2" :disabled="testV.length===0">审核</el-button>
-                            <el-button @click="openReview()" v-else :disabled="reviewV[0].status === 2">审核中</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card">
@@ -70,13 +70,13 @@
                             </el-col>
                             <br>
                             <el-col>
-                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 2">审核中</p>
-                                <p style="color:#00db00;line-height:40px;" v-if="reviewV[0].status === 0">审核成功</p>
-                                <p style="color:red;line-height:40px;" v-if="reviewV[0].status === 1">审核失败</p>
+                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewVStatus === 2">审核中</p>
+                                <p style="color:#00db00;line-height:40px;" v-if="reviewVStatus === 0">审核成功</p>
+                                <p style="color:red;line-height:40px;" v-if="reviewVStatus === 1">审核失败</p>
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="" type='primary' :disabled="reviewV[0].status !== 0">发布</el-button>
+                            <el-button @click="" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card">
@@ -107,7 +107,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="" type='primary' :disabled="onlineV[0].status !== 3">预览</el-button>
+                            <el-button @click="" type='primary' :disabled="onlineVStatus !== 3">预览</el-button>
                         </el-row>
                     </el-card>
                 </el-tab-pane>
@@ -333,13 +333,17 @@ export default {
             ],
             //当前最新体验版本(first)
             testV: [],
+            testVStatus:-10,
             componentsList:[],
             testComponts:'',
             testVisible:false,
+
             //当前审核版本(first)
             reviewV: [],
+            reviewVStatus:-10,
             //当前线上版本(first)
-            onlineV: []
+            onlineV: [],
+            onlineVStatus:-10,
         };
     },
     methods: {
@@ -361,6 +365,21 @@ export default {
                         } else {
                             this.onlineV.push(this.versionList[i]);
                         }
+                    }
+                    if(!(this.testV.length > 0)){
+                        this.testVStatus = -10
+                    }else{
+                        this.testVStatus = this.testV[0].status
+                    }
+                    if(!(this.reviewV.length > 0)){
+                        this.reviewVStatus = -10
+                    }else{
+                        this.reviewVStatus = this.reviewV[0].status
+                    }
+                    if(!(this.onlineV.length > 0)){
+                        this.onlineVStatus = -10
+                    }else{
+                        this.onlineVStatus = this.onlineV[0].status
                     }
                     axios.get("/api/templates").then(res => {
                         this.componentsList = res.data.data;
