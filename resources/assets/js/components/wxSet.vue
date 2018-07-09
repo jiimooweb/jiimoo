@@ -260,24 +260,30 @@ export default {
         };
     },
     methods: {
-        //体验版本信息
+        //版本信息
         getTestV(){
             axios.get("/wechat/" + store.state.xcxId.xcxID + "/get_audits").then(res=>{
                 this.versionList = res.data
                 for(let i=0;i<this.versionList.length;i++){
+                    console.log(this.versionList[i].status);
+                    
                     if(this.versionList[i].status === -1){
                         this.testV.push(this.versionList[i])
+                        console.log(1);
+                        
                     }else if(this.versionList[i].status === 0 ||
                      this.versionList[i].status === 1 ||
                      this.versionList[i].status === 2){
+                         console.log(2);
                          this.reviewV.push(this.versionList[i])
                     }else{
+                        console.log(3);
                         this.onlineV.push(this.versionList[i])
                     }
                 }
-                console.log(this.testV);
-                console.log(this.reviewV);
-                console.log(this.onlineV);
+                // console.log(this.testV);
+                // console.log(this.reviewV);
+                // console.log(this.onlineV);
             })
         },
 
@@ -345,10 +351,10 @@ export default {
                     // console.log(this.convertBase64UrlToBlob(res.data));
 
                     // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
-                    console.log(res.data);
+                    // console.log(res.data);
                     window.URL.revokeObjectURL(this.preViewQrcode)
                     this.preViewQrcode = window.URL.createObjectURL(res.data);
-                    console.log(this.preViewQrcode);
+                    // console.log(this.preViewQrcode);
                     
                 },res=>{
                     this.showMessage('error','二维码获取错误，请联系管理员,或者稍后再重新获取')
@@ -373,14 +379,14 @@ export default {
             axios
                 .get("/wechat/" + store.state.xcxId.xcxID + "/miniprogram")
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.data.status === 'unauthorize') {
-                        console.log("未绑定");
+                        // console.log("未绑定");
                         this.buttonUrl = res.data.data;
                         this.loading = false;
                         this.xcxBind2 = true;
                     } else {
-                        console.log("已绑定");
+                        // console.log("已绑定");
                         // console.log(eval("(" + res.data.data.func_info + ")"));
                         // console.log(res.data);
                         this.getCategoryList();
@@ -449,7 +455,7 @@ export default {
                         this.templateList[index].id
                 )
                 .then(res => {
-                    console.log(this.templateList[index].status);
+                    // console.log(this.templateList[index].status);
                 });
 		},
 		showMessage(type, msg) {
@@ -460,10 +466,10 @@ export default {
         },
     },
     mounted() {
+        this.getTestV()
         this.getXCXAuthorized();
         this.getTestList();
         this.getNoticeTemplateList();
-        this.getTestV()
     }
 };
 </script>
