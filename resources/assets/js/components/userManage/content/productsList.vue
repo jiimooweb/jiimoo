@@ -198,6 +198,7 @@
                 <el-col :span="20" style="height:500px;overflow:auto;">
                     <quill-editor style="height:400px;" ref="myTextEditor" :content="this.dialogData.content" @change="onEditorChange($event)">
                     </quill-editor>
+                    <!-- <el-input v-model="this.dialogData.content" @change="testtt()"></el-input> -->
                 </el-col>
             </el-row>
             <span slot="footer" class="dialog-footer">
@@ -251,6 +252,9 @@ export default {
   },
   components: { quillEditor },
   methods: {
+      testtt(value){
+          console.log(value)
+      },
     //----获取优惠券
     getCoupongs() {
       axios
@@ -340,7 +344,7 @@ export default {
         name: "",
         cate_id: "",
         thumb: "",
-        banner: "",
+        banner: [],
         o_price: "", //原价
         c_price: "", //现价
         stock: "", //库存
@@ -376,7 +380,6 @@ export default {
       this.sortCoupons(this.productsList[index].coupons);
       if (this.dialogData.banner == null) {
         this.dialogData.banner = [];
-        // console.log(this.dialogData.banner);
       }
       this.bannerList = [];
       this.thumbList = [];
