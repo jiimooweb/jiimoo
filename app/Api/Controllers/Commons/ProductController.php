@@ -51,7 +51,7 @@ class ProductController extends Controller
 
         if(request()->client_type == 'app') {
             $uid = Token::getUid();
-            $coupons = CouponRecord::getUserHasCoupons($uid)->pluck('id');
+            $coupons = CouponRecord::getUserHasCoupons($uid);
         }
 
         $product = Product::where('id', request()->product)->with(['coupons' => function ($query) use ($coupons){
