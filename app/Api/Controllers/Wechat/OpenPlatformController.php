@@ -157,7 +157,7 @@ class OpenPlatformController extends Controller
     public function get_audits()
     {
         $xcx_id = request()->xcx_id;
-        $audits = Audit::where('xcx_id', $xcx_id)>get();
+        $audits = Audit::where('xcx_id', $xcx_id)->orderBy('updated_at', 'desc')->get();
         return response()->json(['status' => 'success', 'data' => $audits]);
     }
 
