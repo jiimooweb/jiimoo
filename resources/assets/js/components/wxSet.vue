@@ -33,7 +33,7 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" v-if="reviewVStatus === -10" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0" :disabled="testV.length===0">审核</el-button>
                             <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
@@ -203,7 +203,7 @@
             </span>
         </el-dialog>
         <!-- 审核表单 -->
-        <el-dialog title="审核资料填写" class="reviewTable" :visible.sync="reviewVisible" width="30%">
+        <el-dialog title="审核资料填写" class="reviewTable" :visible.sync="reviewVisible" width="500px">
             <el-row>
                 <el-col>
                     标题
@@ -252,6 +252,20 @@
                 </el-col>
             </el-row>
         </el-dialog>
+        <el-dialog title="审核资料列表" class="reviewTable" :visible.sync="reviewListVisible" width="500px">
+            <el-row>
+                <el-col>
+                    <el-table :data="reviewList">
+                        <el-table-column prop="template_id" label="编号" width="200" style="background:#ddd;"></el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    <el-button type='primary' @click="inputCommitauto()" style="display:block;margin:0 auto;">提交</el-button>
+                </el-col>
+            </el-row>
+        </el-dialog>
     </el-container>
 </template>
 
@@ -263,6 +277,7 @@ export default {
     data() {
         return {
             reviewVisible: false, // 审核表单开启
+            reviewListVisible: false, // 审核列表开启
             qrcodePreview: false,
             preViewQrcode: "",
             dialogVisible: false,
@@ -282,6 +297,7 @@ export default {
                 category: "",
                 tag: ""
             },
+            reviewList:[],
             autoData: [
                 {
                     name: "小程序名称",
@@ -413,6 +429,7 @@ export default {
                 category: {},
                 tag: ""
             };
+            this.reviewList = []
         },
         //提交审核
         inputCommitauto() {
