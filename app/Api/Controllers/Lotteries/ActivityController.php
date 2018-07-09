@@ -124,6 +124,7 @@ class ActivityController extends Controller
     public function get_prize_result()
     {
         $activity_id=request()->activity;
+        $fan_id=Token::getUid();
         $activity=Activity::find($activity_id);
         $prizes=$activity->prizes->toArray();
         $noProbably=100;
@@ -145,7 +146,7 @@ class ActivityController extends Controller
             }
         }
         $partook=request('$partook')+1;
-        $save=ActivityFan::updateOrCreate(request(['activity','fan']),['partook'=>$partook]);
+        $save=ActivityFan::updateOrCreate(compact('activity_id','fan_id'),['partook'=>$partook]);
 //        foreach ($prizes as $prize){
 //            if($prize['id']==$rid){
 //                $result=$prize;
