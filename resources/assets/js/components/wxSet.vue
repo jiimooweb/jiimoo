@@ -39,14 +39,48 @@
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span>审核版本</span>
-                            <el-button style="float: right; padding: 3px 0" @click="" type="text" v-if="reviewV[0].status===0">发布</el-button>
-                            <el-button style="float: right; padding: 3px 0" type="text" v-if="reviewV[0].status===2">审核中</el-button>
                         </div>
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                            <el-col>
+                                版本号:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].version}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                            <el-col>
+                                审核提交时间:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].create_time}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-else>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">暂无审核版本，请选择体验版进行审核</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                            <el-col>
+                                审核状态:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 2">审核中</p>
+                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 0">审核成功</p>
+                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 1">审核失败</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="float:right;margin-top:30px;">
+                            <el-button @click="" type='primary' :disabled="reviewV[0].status !== 0">发布</el-button>
+                        </el-row>
                     </el-card>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span>线上版本</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">提交审核</el-button>
                         </div>
                     </el-card>
                 </el-tab-pane>
@@ -112,7 +146,7 @@
                 </el-col>
                 <el-col :span='18'>
                     <el-select v-model="testComponts" placeholder="请选择">
-                        <el-option v-for="item in this.componentsList" :key="item.id" :label="item.title" :value="item.id">
+                        <el-option v-for="item in this.componentsList" :key="item.template_id" :label="item.title" :value="item.template_id">
                         </el-option>
                     </el-select>
                 </el-col>
