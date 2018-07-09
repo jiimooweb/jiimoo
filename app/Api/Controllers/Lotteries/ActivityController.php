@@ -116,6 +116,7 @@ class ActivityController extends Controller
                 $activite->partake_flag=1;
                 $activite->surplus_partake=$activite->partake;
             }
+                $activite->partook=$activite->partake- $activite->surplus_partake;
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
