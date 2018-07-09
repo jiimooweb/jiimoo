@@ -40,7 +40,6 @@ export default {
         this.userinfo.username = store.state.userName
         this.userinfo.email = store.state.userEmail
         this.userinfo.avatarUrl = store.state.avatarUrl
-        console.log(store.state.userName);
     }
 };
 </script>

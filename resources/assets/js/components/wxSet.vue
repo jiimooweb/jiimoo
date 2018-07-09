@@ -31,23 +31,84 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button type='primary' style="width:70px;height:40px;padding: 3px 0">上传</el-button>
+                            <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span>审核版本</span>
-                            <el-button style="float: right; padding: 3px 0" @click="" type="text" v-if="reviewV[0].status===0">发布</el-button>
-                            <el-button style="float: right; padding: 3px 0" type="text" v-if="reviewV[0].status===2">审核中</el-button>
                         </div>
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                            <el-col>
+                                版本号:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].version}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                            <el-col>
+                                审核提交时间:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].create_time}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-else>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">暂无审核版本，请选择体验版进行审核</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                            <el-col>
+                                审核状态:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewVStatus === 2">审核中</p>
+                                <p style="color:#00db00;line-height:40px;" v-if="reviewVStatus === 0">审核成功</p>
+                                <p style="color:red;line-height:40px;" v-if="reviewVStatus === 1">审核失败</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="float:right;margin-top:30px;">
+                            <el-button @click="" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
+                        </el-row>
                     </el-card>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span>线上版本</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">提交审核</el-button>
                         </div>
+                        <el-row style="margin-top:20px;" v-if="onlineV.length>0">
+                            <el-col>
+                                版本号:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{onlineV[0].version}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-if="onlineV.length>0">
+                            <el-col>
+                                发布时间:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{onlineV[0].create_time}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-else>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">暂无发布版本，请对审核版进行发布</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="float:right;margin-top:30px;">
+                            <el-button @click="" type='primary' :disabled="onlineVStatus !== 3">预览</el-button>
+                        </el-row>
                     </el-card>
                 </el-tab-pane>
                 <el-tab-pane label="基本设置">
@@ -107,24 +168,25 @@
         <!-- 上传dialog -->
         <el-dialog title="选择模板" :visible.sync="testVisible" width="400px">
             <el-row>
-                <el-col>
+                <el-col :span='6' style="line-height:40px;">
                     小程序模板
                 </el-col>
-                <el-col>
-                    <el-select v-model="value" placeholder="请选择">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-col :span='18'>
+                    <el-select v-model="testComponts" placeholder="请选择">
+                        <el-option v-for="item in this.componentsList" :key="item.template_id" :label="item.title" :value="item.template_id">
                         </el-option>
                     </el-select>
                 </el-col>
             </el-row>
             <el-row>
-                <el-col>
+                <!-- <el-col>
                     预览
                 </el-col>
                 <el-col>
                     <img src="">
-                </el-col>
+                </el-col> -->
             </el-row>
+            <el-button type='primary' size='small' @click="commingTest()" style="display:block;margin:20px auto 0;">提交</el-button>
         </el-dialog>
         <el-dialog title="使用微信扫描二维码" :visible.sync="qrcodePreview" width="400px">
             <img :src="preViewQrcode" style="margin:0 auto;display:block;width:100%;">
@@ -271,10 +333,17 @@ export default {
             ],
             //当前最新体验版本(first)
             testV: [],
+            testVStatus:-10,
+            componentsList:[],
+            testComponts:'',
+            testVisible:false,
+
             //当前审核版本(first)
             reviewV: [],
+            reviewVStatus:-10,
             //当前线上版本(first)
-            onlineV: []
+            onlineV: [],
+            onlineVStatus:-10,
         };
     },
     methods: {
@@ -297,9 +366,44 @@ export default {
                             this.onlineV.push(this.versionList[i]);
                         }
                     }
+                    if(!(this.testV.length > 0)){
+                        this.testVStatus = -10
+                    }else{
+                        this.testVStatus = this.testV[0].status
+                    }
+                    if(!(this.reviewV.length > 0)){
+                        this.reviewVStatus = -10
+                    }else{
+                        this.reviewVStatus = this.reviewV[0].status
+                    }
+                    if(!(this.onlineV.length > 0)){
+                        this.onlineVStatus = -10
+                    }else{
+                        this.onlineVStatus = this.onlineV[0].status
+                    }
+                    axios.get("/api/templates").then(res => {
+                        this.componentsList = res.data.data;
+                    });
                 });
         },
-
+        //打开上传
+        openTestReview(){
+            this.testVisible = true
+            this.testComponts = ''
+        },
+        //提交上传
+        commingTest(){
+            axios.get("/wechat/" + store.state.xcxId.xcxID + "/commit/" + this.testComponts).then(res=>{
+                if(res.errcode === 0){
+                    this.showMessage('success','上传成功')
+                    this.testVisible = false
+                    this.getTestV();
+                }else{
+                    this.showMessage('error','上传失败，请稍后再试或与管理员联系。')
+                }
+                
+            })
+        },
         //打开审核资料
         openReview() {
             this.reviewVisible = true;
