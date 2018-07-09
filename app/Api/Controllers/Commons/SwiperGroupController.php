@@ -62,7 +62,7 @@ class SwiperGroupController extends Controller
 
     public function display() 
     {
-        $group = SwiperGroup::where('display', 1)->fisrt()->load('swipers');
+        $group = SwiperGroup::where('display', 1)->first()->load('swipers');
         $status = $group ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $group]);
     }
