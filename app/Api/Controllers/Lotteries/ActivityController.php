@@ -9,6 +9,7 @@ use App\Models\Lotteries\Activity;
 use App\Models\Lotteries\Prize;
 use App\Http\Requests\Lotteries\ActivityRequest;
 use App\Services\Token;
+use App\Models\Lotteries\ActivityFan;
 class ActivityController extends Controller
 {
     public function index()
@@ -105,7 +106,7 @@ class ActivityController extends Controller
         offset($offset)->limit($pagesize)->get();
         foreach ($activites as $activite){
             if(count($activite['fans'])){
-                $activite->surplus_partake=$activite->fans->partook-$activite->partake;
+                $activite->surplus_partake=$activite->partake-$activite->fans->partook;
                 if($activite->fans->partook>=$activite->partake){
                     $activite->partake_flag=0;
                 }else{
@@ -142,17 +143,21 @@ class ActivityController extends Controller
                 break;
             }
         }
+        $partook=request('$partook')+1;
+        $save=ActivityFan::updateOrCreate(request(['activity','fan']),['partook'=>$partook]);
 //        foreach ($prizes as $prize){
 //            if($prize['id']==$rid){
 //                $result=$prize;
 //                break;
 //            }
 //        }
-        if($result){
-            return response()->json(["status"=>"success","data"=>$result]);
-        }else{
-            return response()->json(["status"=>"error","msg"=>"系统失误！"]);
-        }
+
+        return response()->json(["status"=>"success","data"=>compact('result','partook')]);
+//        if($result!=""){
+//            return response()->json(["status"=>"success","data"=>$result]);
+//        }else{
+//            return response()->json(["status"=>"error","msg"=>"系统失误！"]);
+//        }
     }
 
     public function get_rand($proArr) {
