@@ -2,7 +2,7 @@
 
 namespace App\Models\Lotteries;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Lotteries\Prize;
 class ActivityFan extends Model
 {
