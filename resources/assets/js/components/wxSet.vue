@@ -31,7 +31,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button type='primary' style="width:70px;height:40px;padding: 3px 0">上传</el-button>
+                            <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
                             <el-button @click="openReview()" :disabled="testV.length===0">审核</el-button>
                         </el-row>
@@ -107,24 +107,25 @@
         <!-- 上传dialog -->
         <el-dialog title="选择模板" :visible.sync="testVisible" width="400px">
             <el-row>
-                <el-col>
+                <el-col :span='6' style="line-height:40px;">
                     小程序模板
                 </el-col>
-                <el-col>
-                    <el-select v-model="value" placeholder="请选择">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-col :span='18'>
+                    <el-select v-model="testComponts" placeholder="请选择">
+                        <el-option v-for="item in this.componentsList" :key="item.id" :label="item.title" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-col>
             </el-row>
             <el-row>
-                <el-col>
+                <!-- <el-col>
                     预览
                 </el-col>
                 <el-col>
                     <img src="">
-                </el-col>
+                </el-col> -->
             </el-row>
+            <el-button type='primary' size='small' @change="commingTest()" style="display:block;margin:20px auto 0;">提交</el-button>
         </el-dialog>
         <el-dialog title="使用微信扫描二维码" :visible.sync="qrcodePreview" width="400px">
             <img :src="preViewQrcode" style="margin:0 auto;display:block;width:100%;">
@@ -271,6 +272,9 @@ export default {
             ],
             //当前最新体验版本(first)
             testV: [],
+            componentsList:[],
+            testComponts:'',
+            testVisible:false,
             //当前审核版本(first)
             reviewV: [],
             //当前线上版本(first)
@@ -297,9 +301,23 @@ export default {
                             this.onlineV.push(this.versionList[i]);
                         }
                     }
+                    axios.get("/api/templates").then(res => {
+                        this.componentsList = res.data.data;
+                    });
                 });
         },
-
+        //打开上传
+        openTestReview(){
+            this.testVisible = true
+            this.testComponts = ''
+        },
+        //提交上传
+        commingTest(){
+            axios.get("/wechat/" + store.state.xcxId.xcxID + "/commit/" + this.testComponts).then(res=>{
+                this.showMessage('success','上传成功')
+                this.testVisible = false
+            })
+        },
         //打开审核资料
         openReview() {
             this.reviewVisible = true;
