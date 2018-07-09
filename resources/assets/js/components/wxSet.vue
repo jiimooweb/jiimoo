@@ -5,7 +5,7 @@
 				<el-tab-pane label="版本设置">
 					<el-card class="box-card" style="height:200px;">
 						<div slot="header" class="clearfix">
-							<span>开发版本</span>
+							<span>体验版本</span>
 							
 						</div>
 						<el-row style="margin-top:20px;">
@@ -236,10 +236,23 @@ export default {
             },
             templateList: [],
             pageList: [],
-            buttonUrl: ""
+            buttonUrl: "",
+            //体验版资料
+            testV:{
+                modulesData:[],
+            }
+
         };
     },
     methods: {
+        //体验版本信息
+        getTestV(){
+            axios.get("/wechat/" + store.state.xcxId.xcxID + "/get_audits").then(res=>{
+                this.testV.modulesData = res.data
+            })
+        },
+
+
 		//打开审核资料
 		openReview(){
 			this.reviewVisible = true
@@ -251,7 +264,7 @@ export default {
             }
 		},
 		//提交审核
-		inputCommitauto(){
+		inputCommitauto() {
 			if(this.reviewTable.title == ''
 				|| this.reviewTable.powitem == ''
 				|| this.reviewTable.category === ''
@@ -418,11 +431,10 @@ export default {
         },
     },
     mounted() {
-        // console.log(store.state.xcxId);
         this.getXCXAuthorized();
         this.getTestList();
         this.getNoticeTemplateList();
-        // console.log(this.templateList);
+        this.getTestV()
     }
 };
 </script>
