@@ -125,7 +125,7 @@
                     <img src="">
                 </el-col> -->
             </el-row>
-            <el-button type='primary' size='small' @change="commingTest()" style="display:block;margin:20px auto 0;">提交</el-button>
+            <el-button type='primary' size='small' @click="commingTest()" style="display:block;margin:20px auto 0;">提交</el-button>
         </el-dialog>
         <el-dialog title="使用微信扫描二维码" :visible.sync="qrcodePreview" width="400px">
             <img :src="preViewQrcode" style="margin:0 auto;display:block;width:100%;">
