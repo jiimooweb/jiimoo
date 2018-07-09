@@ -424,8 +424,16 @@ export default {
             ) {
                 this.showMessage("error", "有项目未填");
             } else {
-                this.showMessage("success", "成功提交审核（未完成）");
-                this.reviewVisible = false;
+                axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
+                    title:this.reviewTable.title,
+                    powitem:this.reviewTable.powitem,
+                    category:this.reviewTable.category,
+                    tag:this.reviewTable.tag
+                }).then(res=>{
+                    this.showMessage("success", "成功提交审核（未完成）");
+                    this.reviewVisible = false;
+                })
+                
             }
         },
         //获取category列表
@@ -490,7 +498,6 @@ export default {
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_testers")
                 .then(res => {
                     this.testData = res.data.data;
-                    // console.log(this.testData);
                 });
         },
         //绑定连接跳转
