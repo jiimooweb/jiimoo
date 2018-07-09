@@ -237,18 +237,47 @@ export default {
             templateList: [],
             pageList: [],
             buttonUrl: "",
-            //体验版资料
-            testV:{
-                modulesData:[],
-            }
-
+            //版本资料列表
+            versionList:[
+                {
+                    template_id:'',//模板id
+                    version:'',//版本号
+                    audit_id:'',//审核id
+                    status:'',//-1 上传  0 审核成功  1 审核失败  2 审核中  3 发布
+                    item_list:'',//提交审核向
+                    reason:'',//审核失败原因
+                    succ_time:'',//成功时间
+                    fail_time:'',//失败时间
+                    create_time:'',//创建时间 
+                }
+            ],
+            //当前最新体验版本
+            testV:[],
+            //当前审核版本
+            reviewV:[],
+            //当前线上版本
+            onlineV:[]
         };
     },
     methods: {
         //体验版本信息
         getTestV(){
             axios.get("/wechat/" + store.state.xcxId.xcxID + "/get_audits").then(res=>{
-                this.testV.modulesData = res.data
+                this.versionList = res.data
+                for(let i=0;i<this.versionList.length;i++){
+                    if(this.versionList[i].status === -1){
+                        this.testV.push(this.versionList[i])
+                    }else if(this.versionList[i].status === 0 ||
+                     this.versionList[i].status === 1 ||
+                     this.versionList[i].status === 2){
+                         this.reviewV.push(this.versionList[i])
+                    }else{
+                        this.onlineV.push(this.versionList[i])
+                    }
+                }
+                console.log(this.testV);
+                console.log(this.reviewV);
+                console.log(this.onlineV);
             })
         },
 
