@@ -5,7 +5,7 @@
 				<el-tab-pane label="版本设置">
 					<el-card class="box-card" style="height:200px;">
 						<div slot="header" class="clearfix">
-							<span>开发版本</span>
+							<span>体验版本</span>
 							
 						</div>
 						<el-row style="margin-top:20px;">
@@ -236,10 +236,58 @@ export default {
             },
             templateList: [],
             pageList: [],
-            buttonUrl: ""
+            buttonUrl: "",
+            //版本资料列表
+            versionList:[
+                {
+                    template_id:'',//模板id
+                    version:'',//版本号
+                    audit_id:'',//审核id
+                    status:'',//-1 上传  0 审核成功  1 审核失败  2 审核中  3 发布
+                    item_list:'',//提交审核向
+                    reason:'',//审核失败原因
+                    succ_time:'',//成功时间
+                    fail_time:'',//失败时间
+                    create_time:'',//创建时间 
+                }
+            ],
+            //当前最新体验版本
+            testV:[],
+            //当前审核版本
+            reviewV:[],
+            //当前线上版本
+            onlineV:[]
         };
     },
     methods: {
+        //版本信息
+        getTestV(){
+            axios.get("/wechat/" + store.state.xcxId.xcxID + "/get_audits").then(res=>{
+                this.versionList = res.data
+                for(let i=0;i<this.versionList.length;i++){
+                    console.log(this.versionList[i].status);
+                    
+                    if(this.versionList[i].status === -1){
+                        this.testV.push(this.versionList[i])
+                        console.log(1);
+                        
+                    }else if(this.versionList[i].status === 0 ||
+                     this.versionList[i].status === 1 ||
+                     this.versionList[i].status === 2){
+                         console.log(2);
+                         this.reviewV.push(this.versionList[i])
+                    }else{
+                        console.log(3);
+                        this.onlineV.push(this.versionList[i])
+                    }
+                }
+                // console.log(this.testV);
+                // console.log(this.reviewV);
+                // console.log(this.onlineV);
+            })
+        },
+
+
 		//打开审核资料
 		openReview(){
 			this.reviewVisible = true
@@ -251,7 +299,7 @@ export default {
             }
 		},
 		//提交审核
-		inputCommitauto(){
+		inputCommitauto() {
 			if(this.reviewTable.title == ''
 				|| this.reviewTable.powitem == ''
 				|| this.reviewTable.category === ''
@@ -303,10 +351,10 @@ export default {
                     // console.log(this.convertBase64UrlToBlob(res.data));
 
                     // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
-                    console.log(res.data);
+                    // console.log(res.data);
                     window.URL.revokeObjectURL(this.preViewQrcode)
                     this.preViewQrcode = window.URL.createObjectURL(res.data);
-                    console.log(this.preViewQrcode);
+                    // console.log(this.preViewQrcode);
                     
                 },res=>{
                     this.showMessage('error','二维码获取错误，请联系管理员,或者稍后再重新获取')
@@ -331,14 +379,14 @@ export default {
             axios
                 .get("/wechat/" + store.state.xcxId.xcxID + "/miniprogram")
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.data.status === 'unauthorize') {
-                        console.log("未绑定");
+                        // console.log("未绑定");
                         this.buttonUrl = res.data.data;
                         this.loading = false;
                         this.xcxBind2 = true;
                     } else {
-                        console.log("已绑定");
+                        // console.log("已绑定");
                         // console.log(eval("(" + res.data.data.func_info + ")"));
                         // console.log(res.data);
                         this.getCategoryList();
@@ -407,7 +455,7 @@ export default {
                         this.templateList[index].id
                 )
                 .then(res => {
-                    console.log(this.templateList[index].status);
+                    // console.log(this.templateList[index].status);
                 });
 		},
 		showMessage(type, msg) {
@@ -418,11 +466,10 @@ export default {
         },
     },
     mounted() {
-        // console.log(store.state.xcxId);
+        this.getTestV()
         this.getXCXAuthorized();
         this.getTestList();
         this.getNoticeTemplateList();
-        // console.log(this.templateList);
     }
 };
 </script>

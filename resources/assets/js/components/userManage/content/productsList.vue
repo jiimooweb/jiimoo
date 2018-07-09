@@ -236,9 +236,9 @@ export default {
         o_price: "", //原价
         c_price: "", //现价
         stock: "", //库存
-        display: "",
-        hot: "", //热卖
-        recommend: "", //推荐
+        display: 0,
+        hot: 0, //热卖
+        recommend: 0, //推荐
         format: "", //参数
         coupons: [],
         content: ""
@@ -344,9 +344,9 @@ export default {
         o_price: "", //原价
         c_price: "", //现价
         stock: "", //库存
-        display: "",
-        hot: "", //热卖
-        recommend: "", //推荐
+        display: 0,
+        hot: 0, //热卖
+        recommend: 0, //推荐
         format: "", //参数
         coupons: [],
         content: ""

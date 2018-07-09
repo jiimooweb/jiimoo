@@ -20,9 +20,6 @@ class ProductRequest extends CommonRequest
             'o_price' => 'required',
             'c_price' => 'required',
             'stock' => 'required|integer',
-            'display' => 'required|integer',
-            'hot' => 'required|integer',
-            'recommend' => 'required|integer',
         ];
     }
 }

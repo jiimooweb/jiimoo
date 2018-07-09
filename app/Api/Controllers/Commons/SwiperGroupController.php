@@ -59,4 +59,11 @@ class SwiperGroupController extends Controller
 
         return response()->json(['status' => 'error', 'msg' => '删除失败！']);   
     }
+
+    public function display() 
+    {
+        $group = SwiperGroup::where('display', 1)->first()->load('swipers');
+        $status = $group ? 'success' : 'error';
+        return response()->json(['status' => $status, 'data' => $group]);
+    }
 }
