@@ -2,6 +2,7 @@
 
 namespace App\Api\Controllers\Commons;
 
+use App\Services\Token;
 use Illuminate\Http\Request;
 use App\Models\Commons\Product;
 use App\Api\Controllers\Controller;
