@@ -33,7 +33,8 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-if="reviewV[0].status !== 2" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-else :disabled="reviewV[0].status === 2">审核中</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card">
@@ -70,8 +71,8 @@
                             <br>
                             <el-col>
                                 <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 2">审核中</p>
-                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 0">审核成功</p>
-                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 1">审核失败</p>
+                                <p style="color:#00db00;line-height:40px;" v-if="reviewV[0].status === 0">审核成功</p>
+                                <p style="color:red;line-height:40px;" v-if="reviewV[0].status === 1">审核失败</p>
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
@@ -82,6 +83,32 @@
                         <div slot="header" class="clearfix">
                             <span>线上版本</span>
                         </div>
+                        <el-row style="margin-top:20px;" v-if="onlineV.length>0">
+                            <el-col>
+                                版本号:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{onlineV[0].version}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-if="onlineV.length>0">
+                            <el-col>
+                                发布时间:
+                            </el-col>
+                            <br>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">{{onlineV[0].create_time}}</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px;" v-else>
+                            <el-col>
+                                <p style="color:#1da5d3;line-height:40px;">暂无发布版本，请对审核版进行发布</p>
+                            </el-col>
+                        </el-row>
+                        <el-row style="float:right;margin-top:30px;">
+                            <el-button @click="" type='primary' :disabled="onlineV[0].status !== 3">预览</el-button>
+                        </el-row>
                     </el-card>
                 </el-tab-pane>
                 <el-tab-pane label="基本设置">
@@ -348,8 +375,14 @@ export default {
         //提交上传
         commingTest(){
             axios.get("/wechat/" + store.state.xcxId.xcxID + "/commit/" + this.testComponts).then(res=>{
-                this.showMessage('success','上传成功')
-                this.testVisible = false
+                if(res.errcode === 0){
+                    this.showMessage('success','上传成功')
+                    this.testVisible = false
+                    this.getTestV();
+                }else{
+                    this.showMessage('error','上传失败，请稍后再试或与管理员联系。')
+                }
+                
             })
         },
         //打开审核资料
