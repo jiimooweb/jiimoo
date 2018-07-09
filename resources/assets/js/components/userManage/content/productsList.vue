@@ -340,7 +340,7 @@ export default {
         name: "",
         cate_id: "",
         thumb: "",
-        banner: "",
+        banner: [],
         o_price: "", //原价
         c_price: "", //现价
         stock: "", //库存
@@ -376,7 +376,6 @@ export default {
       this.sortCoupons(this.productsList[index].coupons);
       if (this.dialogData.banner == null) {
         this.dialogData.banner = [];
-        // console.log(this.dialogData.banner);
       }
       this.bannerList = [];
       this.thumbList = [];
