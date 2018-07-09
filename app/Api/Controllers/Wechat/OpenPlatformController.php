@@ -123,7 +123,7 @@ class OpenPlatformController extends Controller
                 'app_id' => $xcx['app_id'],                
                 'template_id' => $template_id,
                 'version' => $version,
-                'status' => 3,
+                'status' => -1, //上传
             ];
             if($audit) {
                 $data['status'] = $audit['status'];
@@ -157,7 +157,7 @@ class OpenPlatformController extends Controller
     public function get_audits()
     {
         $xcx_id = request()->xcx_id;
-        $audits = Audit::where('xcx_id', $xcx_id)->get();
+        $audits = Audit::where('xcx_id', $xcx_id)->orderBy('updated_at', 'desc')->first();
         return response()->json(['status' => 'success', 'data' => $audits]);
     }
 
@@ -168,17 +168,17 @@ class OpenPlatformController extends Controller
         $itemList = request('item_list');
         
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
-        $itemList = [
-                        [
-                            "address" => "pages/applicants/applicants",
-                            "tag" => "人员 资源",
-                            "first_class" => "餐饮",
-                            "second_class"=> "菜谱",
-                            "first_id" => 220,
-                            "second_id" => 225,
-                            "title" => "首页"
-                        ]
-                    ];
+        // $itemList = [
+        //                 [
+        //                     "address" => "pages/applicants/applicants",
+        //                     "tag" => "人员 资源",
+        //                     "first_class" => "餐饮",
+        //                     "second_class"=> "菜谱",
+        //                     "first_id" => 220,
+        //                     "second_id" => 225,
+        //                     "title" => "首页"
+        //                 ]
+        //             ];
 
         $msg = $miniProgram->code->submitAudit($itemList);    
         if($msg['errcode'] == 0) {
@@ -208,6 +208,8 @@ class OpenPlatformController extends Controller
     public function release() 
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
+        Audit::where('audit_id', $auditMsg['auditid'])->update(['status' => 3]);    
         return Wechat::retMsg($miniProgram->code->release()); 
     }
 
