@@ -18,6 +18,7 @@ class XcxTemplatesController extends Controller
         $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
         $xcxTemplates=XcxTemplates::where('xcx_id',$xcx->id)->first();
         $xcxTemplates->templates=json_decode($xcxTemplates->templates);
+        $xcxTemplates->templates=Template::findMany($xcxTemplates->templates);
         return response()->json(["status"=>"success","data"=>$xcxTemplates]);
     }
 
