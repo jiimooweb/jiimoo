@@ -457,6 +457,7 @@ export default {
         releaseOnline(){
             axios.get("/wechat/" + store.state.xcxId.xcxID + "/release").then(res=>{
                     this.showMessage('success','发布成功')
+                    this.getTestV()
             })
         },
 
@@ -517,9 +518,10 @@ export default {
                 itemList:this.reviewList,
                 id:this.testV[0].id
                 }).then(res=>{
-                    this.showMessage("success", "成功提交审核（未完成）");
+                    this.showMessage("success", "成功提交审核");
                     this.reviewVisible = false;
                     this.reviewList = []
+                    this.getTestV()
                 })
         },
 
