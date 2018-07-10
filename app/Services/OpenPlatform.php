@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Commons\Xcx;
+use App\Models\Wechat\Audit;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
