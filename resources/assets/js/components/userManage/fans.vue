@@ -15,8 +15,11 @@
             <el-col :span="2" style="line-height:40px;font-size:15px;color:#999;">
                 用户搜索
             </el-col>
-            <el-col :span="10">
+            <el-col :span="3">
                 <el-input v-model="searchName"></el-input>
+            </el-col>
+            <el-col :span="2" style="margin-left:10px;">
+                <el-button @click=""  type='primary'>搜索</el-button>
             </el-col>
         </el-row>
         <el-table :data="fansList" style="width: 100%">
@@ -66,17 +69,18 @@ export default {
                 {value:'-1',label:'所有用户'},
                 {value:'1',label:'已授权'},
                 {value:'0',label:'未授权'}
-                ]
+                ],
+            searchName:''
         };
     },
     methods: {
         sizeChange(index) {
             this.getFansList(index);
         },
-        getFansList(page) {
+        getFansList() {
             axios
                 .get("/web/" + store.state.xcx_flag.xcx_flag + "/api/fans?page=" +
-                        page+'&status=' + this.statusFilter)
+                        this.page+'&status=' + this.statusFilter+'&nickname='+this.searchName)
                 .then(res => {
                     this.fansList = res.data.data.data;
                     this.allPage = res.data.data.total;
@@ -85,7 +89,7 @@ export default {
         changeStatus(){
             axios
                 .get("/web/" + store.state.xcx_flag.xcx_flag + "/api/fans?page=" +
-                        page+'&status=' + this.statusFilter)
+                        this.page+'&status=' + this.statusFilter+'&nickname='+this.searchName)
                 .then(res => {
                     this.fansList = res.data.data.data;
                     this.allPage = res.data.data.total;
@@ -95,7 +99,7 @@ export default {
     computed:{
         searchfilter: function() {
             var search = this.statusFilter;
-            if (search) {
+            if (search) {   
                 return this.fansList.filter(function(fansList) {
                     return ["status"].some(function(key) {
                         return (
@@ -110,7 +114,7 @@ export default {
         },
     },
     mounted() {
-        this.getFansList(this.page);
+        this.getFansList();
     }
 };
 </script>
