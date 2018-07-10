@@ -260,7 +260,7 @@
                         <el-table-column prop="title" label="标题" width="200" style="background:#ddd;"></el-table-column>
                         <el-table-column label="操作" width="200" style="background:#ddd;">
                             <template slot-scope="scope">
-                                <el-button @click="" type='danger'>删除</el-button>
+                                <el-button @click="removeCommitauto()" type='danger'>删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
