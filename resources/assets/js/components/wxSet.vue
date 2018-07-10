@@ -41,7 +41,7 @@
                         <div slot="header" class="clearfix">
                             <span>审核版本</span>
                         </div>
-                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 && reviewVStatus !== -4">
                             <el-col>
                                 版本号:
                             </el-col>
@@ -50,7 +50,7 @@
                                 <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].version}}</p>
                             </el-col>
                         </el-row>
-                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 || reviewVStatus !== -4">
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 && reviewVStatus !== -4">
                             <el-col>
                                 审核提交时间:
                             </el-col>
@@ -64,7 +64,7 @@
                                 <p style="color:#1da5d3;line-height:40px;">暂无审核版本，请选择体验版进行审核</p>
                             </el-col>
                         </el-row>
-                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 || reviewVStatus !== -4">
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 && reviewVStatus !== -4">
                             <el-col>
                                 审核状态:
                             </el-col>
@@ -418,7 +418,7 @@ export default {
                         }
                     }else{
                         if(this.onlineV.length > 0){
-                            if(this.formatDate(this.reviewV[0].created_at)>this.formatDate(this.onlineV[0].created_at)){
+                            if(Date.parse(this.formatDate(this.reviewV[0].created_at))>Date.parse(this.formatDate(this.onlineV[0].created_at))){
                                 this.reviewVStatus = this.reviewV[0].status
                             }else{
                                 this.reviewVStatus = -4
@@ -427,6 +427,7 @@ export default {
                             this.reviewVStatus = this.reviewV[0].status
                         }
                     }
+                    console.log(this.reviewVStatus);
                     
                     //整理体验版本
                     if(!(this.testV.length > 0)){
