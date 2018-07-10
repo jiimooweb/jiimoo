@@ -258,7 +258,7 @@
             </el-row>
         </el-dialog>
         <el-dialog title="审核资料列表" class="reviewTable" :visible.sync="reviewListVisible" width="500px">
-            <el-button @click="openCommitauto()" size='small'>新增</el-button>
+            <el-button style="margin-left:30px;" @click="openCommitauto()" size='small'>新增</el-button>
             <el-row>
                 <el-col>
                     <el-table :data="reviewList">
@@ -479,7 +479,8 @@ export default {
         //提交审核
         inputCommitauto(){
             axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
-                itemList:this.reviewList
+                itemList:this.reviewList,
+                id:this.testV[0].id
                 }).then(res=>{
                     this.showMessage("success", "成功提交审核（未完成）");
                     this.reviewVisible = false;
