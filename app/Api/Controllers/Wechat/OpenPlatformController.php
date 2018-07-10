@@ -324,7 +324,6 @@ class OpenPlatformController extends Controller
     {
         $path = request()->path;
         $scene = request()->scene;
-        dd($scene);
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->app_code->get($path, [
             'scene' => $scene
