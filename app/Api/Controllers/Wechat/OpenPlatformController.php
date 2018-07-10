@@ -322,6 +322,13 @@ class OpenPlatformController extends Controller
 
     public function get_qrcode_online()
     {
+        $page = request()->page ?? 'pages/index/index';        
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->app_code->get($page);
+    }
+
+    public function get_qrcode_scene()
+    {
         $page = request()->page;
         $scene = request()->scene;
         $width = request()->width ?? 430;
@@ -330,7 +337,6 @@ class OpenPlatformController extends Controller
             'page' => $page,
             'width' => $width
         ]);
-        // $filename = $response->save('wechat/miniprogram/','minicode.png');
     }
 
     
