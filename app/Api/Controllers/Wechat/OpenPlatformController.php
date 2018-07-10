@@ -320,16 +320,15 @@ class OpenPlatformController extends Controller
         return $miniProgram->data_cube->summaryTrend();
     }
 
-    public function get_webview()
+    public function get_qrcode_online()
     {
+        $path = request()->path;
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        // $data = ["action" =>  'get'];
-        $data = [
-            "action" =>  'add',
-            "webviewdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-        ];
-        return Wechat::retMsg($miniProgram->domain->webview($data));
+        return $miniProgram->app_code->get($path);
+        // $filename = $response->save('wechat/miniprogram/','minicode.png');
     }
+
+    
     
     public function callback($app_id)
     {
