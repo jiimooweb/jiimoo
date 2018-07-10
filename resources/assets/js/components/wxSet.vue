@@ -447,6 +447,8 @@ export default {
                 this.showMessage("error", "有项目未填");
             } else {
                 this.reviewList.push(this.reviewTable)
+                console.log(this.reviewList);
+                
                 this.reviewTable = {
                     title: "",
                     powitem: "", //功能页面
