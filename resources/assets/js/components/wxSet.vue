@@ -453,8 +453,8 @@ export default {
             })
         },
         //发布版本
-        relaoseOnline(){
-            axios.get("/wechat/" + store.state.xcxId.xcxID + "/releose").then(res=>{
+        releaseOnline(){
+            axios.get("/wechat/" + store.state.xcxId.xcxID + "/release").then(res=>{
                     this.showMessage('success','发布成功')
             })
         },
