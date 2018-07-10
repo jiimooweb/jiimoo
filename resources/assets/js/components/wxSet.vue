@@ -258,6 +258,11 @@
                 <el-col>
                     <el-table :data="reviewList">
                         <el-table-column prop="title" label="标题" width="200" style="background:#ddd;"></el-table-column>
+                        <el-table-column label="操作" width="200" style="background:#ddd;">
+                            <template slot-scope="scope">
+                                <el-button @click="" type='danger'>删除</el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </el-col>
             </el-row>
@@ -460,6 +465,10 @@ export default {
                 //     this.reviewList = []
                 // })
             }
+        },
+        //删除审核记录
+        removeCommitauto(index){
+            this.reviewList.splice(index,1)
         },
         //提交审核
         inputCommitauto(){
