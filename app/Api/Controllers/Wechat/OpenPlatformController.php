@@ -164,20 +164,9 @@ class OpenPlatformController extends Controller
     public function submit_audit()
     {
         $xcx_id = request()->xcx_id;
-        $audit_id = request('audit_id');
+        $id = request('id');
         $itemList = request('itemList');
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
-        // $itemList = [
-        //                 [
-        //                     "address" => "pages/applicants/applicants",
-        //                     "tag" => "人员 资源",
-        //                     "first_class" => "餐饮",
-        //                     "second_class"=> "菜谱",
-        //                     "first_id" => 220,
-        //                     "second_id" => 225,
-        //                     "title" => "首页"
-        //                 ]
-        //             ];
 
         $msg = $miniProgram->code->submitAudit($itemList);    
         if($msg['errcode'] == 0) {
@@ -186,7 +175,7 @@ class OpenPlatformController extends Controller
                 'status' => 2,
                 'item_list' => json_encode($itemList)
             ];
-            Audit::where('id', $audit_id)->update($data);
+            Audit::where('id', $id)->update($data);
         }
 
         return Wechat::retMsg($msg);
