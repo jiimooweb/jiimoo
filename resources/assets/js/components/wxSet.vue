@@ -258,14 +258,14 @@
             </el-row>
         </el-dialog>
         <el-dialog title="审核资料列表" class="reviewTable" :visible.sync="reviewListVisible" width="500px">
-            <el-button @click="openCommitauto()">新增</el-button>
+            <el-button @click="openCommitauto()" size='small'>新增</el-button>
             <el-row>
                 <el-col>
                     <el-table :data="reviewList">
                         <el-table-column prop="title" label="标题" width="200" style="background:#ddd;"></el-table-column>
                         <el-table-column label="操作" width="200" style="background:#ddd;">
                             <template slot-scope="scope">
-                                <el-button @click="removeCommitauto()" type='danger'>删除</el-button>
+                                <el-button @click="removeCommitauto()" size='small' type='danger'>删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -273,7 +273,7 @@
             </el-row>
             <el-row>
                 <el-col>
-                    <el-button type='primary' @click="inputCommitauto()" style="display:block;margin:0 auto;">提交</el-button>
+                    <el-button type='primary' @click="inputCommitauto()" style="display:block;margin:0 auto;" size='small'>提交</el-button>
                 </el-col>
             </el-row>
         </el-dialog>
@@ -451,7 +451,15 @@ export default {
             ) {
                 this.showMessage("error", "有项目未填");
             } else {
-                this.reviewList.push(this.reviewTable)
+                this.reviewList.push({
+                    address:this.reviewTable.powitem,
+                    tag:this.reviewTable.tag,
+                    first_class:this.reviewTable.category.first_class,
+                    second_class:this.reviewTable.category.second_class,
+                    first_id:this.reviewTable.category.first_id,
+                    second_id:this.reviewTable.category.second_id,
+                    title:this.reviewTable.title
+                })
                 console.log(this.reviewList);
                 
                 this.reviewTable = {
@@ -461,16 +469,7 @@ export default {
                     tag: ""
                 };
                 this.reviewVisible = false;
-                // axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
-                //     title:this.reviewTable.title,
-                //     powitem:this.reviewTable.powitem,
-                //     category:this.reviewTable.category,
-                //     tag:this.reviewTable.tag
-                // }).then(res=>{
-                //     this.showMessage("success", "成功提交审核（未完成）");
-                //     this.reviewVisible = false;
-                //     this.reviewList = []
-                // })
+                
             }
         },
         //删除审核记录
@@ -479,7 +478,13 @@ export default {
         },
         //提交审核
         inputCommitauto(){
-
+            axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
+                itemList:this.reviewList
+                }).then(res=>{
+                    this.showMessage("success", "成功提交审核（未完成）");
+                    this.reviewVisible = false;
+                    this.reviewList = []
+                })
         },
 
         //单项审核资料关闭
