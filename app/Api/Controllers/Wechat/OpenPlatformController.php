@@ -69,7 +69,7 @@ class OpenPlatformController extends Controller
         $auth_code = request()->get('auth_code');
         $xcx_id = request()->xcx_id;
         OpenPlatform::initMiniProgram($xcx_id,$auth_code);
-        return 'success';
+        return redirect('https://www.rdoorweb.com/backend#/userManage/wxset');  
     }
 
     public function bind_tester()
