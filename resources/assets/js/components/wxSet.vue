@@ -76,7 +76,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="relaoseOnline()" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
+                            <el-button @click="releaseOnline()" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card" style="height:200px;">
@@ -107,7 +107,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="" type='primary' :disabled="onlineVStatus !== 3">预览</el-button>
+                            <el-button @click="getOnlineQrcode()" type='primary' :disabled="onlineVStatus !== 3">预览</el-button>
                         </el-row>
                     </el-card>
                 </el-tab-pane>
@@ -291,6 +291,7 @@ export default {
             reviewListVisible: false, // 审核列表开启
             qrcodePreview: false,
             preViewQrcode: "",
+            onlineQrcode: "",
             dialogVisible: false,
             wxAccount: "",
             loading: true,
@@ -544,16 +545,6 @@ export default {
         },
 
         //获取体验版预览二维码
-        convertBase64UrlToBlob(urlData) {
-            var bytes = window.atob(urlData.split(",")[1]); //去掉url的头，并转换为byte
-            //处理异常,将ascii码小于0的转换为大于0
-            var ab = new ArrayBuffer(bytes.length);
-            var ia = new Uint8Array(ab);
-            for (var i = 0; i < bytes.length; i++) {
-                ia[i] = bytes.charCodeAt(i);
-            }
-            return new Blob([ab], { type: "image/png" });
-        },
         getPreviewQrcode() {
             axios
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode/", {
@@ -562,17 +553,11 @@ export default {
                 .then(
                     res => {
                         this.qrcodePreview = true;
-                        // this.preViewQrcode = "data:image/png;base64," + res.data;
                         var reader = new FileReader();
-                        // console.log(this.convertBase64UrlToBlob(res.data));
-
-                        // this.preViewQrcode = this.convertBase64UrlToBlob(res.data);
-                        // console.log(res.data);
                         window.URL.revokeObjectURL(this.preViewQrcode);
                         this.preViewQrcode = window.URL.createObjectURL(
                             res.data
                         );
-                        // console.log(this.preViewQrcode);
                     },
                     res => {
                         this.showMessage(
@@ -582,6 +567,30 @@ export default {
                     }
                 );
         },
+        //获取线上版本二维码
+        getOnlineQrcode(){
+            axios
+                .get("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online", {
+                    responseType: "blob"
+                })
+                .then(
+                    res => {
+                        this.qrcodePreview = true;
+                        var reader = new FileReader();
+                        window.URL.revokeObjectURL(this.preViewQrcode);
+                        this.preViewQrcode = window.URL.createObjectURL(
+                            res.data
+                        );
+                    },
+                    res => {
+                        this.showMessage(
+                            "error",
+                            "二维码获取错误，请联系管理员,或者稍后再重新获取"
+                        );
+                    }
+                );
+        },
+
         //获取体验者列表
         getTestList() {
             axios
