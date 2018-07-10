@@ -570,7 +570,7 @@ export default {
         //获取线上版本二维码
         getOnlineQrcode(){
             axios
-                .post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online", {
+                .post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online",{}, {
                     responseType: "blob"
                 })
                 .then(
