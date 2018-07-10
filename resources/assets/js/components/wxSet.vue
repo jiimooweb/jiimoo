@@ -229,7 +229,12 @@
                 </el-col>
                 <el-col>
                     <el-select v-model="reviewTable.category" placeholder="选择类目">
-                        <el-option v-for="(item,index) in this.category" :key="index" :label="item.first_class+' > '+item.second_class" :value="index">
+                        <el-option v-for="(item,index) in this.category" :key="index" :label="item.first_class+' > '+item.second_class" :value="{
+                            first_class:item.first_class,
+                            second_class:item.second_class,
+                            first_id:item.first_id,
+                            second_id:item.second_id,
+                            }">
                         </el-option>
                     </el-select>
                     <!-- <el-select v-model="reviewTable.powitem" placeholder="二级类目">
