@@ -322,9 +322,12 @@ class OpenPlatformController extends Controller
 
     public function get_qrcode_online()
     {
-        $path = request()->path.'?sign=813';
+        $path = request()->path;
+        $scene = request()->scene;
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        return $miniProgram->app_code->get($path);
+        return $miniProgram->app_code->get($path, [
+            'scene' => $scene
+        ]);
         // $filename = $response->save('wechat/miniprogram/','minicode.png');
     }
 
