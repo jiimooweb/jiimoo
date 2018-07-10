@@ -19,7 +19,7 @@
                 <el-input v-model="searchName"></el-input>
             </el-col>
             <el-col :span="2" style="margin-left:10px;">
-                <el-button @click=""  type='primary'>搜索</el-button>
+                <el-button @click="getFansList()"  type='primary'>搜索</el-button>
             </el-col>
         </el-row>
         <el-table :data="fansList" style="width: 100%">
@@ -48,7 +48,7 @@
             </el-table-column>
         </el-table>
         <el-row>
-            <el-pagination layout="prev, pager, next" :current-page.sync='page' @current-change='sizeChange(page)' :page-size='pageSize' :total="allPage"></el-pagination>
+            <el-pagination layout="prev, pager, next" :current-page.sync='page' @current-change='sizeChange()' :page-size='pageSize' :total="allPage"></el-pagination>
         </el-row>
     </el-main>
 </template>
@@ -74,8 +74,8 @@ export default {
         };
     },
     methods: {
-        sizeChange(index) {
-            this.getFansList(index);
+        sizeChange() {
+            this.getFansList();
         },
         getFansList() {
             axios
