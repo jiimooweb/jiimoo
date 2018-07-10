@@ -203,7 +203,7 @@
             </span>
         </el-dialog>
         <!-- 审核表单 -->
-        <el-dialog title="审核资料填写" class="reviewTable" :visible.sync="reviewVisible" width="500px">
+        <el-dialog title="审核资料填写" class="reviewTable" :visible.sync="reviewVisible" width="500px" @close='handleClose'>
             <el-row>
                 <el-col>
                     标题
@@ -248,15 +248,16 @@
             </el-row>
             <el-row>
                 <el-col>
-                    <el-button type='primary' @click="inputCommitauto()" style="display:block;margin:0 auto;">提交</el-button>
+                    <el-button type='primary' @click="addCommitauto()" style="display:block;margin:0 auto;">提交</el-button>
                 </el-col>
             </el-row>
         </el-dialog>
         <el-dialog title="审核资料列表" class="reviewTable" :visible.sync="reviewListVisible" width="500px">
+            <el-button @click="openCommitauto()">新增</el-button>
             <el-row>
                 <el-col>
                     <el-table :data="reviewList">
-                        <el-table-column prop="template_id" label="编号" width="200" style="background:#ddd;"></el-table-column>
+                        <el-table-column prop="title" label="标题" width="200" style="background:#ddd;"></el-table-column>
                     </el-table>
                 </el-col>
             </el-row>
@@ -420,19 +421,18 @@ export default {
                 
             })
         },
+
         //打开审核资料
         openReview() {
-            this.reviewVisible = true;
-            this.reviewTable = {
-                title: "",
-                powitem: "", //功能页面
-                category: {},
-                tag: ""
-            };
-            this.reviewList = []
+            this.reviewListVisible = true;
         },
-        //提交审核
-        inputCommitauto() {
+        //打开新增审核资料
+        openCommitauto(){
+            this.reviewListVisible = false;
+            this.reviewVisible = true;
+        },
+        //添加审核
+        addCommitauto() {
             if (
                 this.reviewTable.title == "" ||
                 this.reviewTable.powitem == "" ||
@@ -441,17 +441,34 @@ export default {
             ) {
                 this.showMessage("error", "有项目未填");
             } else {
-                axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
-                    title:this.reviewTable.title,
-                    powitem:this.reviewTable.powitem,
-                    category:this.reviewTable.category,
-                    tag:this.reviewTable.tag
-                }).then(res=>{
-                    this.showMessage("success", "成功提交审核（未完成）");
-                    this.reviewVisible = false;
-                })
-                
+                this.reviewList.push(this.reviewTable)
+                this.reviewTable = {
+                    title: "",
+                    powitem: "", //功能页面
+                    category: {},
+                    tag: ""
+                };
+                this.reviewVisible = false;
+                // axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
+                //     title:this.reviewTable.title,
+                //     powitem:this.reviewTable.powitem,
+                //     category:this.reviewTable.category,
+                //     tag:this.reviewTable.tag
+                // }).then(res=>{
+                //     this.showMessage("success", "成功提交审核（未完成）");
+                //     this.reviewVisible = false;
+                //     this.reviewList = []
+                // })
             }
+        },
+        //提交审核
+        inputCommitauto(){
+
+        },
+
+        //单项审核资料关闭
+        handleClose(){
+            this.reviewListVisible = true;
         },
         //获取category列表
         getCategoryList() {
