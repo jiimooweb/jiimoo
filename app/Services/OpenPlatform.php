@@ -87,7 +87,7 @@ class OpenPlatform
         return $data;
     }
 
-    public function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
+    public static function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
     {
         if($method == 'get') {
             $data = ["action" =>  $method];
