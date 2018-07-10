@@ -25,7 +25,7 @@
         <el-table :data="fansList" style="width: 100%">
             <el-table-column prop="id" label="ID" width="100">
             </el-table-column>
-            <el-table-column prop="nickname" label="用户名" width="100">
+            <el-table-column prop="nickname" label="用户名" width="200">
             </el-table-column>
             <el-table-column prop="gender" label="性别" width="50">
                 <template slot-scope="scope">
@@ -40,11 +40,11 @@
                     <img v-else src="img/logo.png" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
                 </template>
             </el-table-column>
-            <el-table-column prop="openid" label="openid" width="300">
+            <el-table-column prop="openid" label="openid">
             </el-table-column>
-            <el-table-column prop="province" label="地区" width="150">
+            <el-table-column prop="province" label="地区" width="200">
             </el-table-column>
-            <el-table-column prop="city" label="城市" width="150">
+            <el-table-column prop="city" label="城市" width="200">
             </el-table-column>
         </el-table>
         <el-row>
