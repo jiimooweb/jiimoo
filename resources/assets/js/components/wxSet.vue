@@ -33,8 +33,8 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" v-if="reviewV[0].status !== 2" :disabled="testV.length===0">审核</el-button>
-                            <el-button @click="openReview()" v-else :disabled="reviewV[0].status === 2">审核中</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card">
@@ -70,13 +70,13 @@
                             </el-col>
                             <br>
                             <el-col>
-                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewV[0].status === 2">审核中</p>
-                                <p style="color:#00db00;line-height:40px;" v-if="reviewV[0].status === 0">审核成功</p>
-                                <p style="color:red;line-height:40px;" v-if="reviewV[0].status === 1">审核失败</p>
+                                <p style="color:#1da5d3;line-height:40px;" v-if="reviewVStatus === 2">审核中</p>
+                                <p style="color:#00db00;line-height:40px;" v-if="reviewVStatus === 0">审核成功</p>
+                                <p style="color:red;line-height:40px;" v-if="reviewVStatus === 1">审核失败</p>
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="" type='primary' :disabled="reviewV[0].status !== 0">发布</el-button>
+                            <el-button @click="" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
                         </el-row>
                     </el-card>
                     <el-card class="box-card">
@@ -107,7 +107,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="" type='primary' :disabled="onlineV[0].status !== 3">预览</el-button>
+                            <el-button @click="" type='primary' :disabled="onlineVStatus !== 3">预览</el-button>
                         </el-row>
                     </el-card>
                 </el-tab-pane>
@@ -203,7 +203,7 @@
             </span>
         </el-dialog>
         <!-- 审核表单 -->
-        <el-dialog title="审核资料填写" class="reviewTable" :visible.sync="reviewVisible" width="30%">
+        <el-dialog title="审核资料填写" class="reviewTable" :visible.sync="reviewVisible" width="500px" @close='handleClose'>
             <el-row>
                 <el-col>
                     标题
@@ -229,7 +229,12 @@
                 </el-col>
                 <el-col>
                     <el-select v-model="reviewTable.category" placeholder="选择类目">
-                        <el-option v-for="(item,index) in this.category" :key="index" :label="item.first_class+' > '+item.second_class" :value="index">
+                        <el-option v-for="(item,index) in this.category" :key="index" :label="item.first_class+' > '+item.second_class" :value="{
+                            first_class:item.first_class,
+                            second_class:item.second_class,
+                            first_id:item.first_id,
+                            second_id:item.second_id,
+                            }">
                         </el-option>
                     </el-select>
                     <!-- <el-select v-model="reviewTable.powitem" placeholder="二级类目">
@@ -248,7 +253,27 @@
             </el-row>
             <el-row>
                 <el-col>
-                    <el-button type='primary' @click="inputCommitauto()" style="display:block;margin:0 auto;">提交</el-button>
+                    <el-button type='primary' @click="addCommitauto()" style="display:block;margin:0 auto;">提交</el-button>
+                </el-col>
+            </el-row>
+        </el-dialog>
+        <el-dialog title="审核资料列表" class="reviewTable" :visible.sync="reviewListVisible" width="500px">
+            <el-button @click="openCommitauto()" size='small'>新增</el-button>
+            <el-row>
+                <el-col>
+                    <el-table :data="reviewList">
+                        <el-table-column prop="title" label="标题" width="200" style="background:#ddd;"></el-table-column>
+                        <el-table-column label="操作" width="200" style="background:#ddd;">
+                            <template slot-scope="scope">
+                                <el-button @click="removeCommitauto()" size='small' type='danger'>删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    <el-button type='primary' @click="inputCommitauto()" style="display:block;margin:0 auto;" size='small'>提交</el-button>
                 </el-col>
             </el-row>
         </el-dialog>
@@ -263,6 +288,7 @@ export default {
     data() {
         return {
             reviewVisible: false, // 审核表单开启
+            reviewListVisible: false, // 审核列表开启
             qrcodePreview: false,
             preViewQrcode: "",
             dialogVisible: false,
@@ -282,6 +308,7 @@ export default {
                 category: "",
                 tag: ""
             },
+            reviewList:[],
             autoData: [
                 {
                     name: "小程序名称",
@@ -333,13 +360,17 @@ export default {
             ],
             //当前最新体验版本(first)
             testV: [],
+            testVStatus:-10,
             componentsList:[],
             testComponts:'',
             testVisible:false,
+
             //当前审核版本(first)
             reviewV: [],
+            reviewVStatus:-10,
             //当前线上版本(first)
-            onlineV: []
+            onlineV: [],
+            onlineVStatus:-10,
         };
     },
     methods: {
@@ -361,6 +392,21 @@ export default {
                         } else {
                             this.onlineV.push(this.versionList[i]);
                         }
+                    }
+                    if(!(this.testV.length > 0)){
+                        this.testVStatus = -10
+                    }else{
+                        this.testVStatus = this.testV[0].status
+                    }
+                    if(!(this.reviewV.length > 0)){
+                        this.reviewVStatus = -10
+                    }else{
+                        this.reviewVStatus = this.reviewV[0].status
+                    }
+                    if(!(this.onlineV.length > 0)){
+                        this.onlineVStatus = -10
+                    }else{
+                        this.onlineVStatus = this.onlineV[0].status
                     }
                     axios.get("/api/templates").then(res => {
                         this.componentsList = res.data.data;
@@ -385,18 +431,18 @@ export default {
                 
             })
         },
+
         //打开审核资料
         openReview() {
-            this.reviewVisible = true;
-            this.reviewTable = {
-                title: "",
-                powitem: "", //功能页面
-                category: {},
-                tag: ""
-            };
+            this.reviewListVisible = true;
         },
-        //提交审核
-        inputCommitauto() {
+        //打开新增审核资料
+        openCommitauto(){
+            this.reviewListVisible = false;
+            this.reviewVisible = true;
+        },
+        //添加审核
+        addCommitauto() {
             if (
                 this.reviewTable.title == "" ||
                 this.reviewTable.powitem == "" ||
@@ -405,9 +451,45 @@ export default {
             ) {
                 this.showMessage("error", "有项目未填");
             } else {
-                this.showMessage("success", "成功提交审核（未完成）");
+                this.reviewList.push({
+                    address:this.reviewTable.powitem,
+                    tag:this.reviewTable.tag,
+                    first_class:this.reviewTable.category.first_class,
+                    second_class:this.reviewTable.category.second_class,
+                    first_id:this.reviewTable.category.first_id,
+                    second_id:this.reviewTable.category.second_id,
+                    title:this.reviewTable.title
+                })
+                console.log(this.reviewList);
+                
+                this.reviewTable = {
+                    title: "",
+                    powitem: "", //功能页面
+                    category: {},
+                    tag: ""
+                };
                 this.reviewVisible = false;
+                
             }
+        },
+        //删除审核记录
+        removeCommitauto(index){
+            this.reviewList.splice(index,1)
+        },
+        //提交审核
+        inputCommitauto(){
+            axios.post('/wechat/' + store.state.xcxId.xcxID + "/submit_audit",{
+                itemList:this.reviewList
+                }).then(res=>{
+                    this.showMessage("success", "成功提交审核（未完成）");
+                    this.reviewVisible = false;
+                    this.reviewList = []
+                })
+        },
+
+        //单项审核资料关闭
+        handleClose(){
+            this.reviewListVisible = true;
         },
         //获取category列表
         getCategoryList() {
@@ -471,7 +553,6 @@ export default {
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_testers")
                 .then(res => {
                     this.testData = res.data.data;
-                    // console.log(this.testData);
                 });
         },
         //绑定连接跳转

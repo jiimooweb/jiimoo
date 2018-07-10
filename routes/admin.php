@@ -19,5 +19,9 @@ Route::group(['prefix'=>'api','middleware'=>['token']],function (){
     Route::apiResource('xcx','\App\Api\Controllers\XcxController');
 
     Route::apiResource('/templets','\App\Api\Controllers\Commons\AdminTempletController');
+
+    Route::get('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@index');
+    Route::post('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@store');
+    Route::put('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@update');
 });
 
