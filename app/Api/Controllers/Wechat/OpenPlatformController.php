@@ -339,8 +339,6 @@ class OpenPlatformController extends Controller
         ]);
     }
 
-    
-    
     public function callback($app_id)
     {
         $openPlatform = OpenPlatform::getApp();
