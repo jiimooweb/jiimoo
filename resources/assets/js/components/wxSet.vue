@@ -33,11 +33,11 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0" :disabled="testV.length===0">审核</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0 || reviewVStatus === 3" :disabled="testV.length===0 || reviewVStatus === 3">审核</el-button>
                             <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
-                    <el-card class="box-card">
+                    <el-card class="box-card" style="height:200px;">
                         <div slot="header" class="clearfix">
                             <span>审核版本</span>
                         </div>
@@ -71,15 +71,15 @@
                             <br>
                             <el-col>
                                 <p style="color:#1da5d3;line-height:40px;" v-if="reviewVStatus === 2">审核中</p>
-                                <p style="color:#00db00;line-height:40px;" v-if="reviewVStatus === 0">审核成功</p>
+                                <p style="color:#00db00;line-height:40px;" v-if="reviewVStatus === 0 || reviewVStatus === 3">审核成功</p>
                                 <p style="color:red;line-height:40px;" v-if="reviewVStatus === 1">审核失败</p>
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
-                            <el-button @click="" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
+                            <el-button @click="relaoseOnline()" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
                         </el-row>
                     </el-card>
-                    <el-card class="box-card">
+                    <el-card class="box-card" style="height:200px;">
                         <div slot="header" class="clearfix">
                             <span>线上版本</span>
                         </div>
@@ -393,21 +393,42 @@ export default {
                             this.onlineV.push(this.versionList[i]);
                         }
                     }
-                    if(!(this.testV.length > 0)){
-                        this.testVStatus = -10
-                    }else{
-                        this.testVStatus = this.testV[0].status
-                    }
-                    if(!(this.reviewV.length > 0)){
-                        this.reviewVStatus = -10
-                    }else{
-                        this.reviewVStatus = this.reviewV[0].status
-                    }
+                    console.log(this.onlineV.length);
+                    console.log(this.reviewV.length);
+                    console.log(this.testV.length);
+                    
+                    //整理线上版本
                     if(!(this.onlineV.length > 0)){
                         this.onlineVStatus = -10
                     }else{
                         this.onlineVStatus = this.onlineV[0].status
                     }
+                    
+                    //整理审核版本
+                    if(!(this.reviewV.length > 0)){
+                        if(this.onlineV.length > 0){
+                            this.reviewV.push(this.onlineV[0])
+                            this.reviewVStatus = this.reviewV[0].status
+                        }else{
+                            this.reviewVStatus = -10
+                        }
+                    }else{
+                        this.reviewVStatus = this.reviewV[0].status
+                    }
+                    
+                    //整理体验版本
+                    if(!(this.testV.length > 0)){
+                        if(this.onlineV.length > 0){
+                            this.testV.push(this.reviewV[0])
+                            this.testVStatus = this.testV[0].status
+                        }else{
+                            this.testVStatus = -10
+                        }
+                    }else{
+                        this.testVStatus = this.testV[0].status
+                    }
+                    
+
                     axios.get("/api/templates").then(res => {
                         this.componentsList = res.data.data;
                     });
@@ -431,6 +452,13 @@ export default {
                 
             })
         },
+        //发布版本
+        releaseOnline(){
+            axios.get("/wechat/" + store.state.xcxId.xcxID + "/release").then(res=>{
+                    this.showMessage('success','发布成功')
+            })
+        },
+
 
         //打开审核资料
         openReview() {
