@@ -6,6 +6,7 @@ Route::any('wechat/{xcx_id?}/save_miniprogram', '\App\Api\Controllers\Wechat\Ope
 Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
 
 Route::get('wechat/{xcx_id}/get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode')->middleware(['cors']);
+Route::get('wechat/{xcx_id}/get_qrcode_online', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode_online')->middleware(['cors']);
 
 Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], function () {
     //体验者
