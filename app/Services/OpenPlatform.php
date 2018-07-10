@@ -145,7 +145,7 @@ class OpenPlatform
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
         $auditMsg = $miniProgram->code->getLatestAuditStatus();
-        $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();        
+        $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();
         $audit->status = $status;
         $audit->org_id = $msg['ToUserName'];
         $audit->sys_id = $msg['FromUserName'];
