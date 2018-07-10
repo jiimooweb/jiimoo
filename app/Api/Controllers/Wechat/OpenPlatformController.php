@@ -165,8 +165,8 @@ class OpenPlatformController extends Controller
     {
         $xcx_id = request()->xcx_id;
         $audit_id = request('audit_id');
-        $itemList = request('item_list');
-        
+        $itemList = request('itemList');
+        dd($itemList);
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
         // $itemList = [
         //                 [
