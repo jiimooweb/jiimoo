@@ -69,7 +69,7 @@ class OpenPlatformController extends Controller
         $auth_code = request()->get('auth_code');
         $xcx_id = request()->xcx_id;
         OpenPlatform::initMiniProgram($xcx_id,$auth_code);
-        return 'success';
+        return redirect('https://www.rdoorweb.com/backend#/userManage/wxset');  
     }
 
     public function bind_tester()
@@ -196,7 +196,7 @@ class OpenPlatformController extends Controller
     public function release() 
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
+        $auditMsg = $miniProgram->code->getLatestAuditStatus();
         Audit::where('audit_id', $auditMsg['auditid'])->update(['status' => 3]);    
         return Wechat::retMsg($miniProgram->code->release()); 
     }

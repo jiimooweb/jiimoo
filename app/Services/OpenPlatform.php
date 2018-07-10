@@ -87,7 +87,7 @@ class OpenPlatform
         return $data;
     }
 
-    public function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
+    public static function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
     {
         if($method == 'get') {
             $data = ["action" =>  $method];
@@ -143,7 +143,7 @@ class OpenPlatform
     {
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
-        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
+        $auditMsg = $miniProgram->code->getLatestAuditStatus();
         $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();        
         $audit->status = $status;
         $audit->org_id = $msg['ToUserName'];
