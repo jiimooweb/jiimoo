@@ -440,6 +440,12 @@ export default {
         openCommitauto(){
             this.reviewListVisible = false;
             this.reviewVisible = true;
+            his.reviewTable = {
+                    title: "",
+                    powitem: "", //功能页面
+                    category: '',
+                    tag: ""
+                };
         },
         //添加审核
         addCommitauto() {
