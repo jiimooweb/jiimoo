@@ -193,18 +193,18 @@ class OpenPlatformController extends Controller
         return Wechat::retMsg($miniProgram->code->getLatestAuditStatus()); 
     }
 
+    public function release() 
+    {
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        $auditMsg = $miniProgram->code->getLatestAuditStatus();
+        Audit::where('audit_id', $auditMsg['auditid'])->update(['status' => 3]);    
+        return Wechat::retMsg($miniProgram->code->release()); 
+    }
+
     public function undocodeaudit()
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return Wechat::retMsg($miniProgram->code->withdrawAudit()); 
-    }
-
-    public function release() 
-    {
-        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
-        Audit::where('audit_id', $auditMsg['auditid'])->update(['status' => 3]);    
-        return Wechat::retMsg($miniProgram->code->release()); 
     }
 
     public function rollback_release()
