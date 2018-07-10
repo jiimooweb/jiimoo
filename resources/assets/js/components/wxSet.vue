@@ -421,7 +421,7 @@ export default {
         //提交上传
         commingTest(){
             axios.get("/wechat/" + store.state.xcxId.xcxID + "/commit/" + this.testComponts).then(res=>{
-                if(res.errcode === 0){
+                if(res.data.errcode === 0){
                     this.showMessage('success','上传成功')
                     this.testVisible = false
                     this.getTestV();
