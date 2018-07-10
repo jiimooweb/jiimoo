@@ -56,7 +56,7 @@
                             </el-col>
                             <br>
                             <el-col>
-                                <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].create_time}}</p>
+                                <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].created_at}}</p>
                             </el-col>
                         </el-row>
                         <el-row style="margin-top:20px;" v-else>
@@ -98,7 +98,7 @@
                             </el-col>
                             <br>
                             <el-col>
-                                <p style="color:#1da5d3;line-height:40px;">{{onlineV[0].create_time}}</p>
+                                <p style="color:#1da5d3;line-height:40px;">{{onlineV[0].created_at}}</p>
                             </el-col>
                         </el-row>
                         <el-row style="margin-top:20px;" v-else>
@@ -355,7 +355,7 @@ export default {
                     reason: "", //审核失败原因
                     succ_time: "", //成功时间
                     fail_time: "", //失败时间
-                    create_time: "" //创建时间
+                    created_at: "" //创建时间
                 }
             ],
             //当前最新体验版本(first)
@@ -465,7 +465,7 @@ export default {
                 this.reviewTable = {
                     title: "",
                     powitem: "", //功能页面
-                    category: {},
+                    category: '',
                     tag: ""
                 };
                 this.reviewVisible = false;
