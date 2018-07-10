@@ -33,7 +33,7 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0 || reviewVStatus === 3" :disabled="testV.length===0 || reviewVStatus === 3">审核</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0 || reviewVStatus === 3" :disabled="testV.length===0 || reviewVStatus === 3 || reviewVStatus === -4">审核</el-button>
                             <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
