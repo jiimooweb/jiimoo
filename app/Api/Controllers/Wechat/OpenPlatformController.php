@@ -327,7 +327,7 @@ class OpenPlatformController extends Controller
         $width = request()->width ?? 430;
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
         return $miniProgram->app_code->getUnlimit($scene, [
-            'path' => $path,
+            'page' => $path,
             'width' => $width
         ]);
         // $filename = $response->save('wechat/miniprogram/','minicode.png');
