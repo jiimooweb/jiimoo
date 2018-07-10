@@ -338,7 +338,7 @@ class OpenPlatformController extends Controller
 
         $msg = $server->getMessage();
 
-        $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+        $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->first()['refresh_token'];
         $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
 
         if ($msg['MsgType'] == 'text') {
