@@ -2,40 +2,54 @@
     <el-main>
         <el-row style="margin-bottom:20px;">
             <el-col :span="2" style="line-height:40px;font-size:15px;color:#999;">
-                授权过滤
+                用户过滤
             </el-col>
             <el-col :span="10">
-                <el-select v-model="statusFilter" placeholder="请选择">
+                <el-select v-model="statusFilter" placeholder="请选择" @change="changeStatus()">
                     <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
         </el-row>
-        <el-table :data="searchfilter?searchfilter:''" style="width: 100%">
+        <el-row style="margin-bottom:20px;">
+            <el-col :span="2" style="line-height:40px;font-size:15px;color:#999;">
+                用户搜索
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="searchName"></el-input>
+            </el-col>
+            <el-col :span="2" style="margin-left:10px;">
+                <el-button @click="getFansList()"  type='primary'>搜索</el-button>
+            </el-col>
+        </el-row>
+        <el-table :data="fansList" style="width: 100%">
             <el-table-column prop="id" label="ID" width="100">
             </el-table-column>
-            <el-table-column prop="nickname" label="用户名" width="100">
+            <el-table-column prop="nickname" label="用户名" width="200">
             </el-table-column>
             <el-table-column prop="gender" label="性别" width="50">
                 <template slot-scope="scope">
-                    <p v-if="searchfilter[scope.$index].gender === 0">未知</p>
-                    <p v-if="searchfilter[scope.$index].gender === 1">男</p>
-                    <p v-if="searchfilter[scope.$index].gender === 2">女</p>
+                    <p v-if="fansList[scope.$index].gender === 0">未知</p>
+                    <p v-if="fansList[scope.$index].gender === 1">男</p>
+                    <p v-if="fansList[scope.$index].gender === 2">女</p>
                 </template>
             </el-table-column>
             <el-table-column label="头像" header-align='center' width="120">
                 <template slot-scope='scope'>
-                    <img v-if="searchfilter[scope.$index].avatarUrl !== ''" :src="searchfilter[scope.$index].avatarUrl" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
+                    <img v-if="fansList[scope.$index].avatarUrl !== ''" :src="fansList[scope.$index].avatarUrl" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
                     <img v-else src="img/logo.png" width="60px" height='60px' style="display:block;margin:0 auto;border-radius:50%;border:1px solid #ddd;">
                 </template>
             </el-table-column>
-            <el-table-column prop="openid" label="openid" width="300">
+            <el-table-column prop="openid" label="openid">
             </el-table-column>
-            <el-table-column prop="province" label="地区" width="150">
+            <el-table-column prop="province" label="地区" width="200">
             </el-table-column>
-            <el-table-column prop="city" label="城市" width="150">
+            <el-table-column prop="city" label="城市" width="200">
             </el-table-column>
         </el-table>
+        <el-row>
+            <el-pagination layout="prev, pager, next" :current-page.sync='page' @current-change='sizeChange()' :page-size='pageSize' :total="allPage"></el-pagination>
+        </el-row>
     </el-main>
 </template>
 
@@ -46,28 +60,46 @@ import VueAxios from "vue-axios";
 export default {
     data() {
         return {
+            allPage: "",
+            page: 1,
+            pageSize: 20,
             fansList: [],
             statusFilter:'1',
             statusList:[
-                {value:'',label:'所有用户'},
+                {value:'-1',label:'所有用户'},
                 {value:'1',label:'已授权'},
                 {value:'0',label:'未授权'}
-                ]
+                ],
+            searchName:''
         };
     },
     methods: {
+        sizeChange() {
+            this.getFansList();
+        },
         getFansList() {
             axios
-                .get("/web/" + store.state.xcx_flag.xcx_flag + "/api/fans")
+                .get("/web/" + store.state.xcx_flag.xcx_flag + "/api/fans?page=" +
+                        this.page+'&status=' + this.statusFilter+'&nickname='+this.searchName)
                 .then(res => {
                     this.fansList = res.data.data.data;
+                    this.allPage = res.data.data.total;
+                });
+        },
+        changeStatus(){
+            axios
+                .get("/web/" + store.state.xcx_flag.xcx_flag + "/api/fans?page=" +
+                        this.page+'&status=' + this.statusFilter+'&nickname='+this.searchName)
+                .then(res => {
+                    this.fansList = res.data.data.data;
+                    this.allPage = res.data.data.total;
                 });
         }
     },
     computed:{
         searchfilter: function() {
             var search = this.statusFilter;
-            if (search) {
+            if (search) {   
                 return this.fansList.filter(function(fansList) {
                     return ["status"].some(function(key) {
                         return (
