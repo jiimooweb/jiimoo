@@ -154,6 +154,9 @@
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
+                <el-tab-pane label="获取参数二维码" style="min-width:100%;">
+                    
+                </el-tab-pane>
             </el-tabs>
             <el-card class="box-card" v-if='xcxBind2' style="width:100%;">
                 <div slot="header" class="clearfix">
@@ -414,7 +417,17 @@ export default {
                             this.reviewVStatus = -10
                         }
                     }else{
-                        this.reviewVStatus = this.reviewV[0].status
+                        if(this.onlineV.length > 0){
+                            if(this.formatDate(this.reviewV[0].created_at)>this.formatDate(this.onlineV[0].created_at)){
+                                this.reviewVStatus = this.reviewV[0].status
+                            }else{
+                                this.reviewV = []
+                            }
+                        }else{
+                            this.reviewVStatus = this.reviewV[0].status
+                        }
+                        
+                        
                     }
                     
                     //整理体验版本
@@ -695,7 +708,34 @@ export default {
                 message: msg,
                 type: type
             });
-        }
+        },
+        //format time
+        formatDate(time, format = "YY-MM-DD hh:mm:ss") {
+            var date = new Date(time);
+
+            var year = date.getFullYear(),
+                month = date.getMonth() + 1, //月份是从0开始的
+                day = date.getDate(),
+                hour = date.getHours(),
+                min = date.getMinutes(),
+                sec = date.getSeconds();
+            var preArr = Array.apply(null, Array(10)).map(function(
+                elem,
+                index
+            ) {
+                return "0" + index;
+            }); ////开个长度为10的数组 格式为 00 01 02 03
+
+            var newTime = format
+                .replace(/YY/g, year)
+                .replace(/MM/g, preArr[month] || month)
+                .replace(/DD/g, preArr[day] || day)
+                .replace(/hh/g, preArr[hour] || hour)
+                .replace(/mm/g, preArr[min] || min)
+                .replace(/ss/g, preArr[sec] || sec);
+
+            return newTime;
+        },
     },
     mounted() {
         this.getTestV();
