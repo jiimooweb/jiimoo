@@ -149,10 +149,10 @@ class OpenPlatform
         $audit->status = $status;
         $audit->org_id = $msg['ToUserName'];
         $audit->sys_id = $msg['FromUserName'];
-        $audit->create_time = $msg['CreateTime'];
-        $audit->succ_time = $msg['SuccTime'];
-        $audit->fail_time = $msg['FailTime'];
-        $audit->reason  = $msg['Reason'];
+        $audit->create_time = $msg['CreateTime'] ?? null;
+        $audit->succ_time = $msg['SuccTime'] ?? null;
+        $audit->fail_time = $msg['FailTime'] ?? null;
+        $audit->reason  = $msg['Reason'] ?? null;
         return $audit->save();
     }
 
