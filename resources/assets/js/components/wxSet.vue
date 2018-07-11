@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <el-main v-loading="loading" style="min-height:300px;">
-            <el-tabs type="border-card" v-if='xcxBind1'>
+            <el-tabs type="border-card" v-if='xcxBind1' @tab-click="handletabClick">
                 <el-tab-pane label="版本设置">
                     <el-card class="box-card" style="height:200px;">
                         <div slot="header" class="clearfix">
@@ -33,7 +33,7 @@
                         <el-row style="float:right;margin-top:30px;">
                             <el-button type='primary' style="width:70px;height:40px;padding: 3px 0" @click="openTestReview()">上传</el-button>
                             <el-button @click="getPreviewQrcode()" :disabled="testV.length===0">预览</el-button>
-                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0 || reviewVStatus === 3" :disabled="testV.length===0 || reviewVStatus === 3">审核</el-button>
+                            <el-button @click="openReview()" v-if="reviewVStatus === -10 || reviewVStatus === 1 || reviewVStatus === 0 || reviewVStatus === 3 || reviewVStatus === -4" :disabled="testV.length===0 || reviewVStatus === 3">审核</el-button>
                             <el-button @click="openReview()" v-else :disabled="reviewVStatus === 2">审核中</el-button>
                         </el-row>
                     </el-card>
@@ -41,7 +41,7 @@
                         <div slot="header" class="clearfix">
                             <span>审核版本</span>
                         </div>
-                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 && reviewVStatus !== -4">
                             <el-col>
                                 版本号:
                             </el-col>
@@ -50,7 +50,7 @@
                                 <p style="color:#1da5d3;line-height:40px;">{{reviewV[0].version}}</p>
                             </el-col>
                         </el-row>
-                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 && reviewVStatus !== -4">
                             <el-col>
                                 审核提交时间:
                             </el-col>
@@ -64,7 +64,7 @@
                                 <p style="color:#1da5d3;line-height:40px;">暂无审核版本，请选择体验版进行审核</p>
                             </el-col>
                         </el-row>
-                        <el-row style="margin-top:20px;" v-if="reviewV.length>0">
+                        <el-row style="margin-top:20px;" v-if="reviewV.length>0 && reviewVStatus !== -4">
                             <el-col>
                                 审核状态:
                             </el-col>
@@ -153,6 +153,36 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="获取参数二维码" style="min-width:100%;">
+                    <el-row style="margin:10px 0;">
+                        <el-col :span='3' style="line-height:40px;">
+                            二维码页面
+                        </el-col>
+                        <el-col :span="10">
+                            <el-select v-model="qrcodeX.page" placeholder="请选择">
+                                <el-option v-for="(item,index) in this.pageList" :key="index" :label="item" :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:10px 0;">
+                        <el-col :span='3' style="line-height:40px;">
+                            二维码参数
+                        </el-col>
+                        <el-col :span='4'>
+                            <el-input v-model="qrcodeX.scene"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:10px 0;">
+                        <el-col :span='3' style="line-height:40px;">
+                            二维码大小
+                        </el-col>
+                        <el-col :span='4'>
+                            <el-input-number v-model="qrcodeX.width" :min="1" label="宽度"></el-input-number>
+                        </el-col>
+                    </el-row>
+                    <el-button @click="getSceneQrcode()" type="primary">生成二维码</el-button>
                 </el-tab-pane>
             </el-tabs>
             <el-card class="box-card" v-if='xcxBind2' style="width:100%;">
@@ -372,9 +402,24 @@ export default {
             //当前线上版本(first)
             onlineV: [],
             onlineVStatus:-10,
+
+
+            //生成二位码参数
+            qrcodeX:{
+                page:'',
+                scene:'',
+                width:'430'
+            }
         };
     },
     methods: {
+        handletabClick(tab, event){
+            if (tab.index == 0) {
+                this.getTestV();
+            }else if(tab.index == 4){
+                this.getCategoryList()
+            }
+        },
         //版本信息
         getTestV() {
             axios
@@ -414,8 +459,17 @@ export default {
                             this.reviewVStatus = -10
                         }
                     }else{
-                        this.reviewVStatus = this.reviewV[0].status
+                        if(this.onlineV.length > 0){
+                            if(Date.parse(this.formatDate(this.reviewV[0].created_at))>Date.parse(this.formatDate(this.onlineV[0].created_at))){
+                                this.reviewVStatus = this.reviewV[0].status
+                            }else{
+                                this.reviewVStatus = -4
+                            }
+                        }else{
+                            this.reviewVStatus = this.reviewV[0].status
+                        }
                     }
+                    console.log(this.reviewVStatus);
                     
                     //整理体验版本
                     if(!(this.testV.length > 0)){
@@ -535,7 +589,6 @@ export default {
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_category")
                 .then(res => {
                     this.category = res.data.category_list;
-                    // console.log(res.data.category_list);
                 });
 
             //getPage
@@ -592,6 +645,28 @@ export default {
                     }
                 );
         },
+        //生成二维码
+        getSceneQrcode(){
+            if(this.qrcodeX.page == ''){
+                this.showMessage('error','二维码页面未选择')
+                return false
+            }
+            axios.post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online",{
+                page:this.qrcodeX.page,
+                scene:this.qrcodeX.scene,
+                width:this.qrcodeX.width
+            }, {
+                    responseType: "blob"
+                }).then(res=>{
+                    this.qrcodePreview = true;
+                    var reader = new FileReader();
+                    window.URL.revokeObjectURL(this.preViewQrcode);
+                    this.preViewQrcode = window.URL.createObjectURL(
+                        res.data
+                    );
+            })
+        },
+
 
         //获取体验者列表
         getTestList() {
@@ -695,7 +770,34 @@ export default {
                 message: msg,
                 type: type
             });
-        }
+        },
+        //format time
+        formatDate(time, format = "YY-MM-DD hh:mm:ss") {
+            var date = new Date(time);
+
+            var year = date.getFullYear(),
+                month = date.getMonth() + 1, //月份是从0开始的
+                day = date.getDate(),
+                hour = date.getHours(),
+                min = date.getMinutes(),
+                sec = date.getSeconds();
+            var preArr = Array.apply(null, Array(10)).map(function(
+                elem,
+                index
+            ) {
+                return "0" + index;
+            }); ////开个长度为10的数组 格式为 00 01 02 03
+
+            var newTime = format
+                .replace(/YY/g, year)
+                .replace(/MM/g, preArr[month] || month)
+                .replace(/DD/g, preArr[day] || day)
+                .replace(/hh/g, preArr[hour] || hour)
+                .replace(/mm/g, preArr[min] || min)
+                .replace(/ss/g, preArr[sec] || sec);
+
+            return newTime;
+        },
     },
     mounted() {
         this.getTestV();

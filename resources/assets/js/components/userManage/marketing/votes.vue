@@ -108,7 +108,7 @@
         </el-row>
 
         <!-- 选项投票信息dialog -->
-        <el-dialog :visible.sync='GeneralDialog' :title="dialogTitle" width="950px">
+        <el-dialog :visible.sync='GeneralDialog' :title="dialogTitle" width="950px" :close-on-click-modal='false' :close-on-press-escape='false'>
             <el-row style="margin-bottom:20px;">
                 <el-col :span="5" style="text-align:center;">
                     投票标题
@@ -238,10 +238,10 @@
         </el-dialog>
 
         <!-- 选项信息dialog1 -->
-        <el-dialog :visible.sync='PlayersDialog1'>
+        <el-dialog :visible.sync='PlayersDialog1' :close-on-click-modal='false' :close-on-press-escape='false'>
         </el-dialog>
         <!-- 选手信息dialog2 -->
-        <el-dialog :visible.sync='PlayersDialog2'>
+        <el-dialog :visible.sync='PlayersDialog2' :close-on-click-modal='false' :close-on-press-escape='false'>
             <el-row style="margin:20px 0 0;">
                 <el-col :span='3'>
                     名字
