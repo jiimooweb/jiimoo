@@ -148,8 +148,8 @@ class OpenPlatform
         $auditMsg = $miniProgram->code->getLatestAuditStatus();
         $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();
         $audit->status = $status;
-        $audit->org_id = $msg['ToUserName'];
-        $audit->sys_id = $msg['FromUserName'];
+        $audit->org_id = $msg['ToUserName'] ?? null;
+        $audit->sys_id = $msg['FromUserName'] ?? null;
         $audit->create_time = $msg['CreateTime'] ? date('Y-m-d H:i:s', $msg['CreateTime']) : null;
         $audit->succ_time = $msg['SuccTime'] ? date('Y-m-d H:i:s', $msg['SuccTime']) : null;
         $audit->fail_time = $msg['FailTime'] ? date('Y-m-d H:i:s', $msg['FailTime']) : null;
