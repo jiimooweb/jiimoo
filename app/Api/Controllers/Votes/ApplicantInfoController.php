@@ -40,6 +40,7 @@ class ApplicantInfoController extends Controller
         } else {
             return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $all]);
         }
+
     }
 
     public function store(ApplicantStoreRequest $request)
