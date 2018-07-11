@@ -77,7 +77,7 @@ Route::get('/backend', function () {
 
 Route::get('audit', function() {
     \App\Services\OpenPlatform::saveAudit('wxc1fb7bd6c21cb0cc', [], 0);
-    
+
 });
 
 
