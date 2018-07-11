@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <el-main v-loading="loading" style="min-height:300px;">
-            <el-tabs type="border-card" v-if='xcxBind1'>
+            <el-tabs type="border-card" v-if='xcxBind1' @tab-click="handletabClick">
                 <el-tab-pane label="版本设置">
                     <el-card class="box-card" style="height:200px;">
                         <div slot="header" class="clearfix">
@@ -155,7 +155,34 @@
                     </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="获取参数二维码" style="min-width:100%;">
-                    
+                    <el-row style="margin:10px 0;">
+                        <el-col :span='3' style="line-height:40px;">
+                            二维码页面
+                        </el-col>
+                        <el-col :span="10">
+                            <el-select v-model="qrcodeX.page" placeholder="请选择">
+                                <el-option v-for="(item,index) in this.pageList" :key="index" :label="item" :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:10px 0;">
+                        <el-col :span='3' style="line-height:40px;">
+                            二维码参数
+                        </el-col>
+                        <el-col :span='4'>
+                            <el-input v-model="qrcodeX.scene"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin:10px 0;">
+                        <el-col :span='3' style="line-height:40px;">
+                            二维码大小
+                        </el-col>
+                        <el-col :span='4'>
+                            <el-input-number v-model="qrcodeX.width" :min="1" label="宽度"></el-input-number>
+                        </el-col>
+                    </el-row>
+                    <el-button @click="getSceneQrcode()" type="primary">生成二维码</el-button>
                 </el-tab-pane>
             </el-tabs>
             <el-card class="box-card" v-if='xcxBind2' style="width:100%;">
@@ -375,9 +402,24 @@ export default {
             //当前线上版本(first)
             onlineV: [],
             onlineVStatus:-10,
+
+
+            //生成二位码参数
+            qrcodeX:{
+                page:'',
+                scene:'',
+                width:'430'
+            }
         };
     },
     methods: {
+        handletabClick(tab, event){
+            if (tab.index == 0) {
+                this.getTestV();
+            }else if(tab.index == 4){
+                this.getCategoryList()
+            }
+        },
         //版本信息
         getTestV() {
             axios
@@ -547,7 +589,6 @@ export default {
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_category")
                 .then(res => {
                     this.category = res.data.category_list;
-                    // console.log(res.data.category_list);
                 });
 
             //getPage
@@ -604,6 +645,28 @@ export default {
                     }
                 );
         },
+        //生成二维码
+        getSceneQrcode(){
+            if(this.qrcodeX.page == ''){
+                this.showMessage('error','二维码页面未选择')
+                return false
+            }
+            axios.post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online",{
+                page:this.qrcodeX.page,
+                scene:this.qrcodeX.scene,
+                width:this.qrcodeX.width
+            }, {
+                    responseType: "blob"
+                }).then(res=>{
+                    this.qrcodePreview = true;
+                    var reader = new FileReader();
+                    window.URL.revokeObjectURL(this.preViewQrcode);
+                    this.preViewQrcode = window.URL.createObjectURL(
+                        res.data
+                    );
+            })
+        },
+
 
         //获取体验者列表
         getTestList() {
