@@ -109,7 +109,7 @@
                 <el-col :span="1" :offset="5" style="color:#333;font-weigth:bold;line-height:40px;">
                     内容:
                 </el-col>
-                <el-col :span="13" style="height:500px;overflow:auto;">
+                <el-col :span="13" style="height:400px;overflow:auto;">
                     <quill-editor style="height:300px;" ref="myTextEditor" :content="content" :config="editorOption" @change="onEditorChange($event)">
                     </quill-editor>
                 </el-col>
