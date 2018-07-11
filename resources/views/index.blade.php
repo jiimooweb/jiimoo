@@ -33,15 +33,13 @@
 	    			<li>
 	    				<a href="/" class="current-nav">首页</a>
 	    			</li>
-	    			<li  style="position:relative;">
+	    			<!-- <li  style="position:relative;">
 	    				<a href="javascript:;" class="h-nav">平台特色</a>
 	    				<ul class="second-nav">
 	    					<li>
-	    						<!-- <a href="platform.html">平台介绍</a> -->
 	    						<a href="/">平台介绍</a>
 	    					</li>
 	    					<li>
-	    						<!-- <a href="tools.html">开发流程</a> -->
 	    						<a href="/">开发流程</a>
 	    					</li>
 	    				</ul>
@@ -51,9 +49,9 @@
 	    			</li>
 	    			<li>
 	    				<a href="/">关于我们</a>
-					</li>
+					</li> -->
 					<li>
-						<a href="/" target="_blank">开发后台</a>
+						<a href="/backend" target="_blank">开发后台</a>
 					</li>
 	    		</ul>
     		</div>
