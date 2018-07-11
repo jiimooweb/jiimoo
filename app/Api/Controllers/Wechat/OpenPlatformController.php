@@ -69,7 +69,7 @@ class OpenPlatformController extends Controller
         $auth_code = request()->get('auth_code');
         $xcx_id = request()->xcx_id;
         OpenPlatform::initMiniProgram($xcx_id,$auth_code);
-        return 'success';
+        return redirect('https://www.rdoorweb.com/backend#/userManage/wxset');  
     }
 
     public function bind_tester()
@@ -164,21 +164,9 @@ class OpenPlatformController extends Controller
     public function submit_audit()
     {
         $xcx_id = request()->xcx_id;
-        $audit_id = request('audit_id');
-        $itemList = request('item_list');
-        
+        $id = request('id');
+        $itemList = request('itemList');
         $miniProgram = OpenPlatform::getMiniProgram($xcx_id);
-        // $itemList = [
-        //                 [
-        //                     "address" => "pages/applicants/applicants",
-        //                     "tag" => "人员 资源",
-        //                     "first_class" => "餐饮",
-        //                     "second_class"=> "菜谱",
-        //                     "first_id" => 220,
-        //                     "second_id" => 225,
-        //                     "title" => "首页"
-        //                 ]
-        //             ];
 
         $msg = $miniProgram->code->submitAudit($itemList);    
         if($msg['errcode'] == 0) {
@@ -187,7 +175,7 @@ class OpenPlatformController extends Controller
                 'status' => 2,
                 'item_list' => json_encode($itemList)
             ];
-            Audit::where('id', $audit_id)->update($data);
+            Audit::where('id', $id)->update($data);
         }
 
         return Wechat::retMsg($msg);
@@ -208,7 +196,7 @@ class OpenPlatformController extends Controller
     public function release() 
     {
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
+        $auditMsg = $miniProgram->code->getLatestAuditStatus();
         Audit::where('audit_id', $auditMsg['auditid'])->update(['status' => 3]);    
         return Wechat::retMsg($miniProgram->code->release()); 
     }
@@ -332,17 +320,25 @@ class OpenPlatformController extends Controller
         return $miniProgram->data_cube->summaryTrend();
     }
 
-    public function get_webview()
+    public function get_qrcode_online()
     {
+        $page = request()->page ?? 'pages/index/index';        
         $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
-        // $data = ["action" =>  'get'];
-        $data = [
-            "action" =>  'add',
-            "webviewdomain" => ["https://www.rdoorweb.com","https://www.rdoorweb.com"],
-        ];
-        return Wechat::retMsg($miniProgram->domain->webview($data));
+        return $miniProgram->app_code->get($page);
     }
-    
+
+    public function get_qrcode_scene()
+    {
+        $page = request()->page;
+        $scene = request()->scene;
+        $width = request()->width ?? 430;
+        $miniProgram = OpenPlatform::getMiniProgram(request()->xcx_id);
+        return $miniProgram->app_code->getUnlimit($scene, [
+            'page' => $page,
+            'width' => $width
+        ]);
+    }
+
     public function callback($app_id)
     {
         $openPlatform = OpenPlatform::getApp();
@@ -350,7 +346,7 @@ class OpenPlatformController extends Controller
 
         $msg = $server->getMessage();
 
-        $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->fisrt()['refresh_token'];
+        $refresh_token = Redis::get($app_id) ?? Xcx::where('app_id', $app_id)->first()['refresh_token'];
         $miniProgram = $openPlatform->miniProgram($app_id, $refresh_token);
 
         if ($msg['MsgType'] == 'text') {

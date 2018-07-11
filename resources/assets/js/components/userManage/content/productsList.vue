@@ -81,7 +81,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :visible.sync="showProductDialog" class="dialogFooter" width="600px">
+        <el-dialog :visible.sync="showProductDialog" class="dialogFooter" width="600px" :close-on-click-modal='false' :close-on-press-escape='false'>
             <el-row style="margin-bottom:20px;">
                 <el-col :span='3'>
                     产品名称

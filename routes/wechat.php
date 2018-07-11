@@ -1,13 +1,15 @@
 <?php
 
 Route::any('wechat/{appid}/callback', '\App\Api\Controllers\Wechat\OpenPlatformController@callback');    
-Route::any('wechat/{xcx_id?}/miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
 Route::any('wechat/{xcx_id?}/save_miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@save_miniprogram');
 Route::any('wechat/authorize', '\App\Api\Controllers\Wechat\OpenPlatformController@event_authorize');    
 
 Route::get('wechat/{xcx_id}/get_qrcode', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode')->middleware(['cors']);
+Route::post('wechat/{xcx_id}/get_qrcode_online', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode_online')->middleware(['cors']);
+Route::post('wechat/{xcx_id}/get_qrcode_scene', '\App\Api\Controllers\Wechat\OpenPlatformController@get_qrcode_scene')->middleware(['cors']);
 
 Route::group(['prefix' => 'wechat/{xcx_id}', 'middleware' => ['token']], function () {
+    Route::any('miniprogram', '\App\Api\Controllers\Wechat\OpenPlatformController@miniprogram');
     //体验者
     Route::get('bind_tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@bind_tester');
     Route::get('unbind_tester/{wechatid}', '\App\Api\Controllers\Wechat\OpenPlatformController@unbind_tester');
