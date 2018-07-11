@@ -11,7 +11,13 @@ class FanController extends Controller
     
     public function index() 
     {
-        $fans = Fan::paginate(config('common.pagesize'));
+        $status = request()->status;
+        $nickname = request()->nickname;
+        $fans = Fan::when($status > -1, function($query) use ($status) {
+            return $query->where('status', $status);
+        })->when($nickname, function($query) use ($nickname) {
+            return $query->where('nickname', 'like','%'.$nickname.'%');
+        })->paginate(config('common.pagesize'));
         return response()->json(['status' => 'success', 'data' => $fans]);
     }
 

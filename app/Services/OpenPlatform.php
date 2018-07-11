@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Commons\Xcx;
+use App\Models\Wechat\Audit;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
@@ -87,7 +88,7 @@ class OpenPlatform
         return $data;
     }
 
-    public function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
+    public static function miniProgramWebView(string $method, string $url = 'www.rdoorweb.com')
     {
         if($method == 'get') {
             $data = ["action" =>  $method];
@@ -141,17 +142,18 @@ class OpenPlatform
 
     public static function saveAudit(string $app_id, array $msg, int $status)
     {
+        \Log::info($msg);
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
-        $auditMsg = json_decode($miniProgram->code->getLatestAuditStatus(), true);
-        $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();        
+        $auditMsg = $miniProgram->code->getLatestAuditStatus();
+        $audit = Audit::where('audit_id', $auditMsg['auditid'])->first();
         $audit->status = $status;
-        $audit->org_id = $msg['ToUserName'];
-        $audit->sys_id = $msg['FromUserName'];
-        $audit->create_time = $msg['CreateTime'];
-        $audit->succ_time = $msg['SuccTime'];
-        $audit->fail_time = $msg['FailTime'];
-        $audit->reason  = $msg['Reason'];
+        $audit->org_id = $msg['ToUserName'] ?? null;
+        $audit->sys_id = $msg['FromUserName'] ?? null;
+        $audit->create_time = isset($msg['CreateTime']) ? date('Y-m-d H:i:s', $msg['CreateTime']) : null;
+        $audit->succ_time = isset($msg['SuccTime']) ? date('Y-m-d H:i:s', $msg['SuccTime']) : null;
+        $audit->fail_time = isset($msg['FailTime']) ? date('Y-m-d H:i:s', $msg['FailTime']) : null;
+        $audit->reason = $msg['Reason'] ?? '';
         return $audit->save();
     }
 
