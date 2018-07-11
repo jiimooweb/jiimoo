@@ -2,6 +2,7 @@
 
 namespace App\Api\Controllers\Lotteries;
 
+use App\Models\Lotteries\Fan;
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
 use Validator;
@@ -123,17 +124,8 @@ class ActivityController extends Controller
 
     public function get_prize_result()
     {
-        $activity_id=request()->activity;
         $fan_id=Token::getUid();
-        $activity=Activity::find($activity_id);
-        $prizes=$activity->prizes->toArray();
-        $noProbably=100;
-        foreach ($prizes as $prize){
-            $noProbably=$noProbably-$prize['probably'];
-        }
-        $noPrize=array('id'=>'no','xcx_id'=>session('xcx_id'),'coupon_id'=>0,
-            'probably'=>$noProbably);
-        array_push($prizes,$noPrize);
+        $prizes=request()->prizes;
         foreach ($prizes as $key => $val) {
             $arr[$val['id']] = $val['probably'];
         }
@@ -145,21 +137,13 @@ class ActivityController extends Controller
                 break;
             }
         }
-        $partook=request('$partook')+1;
+        if($rid!='no'){
+            $coupon_id=$prizes[$result]['coupon_id'];
+            $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
+        }
+        $partook=request('partook')+1;
         $save=ActivityFan::updateOrCreate(compact('activity_id','fan_id'),['partook'=>$partook]);
-//        foreach ($prizes as $prize){
-//            if($prize['id']==$rid){
-//                $result=$prize;
-//                break;
-//            }
-//        }
-
         return response()->json(["status"=>"success","data"=>compact('result','partook')]);
-//        if($result!=""){
-//            return response()->json(["status"=>"success","data"=>$result]);
-//        }else{
-//            return response()->json(["status"=>"error","msg"=>"系统失误！"]);
-//        }
     }
 
     public function get_rand($proArr) {
