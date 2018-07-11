@@ -142,6 +142,7 @@ class OpenPlatform
 
     public static function saveAudit(string $app_id, array $msg, int $status)
     {
+        \Log::info($msg);
         $xcx_id = Xcx::where('app_id', $app_id)->first()['id'];
         $miniProgram = self::getMiniProgram($xcx_id);
         $auditMsg = $miniProgram->code->getLatestAuditStatus();
