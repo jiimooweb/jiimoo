@@ -485,15 +485,12 @@ export default {
                         this.testVStatus = this.testV[0].status
                     }
                     if(Date.parse(this.formatDate(this.testV[0].created_at)) > Date.parse(this.formatDate(this.reviewV[0].updated_at)) &&
-                            Date.parse(this.formatDate(this.testV[0].created_at)) > Date.parse(this.formatDate(this.onlineV[0].create_time))
+                            Date.parse(this.formatDate(this.testV[0].created_at)) > Date.parse(this.formatDate(this.onlineV[0].audit_time))
                     ){
                         this.testVStatus = this.testV[0].status
                     }else{
                         this.testVStatus = -4
                     }                    
-                    console.log(this.testV[0]);
-                    console.log(this.reviewV[0]);
-                    console.log(this.onlineV[0]);
                 });
         },
         //获取模板
