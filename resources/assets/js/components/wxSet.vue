@@ -488,11 +488,13 @@ export default {
                     console.log(this.testV[0]);
                     console.log(this.reviewV[0]);
                     console.log(this.onlineV[0]);
-                    
-                    axios.get("/api/templates").then(res => {
-                        this.componentsList = res.data.data;
-                    });
                 });
+        },
+        //获取模板
+        getTemplate(){
+            axios.get("/api/templates").then(res => {
+                this.componentsList = res.data.data;
+            });
         },
         //打开上传
         openTestReview(){
@@ -507,7 +509,9 @@ export default {
                     this.testVisible = false
                     this.getTestV();
                 }else{
+                    this.testVisible = false
                     this.showMessage('error','上传失败，请稍后再试或与管理员联系。')
+                    this.getTestV();
                 }
                 
             })
@@ -583,6 +587,8 @@ export default {
                     this.getTestV()
                 },res=>{
                     this.showMessage("error", res.errmsg);
+                    this.reviewVisible = false;
+                    this.reviewList = []
                     this.getTestV()
                 })
         },
@@ -808,6 +814,7 @@ export default {
         },
     },
     mounted() {
+        this.getTemplate()
         this.getTestV();
         this.getXCXAuthorized();
         this.getTestList();
