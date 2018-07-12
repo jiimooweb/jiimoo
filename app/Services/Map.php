@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class Map extends Model
+class Map
 {
     private $EARTH_RADIUS = 6378137;//赤道半径(单位m)
 
