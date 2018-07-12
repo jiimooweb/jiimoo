@@ -77,4 +77,3 @@ Route::get('/backend', function () {
 
 
 
-
