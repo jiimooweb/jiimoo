@@ -10,7 +10,7 @@ class Map
 	 * @param lon1 第一点的精度
 	 * @param lat1 第一点的纬度
 	 * @param lon2 第二点的精度
-	 * @param lat3 第二点的纬度
+	 * @param lat2 第二点的纬度
 	 * @return 返回的距离，单位m
 	 * */
 	public static function GetDistance($lon1,$lat1,$lon2,$lat2)
