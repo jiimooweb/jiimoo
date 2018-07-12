@@ -338,6 +338,7 @@ export default {
             }else{
                 arr1.push(id)
             }
+            this.loading = true
             axios
                 .post("api/xcx/choice/" + localStorage.getItem('XCXFLAG'), {
                     nick_name: this.nick_name.nick_name,
