@@ -29,7 +29,7 @@ class Map
         $b = self::rad($lon1) - self::rad($lon2);
         $s = 2 * asin(sqrt(pow(sin($a/2),2) + cos($radLat1) * cos($radLat2)* pow(sin($b/2),2)));
         $s = $s * self::$EARTH_RADIUS;
-	   //s = Math.round(s * 10000) / 10000;
+	    $s =  round($s * 10000) / 10000;
 	   return $s;
 	}
 
