@@ -320,34 +320,30 @@ export default {
         },
         //点击卡牌切换状态
         clickCard(index, index1) {
-            // var hasi = !this.modelList[index].children[index1].has;
-            let id = this.modelList[index].children[index1].id + ''
-            // Vue.set(this.modelList[index].children[index1], "has", hasi);
-            if(this.hasCombo.length > 0){
-                for(let i=0;i<this.hasCombo.length;i++){
-                    if(id == this.hasCombo[i]){
-                        this.hasCombo.splice(i,1)
-                        continue
+            let arr1 = []
+            arr1 = this.hasCombo
+            var id = this.modelList[index].children[index1].id + ''
+            if(arr1.length > 0){
+                for(let i=0;i<arr1.length;i++){
+                    if(id == arr1[i]){
+                        arr1.splice(i,1)
+                        break;
                     }else{
-                        if(i == this.hasCombo.length-1){
-                            this.hasCombo.push(id)
-                            console.log(this.hasCombo);
+                        if(i == arr1.length-1){
+                            arr1.push(id)
+                            break;
                         }
                     }
                 }
             }else{
-                this.hasCombo = this.hasCombo.push(id)
-                console.log(this.hasCombo);
-                
+                arr1.push(id)
             }
-            console.log(this.hasCombo);
-            
             axios
                 .post("api/xcx/choice/" + localStorage.getItem('XCXFLAG'), {
                     nick_name: this.nick_name.nick_name,
                     app_id: this.xcxId.xcxID,
                     combos: ["999"],
-                    modules: this.hasCombo
+                    modules: arr1
                 })
                 .then(res => {
                     axios
@@ -357,7 +353,6 @@ export default {
                             this.getAModule();
                         });
                 });
-            // this.switchChange(this.modelList[index].children[index1].id, hasi);
         },
         //switch状态改变是执行
         switchChange(id, is) {
