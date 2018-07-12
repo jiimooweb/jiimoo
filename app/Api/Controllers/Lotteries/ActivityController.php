@@ -100,15 +100,14 @@ class ActivityController extends Controller
         $pagesize=config('common.pagesize');
         $page = request('page') ?? 1;
         $offset = ($page - 1) * $pagesize;
-        $activites=Activity::where('status',0)->with(['fans'=>function ($query){
-            $fan_id = Token::getUid();
-            $query->where('fan_id',$fan_id);
-        }])->orderBy('created_at','desc')->
+        $activites=Activity::where('status',0)->orderBy('created_at','desc')->
         offset($offset)->limit($pagesize)->get();
+        $fan_id = Token::getUid();
         foreach ($activites as $activite){
-            if(count($activite['fans'])){
-                $activite->surplus_partake=$activite->partake-$activite->fans->partook;
-                if($activite->fans->partook>=$activite->partake){
+            $fan_activity=ActivityFan::where('fan_id',$fan_id)->where('activity_id',$activite->id)->first();
+            if(count($fan_activity)){
+                $activite->surplus_partake=$activite->partake-$fan_activity->partook;
+                if($fan_activity->partook>=$activite->partake){
                     $activite->partake_flag=0;
                 }else{
                     $activite->partake_flag=1;
@@ -117,7 +116,7 @@ class ActivityController extends Controller
                 $activite->partake_flag=1;
                 $activite->surplus_partake=$activite->partake;
             }
-                $activite->partook=$activite->partake- $activite->surplus_partake;
+            $activite->partook=$activite->partake- $activite->surplus_partake;
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
