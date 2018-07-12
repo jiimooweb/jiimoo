@@ -144,7 +144,7 @@ class ActivityController extends Controller
             $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
         }
         $partook=(int)$partook+1;
-        $save=ActivityFan::updateOrCreate(['fan_id'=>$fan_id,'activity_id	'=>$activity_id],['partook'=>$partook]);
+        $save=ActivityFan::updateOrCreate(['fan_id'=>$fan_id,'activity_id'=>$activity_id],['partook'=>$partook]);
         return response()->json(["status"=>"success","data"=>compact('result','partook')]);
     }
 
