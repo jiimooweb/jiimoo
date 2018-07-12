@@ -2,9 +2,11 @@
 
 namespace App\Api\Controllers\Foods;
 
+use App\Services\Map;
 use App\Services\Token;
-use App\Models\Foods\Address;
 use Illuminate\Http\Request;
+use App\Models\Foods\Address;
+use App\Models\Commons\BasicInfo;
 use App\Api\Controllers\Controller;
 use App\Http\Requests\Foods\AddressRequest;
 
@@ -65,5 +67,16 @@ class AddressController extends Controller
         }
 
         return response()->json(['status' => 'error']);               
+    }
+
+    public function calc_distance()
+    {
+        $info = BasicInfo::first();
+        $lon1 = $info->lon; //经度
+        $lat1 = $info->lat; //纬度
+        $lon2 = request('lon');
+        $lon2 = request('lat');
+        $distance = Map::GetDistance($lon1, $lat1, $lon2, $lon2);
+        return response()->json(['status' => 'success', 'distance' => $distance]);               
     }
 }
