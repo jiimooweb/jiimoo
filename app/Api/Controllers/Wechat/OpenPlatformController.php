@@ -124,6 +124,7 @@ class OpenPlatformController extends Controller
                 'template_id' => $template_id,
                 'version' => $version,
                 'status' => -1, //上传
+                'audit_time' => date('Y-m-d H:i:s', time())
             ];
             if($audit) {
                 $data['status'] = $audit['status'];
