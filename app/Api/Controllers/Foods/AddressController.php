@@ -74,10 +74,9 @@ class AddressController extends Controller
         $info = BasicInfo::first();
         $lon1 = $info->lon; //经度
         $lat1 = $info->lat; //纬度
-        dd($info);
         $lon2 = request('lon');
-        $lon2 = request('lat');
-        $distance = Map::GetDistance($lon1, $lat1, $lon2, $lon2);
+        $lat2 = request('lat');
+        $distance = Map::GetDistance($lon1, $lat1, $lon2, $lat2);
         return response()->json(['status' => 'success', 'distance' => $distance]);               
     }
 }
