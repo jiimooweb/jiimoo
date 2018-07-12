@@ -127,6 +127,8 @@ class ActivityController extends Controller
         $fan_id=Token::getUid();
         $prizes=request()->prizes;
         $activity_id=request()->activity_id;
+        $partook=request('partook');
+        return compact('prizes','activity_id','partook');
         foreach ($prizes as $key => $val) {
             $arr[$val['id']] = $val['probably'];
         }
