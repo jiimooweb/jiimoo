@@ -11,7 +11,7 @@ class Map
 	 * */
 	private static function rad($d)
 	{
-	   return $d * M_PI / 180.0;
+	   return $d * pi() / 180.0;
 	}
 	/**
 	 * 基于googleMap中的算法得到两经纬度之间的距离,计算精度与谷歌地图的距离精度差不多，相差范围在0.2米以下
