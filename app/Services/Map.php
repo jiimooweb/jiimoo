@@ -9,7 +9,7 @@ class Map
     /**
 	 * 转化为弧度(rad)
 	 * */
-	private function rad(double $d) : double
+	private function rad($d)
 	{
 	   return $d * M_PI / 180.0;
 	}
@@ -21,7 +21,7 @@ class Map
 	 * @param lat3 第二点的纬度
 	 * @return 返回的距离，单位m
 	 * */
-	public static function GetDistance(double $lon1,double $lat1,double $lon2, double $lat2) : double
+	public static function GetDistance($lon1,$lat1,$lon2,$lat2)
 	{
         $radLat1 = $this->rad($lat1);
         $radLat2 = $this->rad($lat2);
