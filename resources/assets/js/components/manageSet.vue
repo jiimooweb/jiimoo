@@ -94,7 +94,9 @@
                     </el-main>
                 </el-scrollbar>
             </el-tab-pane>
+            <el-tab-pane label="模版管理">
 
+            </el-tab-pane>
         </el-tabs>
         <el-dialog title="新增" :visible.sync="centerDialogVisible" width="30%" center>
             <el-row>
@@ -251,13 +253,12 @@ export default {
                 response => {
                     for (var i = 0; i < response.data.data.length; i++) {
                         if (
-                            store.state.xcx_flag.xcx_flag ==
+                            localStorage.getItem('XCXFLAG') ==
                             response.data.data[i].xcx_flag
                         ) {
                             this.userListT = response.data.data[i];
                         }
                     }
-                    console.log(this.userListT);
                 },
                 response => {
                     console.log("失败");
@@ -275,7 +276,7 @@ export default {
         //获取小程序相关用户列表
         getUserList() {
             axios
-                .get("api/xcx/choice_user/" + this.xcx_flag.xcx_flag)
+                .get("api/xcx/choice_user/" + localStorage.getItem('XCXFLAG'))
                 .then(res => {
                     this.hasUserList = res.data.data.hasUsers;
                     this.userList = res.data.data.users;
@@ -293,7 +294,7 @@ export default {
             }
             userList.push(this.newUserId);
             axios
-                .post("api/xcx/choice_user/" + this.xcx_flag.xcx_flag, {
+                .post("api/xcx/choice_user/" + localStorage.getItem('XCXFLAG'), {
                     user_ids: userList
                 })
                 .then(res => {
@@ -309,7 +310,7 @@ export default {
                 userList.push(this.hasUserList[i].id);
             }
             axios
-                .post("api/xcx/choice_user/" + this.xcx_flag.xcx_flag, {
+                .post("api/xcx/choice_user/" + localStorage.getItem('XCXFLAG'), {
                     user_ids: userList
                 })
                 .then(res => {
@@ -317,34 +318,80 @@ export default {
                     this.getUserList();
                 });
         },
-        //switch状态改变是执行
-        switchChange(id, is) {
-            this.hasCombo = [];
-            for (let i = 0; i < this.modelList.length; i++) {
-                for (let j = 0; j < this.modelList[i].children.length; j++) {
-                    if (this.modelList[i].children[j].has) {
-                        this.hasCombo.push(
-                            this.modelList[i].children[j].id.toString()
-                        );
+        //点击卡牌切换状态
+        clickCard(index, index1) {
+            // var hasi = !this.modelList[index].children[index1].has;
+            let id = this.modelList[index].children[index1].id + ''
+            // Vue.set(this.modelList[index].children[index1], "has", hasi);
+            if(this.hasCombo.length > 0){
+                for(let i=0;i<this.hasCombo.length;i++){
+                    if(id == this.hasCombo[i]){
+                        this.hasCombo.splice(i,1)
+                        continue
+                    }else{
+                        if(i == this.hasCombo.length-1){
+                            this.hasCombo.push(id)
+                            console.log(this.hasCombo);
+                        }
                     }
                 }
+            }else{
+                this.hasCombo = this.hasCombo.push(id)
+                console.log(this.hasCombo);
+                
             }
-            // console.log(this.hasCombo);
-            this.loading = true;
-            // this.loading = false;
+            console.log(this.hasCombo);
+            
             axios
-                .post("api/xcx/choice/" + store.state.xcx_flag.xcx_flag, {
+                .post("api/xcx/choice/" + localStorage.getItem('XCXFLAG'), {
                     nick_name: this.nick_name.nick_name,
                     app_id: this.xcxId.xcxID,
                     combos: ["999"],
                     modules: this.hasCombo
                 })
                 .then(res => {
-                    // this.getModule()
                     axios
-                        .get("api/xcx/choice/" + store.state.xcx_flag.xcx_flag)
+                        .get("api/xcx/choice/" + localStorage.getItem('XCXFLAG'))
                         .then(res => {
-                            this.hasCombo = res.data.data.hasCombo;
+                            this.hasCombo = res.data.data.hasCombo.sub;
+                            this.getAModule();
+                        });
+                });
+            // this.switchChange(this.modelList[index].children[index1].id, hasi);
+        },
+        //switch状态改变是执行
+        switchChange(id, is) {
+            if(this.hasCombo.length > 0){
+                for(let i=0;i<this.hasCombo.length;i++){
+                    if(id.toString() == this.hasCombo[i]){
+                        this.hasCombo.splice(i,1)
+                        continue
+                    }else{
+                        if(i == this.hasCombo.length-1){
+                            id = id+''
+                            this.hasCombo.push(id)
+                        }
+                    }
+                }
+            }else{
+                id = id+''
+                this.$set(this.hasCombo,0,id)
+            }
+            return
+            console.log(this.hasCombo);
+            this.loading = true;
+            axios
+                .post("api/xcx/choice/" + localStorage.getItem('XCXFLAG'), {
+                    nick_name: this.nick_name.nick_name,
+                    app_id: this.xcxId.xcxID,
+                    combos: ["999"],
+                    modules: this.hasCombo
+                })
+                .then(res => {
+                    axios
+                        .get("api/xcx/choice/" + localStorage.getItem('XCXFLAG'))
+                        .then(res => {
+                            this.hasCombo = res.data.data.hasCombo.sub;
                             this.getAModule();
                         });
                 });
@@ -409,20 +456,15 @@ export default {
             this.selectDesc = "";
             this.centerDialogVisible = !this.centerDialogVisible;
         },
-        //点击卡牌切换状态
-        clickCard(index, index1) {
-            var hasi = !this.modelList[index].children[index1].has;
-            Vue.set(this.modelList[index].children[index1], "has", hasi);
-            this.switchChange(this.modelList[index].children[index1].id, hasi);
-        },
+        
         handleChange(val) {
             // console.log(val);
         },
         getModule() {
             axios
-                .get("api/xcx/choice/" + store.state.xcx_flag.xcx_flag)
+                .get("api/xcx/choice/" + localStorage.getItem('XCXFLAG'))
                 .then(res => {
-                    this.hasCombo = res.data.data.hasCombo;
+                    this.hasCombo = res.data.data.hasCombo.sub;
                     this.getAModule();
                     // this.loading = false;
                 });
@@ -454,13 +496,15 @@ export default {
                             ) {
                                 let it = res.data.data.data[i];
                                 let itId = it.id;
-                                for (
-                                    let z = 0;
-                                    z < this.hasCombo.sub.length;
-                                    z++
-                                ) {
-                                    if (itId == this.hasCombo.sub[z]) {
-                                        it.has = true;
+                                if(this.hasCombo){
+                                    for (
+                                        let z = 0;
+                                        z < this.hasCombo.length;
+                                        z++
+                                    ) {
+                                        if (itId == this.hasCombo[z]) {
+                                            it.has = true;
+                                        }
                                     }
                                 }
                                 this.modelList[j].children.push(it);
@@ -469,6 +513,7 @@ export default {
                         this.modelChildList.push(res.data.data.data[i]);
                     }
                 }
+                
                 this.loading = false;
             });
         }
