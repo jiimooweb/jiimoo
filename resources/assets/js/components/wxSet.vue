@@ -422,6 +422,12 @@ export default {
         },
         //版本信息
         getTestV() {
+            this.testV = [],
+            this.testVStatus=-4,
+            this.reviewV = [],
+            this.reviewVStatus=-4,
+            this.onlineV= [],
+            this.onlineVStatus=-4,
             axios
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_audits")
                 .then(res => {
