@@ -128,7 +128,6 @@ class ActivityController extends Controller
         $prizes=request()->prizes;
         $activity_id=request()->activity_id;
         $partook=request('partook');
-        return compact('prizes','activity_id','partook');
         foreach ($prizes as $key => $val) {
             $arr[$val['id']] = $val['probably'];
         }
@@ -144,8 +143,8 @@ class ActivityController extends Controller
             $coupon_id=$prizes[$result]['coupon_id'];
             $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
         }
-        $partook=request('partook')+1;
-        $save=ActivityFan::updateOrCreate(compact('activity_id','fan_id'),['partook'=>$partook]);
+        $partook=(int)$partook+1;
+        $save=ActivityFan::updateOrCreate(['fan_id'=>$fan_id,'activity_id	'=>$activity_id],['partook'=>$partook]);
         return response()->json(["status"=>"success","data"=>compact('result','partook')]);
     }
 
