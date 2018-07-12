@@ -9,7 +9,7 @@ class Map
     /**
 	 * 转化为弧度(rad)
 	 * */
-	private function rad($d)
+	private static function rad($d)
 	{
 	   return $d * M_PI / 180.0;
 	}
@@ -23,10 +23,10 @@ class Map
 	 * */
 	public static function GetDistance($lon1,$lat1,$lon2,$lat2)
 	{
-        $radLat1 = $this->rad($lat1);
-        $radLat2 = $this->rad($lat2);
+        $radLat1 = rad($lat1);
+        $radLat2 = rad($lat2);
         $a = $radLat1 - $radLat2;
-        $b = $this->rad($lon1) - $this->rad($lon2);
+        $b = rad($lon1) - rad($lon2);
         $s = 2 * asin(sqrt(pow(sin($a/2),2) + cos($radLat1) * cos($radLat2)* pow(sin($b/2),2)));
         $s = $s * $this->EARTH_RADIUS;
 	   //s = Math.round(s * 10000) / 10000;
