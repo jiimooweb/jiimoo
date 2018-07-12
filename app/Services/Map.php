@@ -4,7 +4,7 @@ namespace App\Services;
 
 class Map
 {
-    private $EARTH_RADIUS = 6378137;//赤道半径(单位m)
+    private static $EARTH_RADIUS = 6378137;//赤道半径(单位m)
 
     /**
 	 * 转化为弧度(rad)
@@ -28,7 +28,7 @@ class Map
         $a = $radLat1 - $radLat2;
         $b = self::rad($lon1) - self::rad($lon2);
         $s = 2 * asin(sqrt(pow(sin($a/2),2) + cos($radLat1) * cos($radLat2)* pow(sin($b/2),2)));
-        $s = $s * $this->EARTH_RADIUS;
+        $s = $s * self::EARTH_RADIUS;
 	   //s = Math.round(s * 10000) / 10000;
 	   return $s;
 	}
