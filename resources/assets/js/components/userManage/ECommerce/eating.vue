@@ -1026,10 +1026,14 @@ export default {
                             payNum2++
                         }
                     }
-                    document.querySelector('.el-tabs__nav').classList.add('hasAfter')
-                    document.querySelector('#tab-3').setAttribute('data-content',payNum1)
-                    document.querySelector('#tab-4').setAttribute('data-content',payNum2)
-                    document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    if(payNum1!==0){
+                        document.querySelector('.el-tabs__nav').classList.add('hasAfter')
+                        document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                        document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    }
+                    if(payNum2!==0){
+                        document.querySelector('#tab-4').setAttribute('data-content',payNum2)
+                    }
                 });
             
         },
