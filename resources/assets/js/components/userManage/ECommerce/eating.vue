@@ -1005,14 +1005,12 @@ export default {
 
         //获取订单列表
         getOrdersList() {
-            let end_time = Date.parse(new Date());
-            let start_time = end_time - 8.64e7 * 7;
-            this.orderSearchTime = [this.formatDate(start_time,'YY-MM-DD'),this.formatDate(end_time,'YY-MM-DD')]
+            
             axios
                 .get(
                     "/web/" +
                         store.state.xcx_flag.xcx_flag +
-                        "/api/foods/orders?start_time="+this.formatDate(start_time,'YY-MM-DD')+"&"+"end_time="+this.formatDate(end_time,'YY-MM-DD')
+                        "/api/foods/orders?start_time="+this.orderSearchTime[0]+"&"+"end_time="+this.orderSearchTime[1]
                 )
                 .then(res => {
                     this.orderList = res.data.data;
@@ -1027,17 +1025,15 @@ export default {
                         }
                     }
                     if(payNum1!==0){
-                        // document.querySelector('.el-tabs__nav').classList.add('hasAfter')
-                        document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter')
+                        document.querySelector('.el-tabs__nav #tab-Paid').classList.add('hasAfter')
+                        // document.querySelector('.el-tabs__nav #tab-Paid').setAttribute('class','el-tabs__item is-top is-active hasAfter')
                         document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
-                        console.log(12333);
-                        
                     }
                         document.querySelector('#tab-3').setAttribute('data-content',payNum1)
                         document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
                     if(payNum2!==0){
                         // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
-                        document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter1')
+                        document.querySelector('.el-tabs__nav #tab-4').setAttribute('class','el-tabs__item is-top is-active hasAfter1')
                     }
                         document.querySelector('#tab-4').setAttribute('data-content',payNum2)
                 });
@@ -1201,6 +1197,9 @@ export default {
         }
     },
     mounted() {
+        let end_time = Date.parse(new Date());
+        let start_time = end_time - 8.64e7 * 7;
+        this.orderSearchTime = [this.formatDate(start_time,'YY-MM-DD'),this.formatDate(end_time,'YY-MM-DD')]
         this.getProductsList();
         this.getProductsType();
         this.getbaseSet()
@@ -1238,7 +1237,7 @@ export default {
 </style>
 
 <style>
-.el-tabs__nav.hasAfter #tab-3::after {
+/* .el-tabs__nav #tab-3.hasAfter::after {
     content: attr(data-content);
     position: absolute;
     background: red;
@@ -1251,7 +1250,7 @@ export default {
     text-align: center;
     border-radius: 50%;
 }
-.el-tabs__nav.hasAfter1 #tab-4::after {
+.el-tabs__nav #tab-4.hasAfter1::after {
     content: attr(data-content);
     position: absolute;
     background: red;
@@ -1276,5 +1275,5 @@ export default {
     color: #fff;
     text-align: center;
     border-radius: 50%;
-}
+} */
 </style>
