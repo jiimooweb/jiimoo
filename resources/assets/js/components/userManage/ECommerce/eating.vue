@@ -1053,6 +1053,30 @@ export default {
                 )
                 .then(res => {
                     this.orderList = res.data.data;
+                    let payNum1 = 0
+                    let payNum2 = 0
+                    for(let i = 0;i<this.orderList.length;i++){
+                        if(this.orderList[i].status === 1){
+                            payNum1++
+                        }
+                        if(String(this.orderList[i].sign).toLowerCase() !== 'null' && String(this.orderList[i].sign).toLowerCase() !== 'undefined'){
+                            payNum2++
+                        }
+                    }
+                    if(payNum1!==0){
+                        // document.querySelector('.el-tabs__nav').classList.add('hasAfter')
+                        document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter')
+                        document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
+                        console.log(12333);
+                        
+                    }
+                        document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                        document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    if(payNum2!==0){
+                        // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
+                        document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter1')
+                    }
+                        document.querySelector('#tab-4').setAttribute('data-content',payNum2)
                 });
         },
         //确认接单
