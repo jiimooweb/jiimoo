@@ -668,7 +668,7 @@ export default {
                 this.showMessage('error','二维码页面未选择')
                 return false
             }
-            axios.post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online",{
+            axios.post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_scene",{
                 page:this.qrcodeX.page,
                 scene:this.qrcodeX.scene,
                 width:this.qrcodeX.width
