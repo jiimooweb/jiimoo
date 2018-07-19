@@ -1024,18 +1024,18 @@ export default {
                             payNum2++
                         }
                     }
-                    if(payNum1!==0){
-                        document.querySelector('.el-tabs__nav #tab-Paid').classList.add('hasAfter')
-                        // document.querySelector('.el-tabs__nav #tab-Paid').setAttribute('class','el-tabs__item is-top is-active hasAfter')
-                        document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
-                    }
-                        document.querySelector('#tab-3').setAttribute('data-content',payNum1)
-                        document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
-                    if(payNum2!==0){
-                        // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
-                        document.querySelector('.el-tabs__nav #tab-4').setAttribute('class','el-tabs__item is-top is-active hasAfter1')
-                    }
-                        document.querySelector('#tab-4').setAttribute('data-content',payNum2)
+                    // if(payNum1!==0){
+                    //     document.querySelector('.el-tabs__nav #tab-Paid').classList.add('hasAfter')
+                    //     // document.querySelector('.el-tabs__nav #tab-Paid').setAttribute('class','el-tabs__item is-top is-active hasAfter')
+                    //     document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
+                    // }
+                    //     document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                    //     document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    // if(payNum2!==0){
+                    //     // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
+                    //     document.querySelector('.el-tabs__nav #tab-4').setAttribute('class','el-tabs__item is-top is-active hasAfter1')
+                    // }
+                    //     document.querySelector('#tab-4').setAttribute('data-content',payNum2)
                 });
             
         },
@@ -1059,20 +1059,18 @@ export default {
                             payNum2++
                         }
                     }
-                    if(payNum1!==0){
-                        // document.querySelector('.el-tabs__nav').classList.add('hasAfter')
-                        document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter')
-                        document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
-                        console.log(12333);
-                        
-                    }
-                        document.querySelector('#tab-3').setAttribute('data-content',payNum1)
-                        document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
-                    if(payNum2!==0){
-                        // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
-                        document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter1')
-                    }
-                        document.querySelector('#tab-4').setAttribute('data-content',payNum2)
+                    // if(payNum1!==0){
+                    //     // document.querySelector('.el-tabs__nav').classList.add('hasAfter')
+                    //     document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter')
+                    //     document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
+                    // }
+                    //     document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                    //     document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    // if(payNum2!==0){
+                    //     // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
+                    //     document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter1')
+                    // }
+                    //     document.querySelector('#tab-4').setAttribute('data-content',payNum2)
                 });
         },
         //确认接单
@@ -1179,7 +1177,6 @@ export default {
         },  
         //打开接口
         websocketonOpen(){
-            console.log('open');
             this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
             this.wensocketTimeout = setInterval(()=>{
                 this.websock.send('xcx_id_'+localStorage.getItem('XCXID'))
@@ -1187,12 +1184,10 @@ export default {
         },
         //接受数据
         websocketonmessage(e){
-            console.log(e.data);
             document.querySelector('#messageAudio').play()
         },
         //关闭websocket
         websocketclose(e){  //关闭
-            console.log("connection closed");
             clearInterval(this.wensocketTimeout)
         }
     },
