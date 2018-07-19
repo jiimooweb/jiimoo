@@ -208,6 +208,14 @@
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
                                 <el-table-column label="操作" width="200">
                                     <template slot-scope="scope">
+                                        <el-dropdown>
+                                            <span class="el-dropdown-link">
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </span>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible1">
                                             <p>是否确认此订单?</p>
                                             <div style="text-align: right; margin: 0">
