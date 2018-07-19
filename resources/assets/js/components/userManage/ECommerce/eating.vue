@@ -621,7 +621,7 @@ export default {
             } else if (tab.index == 2) {
                 this.getbaseSet();
             } else if (tab.index == 3) {
-                this.getOrdersList();
+                // this.getOrdersList();
             }
         },
         //切换前执行
