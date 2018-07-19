@@ -1181,6 +1181,9 @@ export default {
             this.wensocketTimeout = setInterval(()=>{
                 this.websock.send('xcx_id_'+localStorage.getItem('XCXID'))
             },20000)
+            this.againGetOrder = setInterval(()=>{
+                this.getOrdersList()
+            },3600000)
         },
         //接受数据
         websocketonmessage(e){
@@ -1189,6 +1192,7 @@ export default {
         //关闭websocket
         websocketclose(e){  //关闭
             clearInterval(this.wensocketTimeout)
+            this.websocketonOpen()
         }
     },
     mounted() {
