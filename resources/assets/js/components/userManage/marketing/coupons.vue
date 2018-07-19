@@ -30,123 +30,125 @@
         </el-tabs>
         
         <el-dialog :visible.sync="couponsDialog" class="couponsDialog" width='500px' :title='couponsDialogTitle'>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     优惠券名称
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="couponsData.name"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     优惠券类型
                 </el-col>
-                <template>
-                    <el-radio v-model="couponsData.type" :label="0">代金券</el-radio>
-                    <el-radio v-model="couponsData.type" :label="1">折扣券</el-radio>
-                    <el-radio v-model="couponsData.type" :label="2">服务券</el-radio>
-                </template>
+                <el-col :span='20'>
+                    <template>
+                        <el-radio v-model="couponsData.type" :label="0">代金券</el-radio>
+                        <el-radio v-model="couponsData.type" :label="1">折扣券</el-radio>
+                        <el-radio v-model="couponsData.type" :label="2">服务券</el-radio>
+                    </template>
+                </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     在兑换中心显示
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-switch v-model="couponsData.display" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949">
                     </el-switch>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     缩略图
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-upload style="width:100px;height:100px;" class="avatar-uploader" :headers="headers" action="/qiniuUpload" :show-file-list="false" :on-success="handleAvatarSuccess">
                         <img v-if="couponsData.thumb" :src="couponsData.thumb" class="avatar" width="100" height='100'>
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="margin:0 auto;display:block;"></i>
                     </el-upload>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     满减条件
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="couponsData.use_price"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     满减优惠
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="couponsData.price"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     领取类型
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <template>
                         <el-radio v-model="couponsData.exchange" :label="0">无条件领取</el-radio>
                         <el-radio v-model="couponsData.exchange" :label="1">积分兑换</el-radio>
                     </template>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     每人共可领取数量
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input-number v-model="couponsData.limit" :min="1"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     每人每日可领取数量
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input-number v-model="couponsData.day_limit" :min="1"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     优惠券总数
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input-number v-model="couponsData.total" :min="1"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     领取条件(积分)
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="couponsData.receive_num"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     优惠券说明
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <el-input v-model="couponsData.desc"></el-input>
                 </el-col>
             </el-row>
-            <el-row>
-                <el-col>
+            <el-row style="margin-bottom: 20px;">
+                <el-col :span='4' style="line-height:40px;">
                     时间类型
                 </el-col>
-                <el-col>
+                <el-col :span='20'>
                     <template>
                         <el-radio v-model="couponsData.time_type" :label="0">固定时间段</el-radio>
                         <el-radio v-model="couponsData.time_type" :label="1">领取当天生效</el-radio>
                     </template>
                 </el-col>
             </el-row>
-            <el-row v-if="couponsData.time_type !== ''">
+            <el-row v-if="couponsData.time_type !== ''" style="margin-bottom: 20px;">
                 <el-col v-if='couponsData.time_type === 0'>
                     时间段
                 </el-col>
