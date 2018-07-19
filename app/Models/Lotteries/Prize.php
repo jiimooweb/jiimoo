@@ -2,7 +2,7 @@
 
 namespace App\Models\Lotteries;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Coupons\Coupon;
 use App\Models\Lotteries\Activity;
 class Prize extends Model
@@ -18,8 +18,7 @@ class Prize extends Model
 
     public function activities()
     {
-        return $this->belongsToMany(Activity::class,'lottery_activity_prize',
-            'prize_id','activity_id');
+        return $this->belongsTo(Activity::class,'prize_id','activity_id');
     }
 
     public function detachActivity($activity)
