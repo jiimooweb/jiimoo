@@ -184,6 +184,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已完成" name="Out">
@@ -195,6 +207,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已支付" name="Paid">
@@ -206,12 +230,12 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="操作" width="200">
+                                <el-table-column label="操作" width="350">
                                     <template slot-scope="scope">
-                                        <el-dropdown>
-                                            <span class="el-dropdown-link">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
-                                            </span>
+                                            </el-button>
                                             <el-dropdown-menu slot="dropdown">
                                                 <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
                                             </el-dropdown-menu>
@@ -245,6 +269,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="未支付" name="UnPaid">
@@ -256,6 +292,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="退款审核" name="Refund">
@@ -267,8 +315,16 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="操作" width="200">
+                                <el-table-column label="操作" width="350">
                                     <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible1">
                                             <p>是否确认对此订单进行退款?</p>
                                             <div style="text-align: right; margin: 0">
@@ -298,6 +354,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                     </el-tabs>
@@ -311,8 +379,16 @@
                         <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                         <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                         <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                        <el-table-column label="操作" width="200">
+                        <el-table-column label="操作" width="350">
                                     <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForOutOrder[scope.$index].visible1">
                                             <p>是否确认此订单?</p>
                                             <div style="text-align: right; margin: 0">
