@@ -40,12 +40,12 @@
                             <p v-if="couponsList[scope.$index].exchange === 1">积分兑换</p>
                         </template>
                     </el-table-column>
-                    <el-table-colum label="操作">
+                    <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button class="button" @click="removeCoupons(scope.$index)" style="margin-top:20px;width:60px;height:30px;" type="danger">删除</el-button>
-                            <el-button class="button" @click="openCouponsDialog(1,scope.$index)" style="margin-top:20px;width:60px;height:30px;" type="primary">编辑</el-button>
+                            <el-button @click="removeCoupons(scope.$index)" type="danger" size="small">删除</el-button>
+                            <el-button @click="openCouponsDialog(1,scope.$index)" type="primary" size="small">编辑</el-button>
                         </template>
-                    </el-table-colum>
+                    </el-table-column>
                 </el-table>
             </el-tab-pane>
             <el-tab-pane label="优惠券派发">
