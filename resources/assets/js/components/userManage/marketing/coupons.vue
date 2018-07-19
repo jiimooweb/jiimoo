@@ -27,17 +27,17 @@
                     <el-table-column prop="name" label="优惠券名"></el-table-column>
                     <el-table-column label="优惠券类型">
                         <template slot-scope="scope">
-                            <el-input type="text" v-if="couponsList[scope.$index].type === 0">代金券</el-input>
-                            <el-input type="text" v-if="couponsList[scope.$index].type === 1">折扣券</el-input>
-                            <el-input type="text" v-if="couponsList[scope.$index].type === 2">服务券</el-input>
+                            <p v-if="couponsList[scope.$index].type === 0">代金券</p>
+                            <p v-if="couponsList[scope.$index].type === 1">折扣券</p>
+                            <p v-if="couponsList[scope.$index].type === 2">服务券</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="limit" label="每人可领取"></el-table-column>
                     <el-table-column prop="day_limit" label="每人每日可领取"></el-table-column>
                     <el-table-column label="领取类型">
                         <template slot-scope="scope">
-                            <el-input type="text" v-if="couponsList[scope.$index].exchange === 0">无条件领取</el-input>
-                            <el-input type="text" v-if="couponsList[scope.$index].exchange === 1">积分兑换</el-input>
+                            <p v-if="couponsList[scope.$index].exchange === 0">无条件领取</p>
+                            <p v-if="couponsList[scope.$index].exchange === 1">积分兑换</p>
                         </template>
                     </el-table-column>
                     <el-table-colum label="操作">
