@@ -3,7 +3,7 @@
         <el-tabs type="border-card">
             <el-tab-pane label="优惠券管理">
                 <el-button type="primary" style="margin:20px 0;" @click="openCouponsDialog(0)">新增优惠券</el-button>
-                <el-row style="min-width:1200px;">
+                <!-- <el-row style="min-width:1200px;">
                     <el-col :span="7" :offset="1" v-for="(item,key) in couponsList" :key='key' class="couponsCard">
                         <el-card :body-style="{ padding: '10px' }">
                             <div class="imgPPage">
@@ -22,14 +22,38 @@
                             </div>
                         </el-card>
                     </el-col>
-                </el-row>
+                </el-row> -->
+                <el-table :data="couponsList">
+                    <el-table-column prop="name" label="优惠券名"></el-table-column>
+                    <el-table-column label="优惠券类型">
+                        <template slot-scope="scope">
+                            <el-input type="text" v-if="couponsList[scope.$index].type === 0">代金券</el-input>
+                            <el-input type="text" v-if="couponsList[scope.$index].type === 1">折扣券</el-input>
+                            <el-input type="text" v-if="couponsList[scope.$index].type === 2">服务券</el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="limit" label="每人可领取"></el-table-column>
+                    <el-table-column prop="day_limit" label="每人每日可领取"></el-table-column>
+                    <el-table-column label="领取类型">
+                        <template slot-scope="scope">
+                            <el-input type="text" v-if="couponsList[scope.$index].exchange === 0">无条件领取</el-input>
+                            <el-input type="text" v-if="couponsList[scope.$index].exchange === 1">积分兑换</el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-colum label="操作">
+                        <template slot-scope="scope">
+                            <el-button class="button" @click="removeCoupons(scope.$index)" style="margin-top:20px;width:60px;height:30px;" type="danger">删除</el-button>
+                            <el-button class="button" @click="openCouponsDialog(1,scope.$index)" style="margin-top:20px;width:60px;height:30px;" type="primary">编辑</el-button>
+                        </template>
+                    </el-table-colum>
+                </el-table>
             </el-tab-pane>
             <el-tab-pane label="优惠券派发">
                 
             </el-tab-pane>
         </el-tabs>
         
-        <el-dialog :visible.sync="couponsDialog" class="couponsDialog" width='500px' :title='couponsDialogTitle'>
+        <el-dialog :visible.sync="couponsDialog" class="couponsDialog" width='800px' :title='couponsDialogTitle'>
             <el-row style="margin-bottom: 20px;">
                 <el-col :span='4' style="line-height:40px;">
                     优惠券名称
@@ -143,8 +167,8 @@
                 </el-col>
                 <el-col :span='20'>
                     <template>
-                        <el-radio v-model="couponsData.time_type" :label="0">固定时间段</el-radio>
-                        <el-radio v-model="couponsData.time_type" :label="1">领取当天生效</el-radio>
+                        <el-radio v-model="couponsData.time_type" :label="0" style="line-height:40px;">固定时间段</el-radio>
+                        <el-radio v-model="couponsData.time_type" :label="1" style="line-height:40px;">领取当天生效</el-radio>
                     </template>
                 </el-col>
             </el-row>
