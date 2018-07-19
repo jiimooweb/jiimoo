@@ -1232,7 +1232,7 @@ export default {
                 day = date.getDate(),
                 hour = date.getHours(),
                 min = date.getMinutes(),
-                sec = date.getSeconds();
+                sec = date.getSeconds(); 
             var preArr = Array.apply(null, Array(10)).map(function(
                 elem,
                 index
