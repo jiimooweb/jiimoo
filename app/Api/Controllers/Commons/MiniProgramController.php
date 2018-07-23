@@ -3,22 +3,22 @@
 namespace App\Api\Controllers\Commons;
 
 use Illuminate\Http\Request;
-use App\Models\Commons\Suggest;
 use App\Api\Controllers\Controller;
-use App\Http\Requests\Commons\SuggestRequest;
+use App\Models\Commons\MiniProgram;
+use App\Http\Requests\Commons\MiniProgramRequest;
 
-class SuggestController extends Controller
+class MiniProgramController extends Controller
 {
     
     public function index() 
     {
-        $suggests = Suggest::orderBy('created_at','desc')->paginate(config('common.pagesize'));      
-        return response()->json(['status' => 'success', 'data' => $suggests]);
+        $miniprogram = MiniProgram::orderBy('created_at','desc')->get();      
+        return response()->json(['status' => 'success', 'data' => $miniprogram]);
     }
 
-    public function store(SuggestRequest $request) 
+    public function store(MiniProgramRequest $request) 
     {
-        if(Suggest::create(request()->all())){
+        if(MiniProgram::create(request()->all())){
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                  
         }
 
@@ -26,9 +26,9 @@ class SuggestController extends Controller
     }
 
 
-    public function update(SuggestRequest $request) 
+    public function update(MiniProgramRequest $request) 
     {
-        if(Suggest::where('id', request()->suggest)->update(request()->all())){
+        if(MiniProgram::where('id', request()->miniprogram)->update(request()->all())){
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                  
         }
 
@@ -39,7 +39,7 @@ class SuggestController extends Controller
     public function destroy()
     {
         // TODO:判断删除权限
-        if(Suggest::where('id', request()->suggest)->delete()) {
+        if(MiniProgram::where('id', request()->miniprogram)->delete()) {
             return response()->json(['status' => 'success', 'msg' => '删除成功！']);   
         }
 
