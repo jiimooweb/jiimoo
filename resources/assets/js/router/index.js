@@ -26,6 +26,7 @@ import manageSet from '@/components/manageSet'
 import wxSet from '@/components/wxSet'
 import systemSet from '@/components/systemSet/systemSet'
 import moduleSet from '@/components/systemSet/moduleSet'
+import XCXShowList from '@/components/systemSet/XCXShowList'
 import user from '@/components/user'
 import fans from '@/components/userManage/fans'
 
@@ -79,6 +80,7 @@ export default new Router({
 		//管理员设置
 		{path: '/systemSet',name: 'systemSet',component: systemSet,meta: {CName: '公共设置'}},
 		{path: '/moduleSet',name:'moduleSet',meta: {CName: '模板设置'},component:moduleSet},
+		{path: '/XCXShowList',name:'XCXShowList',meta: {CName: '小程序展示列表'},component:XCXShowList},
 		
 	],
 	

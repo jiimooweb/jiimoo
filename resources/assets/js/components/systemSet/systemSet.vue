@@ -28,6 +28,9 @@ import top from "@/components/top";
                     {
                         name:'模块管理',
                         link:'/moduleSet'
+                    },{
+                        name:'小程序展示列表',
+                        link:'/XCXShowList'
                     }
                 ]
             }
