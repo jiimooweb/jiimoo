@@ -2,7 +2,7 @@
 
 namespace App\Models\Commons;
 
-use App\Models\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class MiniProgram extends Model
 {
