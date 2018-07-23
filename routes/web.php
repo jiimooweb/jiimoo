@@ -46,6 +46,9 @@ Route::group(['prefix' => 'api','middleware'=>['cors']], function () {
     //小程序模板
     Route::apiResource('templates', '\App\Api\Controllers\Commons\TemplateController')->middleware(['token']);
 
+    Route::apiResource('miniprogram', '\App\Api\Controllers\Commons\MiniProgramController');
+    
+
     //www.rdoorweb.com/api/templates/{id}  GET/POST/DELETE
 });
 
