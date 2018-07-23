@@ -383,7 +383,7 @@
                                     <template slot-scope="scope">
                                         <el-dropdown width="160">
                                             <el-button class="el-dropdown-link" size="small" type='primary'>
-                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                                订单详情
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
                                                 <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
