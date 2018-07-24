@@ -100,7 +100,7 @@ class ActivityController extends Controller
         $pagesize=config('common.pagesize');
         $page = request('page') ?? 1;
         $offset = ($page - 1) * $pagesize;
-        $activites=Activity::where('status',0)->orderBy('created_at','desc')->
+        $activites=Activity::where('status',0)->with('prizes')->orderBy('created_at','desc')->
         offset($offset)->limit($pagesize)->get();
         $fan_id = Token::getUid();
         foreach ($activites as $activite){
@@ -117,6 +117,10 @@ class ActivityController extends Controller
                 $activite->surplus_partake=$activite->partake;
             }
             $activite->partook=$activite->partake- $activite->surplus_partake;
+                //转盘图片
+            $activite->turn_image=request()->server('HTTP_HOST').
+                '/jiimoo/public/img/lotteries/n'.(count($activite->prizes)+1).'.png';
+            $activite->prizes_count=count($activite->prizes)+1;
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
@@ -124,8 +128,8 @@ class ActivityController extends Controller
     public function get_prize_result()
     {
         $fan_id=Token::getUid();
-        $prizes=request()->prizes;
         $activity_id=request()->activity_id;
+        $prizes=PrizeController::get_prizes($activity_id);
         $partook=request('partook');
         foreach ($prizes as $key => $val) {
             $arr[$val['id']] = $val['probably'];
@@ -138,9 +142,15 @@ class ActivityController extends Controller
                 break;
             }
         }
+        if($prizes[$result]['number']<($prizes[$result]['lottery_number']+1)){
+            $result=count($prizes)-1;
+            $rid='no';
+        }
         if($rid!='no'){
             $coupon_id=$prizes[$result]['coupon_id'];
             $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
+            $saveNum=Prize::where('id',$prizes[$result]['id'])->
+            update(['lottery_number'=>($prizes[$result]['lottery_number']+1)]);
         }
         $partook=(int)$partook+1;
         $save=ActivityFan::updateOrCreate(['fan_id'=>$fan_id,'activity_id'=>$activity_id],['partook'=>$partook]);

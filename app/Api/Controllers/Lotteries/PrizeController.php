@@ -55,7 +55,7 @@ class PrizeController extends Controller
         }
     }
 
-    public function get_prizes(){
+    public function get_prizes($activity){
         $activity_id=request()->activity;
         $prizes=Prize::where('activity_id',$activity_id)->with('coupon')->get();
         $noProbably=100;

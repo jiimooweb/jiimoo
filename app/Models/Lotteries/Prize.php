@@ -18,7 +18,7 @@ class Prize extends Model
 
     public function activities()
     {
-        return $this->belongsTo(Activity::class,'prize_id','activity_id');
+        return $this->belongsTo(Activity::class,'id','activity_id');
     }
 
     public function detachActivity($activity)

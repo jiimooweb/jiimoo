@@ -13,8 +13,8 @@ class Activity extends Model
 
     public function prizes()
     {
-        return $this->belongsToMany(Prize::class,'lottery_activity_prize',
-            'activity_id','prize_id');
+        return $this->hasMany(Prize::class,
+            'activity_id','id');
     }
 
     public function assignPrize($prize)
