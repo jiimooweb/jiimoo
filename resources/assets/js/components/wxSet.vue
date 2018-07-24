@@ -309,7 +309,7 @@
             </el-row>
         </el-dialog>
         <el-dialog :visible.sync='reviewFailure' width="300" title='失败原因'>
-            {{reviewFailureText}}
+            <div v-html='reviewFailureText'></div>
         </el-dialog>
     </el-container>
 </template>
