@@ -142,6 +142,7 @@ class ActivityController extends Controller
                 break;
             }
         }
+        //处理奖品数量溢出
         if($prizes[$result]['number']<($prizes[$result]['lottery_number']+1)){
             $result=count($prizes)-1;
             $rid='no';
