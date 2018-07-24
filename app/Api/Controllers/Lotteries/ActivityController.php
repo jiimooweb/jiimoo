@@ -118,8 +118,8 @@ class ActivityController extends Controller
             }
             $activite->partook=$activite->partake- $activite->surplus_partake;
                 //转盘图片
-            $activite->turn_image=request()->server('HTTP_HOST').
-                '/jiimoo/public/img/lotteries/n'.(count($activite->prizes)+1).'.png';
+            $activite->turn_image='https://'.request()->server('HTTP_HOST').
+                '/img/lotteries/n'.(count($activite->prizes)+1).'.png';
             $activite->prizes_count=count($activite->prizes)+1;
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
