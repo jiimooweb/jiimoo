@@ -57,7 +57,7 @@ class PrizeController extends Controller
 
     public function get_prizes($activity){
         $activity_id=request()->activity;
-        $prizes=Prize::where('activity_id',$activity_id)->with('coupon')->get();
+        $prizes=Prize::where('activity_id',$activity_id)->with('coupon')->orderBy('orderby_lev','asc')->get();
         $noProbably=100;
         foreach ($prizes as $prize){
             $prize['prize_name']=$prize['coupon']['name'];
