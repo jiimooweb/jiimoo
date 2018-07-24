@@ -76,6 +76,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
+                            <el-button @click="showReviewFailure()" type='primary' v-if='reviewVStatus === 1'>发布失败原因</el-button>
                             <el-button @click="releaseOnline()" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
                         </el-row>
                     </el-card>
@@ -307,6 +308,9 @@
                 </el-col>    
             </el-row>
         </el-dialog>
+        <el-dialog :visible.sync='reviewFailure' width="300" title='失败原因'>
+            <div v-html='reviewFailureText'></div>
+        </el-dialog>
     </el-container>
 </template>
 
@@ -319,6 +323,8 @@ export default {
         return {
             reviewVisible: false, // 审核表单开启
             reviewListVisible: false, // 审核列表开启
+            reviewFailure:false,
+            reviewFailureText:'',
             qrcodePreview: false,
             preViewQrcode: "",
             onlineQrcode: "",
@@ -526,7 +532,11 @@ export default {
                     this.getTestV()
             })
         },
-
+        //查看失败原因
+        showReviewFailure(){
+            this.reviewFailure = true
+            this.reviewFailureText = this.reviewV[0].reason
+        },
 
         //打开审核资料
         openReview() {
