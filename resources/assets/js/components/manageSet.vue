@@ -97,6 +97,11 @@
             <el-tab-pane label="模版管理">
 
             </el-tab-pane>
+            <el-tab-pane label="小程序公共变量">
+                <el-table :data="userListT">
+                    <el-table-column prop="id" label="ID"></el-table-column>
+                </el-table>
+            </el-tab-pane>
         </el-tabs>
         <el-dialog title="新增" :visible.sync="centerDialogVisible" width="30%" center>
             <el-row>
