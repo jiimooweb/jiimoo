@@ -63,11 +63,6 @@ Route::get('flash_token', function() {
     return 'error';
 });
 
-Route::get('ticket', function() {
-    return cache('component_verify_ticket');
-});
-
-
 Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
 
 Route::get('/', function() {
