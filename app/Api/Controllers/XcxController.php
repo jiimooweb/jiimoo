@@ -148,4 +148,18 @@ class XcxController extends Controller{
         }
         return response()->json(["status"=>"success","msg"=>"更新成功！"]);
     }
+
+    public function updateExtJson()
+    {
+        $ext = json_encode(request('ext_json'));
+        $xcx=Xcx::where('id',request()->xcx_id)->update(['ext_json' => $ext]);
+        
+    }
+
+    public function showExtJson()
+    {
+        $xcx=Xcx::where('id',request()->xcx_id)->first();
+        return response()->json(["status"=>"success","data"=>json_decode($xcx['ext_json'])]);
+        
+    }
 }
