@@ -152,7 +152,7 @@ class ActivityController extends Controller
             }else{
                 $coupon_id=$prizes[$result]['coupon_id'];
                 $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
-                $saveNum=Prize::where('id')->update(['lottery_number'=>($prizes[$result]['lottery_number']+1)]);
+                $saveNum=Prize::where('id',$prizes[$result]['id'])->update(['lottery_number'=>($prizes[$result]['lottery_number']+1)]);
             }
         }
         $partook=(int)$partook+1;

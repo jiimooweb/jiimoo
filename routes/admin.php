@@ -25,6 +25,6 @@ Route::group(['prefix'=>'api','middleware'=>['token']],function (){
     Route::put('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@update');
 
     Route::get('ext_json/{xcx_id}/show','\App\Api\Controllers\XcxController@showExtJson');
-    Route::post('ext_json/{xcx_id}/update','\App\Api\Controllers\XcxController@updateExtJson');
+    Route::put('ext_json/{xcx_id}/update','\App\Api\Controllers\XcxController@updateExtJson');
 });
 
