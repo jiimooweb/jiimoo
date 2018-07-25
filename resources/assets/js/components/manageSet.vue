@@ -98,7 +98,7 @@
 
             </el-tab-pane>
             <el-tab-pane label="小程序公共变量">
-                <el-button @click="addVersion()" style="width:70px;height:40px;" type="primary">添加</el-button>
+                <el-button @click="addVersion()" style="width:70px;height:40px;">添加</el-button>
                 <el-table :data="userListT.ext_json">
                     <el-table-column label="变量名">
                         <template slot-scope="scope">
@@ -116,7 +116,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button @click="saveVersion()" style="width:70px;height:40px;" type="primary">保存</el-button>
+                <el-button @click="saveVersion()" style="width:70px;height:40px;margin:20px auto 0;" type="primary">保存</el-button>
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="新增" :visible.sync="centerDialogVisible" width="30%" center>
