@@ -191,7 +191,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in orderList[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                     </template>
@@ -214,7 +214,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForOut[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                     </template>
@@ -237,7 +237,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible1">
@@ -276,7 +276,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForAccept[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                     </template>
@@ -299,7 +299,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForUnPaid[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                     </template>
@@ -322,7 +322,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForOnRefund[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible1">
@@ -361,7 +361,7 @@
                                                 商品列表<i class="el-icon-arrow-down el-icon--right"></i>
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForAfterRefund[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                     </template>
@@ -383,10 +383,10 @@
                                     <template slot-scope="scope">
                                         <el-dropdown width="160">
                                             <el-button class="el-dropdown-link" size="small" type='primary'>
-                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                                订单详情
                                             </el-button>
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}}</el-dropdown-item>
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForOutOrder[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForOutOrder[scope.$index].visible1">
@@ -551,6 +551,7 @@ export default {
                 thumb: "",
                 notice: "",
                 offer_status: "",
+                status:'',
                 offer: []
             },
 
@@ -988,16 +989,16 @@ export default {
                 )
                 .then(res => {
                     this.baseSetData = res.data.data;
-
                     if (
-                        this.baseSetData.offer === null ||
-                        this.baseSetData.offer.length === 0
+                        this.baseSetData === null
                     ) {
                         this.baseSetData = {
                             name: "",
                             thumb: "",
                             notice: "",
+                            offer:0,
                             offer_status: 1,
+                            status: 0,
                             offer: []
                         };
                         this.isNewBaseData = true;

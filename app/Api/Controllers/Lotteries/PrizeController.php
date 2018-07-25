@@ -55,9 +55,12 @@ class PrizeController extends Controller
         }
     }
 
-    public function get_prizes(){
-        $activity_id=request()->activity;
-        $prizes=Prize::where('activity_id',$activity_id)->with('coupon')->get();
+    public function get_prizes($activity){
+        $activity_id=$activity;
+        $prizes=Prize::where('activity_id',$activity_id)->with('coupon')->orderBy('orderby_lev','asc')->get();
+        if(count($prizes)==0){
+            return $prizes;
+        }
         $noProbably=100;
         foreach ($prizes as $prize){
             $prize['prize_name']=$prize['coupon']['name'];
@@ -72,6 +75,6 @@ class PrizeController extends Controller
                 'probably'=>$noProbably,'prize_name'=>'感谢参与','prize_desc'=>'','prize_thumb'=>'');
             array_push($prizes,$noPrize);
         }
-        return response()->json(["status"=>"success","data"=>$prizes]);
+        return $prizes;
     }
 }
