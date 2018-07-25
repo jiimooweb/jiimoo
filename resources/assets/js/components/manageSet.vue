@@ -98,9 +98,25 @@
 
             </el-tab-pane>
             <el-tab-pane label="小程序公共变量">
-                <el-table :data="userListT">
-                    <el-table-column prop="id" label="ID"></el-table-column>
+                <el-button @click="addVersion()" style="width:70px;height:40px;" type="primary">添加</el-button>
+                <el-table :data="userListT.ext_json">
+                    <el-table-column label="变量名">
+                        <template slot-scope="scope">
+                            <el-input v-model="userListT.ext_json[scope.$index].name"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="变量值">
+                        <template slot-scope="scope">
+                            <el-input v-model="userListT.ext_json[scope.$index].value"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button @click="removeVersion(scope.$index)">删除</el-button>
+                        </template>
+                    </el-table-column>
                 </el-table>
+                <el-button @click="saveVersion()" style="width:70px;height:40px;" type="primary">保存</el-button>
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="新增" :visible.sync="centerDialogVisible" width="30%" center>
@@ -262,6 +278,7 @@ export default {
                             response.data.data[i].xcx_flag
                         ) {
                             this.userListT = response.data.data[i];
+                            this.userListT.ext_json = []
                         }
                     }
                 },
@@ -287,6 +304,30 @@ export default {
                     this.userList = res.data.data.users;
                     this.loading = false;
                 });
+        },
+        //添加自定义变量
+        addVersion(){
+            if(this.userListT.ext_json.length>0){
+                if(this.userListT.ext_json[this.userListT.ext_json.length - 1].name != ''){
+                    this.userListT.ext_json.push({name:'',value:''})
+                }else{
+                    this.$message.error('上一条变量未命名');
+                }
+            }else{
+                this.userListT.ext_json.push({name:'',value:''})
+            }
+        },
+        //保存自定义变量列表
+        saveVersion(){
+            axios.post('/api/ext_json/'+ localStorage.getItem('XCXID') + '/update',{
+                ext_json:this.userListT.ext_json
+            }).then(res=>{
+
+            })
+        },
+        //删除自定义变量
+        removeVersion(index){
+            this.userListT.ext_json.splice(index,1)
         },
         openNewDialog() {
             this.newUserDialog = true;
