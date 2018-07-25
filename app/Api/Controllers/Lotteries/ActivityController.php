@@ -144,14 +144,15 @@ class ActivityController extends Controller
                 break;
             }
         }
-        if($prizes[$result]['number']<($prizes[$result]['lottery_number']+1)){
-            $result=count($prizes)-1;
-            $rid='no';
-        }
         if($rid!='no'){
-            $coupon_id=$prizes[$result]['coupon_id'];
-            $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
-            $saveNum=Prize::where('id')->update(['lottery_number'=>($prizes[$result]['lottery_number']+1)]);
+            if($prizes[$result]['number']<($prizes[$result]['lottery_number']+1)){
+                $result=count($prizes)-1;
+                $rid='no';
+            }else{
+                $coupon_id=$prizes[$result]['coupon_id'];
+                $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
+                $saveNum=Prize::where('id')->update(['lottery_number'=>($prizes[$result]['lottery_number']+1)]);
+            }
         }
         $partook=(int)$partook+1;
         $save=ActivityFan::updateOrCreate(['fan_id'=>$fan_id,'activity_id'=>$activity_id],['partook'=>$partook]);
