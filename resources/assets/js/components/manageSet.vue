@@ -112,7 +112,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button @click="removeVersion(scope.$index)">删除</el-button>
+                            <el-button @click="removeVersion(scope.$index)" style="width:70px;height:40px;margin:0px auto 0;" type="danger">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -278,7 +278,7 @@ export default {
                             response.data.data[i].xcx_flag
                         ) {
                             this.userListT = response.data.data[i];
-                            this.userListT.ext_json = []
+                            this.userListT.ext_json = eval ("(" + this.userListT.ext_json+ ")")
                         }
                     }
                 },
@@ -308,7 +308,7 @@ export default {
         //添加自定义变量
         addVersion(){
             if(this.userListT.ext_json.length>0){
-                if(this.userListT.ext_json[this.userListT.ext_json.length - 1].name != ''){
+                if(this.userListT.ext_json[this.userListT.ext_json.length - 1].name != '' && this.userListT.ext_json[this.userListT.ext_json.length - 1].name != null){
                     this.userListT.ext_json.push({name:'',value:''})
                 }else{
                     this.$message.error('上一条变量未命名');
@@ -319,7 +319,7 @@ export default {
         },
         //保存自定义变量列表
         saveVersion(){
-            axios.post('/api/ext_json/'+ localStorage.getItem('XCXID') + '/update',{
+            axios.put('/api/ext_json/'+ localStorage.getItem('XCXID') + '/update',{
                 ext_json:this.userListT.ext_json
             }).then(res=>{
 
