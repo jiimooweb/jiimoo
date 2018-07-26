@@ -20,7 +20,7 @@ class ProductCateController extends Controller
 
     public function store(ProductCateRequest $request) 
     {   
-        if(ProductCate::create(request(['name','pid']))) {
+        if(ProductCate::create(request(['name', 'pid', 'thumb']))) {
             return response()->json(['status' => 'success', 'msg' => '新增成功！']);                           
         }
 
@@ -36,7 +36,7 @@ class ProductCateController extends Controller
 
     public function update(ProductCateRequest $request) 
     {
-        if(ProductCate::where('id', request()->product_cate)->update(request(['name', 'pid']))) {
+        if(ProductCate::where('id', request()->product_cate)->update(request(['name', 'pid', 'thumb']))) {
             return response()->json(['status' => 'success', 'msg' => '更新成功！']);                           
         }
 
