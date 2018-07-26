@@ -278,8 +278,13 @@ export default {
                             response.data.data[i].xcx_flag
                         ) {
                             this.userListT = response.data.data[i];
-                            this.userListT.ext_json = eval ("(" + this.userListT.ext_json+ ")")
+                            if(this.userListT.ext_json !== ''){
+                                this.userListT.ext_json = eval ("(" + this.userListT.ext_json+ ")")
+                            }else{
+                                this.userListT.ext_json = []
+                            }
                         }
+                        
                     }
                 },
                 response => {
