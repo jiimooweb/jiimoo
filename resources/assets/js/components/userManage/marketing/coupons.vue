@@ -53,7 +53,7 @@
             </el-tab-pane>
         </el-tabs>
         
-        <el-dialog :visible.sync="couponsDialog" class="couponsDialog" width='800px' :title='couponsDialogTitle'>
+        <el-dialog :visible.sync="couponsDialog" class="couponsDialog" width='820px' :title='couponsDialogTitle'>
             <el-row style="margin-bottom: 20px;">
                 <el-col :span='4' style="line-height:40px;">
                     优惠券名称
@@ -68,9 +68,9 @@
                 </el-col>
                 <el-col :span='20'>
                     <template>
-                        <el-radio v-model="couponsData.type" :label="0">代金券</el-radio>
-                        <el-radio v-model="couponsData.type" :label="1">折扣券</el-radio>
-                        <el-radio v-model="couponsData.type" :label="2">服务券</el-radio>
+                        <el-radio v-model="couponsData.type" :label="0" style="line-height:40px;">代金券</el-radio>
+                        <el-radio v-model="couponsData.type" :label="1" style="line-height:40px;">折扣券</el-radio>
+                        <el-radio v-model="couponsData.type" :label="2" style="line-height:40px;">服务券</el-radio>
                     </template>
                 </el-col>
             </el-row>
@@ -78,7 +78,7 @@
                 <el-col :span='4' style="line-height:40px;">
                     在兑换中心显示
                 </el-col>
-                <el-col :span='20'>
+                <el-col :span='20' style="line-height:40px;">
                     <el-switch v-model="couponsData.display" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949">
                     </el-switch>
                 </el-col>
@@ -116,8 +116,8 @@
                 </el-col>
                 <el-col :span='20'>
                     <template>
-                        <el-radio v-model="couponsData.exchange" :label="0">无条件领取</el-radio>
-                        <el-radio v-model="couponsData.exchange" :label="1">积分兑换</el-radio>
+                        <el-radio v-model="couponsData.exchange" :label="0" style="line-height:40px;">无条件领取</el-radio>
+                        <el-radio v-model="couponsData.exchange" :label="1" style="line-height:40px;">积分兑换</el-radio>
                     </template>
                 </el-col>
             </el-row>
@@ -173,10 +173,10 @@
                 </el-col>
             </el-row>
             <el-row v-if="couponsData.time_type !== ''" style="margin-bottom: 20px;">
-                <el-col v-if='couponsData.time_type === 0'>
+                <el-col v-if='couponsData.time_type === 0' :span="4" style="line-height:40px;">
                     时间段
                 </el-col>
-                <el-col v-if='couponsData.time_type === 0'>
+                <el-col v-if='couponsData.time_type === 0' :span="20">
                     <el-date-picker v-model="allTime" format="yyyy - MM - dd" type="daterange" @change="changeAllTime()" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                 </el-col>
