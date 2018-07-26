@@ -131,7 +131,8 @@ class ActivityController extends Controller
     {
         $fan_id=Token::getUid();
         $activity_id=request()->activity_id;
-        $prizes=request()->prizes;
+        $prizeController=new PrizeController();
+        $prizes=$prizeController->get_prizes($activity_id);
         $partook=request('partook');
         foreach ($prizes as $key => $val) {
             $arr[$val['id']] = $val['probably'];
@@ -146,7 +147,7 @@ class ActivityController extends Controller
         }
         if($rid!='no'){
             //处理奖品溢出
-            $lottery_number=$prizes[$result]['lottery_number']++;
+           $lottery_number=$prizes[$result]['lottery_number']+1;
             if($prizes[$result]['number']<$lottery_number){
                 $result=count($prizes)-1;
                 $rid='no';
