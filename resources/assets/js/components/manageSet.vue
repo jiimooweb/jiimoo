@@ -371,7 +371,13 @@ export default {
         //点击卡牌切换状态
         clickCard(index, index1) {
             let arr1 = []
+            console.log(this.nick_name.nick_name);
+            
             arr1 = this.hasCombo
+                console.log(this.hasCombo === undefined);
+            if(this.hasCombo === undefined){
+                arr1 = []
+            }
             var id = this.modelList[index].children[index1].id + ''
             if(arr1.length > 0){
                 for(let i=0;i<arr1.length;i++){
@@ -391,7 +397,7 @@ export default {
             this.loading = true
             axios
                 .post("api/xcx/choice/" + localStorage.getItem('XCXFLAG'), {
-                    nick_name: this.nick_name.nick_name,
+                    nick_name: localStorage.getItem('NICKNAME'),
                     app_id: this.xcxId.xcxID,
                     combos: ["999"],
                     modules: arr1
