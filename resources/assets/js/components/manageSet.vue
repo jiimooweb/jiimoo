@@ -284,7 +284,6 @@ export default {
                                 this.userListT.ext_json = []
                             }
                         }
-                        
                     }
                 },
                 response => {
