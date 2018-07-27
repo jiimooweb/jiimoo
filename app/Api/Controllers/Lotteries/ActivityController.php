@@ -120,9 +120,13 @@ class ActivityController extends Controller
             }
             $activite->partook=$activite->partake- $activite->surplus_partake;
             //转盘图片
-            $activite->prizes=$prizeController->get_prizes($activite->id);
-            $activite->turn_image='https://'.request()->server('HTTP_HOST').
-                '/img/lotteries/n'.count($activite->prizes).'.png';
+            $prizes=$prizeController->get_prizes($activite->id);
+            if(count($prizes)>0){
+                $activite->turn_image='https://'.request()->server('HTTP_HOST').
+                    '/img/lotteries/n'.count($prizes).'.png';
+                array_pop($prizes);
+                $activite->prizes=$prizes;
+            }
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
