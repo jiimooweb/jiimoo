@@ -65,7 +65,7 @@
                         分类图片:
                     </el-col>
                     <el-col :span="10">
-                        <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-preview="handleThumbPreview" :on-remove="handleThumbRemove">
+                        <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-remove="handleThumbRemove">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-col>
@@ -98,6 +98,7 @@ export default {
             typeList: [],
             typePid: "",
             typeThumb:'',
+            thumbList:[],
             newTypeDialog: false,
             newTypeState: false,
             typeName: "",
@@ -124,9 +125,11 @@ export default {
         getRowArticle(index) {
             this.newTypeDialog = true;
             this.newTypeState = false;
-            (this.typeName = this.typeList[index].name),
-                (this.typeID = this.typeList[index].id),
-                (this.typePid = this.typeList[index].pid);
+            this.typeName = this.typeList[index].name
+            this.typeID = this.typeList[index].id
+            this.typePid = this.typeList[index].pid
+            this.typeThumb = this.typeList[index].thumb
+            this.thumbList = [{url:this.typeList[index].thumb,name:'1'}]
         },
         removeArticleType(index) {
             axios
@@ -154,6 +157,7 @@ export default {
             this.newTypeState = true;
             this.typeName = "";
             this.typePid = "";
+            this.typeThumb = "";
         },
         isNewType() {
             if (this.newTypeState) {
