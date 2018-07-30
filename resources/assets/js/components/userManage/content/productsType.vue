@@ -1,22 +1,26 @@
 <template>
     <el-main>
-        <el-breadcrumb>
+        <!-- <el-breadcrumb>
             <el-breadcrumb-item separator='/' v-for="(item, index) in breadlist" :key='index' :to="{path: item.path}">{{item.meta.CName}}
             </el-breadcrumb-item>
-        </el-breadcrumb>
+        </el-breadcrumb> -->
         <el-row>
             <el-row>
-                <el-col :span='2'>
-                    <el-button @click.stop="newType" type="button" size="small" style="margin:20px 0;">
-                        添加
-                    </el-button>
+                <el-col style="width:100px;">
+                    <el-button @click="toList()" type="primary" size="small" style="margin:20px 0;">
+                        <<产品列表</el-button>
                 </el-col>
-                <el-col :span='3' style="margin:16px 20px;float:right;">
-                    <el-button @click="toList()">产品列表>></el-button>
+                <el-col style="width:100px;">
+                    <el-button @click.stop="newType" size="small" type="success" style="margin:20px 0;">添加</el-button>
                 </el-col>
             </el-row>
             <el-table :data="typeList?typeList:''" border>
                 <el-table-column prop="name" label="分类名称"></el-table-column>
+                <el-table-column label="分类图片">
+                    <template slot-scope="scope">
+                        <img :src="typeList[scope.$index].thumb" width="100px" height="100px">
+                    </template>
+                </el-table-column>
                 <el-table-column prop="pid" label="归属分类" width='80'></el-table-column>
                 <el-table-column prop="id" label="分类ID" width='80'></el-table-column>
                 <el-table-column label="编辑" width='80'>
@@ -46,17 +50,27 @@
                     </el-col>
                 </el-row>
                 <el-row style="margin-bottom:20px;">
-                    <el-col :span="2"  :offset="5">
+                    <el-col :span="2" :offset="5">
                         父级分类:
                     </el-col>
-                    <el-col  :span="10">
+                    <el-col :span="10">
                         <el-select v-model="typePid" placeholder="请选择">
                             <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-col>
                 </el-row>
-                <el-row v-if="!newTypeState"  style="margin-bottom:20px;">
+                <el-row style="margin-bottom:20px;">
+                    <el-col :span="2" :offset="5" style="color:#333;font-weigth:bold;line-height:40px;">
+                        分类图片:
+                    </el-col>
+                    <el-col :span="10">
+                        <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-remove="handleThumbRemove">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                    </el-col>
+                </el-row>
+                <el-row v-if="!newTypeState" style="margin-bottom:20px;">
                     <el-col :span="2" :offset="5" style="color:#333;font-weigth:bold;line-height:40px;">
                         分类ID:
                     </el-col>
@@ -83,16 +97,18 @@ export default {
             breadlist: "",
             typeList: [],
             typePid: "",
+            typeThumb:'',
+            thumbList:[],
             newTypeDialog: false,
             newTypeState: false,
             typeName: "",
             typeID: "",
-            typeIDDisplay:true
+            typeIDDisplay: true
         };
     },
     methods: {
-        toList(){
-            this.$router.push({path:'/userManage/content/productsList'})
+        toList() {
+            this.$router.push({ path: "/userManage/content/productsList" });
         },
         getProductsType() {
             axios
@@ -102,23 +118,30 @@ export default {
                         "/api/product_cates"
                 )
                 .then(res => {
-                    this.typeList = res.data.data
+                    this.typeList = res.data.data;
                 });
         },
         //编辑按钮
-        getRowArticle(index){
-            this.newTypeDialog = true
-            this.newTypeState = false
-            this.typeName = this.typeList[index].name,
-            this.typeID = this.typeList[index].id,
+        getRowArticle(index) {
+            this.newTypeDialog = true;
+            this.newTypeState = false;
+            this.typeName = this.typeList[index].name
+            this.typeID = this.typeList[index].id
             this.typePid = this.typeList[index].pid
+            this.typeThumb = this.typeList[index].thumb
+            this.thumbList = [{url:this.typeList[index].thumb,name:'1'}]
         },
-        removeArticleType(index){
-            axios.delete("/web/" +
-                            store.state.xcx_flag.xcx_flag +
-                            "/api/product_cates/"+this.typeList[index].id).then(res=>{
-                                this.getProductsType()
-            })
+        removeArticleType(index) {
+            axios
+                .delete(
+                    "/web/" +
+                        store.state.xcx_flag.xcx_flag +
+                        "/api/product_cates/" +
+                        this.typeList[index].id
+                )
+                .then(res => {
+                    this.getProductsType();
+                });
         },
         getBread() {
             this.breadlist = this.$route.matched;
@@ -132,9 +155,9 @@ export default {
         newType() {
             this.newTypeDialog = true;
             this.newTypeState = true;
-            this.typeName = ''
-            this.typePid = ''
-            
+            this.typeName = "";
+            this.typePid = "";
+            this.typeThumb = "";
         },
         isNewType() {
             if (this.newTypeState) {
@@ -144,11 +167,15 @@ export default {
                         "/web/" +
                             store.state.xcx_flag.xcx_flag +
                             "/api/product_cates",
-                        { name: this.typeName, pid: this.typePid==''?0:this.typePid }
+                        {
+                            name: this.typeName,
+                            thumb:this.typeThumb,
+                            pid: this.typePid == "" ? 0 : this.typePid
+                        }
                     )
                     .then(res => {
                         this.newTypeDialog = false;
-                        this.getProductsType()
+                        this.getProductsType();
                     });
             } else {
                 //修改
@@ -156,19 +183,40 @@ export default {
                     .put(
                         "/web/" +
                             store.state.xcx_flag.xcx_flag +
-                            "/api/product_cates/"+this.typeID,
-                        { name: this.typeName, pid: this.typePid==''?0:this.typePid }
+                            "/api/product_cates/" +
+                            this.typeID,
+                        {
+                            name: this.typeName,
+                            thumb:this.typeThumb,
+                            pid: this.typePid == "" ? 0 : this.typePid
+                        }
                     )
                     .then(res => {
                         this.newTypeDialog = false;
-                        this.getProductsType()
+                        this.getProductsType();
                     });
             }
+        },
+        //pic event
+        handleThumbRemove(file) {
+            axios.post("/qiniuDelete", { url: file.url }).then(res => {
+                this.typeThumb = "";
+            });
+        },
+        uploadThumbSuccess(file) {
+            this.typeThumb = file.url;
         }
     },
     watch: {
         $route() {
             this.getBread();
+        }
+    },
+    computed: {
+        headers() {
+            return {
+                token: localStorage.token
+            };
         }
     },
     mounted() {

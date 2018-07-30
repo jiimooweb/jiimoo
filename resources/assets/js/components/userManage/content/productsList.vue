@@ -1,15 +1,17 @@
 <template>
     <el-main>
-        <el-breadcrumb>
+        <!-- <el-breadcrumb>
             <el-breadcrumb-item separator='/' v-for="(item, index) in breadlist" :key='index' :to="{path: item.path}">{{item.meta.CName}}
             </el-breadcrumb-item>
-        </el-breadcrumb>
+        </el-breadcrumb> -->
         <el-row>
-            <el-col :span='2'>
-                <el-button @click="newProduct()" type="button" size="small" style="margin:20px 0;">
-                    添加
-                </el-button>
+            <el-col style="width:100px">
+                <el-button @click="toType()" type="primary" size="small" style="margin:20px 0;"><<产品分类</el-button>
             </el-col>
+            <el-col style="width:100px">
+                <el-button @click="newProduct()" type="success" size="small" style="margin:20px 0;">添加</el-button>
+            </el-col>
+            
             <el-col :span='3' style="margin:16px 0px;">
                 <el-select v-model="searchValue" filterable placeholder="请选择分类">
                     <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id">
@@ -33,9 +35,6 @@
                     <el-button slot="reference">筛选</el-button>
                 </el-popover> -->
                 <el-button @click="getSearch()" type="primary">搜索</el-button>
-            </el-col>
-            <el-col :span='3' style="margin:16px 20px;float:right;">
-                <el-button @click="toType()">产品分类>></el-button>
             </el-col>
         </el-row>
         <el-table :data="searchfilter?searchfilter:''" border v-loading="loading">

@@ -174,7 +174,7 @@
                     <el-date-picker v-model="orderSearchTime" type="daterange" value-format='yyyy-MM-dd' range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                     <el-button type="primary" @click="searchDateOrders()">搜索</el-button>
-                    <el-tabs @tab-click="handletabClick1" tab-position="left" v-model="articleLeftTab" style="margin:20px 0 0;">
+                    <el-tabs @tab-click="handletabClick1" class="childTab" tab-position="left" v-model="articleLeftTab" style="margin:20px 0 0;">
                         <el-tab-pane label="全部订单" name="all">
                             <el-table :data='ordersSign[0] && orderList' border>
                                 <el-table-column prop="order_no" label="订单号"></el-table-column>
@@ -184,6 +184,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in orderList[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已完成" name="Out">
@@ -195,6 +207,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForOut[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="已支付" name="Paid">
@@ -206,8 +230,16 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="操作" width="200">
+                                <el-table-column label="操作" width="350">
                                     <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForPaid[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForPaid[scope.$index].visible1">
                                             <p>是否确认此订单?</p>
                                             <div style="text-align: right; margin: 0">
@@ -237,6 +269,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForAccept[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="未支付" name="UnPaid">
@@ -248,6 +292,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForUnPaid[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="退款审核" name="Refund">
@@ -259,8 +315,16 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                                <el-table-column label="操作" width="200">
+                                <el-table-column label="操作" width="350">
                                     <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForOnRefund[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForOnRefund[scope.$index].visible1">
                                             <p>是否确认对此订单进行退款?</p>
                                             <div style="text-align: right; margin: 0">
@@ -290,6 +354,18 @@
                                 <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                                 <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                                 <el-table-column prop="created_at" label="下单时间"></el-table-column>
+                                <el-table-column label="操作" width="160">
+                                    <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                商品列表<i class="el-icon-arrow-down el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForAfterRefund[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-tab-pane>
                     </el-tabs>
@@ -303,8 +379,16 @@
                         <el-table-column prop="mj_offer" label="满减金额"></el-table-column>
                         <el-table-column prop="coupon_offer" label="优惠券优惠金额"></el-table-column>
                         <el-table-column prop="created_at" label="下单时间"></el-table-column>
-                        <el-table-column label="操作" width="200">
+                        <el-table-column label="操作" width="350">
                                     <template slot-scope="scope">
+                                        <el-dropdown width="160">
+                                            <el-button class="el-dropdown-link" size="small" type='primary'>
+                                                订单详情
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item v-for="(item,index) in filterOrderForOutOrder[scope.$index].products" :key='index'>{{item.name}} X {{item.count}} 共 {{item.c_price}}元</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
                                         <el-popover placement="top" width="160" v-model="filterOrderForOutOrder[scope.$index].visible1">
                                             <p>是否确认此订单?</p>
                                             <div style="text-align: right; margin: 0">
@@ -447,11 +531,11 @@ export default {
                 intro: "",
                 o_price: "",
                 c_price: "",
-                oversell: "",
+                oversell: 0,
                 content: "",
-                hot: "",
-                display: "",
-                recommend: "",
+                hot: 0,
+                display: 0,
+                recommend: 0,
                 cate_id: ""
             },
 
@@ -467,6 +551,7 @@ export default {
                 thumb: "",
                 notice: "",
                 offer_status: "",
+                status:'',
                 offer: []
             },
 
@@ -621,7 +706,7 @@ export default {
             } else if (tab.index == 2) {
                 this.getbaseSet();
             } else if (tab.index == 3) {
-                this.getOrdersList();
+                // this.getOrdersList();
             }
         },
         //切换前执行
@@ -686,11 +771,11 @@ export default {
                 intro: "",
                 o_price: "",
                 c_price: "",
-                oversell: "",
+                oversell: 0,
                 content: "",
-                hot: "",
-                display: "",
-                recommend: "",
+                hot: 0,
+                display: 0,
+                recommend: 0,
                 cate_id: ""
             };
         },
@@ -904,16 +989,16 @@ export default {
                 )
                 .then(res => {
                     this.baseSetData = res.data.data;
-
                     if (
-                        this.baseSetData.offer === null ||
-                        this.baseSetData.offer.length === 0
+                        this.baseSetData === null
                     ) {
                         this.baseSetData = {
                             name: "",
                             thumb: "",
                             notice: "",
+                            offer:0,
                             offer_status: 1,
+                            status: 0,
                             offer: []
                         };
                         this.isNewBaseData = true;
@@ -1005,14 +1090,12 @@ export default {
 
         //获取订单列表
         getOrdersList() {
-            let end_time = Date.parse(new Date());
-            let start_time = end_time - 8.64e7 * 7;
-            this.orderSearchTime = [this.formatDate(start_time,'YY-MM-DD'),this.formatDate(end_time,'YY-MM-DD')]
+            
             axios
                 .get(
                     "/web/" +
                         store.state.xcx_flag.xcx_flag +
-                        "/api/foods/orders?start_time="+this.formatDate(start_time,'YY-MM-DD')+"&"+"end_time="+this.formatDate(end_time,'YY-MM-DD')
+                        "/api/foods/orders?start_time="+this.orderSearchTime[0]+"&"+"end_time="+this.orderSearchTime[1]
                 )
                 .then(res => {
                     this.orderList = res.data.data;
@@ -1026,10 +1109,18 @@ export default {
                             payNum2++
                         }
                     }
-                    document.querySelector('.el-tabs__nav').classList.add('hasAfter')
-                    document.querySelector('#tab-3').setAttribute('data-content',payNum1)
-                    document.querySelector('#tab-4').setAttribute('data-content',payNum2)
-                    document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    // if(payNum1!==0){
+                    //     document.querySelector('.el-tabs__nav #tab-Paid').classList.add('hasAfter')
+                    //     // document.querySelector('.el-tabs__nav #tab-Paid').setAttribute('class','el-tabs__item is-top is-active hasAfter')
+                    //     document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
+                    // }
+                    //     document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                    //     document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    // if(payNum2!==0){
+                    //     // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
+                    //     document.querySelector('.el-tabs__nav #tab-4').setAttribute('class','el-tabs__item is-top is-active hasAfter1')
+                    // }
+                    //     document.querySelector('#tab-4').setAttribute('data-content',payNum2)
                 });
             
         },
@@ -1043,6 +1134,28 @@ export default {
                 )
                 .then(res => {
                     this.orderList = res.data.data;
+                    let payNum1 = 0
+                    let payNum2 = 0
+                    for(let i = 0;i<this.orderList.length;i++){
+                        if(this.orderList[i].status === 1){
+                            payNum1++
+                        }
+                        if(String(this.orderList[i].sign).toLowerCase() !== 'null' && String(this.orderList[i].sign).toLowerCase() !== 'undefined'){
+                            payNum2++
+                        }
+                    }
+                    // if(payNum1!==0){
+                    //     // document.querySelector('.el-tabs__nav').classList.add('hasAfter')
+                    //     document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter')
+                    //     document.querySelector('#tab-Paid').setAttribute('id','tab-Paid')
+                    // }
+                    //     document.querySelector('#tab-3').setAttribute('data-content',payNum1)
+                    //     document.querySelector('#tab-Paid').setAttribute('data-content',payNum1)
+                    // if(payNum2!==0){
+                    //     // document.querySelector('.el-tabs__nav').classList.add('hasAfter1')
+                    //     document.querySelector('.el-tabs__nav').setAttribute('class','el-tabs__nav hasAfter1')
+                    // }
+                    //     document.querySelector('#tab-4').setAttribute('data-content',payNum2)
                 });
         },
         //确认接单
@@ -1120,7 +1233,7 @@ export default {
                 day = date.getDate(),
                 hour = date.getHours(),
                 min = date.getMinutes(),
-                sec = date.getSeconds();
+                sec = date.getSeconds(); 
             var preArr = Array.apply(null, Array(10)).map(function(
                 elem,
                 index
@@ -1149,31 +1262,32 @@ export default {
         },  
         //打开接口
         websocketonOpen(){
-            console.log('open');
             this.websock.send('xcx_id_'+localStorage.getItem('XCXID'));
             this.wensocketTimeout = setInterval(()=>{
                 this.websock.send('xcx_id_'+localStorage.getItem('XCXID'))
-                console.log(123);
-                
             },20000)
+            this.againGetOrder = setInterval(()=>{
+                this.getOrdersList()
+            },3600000)
         },
         //接受数据
         websocketonmessage(e){
-            console.log(e.data);
             document.querySelector('#messageAudio').play()
         },
         //关闭websocket
         websocketclose(e){  //关闭
-            console.log("connection closed");
             clearInterval(this.wensocketTimeout)
+            this.websocketonOpen()
         }
     },
     mounted() {
+        let end_time = Date.parse(new Date());
+        let start_time = end_time - 8.64e7 * 7;
+        this.orderSearchTime = [this.formatDate(start_time,'YY-MM-DD'),this.formatDate(end_time,'YY-MM-DD')]
         this.getProductsList();
         this.getProductsType();
         this.getbaseSet()
         this.getOrdersList()
-
         this.initWebsocket()
     }
 };
@@ -1207,7 +1321,7 @@ export default {
 </style>
 
 <style>
-.el-tabs__nav.hasAfter #tab-3::after {
+/* .el-tabs__nav #tab-3.hasAfter::after {
     content: attr(data-content);
     position: absolute;
     background: red;
@@ -1220,7 +1334,7 @@ export default {
     text-align: center;
     border-radius: 50%;
 }
-.el-tabs__nav.hasAfter #tab-4::after {
+.el-tabs__nav #tab-4.hasAfter1::after {
     content: attr(data-content);
     position: absolute;
     background: red;
@@ -1245,5 +1359,5 @@ export default {
     color: #fff;
     text-align: center;
     border-radius: 50%;
-}
+} */
 </style>

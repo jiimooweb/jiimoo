@@ -243,6 +243,7 @@ export default {
             store.commit("SET_NICKNAME", {
                 nick_name: this.userListT[index].nick_name
             });
+            localStorage.setItem('NICKNAME',this.userListT[index].nick_name)
             this.$router.push({ path: "/manageSet" });
         }
     },

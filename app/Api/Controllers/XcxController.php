@@ -75,11 +75,11 @@ class XcxController extends Controller{
 
     public function storeCombo(XcxRequest $request){
         $xcx_flag=request()->xcx_flag;
-        $data=request(['nick_name','start_time','end_time','apply_modules']);
-        $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
+//        $data=request(['nick_name','start_time','end_time','apply_modules']);
+//        $update=Xcx::where('xcx_flag',$xcx_flag)->update($data);
         $reCombos=request('combos');
         $reModules=request('modules');
-        if ($reCombos&&$reModules){
+        //if ($reCombos&&$reModules){
             $xcx=Xcx::where('xcx_flag',$xcx_flag)->first();
             $xcx_id=$xcx->id;
             $modules=["parent"=>$reCombos,'sub'=>$reModules];
@@ -89,7 +89,7 @@ class XcxController extends Controller{
                 $xcx->apply_modules=$modules;
                 $xcx->save();
             }
-        }
+        //}
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
     }
 
@@ -148,4 +148,19 @@ class XcxController extends Controller{
         }
         return response()->json(["status"=>"success","msg"=>"更新成功！"]);
     }
+
+    public function showExtJson()
+    {
+        $xcx=Xcx::where('id',request()->xcx_id)->first();
+        return response()->json(["status"=>"success","data"=>json_decode($xcx['ext_json'])]);
+    }
+
+    public function updateExtJson()
+    {
+        $ext = json_encode(request('ext_json'));
+        Xcx::where('id',request()->xcx_id)->update(['ext_json' => $ext]);
+        return response()->json(["status"=>"success","msg"=>"更新成功！"]);
+        
+    }
+
 }

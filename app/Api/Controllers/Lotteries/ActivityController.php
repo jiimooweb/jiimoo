@@ -96,19 +96,20 @@ class ActivityController extends Controller
 
     }
 
-    public function show_by_filter(){
+    public function show_by_filter()
+    {
         $pagesize=config('common.pagesize');
         $page = request('page') ?? 1;
         $offset = ($page - 1) * $pagesize;
-        $activites=Activity::where('status',0)->with(['fans'=>function ($query){
-            $fan_id = Token::getUid();
-            $query->where('fan_id',$fan_id);
-        }])->orderBy('created_at','desc')->
+        $activites=Activity::where('status',0)->orderBy('created_at','desc')->
         offset($offset)->limit($pagesize)->get();
+        $fan_id = Token::getUid();
+        $prizeController=new PrizeController();
         foreach ($activites as $activite){
-            if(count($activite['fans'])){
-                $activite->surplus_partake=$activite->partake-$activite->fans->partook;
-                if($activite->fans->partook>=$activite->partake){
+            $fan_activity=ActivityFan::where('fan_id',$fan_id)->where('activity_id',$activite->id)->first();
+            if(count($fan_activity)){
+                $activite->surplus_partake=$activite->partake-$fan_activity->partook;
+                if($fan_activity->partook>=$activite->partake){
                     $activite->partake_flag=0;
                 }else{
                     $activite->partake_flag=1;
@@ -117,7 +118,15 @@ class ActivityController extends Controller
                 $activite->partake_flag=1;
                 $activite->surplus_partake=$activite->partake;
             }
-                $activite->partook=$activite->partake- $activite->surplus_partake;
+            $activite->partook=$activite->partake- $activite->surplus_partake;
+            //转盘图片
+            $prizes=$prizeController->get_prizes($activite->id);
+            if(count($prizes)>0){
+                $activite->turn_image='https://'.request()->server('HTTP_HOST').
+                    '/img/lotteries/n'.count($prizes).'.png';
+                array_pop($prizes);
+                $activite->prizes=$prizes;
+            }
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
@@ -125,7 +134,10 @@ class ActivityController extends Controller
     public function get_prize_result()
     {
         $fan_id=Token::getUid();
-        $prizes=request()->prizes;
+        $activity_id=request()->activity_id;
+        $prizeController=new PrizeController();
+        $prizes=$prizeController->get_prizes($activity_id);
+        $partook=request('partook');
         foreach ($prizes as $key => $val) {
             $arr[$val['id']] = $val['probably'];
         }
@@ -138,11 +150,19 @@ class ActivityController extends Controller
             }
         }
         if($rid!='no'){
-            $coupon_id=$prizes[$result]['coupon_id'];
-            $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
+            //处理奖品溢出
+           $lottery_number=$prizes[$result]['lottery_number']+1;
+            if($prizes[$result]['number']<$lottery_number){
+                $result=count($prizes)-1;
+                $rid='no';
+            }else{
+                $coupon_id=$prizes[$result]['coupon_id'];
+                $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
+                $saveNum=Prize::where('id',$prizes[$result]['id'])->update(['lottery_number'=>$lottery_number]);
+            }
         }
-        $partook=request('partook')+1;
-        $save=ActivityFan::updateOrCreate(compact('activity_id','fan_id'),['partook'=>$partook]);
+        $partook=(int)$partook+1;
+        $save=ActivityFan::updateOrCreate(['fan_id'=>$fan_id,'activity_id'=>$activity_id],['partook'=>$partook]);
         return response()->json(["status"=>"success","data"=>compact('result','partook')]);
     }
 

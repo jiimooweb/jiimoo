@@ -27,6 +27,7 @@ Route::group(['prefix' => 'foods'], function () {
     Route::get('/members/getuser', '\App\Api\Controllers\Foods\MemberController@getuser');
     Route::apiResource('/members', '\App\Api\Controllers\Foods\MemberController');
     
+    Route::post('/address/calc_distance', '\App\Api\Controllers\Foods\AddressController@calc_distance');
     Route::apiResource('/address', '\App\Api\Controllers\Foods\AddressController');
 
 });

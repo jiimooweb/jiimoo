@@ -23,5 +23,8 @@ Route::group(['prefix'=>'api','middleware'=>['token']],function (){
     Route::get('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@index');
     Route::post('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@store');
     Route::put('xcx_templates/{xcx_flag}','\App\Api\Controllers\Commons\XcxTemplatesController@update');
+
+    Route::get('ext_json/{xcx_id}/show','\App\Api\Controllers\XcxController@showExtJson');
+    Route::put('ext_json/{xcx_id}/update','\App\Api\Controllers\XcxController@updateExtJson');
 });
 

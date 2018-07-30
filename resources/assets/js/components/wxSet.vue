@@ -76,6 +76,7 @@
                             </el-col>
                         </el-row>
                         <el-row style="float:right;margin-top:30px;">
+                            <el-button @click="showReviewFailure()" type='primary' v-if='reviewVStatus === 1'>发布失败原因</el-button>
                             <el-button @click="releaseOnline()" type='primary' :disabled="reviewVStatus !== 0">发布</el-button>
                         </el-row>
                     </el-card>
@@ -307,6 +308,9 @@
                 </el-col>    
             </el-row>
         </el-dialog>
+        <el-dialog :visible.sync='reviewFailure' width="300" title='失败原因'>
+            <div v-html='reviewFailureText'></div>
+        </el-dialog>
     </el-container>
 </template>
 
@@ -319,6 +323,8 @@ export default {
         return {
             reviewVisible: false, // 审核表单开启
             reviewListVisible: false, // 审核列表开启
+            reviewFailure:false,
+            reviewFailureText:'',
             qrcodePreview: false,
             preViewQrcode: "",
             onlineQrcode: "",
@@ -422,6 +428,12 @@ export default {
         },
         //版本信息
         getTestV() {
+            this.testV = [],
+            this.testVStatus=-4,
+            this.reviewV = [],
+            this.reviewVStatus=-4,
+            this.onlineV= [],
+            this.onlineVStatus=-4,
             axios
                 .get("/wechat/" + store.state.xcxId.xcxID + "/get_audits")
                 .then(res => {
@@ -479,20 +491,19 @@ export default {
                         this.testVStatus = this.testV[0].status
                     }
                     if(Date.parse(this.formatDate(this.testV[0].created_at)) > Date.parse(this.formatDate(this.reviewV[0].updated_at)) &&
-                            Date.parse(this.formatDate(this.testV[0].created_at)) > Date.parse(this.formatDate(this.onlineV[0].create_time))
+                            Date.parse(this.formatDate(this.testV[0].created_at)) > Date.parse(this.formatDate(this.onlineV[0].audit_time))
                     ){
                         this.testVStatus = this.testV[0].status
                     }else{
                         this.testVStatus = -4
                     }                    
-                    console.log(this.testV[0]);
-                    console.log(this.reviewV[0]);
-                    console.log(this.onlineV[0]);
-                    
-                    axios.get("/api/templates").then(res => {
-                        this.componentsList = res.data.data;
-                    });
                 });
+        },
+        //获取模板
+        getTemplate(){
+            axios.get("/api/templates").then(res => {
+                this.componentsList = res.data.data;
+            });
         },
         //打开上传
         openTestReview(){
@@ -507,7 +518,9 @@ export default {
                     this.testVisible = false
                     this.getTestV();
                 }else{
+                    this.testVisible = false
                     this.showMessage('error','上传失败，请稍后再试或与管理员联系。')
+                    this.getTestV();
                 }
                 
             })
@@ -519,7 +532,11 @@ export default {
                     this.getTestV()
             })
         },
-
+        //查看失败原因
+        showReviewFailure(){
+            this.reviewFailure = true
+            this.reviewFailureText = this.reviewV[0].reason
+        },
 
         //打开审核资料
         openReview() {
@@ -583,6 +600,8 @@ export default {
                     this.getTestV()
                 },res=>{
                     this.showMessage("error", res.errmsg);
+                    this.reviewVisible = false;
+                    this.reviewList = []
                     this.getTestV()
                 })
         },
@@ -659,7 +678,7 @@ export default {
                 this.showMessage('error','二维码页面未选择')
                 return false
             }
-            axios.post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_online",{
+            axios.post("/wechat/" + store.state.xcxId.xcxID + "/get_qrcode_scene",{
                 page:this.qrcodeX.page,
                 scene:this.qrcodeX.scene,
                 width:this.qrcodeX.width
@@ -808,6 +827,7 @@ export default {
         },
     },
     mounted() {
+        this.getTemplate()
         this.getTestV();
         this.getXCXAuthorized();
         this.getTestList();

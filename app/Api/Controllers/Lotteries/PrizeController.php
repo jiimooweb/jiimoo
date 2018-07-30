@@ -20,7 +20,7 @@ class PrizeController extends Controller
 
     public function store(PrizeRequest $request)
     {
-        $save=Prize::create(request(['coupon_id','probably']));
+        $save=Prize::create(request(['activity_id','level','coupon_id','probably']));
         if ($save){
             return response()->json(["status"=>"success","msg"=>"保存成功！"]);
         }else{
@@ -31,7 +31,7 @@ class PrizeController extends Controller
     public function update(PrizeRequest $request)
     {
         $prize_id=request('prize_id');
-        $update=Prize::find($prize_id)->update(request(['coupon_id','probably']));
+        $update=Prize::find($prize_id)->update(request(['level','coupon_id','probably']));
         if ($update){
             return response()->json(["status"=>"success","msg"=>"修改成功！"]);
         }else{
@@ -55,11 +55,12 @@ class PrizeController extends Controller
         }
     }
 
-    public function get_prizes(){
-        $activity_id=request()->activity;
-        $prizes=Prize::whereHas('activities',function ($query) use ($activity_id){
-            $query->where('activity_id',$activity_id);
-        })->with('coupon')->get();
+    public function get_prizes($activity){
+        $activity_id=$activity;
+        $prizes=Prize::where('activity_id',$activity_id)->with('coupon')->orderBy('orderby_lev','asc')->get();
+        if(count($prizes)==0){
+            return $prizes;
+        }
         $noProbably=100;
         foreach ($prizes as $prize){
             $prize['prize_name']=$prize['coupon']['name'];
@@ -69,9 +70,11 @@ class PrizeController extends Controller
             unset($prize['coupon']);
         }
         $prizes=$prizes->toArray();
-        $noPrize=array('id'=>'no','xcx_id'=>session('xcx_id'),'coupon_id'=>0,
-            'probably'=>$noProbably,'prize_name'=>'感谢参与','prize_desc'=>'','prize_thumb'=>'');
-        array_push($prizes,$noPrize);
-        return response()->json(["status"=>"success","data"=>$prizes]);
+        if($noProbably!='0'){
+            $noPrize=array('id'=>'no','activity_id'=>$activity_id,'coupon_id'=>0,
+                'probably'=>$noProbably,'prize_name'=>'感谢参与','prize_desc'=>'','prize_thumb'=>'');
+            array_push($prizes,$noPrize);
+        }
+        return $prizes;
     }
 }

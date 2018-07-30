@@ -46,6 +46,9 @@ Route::group(['prefix' => 'api','middleware'=>['cors']], function () {
     //小程序模板
     Route::apiResource('templates', '\App\Api\Controllers\Commons\TemplateController')->middleware(['token']);
 
+    Route::apiResource('miniprogram', '\App\Api\Controllers\Commons\MiniProgramController');
+    
+
     //www.rdoorweb.com/api/templates/{id}  GET/POST/DELETE
 });
 
@@ -60,11 +63,6 @@ Route::get('flash_token', function() {
     return 'error';
 });
 
-Route::get('ticket', function() {
-    return cache('component_verify_ticket');
-});
-
-
 Route::get('token','\App\Api\Controllers\Wechat\OpenPlatformController@token');
 
 Route::get('/', function() {
@@ -75,9 +73,5 @@ Route::get('/backend', function () {
     return view('backend');
 });
 
-Route::get('audit', function() {
-    \App\Services\OpenPlatform::saveAudit('wxc1fb7bd6c21cb0cc', [], 0);
-
-});
 
 
