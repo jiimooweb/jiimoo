@@ -232,4 +232,31 @@ class VoteInfoController extends Controller
         return response()->json(['status' => 'success', 'msg' => '删除成功！']);
     }
 
+    public function getNweVote()
+    {
+        $data = Info::withCount('fans')->with('applicants')->orderByDesc('vote_start_date')->first();
+        // 总投票数
+        if ($data) {
+                $fansCount = $data->fans_count;
+                $applicants = $data->applicants;
+                $countApplicant = count($applicants);
+                $data['applicants_counts'] = $countApplicant;
+                //总投票数：对比投票人数和选手（选项）总票数，取最大值
+                if ($countApplicant > 0) {
+                    $total = 0;
+                    foreach ($applicants as $applicant) {
+                        $total = $applicant->total + $total;
+                    }
+                    if ($fansCount < $total) {
+                        $data->fans_count = $total;
+                    }
+                }
+            unset($data->applicants);
+            return response()->json(['status' => 'success', 'data' => $data]);
+         }else{
+            return response()->json(['status' => 'success', 'data' => "F"]);
+        }
+
+
+    }
 }
