@@ -12,21 +12,23 @@ class CategoriesController extends Controller
     
     public function index() 
     {
-        $json_string = '[{
-            id: 4632,
-            name: "理发",
-            data: {},
-            productsCount: 2,
-            coverImage: "https://nzr2ybsda.qnssl.com/images/24978/FkGlOCq6KBSMk_MRll660rVUh8xS.jpg?imageMogr2/strip/thumbnail/500x1000%3E/quality/90!/interlace/1/format/jpeg"
-          }, {
-            id: 4633,
-            name: "造型",
-            data: {},
-            productsCount: 1,
-            coverImage: "https://nzr2ybsda.qnssl.com/images/24978/Fpb0KJRBvf3A_7HH2tnLaUfXxNpt.jpg?imageMogr2/strip/thumbnail/500x1000%3E/quality/90!/interlace/1/format/jpeg"
-          }]';
-        // $obj = json_decode($json_string);
-        return response()->json(['status' => 'success', 'data' => $json_string]);
+        $json_string = '{
+            "categories": [{
+                "id": 4632,
+                "name": "理发",
+                "data": {},
+                "productsCount": 2,
+                "coverImage": "https://nzr2ybsda.qnssl.com/images/24978/FkGlOCq6KBSMk_MRll660rVUh8xS.jpg?imageMogr2/strip/thumbnail/500x1000%3E/quality/90!/interlace/1/format/jpeg"
+            }, {
+                "id": 4633,
+                "name": "造型",
+                "data": {},
+                "productsCount": 1,
+                "coverImage": "https://nzr2ybsda.qnssl.com/images/24978/Fpb0KJRBvf3A_7HH2tnLaUfXxNpt.jpg?imageMogr2/strip/thumbnail/500x1000%3E/quality/90!/interlace/1/format/jpeg"
+            }]
+        }';
+        $obj = json_decode($json_string);
+        return response()->json(['status' => 'success', 'data' => $obj]);
     }
 
     public function store(CateRequest $requset) 
