@@ -7,5 +7,7 @@ Route::group(['prefix' => 'booking'], function () {
     //分类
     Route::apiResource('/categories', '\App\Api\Controllers\Booking\CategoriesController');
 
-    // https://www.sxl.cn/r/v1/sites/11040765/booking/categories
+     //商品
+     Route::get('/products/list', '\App\Api\Controllers\Booking\ProductController@list');
+     Route::apiResource('/products', '\App\Api\Controllers\Booking\ProductController');
 });
