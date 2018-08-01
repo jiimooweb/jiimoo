@@ -17,10 +17,6 @@ class MiniProgramController extends Controller
 
     public function getToken()
     {
-        // $app = Xcx::getApp(session('xcx_id'));
-
-        // $user = $app->auth->session(request('code'));
-
         $app = OpenPlatform::getMiniProgram(session('xcx_id'));
         dd($app);
 
