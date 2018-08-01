@@ -11,6 +11,8 @@ use App\Models\Lotteries\Prize;
 use App\Http\Requests\Lotteries\ActivityRequest;
 use App\Services\Token;
 use App\Models\Lotteries\ActivityFan;
+use App\Models\Coupons\Coupon;
+use App\Models\Coupons\CouponRecord;
 class ActivityController extends Controller
 {
     public function index()
@@ -120,9 +122,13 @@ class ActivityController extends Controller
             }
             $activite->partook=$activite->partake- $activite->surplus_partake;
             //转盘图片
-            $activite->prizes=$prizeController->get_prizes($activite->id);
-            $activite->turn_image='https://'.request()->server('HTTP_HOST').
-                '/img/lotteries/n'.count($activite->prizes).'.png';
+            $prizes=$prizeController->get_prizes($activite->id);
+            if(count($prizes)>0){
+                $activite->turn_image='https://'.request()->server('HTTP_HOST').
+                    '/img/lotteries/n'.count($prizes).'.png';
+                array_pop($prizes);
+                $activite->prizes=$prizes;
+            }
         }
         return response()->json(["status"=>"success","data"=>$activites->toArray()]);
     }
@@ -153,8 +159,11 @@ class ActivityController extends Controller
                 $rid='no';
             }else{
                 $coupon_id=$prizes[$result]['coupon_id'];
-                $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id]);
+                $savePrize=Fan::create(['fan_id'=>$fan_id,'get_prizes'=>$coupon_id,'activity_id'=>$activity_id]);
                 $saveNum=Prize::where('id',$prizes[$result]['id'])->update(['lottery_number'=>$lottery_number]);
+                $time = Coupon::getTime($coupon_id);
+                $saveCoupon=CouponRecord::create(['title'=>'抽奖获得','fan_id'=>$fan_id,'coupon_id'=>$coupon_id,
+                    'start_time'=>$time['start'],'end_time'=>$time['end']]);
             }
         }
         $partook=(int)$partook+1;
