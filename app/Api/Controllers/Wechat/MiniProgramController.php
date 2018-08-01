@@ -22,6 +22,7 @@ class MiniProgramController extends Controller
         // $user = $app->auth->session(request('code'));
 
         $app = OpenPlatform::getMiniProgram(session('xcx_id'));
+        dd($app);
 
         $user = $app->auth->session(request('code'));
 
@@ -59,27 +60,5 @@ class MiniProgramController extends Controller
     public function verifyToken() 
     {
         return response()->json(['isValid' => Token::verifyToken(request()->header('token'))]);
-    }
-
-    public function getMiniCode() 
-    {
-        $app = Xcx::getApp(3);
-        $response = $app->app_code->get('path/to/page');
-        $filename = $response->save('wechat/miniprogram/','minicode.png');
-        return $filename;
-    }
-
-    public function getQrCode() 
-    {
-        $app = Xcx::getApp(3);
-        $response = $app->app_code->getQrCode('/path/to/page');
-        $filename = $response->save('wechat/miniprogram/','appcode.png');
-        return $filename;
-    }
-
-    public function test() {
-        $app = Xcx::getApp(3);
-        // return $app->data_cube->summaryTrend('2018-05-30','2018-05-30');
-        return $app->data_cube->dailyVisitTrend('2018-05-30','2018-05-30');
     }
 }
