@@ -258,8 +258,8 @@ class VoteInfoController extends Controller
                 foreach ($all as $applicant) {
                     $vote_num = $applicant->total + $vote_num;
                 }
-                if ($fansCount < $total) {
-                    $data->fans_count = $total;
+                if ($fansCount < $vote_num) {
+                    $data->fans_count = $vote_num;
                 }
                 //选手票数
                 foreach ($all as $item) {
