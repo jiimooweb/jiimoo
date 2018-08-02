@@ -227,6 +227,16 @@
             </el-row>
             <el-row style="margin-bottom:20px;">
                 <el-col :span="5" style="text-align:center;">
+                    投票图片
+                </el-col>
+                <el-col :span="19">
+                    <el-upload action="/qiniuUpload" :file-list="albumList" list-type="picture-card" :limit="3" :onSuccess="uploadSuccessAlbum" :headers="headers" :on-remove="handleRemoveAlbum">
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                </el-col>
+            </el-row>
+            <el-row style="margin-bottom:20px;">
+                <el-col :span="5" style="text-align:center;">
                     投票描述
                 </el-col>
                 <el-col :span="19">
@@ -341,6 +351,8 @@ export default {
             isNewVotes: false,
             applyIsTrue: false,
 
+            albumList:[],
+            voteImage:[],
             removeVotesDialog: false,
             removeIndex: "",
             //一般选项列表
@@ -408,6 +420,21 @@ export default {
         }
     },
     methods: {
+        //图片事件
+        uploadSuccessAlbum(response) {
+            this.albumList.push({ name: "未命名", url: response.url });
+            this.voteImage.push(response.url);
+            console.log(this.voteImage);
+            
+        },
+        handleRemoveAlbum(file) {
+            axios.post("/qiniuDelete", { url: file.url }).then(res => {
+                this.voteImage.images = [];
+                for (let i = 0; i < this.albumList.length; i++) {
+                    this.voteImage.images.push(this.albumList[i].url);
+                }
+            });
+        },
         getRemoveIndex(index) {
             this.removeIndex = index;
             this.removeVotesDialog = true;
@@ -538,6 +565,15 @@ export default {
         intoDialog(index) {
             this.dialogTitle = "编辑投票信息";
             this.isNewVotes = false;
+            console.log(this.votesList[index].image);
+            let imageList = eval("("+this.votesList[index].image+")")
+            console.log(imageList);
+            
+            // for(let i=0;i<imageList.length;i++){
+            //     this.albumList.push({url:imageList[i],name:'1'})
+            //     this.voteImage = imageList[i]
+            // }   
+            
             if (this.votesList[index].type === 1) {
                 this.GeneralDialog = true;
                 this.GeneralData = this.votesList[index];
@@ -621,6 +657,7 @@ export default {
                                 store.state.xcx_flag.xcx_flag +
                                 "/api/votes/infos",
                             {
+                                image:this.voteImage,
                                 type: this.GeneralData.type,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
@@ -656,6 +693,7 @@ export default {
                                 store.state.xcx_flag.xcx_flag +
                                 "/api/votes/infos",
                             {
+                                image:this.voteImage,
                                 type: this.GeneralData.type,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
@@ -695,6 +733,7 @@ export default {
                                 "/api/votes/infos/" +
                                 this.GeneralData.id,
                             {
+                                image:this.voteImage,
                                 type: this.GeneralData.type,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
@@ -731,6 +770,7 @@ export default {
                                 "/api/votes/infos/" +
                                 this.GeneralData.id,
                             {
+                                image:this.voteImage,
                                 type: this.GeneralData.type,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
