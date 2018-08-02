@@ -24,6 +24,7 @@ class VoteInfoController extends Controller
 
         // 总投票数
         foreach ($data as $item) {
+            $item->image = json_encode($item->image);
             $fansCount = $item->fans_count;
             $applicants = $item->applicants;
             $options = $item->options;
@@ -86,7 +87,8 @@ class VoteInfoController extends Controller
         } else {
             unset($list['apply_start_date'], $list['apply_due_date']);
         }
-        $list['image']=implode(",", $list['image']);
+//        $list['image']=implode(",", $list['image']);
+        $list['image']=json_encode($list['image']);
         DB::beginTransaction();
         try {
             $info = Info::create($list);
