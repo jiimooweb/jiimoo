@@ -24,7 +24,7 @@ class VoteInfoController extends Controller
 
         // 总投票数
         foreach ($data as $item) {
-            $item->image = json_dencode($item->image,true);
+            $item->image = json_decode($item->image,true);
             $fansCount = $item->fans_count;
             $applicants = $item->applicants;
             $options = $item->options;
