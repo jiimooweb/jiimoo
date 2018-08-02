@@ -21,7 +21,9 @@ class ProductController extends Controller
             $cate_ids = (new ProductCate)->getChildrens($request->cate_id);
             $cate_ids[] = (int)$request->cate_id;
             return $query->whereIn('cate_id', $cate_ids);
-        })->orderBy('created_at','desc')->with(['coupons' => function ($query) {
+        })->when($request->sort, function($query) use ($request) {
+            return $query->orderBy($request->sort, $request->order);
+        })->with(['coupons' => function ($query) {
             $query->select('coupons.id', 'coupons.name')->get();
         }])->paginate(config('common.pagesize'));
         $products->load('category');                
