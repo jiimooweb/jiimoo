@@ -430,6 +430,11 @@ export default {
         handleRemoveAlbum(file) {
             axios.post("/qiniuDelete", { url: file.url }).then(res => {
                 this.voteImage.images = [];
+                for(let i=0;i<this.albumList.length;i++){
+                    if(this.albumList[i].uid === file.uid){
+                        this.albumList.splice(i,1)
+                    }
+                }
                 for (let i = 0; i < this.albumList.length; i++) {
                     this.voteImage.images.push(this.albumList[i].url);
                 }
@@ -569,10 +574,10 @@ export default {
             let imageList = eval("("+this.votesList[index].image+")")
             console.log(imageList);
             
-            // for(let i=0;i<imageList.length;i++){
-            //     this.albumList.push({url:imageList[i],name:'1'})
-            //     this.voteImage = imageList[i]
-            // }   
+            for(let i=0;i<imageList.length;i++){
+                this.albumList.push({url:imageList[i],name:'1'})
+                this.voteImage = imageList[i]
+            }   
             
             if (this.votesList[index].type === 1) {
                 this.GeneralDialog = true;
