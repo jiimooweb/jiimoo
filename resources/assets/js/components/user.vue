@@ -176,13 +176,11 @@ export default {
         },
         handleRemoveAlbum(file) {
             axios.post("/qiniuDelete", { url: file.url }).then(res => {
-                console.log(file);
                 for(let i=0;i<this.albumList.length;i++){
                     if(this.albumList[i].uid === file.uid){
                         this.albumList.splice(i,1)
                     }
                 }
-                console.log(this.albumList);
                 
                 this.usermessage.images = [];
                 
