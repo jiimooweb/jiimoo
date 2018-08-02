@@ -60,7 +60,7 @@ class VoteInfoController extends Controller
     {
         $list = request([
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
-            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
+            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check','image'
         ]);
 
         //状态判定
@@ -148,7 +148,7 @@ class VoteInfoController extends Controller
     {
         $list = request([
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
-            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
+            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check','image'
         ]);
 
         $now = new Carbon(Carbon::now()->format('Y-m-d H:i')); //当前时间去除秒
