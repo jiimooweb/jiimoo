@@ -178,6 +178,7 @@ class VoteInfoController extends Controller
         }
 
         $id = request()->info;
+        $list['image']=json_encode($list['image']);
         DB::beginTransaction();
         try {
             $Info = Info::where('id', $id)->update($list);
