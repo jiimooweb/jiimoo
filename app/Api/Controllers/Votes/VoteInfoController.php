@@ -86,7 +86,7 @@ class VoteInfoController extends Controller
         } else {
             unset($list['apply_start_date'], $list['apply_due_date']);
         }
-
+        $list['image']=implode(",", $list['image']);
         DB::beginTransaction();
         try {
             $info = Info::create($list);
