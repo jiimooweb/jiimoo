@@ -251,7 +251,7 @@ class VoteInfoController extends Controller
         }
         if ($data) {
             $fansCount = $data->fans_count;
-            $voteID = $data->ID;
+            $voteID = $data->id;
             if($data->type==0){
                 $all = Applicant::where('vote_id', $voteID)->withCount('fans')->get();
                 $isCheck = $data->is_check;
