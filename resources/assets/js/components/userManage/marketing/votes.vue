@@ -570,13 +570,15 @@ export default {
         intoDialog(index) {
             this.dialogTitle = "编辑投票信息";
             this.isNewVotes = false;
-            console.log(this.votesList[index].image);
-            let imageList = eval("("+this.votesList[index].image+")")
-            console.log(imageList);
-            
-            for(let i=0;i<imageList.length;i++){
-                this.albumList.push({url:imageList[i],name:'1'})
-                this.voteImage = imageList[i]
+            // console.log(this.votesList[index].image);
+            // let imageList = eval("("+this.votesList[index].image+")")
+            // console.log(imageList);
+
+            this.albumList = []
+            this.voteImage = []
+            for(let i=0;i<this.votesList[index].image.length;i++){
+                this.albumList.push({url:this.votesList[index].image[i],name:'1'})
+                this.voteImage = this.votesList[index].image[i]
             }   
             
             if (this.votesList[index].type === 1) {
