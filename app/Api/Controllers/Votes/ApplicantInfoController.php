@@ -14,7 +14,7 @@ class ApplicantInfoController extends Controller
     {
         $voteID = request()->voteID;
         $voteInfo = Info::find($voteID);
-        $all = Applicant::where('vote_id', $voteID)->withCount('fans')->get();
+        $all = Applicant::where('vote_id', $voteID)->withCount('fans')->groupBy('num')->get();
         $isCheck = $voteInfo['is_check'];
         $unaudited = []; //未审核
         $audited = [];   //审核通过
