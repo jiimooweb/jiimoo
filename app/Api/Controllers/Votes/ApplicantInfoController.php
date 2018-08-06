@@ -127,7 +127,7 @@ class ApplicantInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '审核失败'.$e]);
+            return response()->json(['status' => 'error', 'msg' =>$e]);
         }
         return response()->json(['status' => 'success', 'msg' => '审核成功！']);
     }
