@@ -38,7 +38,7 @@ class ApplicantInfoController extends Controller
             $data['audited'] = $audited;
             return response()->json(['status' => 'success', 'isCheck' => 1, 'data' => $data]);
         } else {
-            return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $all]);
+            return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $data]);
         }
     }
 
