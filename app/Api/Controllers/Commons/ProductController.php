@@ -29,6 +29,7 @@ class ProductController extends Controller
         $products->load('category');                
         foreach($products as &$product) {
             $product->banner = json_decode($product->banner);
+            $product->format = json_decode($product->format);
         }
         return response()->json(['status' => 'success', 'data' => $products]);
     }
@@ -37,7 +38,8 @@ class ProductController extends Controller
     {   
         $data = request()->all();
         $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
-        
+        $data['format'] = isset($data['format']) ? json_encode($data['format'], JSON_UNESCAPED_SLASHES) : null; 
+
         $coupons = $data['coupons'];
         unset($data['coupons']);
         $product = Product::create($data);
@@ -64,6 +66,7 @@ class ProductController extends Controller
         }])->first();
         $product->load('category');  
         $product['banner'] = json_decode($product['banner']);   
+        $product['format'] = json_decode($product['format']);   
         $status = $product ? 'success' : 'error';
         return response()->json(['status' => $status, 'data' => $product]);
     }
@@ -73,6 +76,8 @@ class ProductController extends Controller
         $data = request()->all();   
 
         $data['banner'] = isset($data['banner']) ? json_encode($data['banner'], JSON_UNESCAPED_SLASHES) : null; 
+        $data['format'] = isset($data['format']) ? json_encode($data['format'], JSON_UNESCAPED_SLASHES) : null; 
+        
         $coupons = $data['coupons'];       
         unset($data['coupons']);
         

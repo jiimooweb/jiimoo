@@ -249,53 +249,51 @@ class VoteInfoController extends Controller
                 break;
             }
         }
-        if ($data) {
-            $fansCount = $data->fans_count;
-            $voteID = $data->ID;
-            if($data->type==0){
-                $all = Applicant::where('vote_id', $voteID)->withCount('fans')->get();
-                $isCheck = $data->is_check;
-                $audited = [];   //审核通过
-                $vote_num =0;
-                //总投票数
-                foreach ($all as $applicant) {
-                    $vote_num = $applicant->total + $vote_num;
-                }
-                if ($fansCount < $vote_num) {
-                    $data->fans_count = $vote_num;
-                }
-                //选手票数
-                foreach ($all as $item) {
-                    $fansCount = $item->fans_count;
-                    if ($item->total < $fansCount) {
-                        $item->total = $fansCount;
-                    }
-                    unset($item->fans_count);
-                    if ($isCheck == 1) {
-                        if ($item->is_pass != 0) {
-                            array_push($audited, $item);
-                        }
-                    }
-                }
-                if($isCheck==1){
-                    $data->applicants = $audited;
-                }else{
-                    $data->applicants = $all;
-                }
-            }else{
-                $options = Option::where('vote_id', $voteID)->withCount('fans')->get();
-                foreach ($options as $item) {
-                    $fansCount = $item->fans_count;
-                    if($item->total < $fansCount){
-                        $item->total = $fansCount;
-                    }
-                    unset($item->fans_count);
-                }
-                $data->options = $options;
-            }
-
-        }else{
+        if ($data=="") {
             $data = $list[count($list)-1];
+        }
+        $fansCount = $data->fans_count;
+        $voteID = $data->id;
+        if($data->type==0){
+            $all = Applicant::where('vote_id', $voteID)->withCount('fans')->get();
+            $isCheck = $data->is_check;
+            $audited = [];   //审核通过
+            $vote_num =0;
+            //总投票数
+            foreach ($all as $applicant) {
+                $vote_num = $applicant->total + $vote_num;
+            }
+            if ($fansCount < $vote_num) {
+                $data->fans_count = $vote_num;
+            }
+            //选手票数
+            foreach ($all as $item) {
+                $fansCount = $item->fans_count;
+                if ($item->total < $fansCount) {
+                    $item->total = $fansCount;
+                }
+                unset($item->fans_count);
+                if ($isCheck == 1) {
+                    if ($item->is_pass != 0) {
+                        array_push($audited, $item);
+                    }
+                }
+            }
+            if($isCheck==1){
+                $data->applicants = $audited;
+            }else{
+                $data->applicants = $all;
+            }
+        }else{
+            $options = Option::where('vote_id', $voteID)->withCount('fans')->get();
+            foreach ($options as $item) {
+                $fansCount = $item->fans_count;
+                if($item->total < $fansCount){
+                    $item->total = $fansCount;
+                }
+                unset($item->fans_count);
+            }
+            $data->options = $options;
         }
         return response()->json(['status' => 'success', 'data' => $data]);
     }
