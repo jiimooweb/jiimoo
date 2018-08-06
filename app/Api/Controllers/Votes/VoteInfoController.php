@@ -24,6 +24,7 @@ class VoteInfoController extends Controller
 
         // 总投票数
         foreach ($data as $item) {
+            $item->image = json_decode($item->image,true);
             $fansCount = $item->fans_count;
             $applicants = $item->applicants;
             $options = $item->options;
@@ -60,7 +61,7 @@ class VoteInfoController extends Controller
     {
         $list = request([
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
-            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
+            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check','image'
         ]);
 
         //状态判定
@@ -80,13 +81,14 @@ class VoteInfoController extends Controller
                 } else {
                     $list['apply_state'] = 0; //报名开始
                 }
-            }else{
-                unset($list['apply_start_date'],$list['apply_due_date']);
+            } else {
+                unset($list['apply_start_date'], $list['apply_due_date']);
             }
-        }else{
-            unset($list['apply_start_date'],$list['apply_due_date']);
+        } else {
+            unset($list['apply_start_date'], $list['apply_due_date']);
         }
-
+//        $list['image']=implode(",", $list['image']);
+        $list['image']=json_encode($list['image'],JSON_UNESCAPED_SLASHES);
         DB::beginTransaction();
         try {
             $info = Info::create($list);
@@ -95,7 +97,7 @@ class VoteInfoController extends Controller
             DB::rollBack();
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
-            $log->addInfo('投票新增失败：'.$e);
+            $log->addInfo('投票新增失败：' . $e);
             return response()->json(['status' => 'error', 'msg' => '新增失败']);
         }
         if ($info) {
@@ -148,7 +150,7 @@ class VoteInfoController extends Controller
     {
         $list = request([
             'title', 'description', 'vote_start_date', 'vote_due_date', 'type', 'cycle', 'num', 'limit',
-            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check'
+            'is_apply', 'apply_start_date', 'apply_due_date', 'is_check','image'
         ]);
 
         $now = new Carbon(Carbon::now()->format('Y-m-d H:i')); //当前时间去除秒
@@ -167,15 +169,16 @@ class VoteInfoController extends Controller
                 } else {
                     $list['apply_state'] = 0;
                 }
-            }else{
-                unset($list['apply_start_date'],$list['apply_due_date']);
+            } else {
+                unset($list['apply_start_date'], $list['apply_due_date']);
             }
 
-        }else{
-            unset($list['apply_start_date'],$list['apply_due_date']);
+        } else {
+            unset($list['apply_start_date'], $list['apply_due_date']);
         }
 
         $id = request()->info;
+        $list['image']=json_encode($list['image'],JSON_UNESCAPED_SLASHES);
         DB::beginTransaction();
         try {
             $Info = Info::where('id', $id)->update($list);
@@ -183,7 +186,7 @@ class VoteInfoController extends Controller
         } catch (\Exception $e) {
             $log = new Logger('vote');
             $log->pushHandler(new StreamHandler(storage_path('logs/vote.log'), Logger::INFO));
-            $log->addInfo('投票新增失败：'.$e);
+            $log->addInfo('投票新增失败：' . $e);
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => '修改失败！']);
         }
@@ -234,29 +237,64 @@ class VoteInfoController extends Controller
 
     public function getNweVote()
     {
-        $data = Info::withCount('fans')->with('applicants')->orderByDesc('vote_start_date')->first();
-        // 总投票数
-        if ($data) {
-                $fansCount = $data->fans_count;
-                $applicants = $data->applicants;
-                $countApplicant = count($applicants);
-                $data['applicants_counts'] = $countApplicant;
-                //总投票数：对比投票人数和选手（选项）总票数，取最大值
-                if ($countApplicant > 0) {
-                    $total = 0;
-                    foreach ($applicants as $applicant) {
-                        $total = $applicant->total + $total;
-                    }
-                    if ($fansCount < $total) {
-                        $data->fans_count = $total;
+        $list = Info::withCount('fans')->orderBy('vote_start_date')->get();
+        $count = count($list);
+        $data="";
+        if($count==0){
+            return response()->json(['status' => 'success', 'data' => $data]);
+        }
+        foreach ($list as $item) {
+            if ($item->vote_state == 1 ||$item->vote_state == 0 ) {
+                $data = $item;
+                break;
+            }
+        }
+        if ($data=="") {
+            $data = $list[count($list)-1];
+        }
+        $fansCount = $data->fans_count;
+        $voteID = $data->id;
+        if($data->type==0){
+            $all = Applicant::where('vote_id', $voteID)->withCount('fans')->get();
+            $isCheck = $data->is_check;
+            $audited = [];   //审核通过
+            $vote_num =0;
+            //总投票数
+            foreach ($all as $applicant) {
+                $vote_num = $applicant->total + $vote_num;
+            }
+            if ($fansCount < $vote_num) {
+                $data->fans_count = $vote_num;
+            }
+            //选手票数
+            foreach ($all as $item) {
+                $fansCount = $item->fans_count;
+                if ($item->total < $fansCount) {
+                    $item->total = $fansCount;
+                }
+                unset($item->fans_count);
+                if ($isCheck == 1) {
+                    if ($item->is_pass != 0) {
+                        array_push($audited, $item);
                     }
                 }
-            unset($data->applicants);
-            return response()->json(['status' => 'success', 'data' => $data]);
-         }else{
-            return response()->json(['status' => 'success', 'data' => "F"]);
+            }
+            if($isCheck==1){
+                $data->applicants = $audited;
+            }else{
+                $data->applicants = $all;
+            }
+        }else{
+            $options = Option::where('vote_id', $voteID)->withCount('fans')->get();
+            foreach ($options as $item) {
+                $fansCount = $item->fans_count;
+                if($item->total < $fansCount){
+                    $item->total = $fansCount;
+                }
+                unset($item->fans_count);
+            }
+            $data->options = $options;
         }
-
-
+        return response()->json(['status' => 'success', 'data' => $data]);
     }
 }
