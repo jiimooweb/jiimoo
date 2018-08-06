@@ -76,16 +76,7 @@ class ApplicantInfoController extends Controller
 
     public function update(ApplicantStoreRequest $request)
     {
-        $list = request(['vote_id', 'fan_id', 'name', 'phone', 'address', 'image', 'description', 'total', 'is_pass']);
-        $isPass = $list['is_pass'];
-        $voteID = $list['vote_id'];
-        $voteInfo = Info::find($voteID);
-        $isCheck = $voteInfo['is_check'];
-        if ($isCheck == 1) {
-            if ($isPass == 0) {
-                $list['num'] = null;
-            }
-        }
+        $list = request(['vote_id', 'fan_id', 'name', 'phone', 'address', 'image', 'description', 'total']);
 
         DB::beginTransaction();
         try {
@@ -115,12 +106,12 @@ class ApplicantInfoController extends Controller
     {
         $list = request(['vote_id', 'applicant_id', 'is_pass']);
         $isPass = $list['is_pass'];
-        if ($isPass == 0) {
-            $list['num'] = null;
-        } else {
-            $list['num'] = Applicant::where('vote_id', $list['vote_id'])->max('num') + 1;
+        if ($isPass != 0) {
+            $applicant = Applicant::where('id', $list['applicant_id'])->get();
+            if($applicant->num == null){
+                $list['num'] = Applicant::where('vote_id', $list['vote_id'])->max('num') + 1;
+            }
         }
-
         DB::beginTransaction();
         try {
             Applicant::where('id', $list['applicant_id'])->update(['is_pass'=>$list['is_pass']]);
