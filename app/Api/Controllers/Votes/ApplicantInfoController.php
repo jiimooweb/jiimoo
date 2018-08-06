@@ -83,7 +83,7 @@ class ApplicantInfoController extends Controller
         $isCheck = $voteInfo['is_check'];
         if ($isCheck == 1) {
             if ($isPass == 0) {
-                $list['num'] = '';
+                $list['num'] = null;
             }
         }
 
