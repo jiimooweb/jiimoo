@@ -106,15 +106,16 @@ class ApplicantInfoController extends Controller
     {
         $list = request(['vote_id', 'applicant_id', 'is_pass']);
         $isPass = $list['is_pass'];
+        $result['is_pass'] = $list['is_pass'];
         if ($isPass != 0) {
             $applicant = Applicant::where('id', $list['applicant_id'])->get();
-            if($applicant->num == null){
-                $list['num'] = Applicant::where('vote_id', $list['vote_id'])->max('num') + 1;
+            if($applicant[0]->num == null){
+                $result['num'] = Applicant::where('vote_id', $list['vote_id'])->max('num') + 1;
             }
         }
         DB::beginTransaction();
         try {
-            Applicant::where('id', $list['applicant_id'])->update(['is_pass'=>$list['is_pass']]);
+            Applicant::where('id', $list['applicant_id'])->update($result);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
