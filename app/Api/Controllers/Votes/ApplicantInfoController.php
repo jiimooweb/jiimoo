@@ -32,13 +32,13 @@ class ApplicantInfoController extends Controller
                 }
             }
         }
+        $data['all'] = $all;
         if ($isCheck == 1) {
-            $data['all'] = $all;
             $data['unaudited'] = $unaudited;
             $data['audited'] = $audited;
             return response()->json(['status' => 'success', 'isCheck' => 1, 'data' => $data]);
         } else {
-            return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $all]);
+            return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $data]);
         }
     }
 
@@ -93,7 +93,7 @@ class ApplicantInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '更新失败！']);
+            return response()->json(['status' => 'error', 'msg' => "修改:".$e]);
         }
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);
     }
@@ -123,11 +123,11 @@ class ApplicantInfoController extends Controller
 
         DB::beginTransaction();
         try {
-            Applicant::where('id', $list['applicant_id'])->update($list);
+            Applicant::where('id', $list['applicant_id'])->update(['is_pass'=>$list['is_pass']]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '审核失败！']);
+            return response()->json(['status' => 'error', 'msg' =>"审核：".$e]);
         }
         return response()->json(['status' => 'success', 'msg' => '审核成功！']);
     }
