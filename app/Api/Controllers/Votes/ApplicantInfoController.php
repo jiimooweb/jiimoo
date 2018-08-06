@@ -93,7 +93,7 @@ class ApplicantInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '更新失败！']);
+            return response()->json(['status' => 'error', 'msg' => "修改:".$e]);
         }
         return response()->json(['status' => 'success', 'msg' => '更新成功！']);
     }
@@ -127,7 +127,7 @@ class ApplicantInfoController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' =>$e]);
+            return response()->json(['status' => 'error', 'msg' =>"审核：".$e]);
         }
         return response()->json(['status' => 'success', 'msg' => '审核成功！']);
     }
