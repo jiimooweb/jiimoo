@@ -105,7 +105,7 @@
                     封面图
                 </el-col>
                 <el-col :span='20'>
-                    <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-preview="handleThumbPreview" :on-remove="handleThumbRemove">
+                    <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-remove="handleThumbRemove">
                         <i class="el-icon-plus"></i>
                     </el-upload>
                 </el-col>
@@ -115,7 +115,7 @@
                     轮播图
                 </el-col>
                 <el-col :span='20'>
-                    <el-upload action="/qiniuUpload" :file-list="bannerList" list-type="picture-card" :headers="headers" :onSuccess="uploadBannerSuccess" :limit="4" :on-preview="handleBannerPreview" :on-remove="handleBannerRemove">
+                    <el-upload action="/qiniuUpload" :file-list="bannerList" list-type="picture-card" :headers="headers" :onSuccess="uploadBannerSuccess" :limit="4" :on-remove="handleBannerRemove">
                         <i class="el-icon-plus"></i>
                     </el-upload>
                 </el-col>

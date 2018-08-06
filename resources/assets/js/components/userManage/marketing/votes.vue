@@ -453,19 +453,13 @@ export default {
         },
         changePlayerSwitch(index) {
             axios
-                .put(
+                .post(
                     "/web/" +
                         store.state.xcx_flag.xcx_flag +
-                        "/api/votes/applicants/" +
-                        this.votesPlayersList[index].id,
+                        "/api/votes/applicants/audited",
                     {
                         vote_id: this.votesGeneralData.id,
-                        name: this.votesPlayersList[index].name,
-                        phone: this.votesPlayersList[index].phone,
-                        address: this.votesPlayersList[index].address,
-                        image: this.votesPlayersList[index].image,
-                        description: this.votesPlayersList[index].description,
-                        total: this.votesPlayersList[index].total,
+                        applicant_id: this.votesPlayersList[index].id,
                         is_pass: this.votesPlayersList[index].is_pass
                     }
                 )
@@ -989,6 +983,8 @@ export default {
                         "/applicants"
                 )
                 .then(res => {
+                    console.log(res);
+                    
                     this.votesPlayersList = res.data.data.all;
                 });
         },
