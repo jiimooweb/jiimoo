@@ -295,7 +295,7 @@
                     <el-input-number v-model="PlayersData.total" :min="0"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row style="margin:20px 0 0;">
+            <el-row style="margin:20px 0 0;" v-if="isNewPlayer">
                 <el-col :span='3'>
                     是否通过审核
                 </el-col>
