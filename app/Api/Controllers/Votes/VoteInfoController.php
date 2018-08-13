@@ -255,7 +255,7 @@ class VoteInfoController extends Controller
         $fansCount = $data->fans_count;
         $voteID = $data->id;
         if($data->type==0){
-            $all = Applicant::where('vote_id', $voteID)->withCount('fans')->get();
+            $all = Applicant::where('vote_id', $voteID)->withCount('fans')->orderBy('num')->get();
             $isCheck = $data->is_check;
             $audited = [];   //审核通过
             $vote_num =0;
