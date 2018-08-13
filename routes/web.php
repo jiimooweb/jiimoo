@@ -75,7 +75,6 @@ Route::get('/backend', function () {
 });
 
 Route::post('/upload', function () {
-    dd(request());
     $file = request()->file('file');
     dd($file);
 })->middleware('cors');
