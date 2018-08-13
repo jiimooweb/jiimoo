@@ -105,7 +105,7 @@
                     封面图
                 </el-col>
                 <el-col :span='20'>
-                    <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-preview="handleThumbPreview" :on-remove="handleThumbRemove">
+                    <el-upload action="/qiniuUpload" :file-list="thumbList" list-type="picture-card" :headers="headers" :onSuccess="uploadThumbSuccess" :limit="1" :on-remove="handleThumbRemove">
                         <i class="el-icon-plus"></i>
                     </el-upload>
                 </el-col>
@@ -115,7 +115,7 @@
                     轮播图
                 </el-col>
                 <el-col :span='20'>
-                    <el-upload action="/qiniuUpload" :file-list="bannerList" list-type="picture-card" :headers="headers" :onSuccess="uploadBannerSuccess" :limit="4" :on-preview="handleBannerPreview" :on-remove="handleBannerRemove">
+                    <el-upload action="/qiniuUpload" :file-list="bannerList" list-type="picture-card" :headers="headers" :onSuccess="uploadBannerSuccess" :limit="4" :on-remove="handleBannerRemove">
                         <i class="el-icon-plus"></i>
                     </el-upload>
                 </el-col>
@@ -175,8 +175,30 @@
                 <el-col :span='3'>
                     参数
                 </el-col>
-                <el-col :span='20'>
-                    <el-input v-model="dialogData.format"></el-input>
+                <el-col :span="20">
+                    <el-button @click="addFormat()" type="success" size="small">添加</el-button>
+                </el-col>
+                <el-col :span='24'>
+                    <!-- <el-input v-model="dialogData.format"></el-input> -->
+                    <el-table :data="dialogData.format">
+                        <el-table-column label="参数名">
+                            <template slot-scope="scope">
+                                <el-input v-model="dialogData.format[scope.$index].name"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="value" label="参数值">
+                            <template slot-scope="scope">
+                                <el-input v-model="dialogData.format[scope.$index].value"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-col :span="12">
+                                    <el-button @click="removeFormat(scope.$index)" type="danger" size="small">删除</el-button>
+                                </el-col>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </el-col>
             </el-row>
             <el-row style="margin-bottom:20px;">
@@ -352,6 +374,23 @@ export default {
       };
       this.coupons = []
     },
+    //新增参数
+    addFormat(){
+        if(this.dialogData.format !== '' && this.dialogData.format !== null && this.dialogData.format.length>0){
+            if(this.dialogData.format[this.dialogData.format.length - 1].name !== ''){
+                this.dialogData.format.push({name:'',value:''})
+            }else{
+                this.showMessage('error','上一项参数名不能为空')
+            }
+        }else{
+            this.dialogData.format = []
+            this.dialogData.format.push({name:'',value:''})
+        }
+    },
+    //删除参数
+    removeFormat(index){
+        this.dialogData.format.splice(index,1)
+    },
     getRowArticle(index) {
       this.updateId = this.productsList[index].id;
       this.showProductDialog = true;
@@ -451,6 +490,9 @@ export default {
         });
     },
     isNewProduct() {
+        if(this.dialogData.format !== null && this.dialogData.format[this.dialogData.format.length-1].name === ''){
+            this.dialogData.format.splice(this.dialogData.format.length-1,1)
+        }
       if (this.isNewProductValue) {
         axios
           .post(
@@ -472,6 +514,7 @@ export default {
             }
           )
           .then(res => {
+            localStorage.setItem('proFormat',this.dialogData.format)
             this.showProductDialog = false;
             this.showMessage("success", "新增成功");
             this.getAllProducts();
@@ -500,6 +543,7 @@ export default {
             }
           )
           .then(res => {
+            localStorage.setItem('proFormat',this.dialogData.format)
             this.showProductDialog = false;
             this.showMessage("success", "修改成功");
             this.getAllProducts();
