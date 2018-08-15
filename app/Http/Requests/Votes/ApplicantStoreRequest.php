@@ -19,8 +19,8 @@ class ApplicantStoreRequest extends CommonRequest
             'name' => 'bail|required|max:20',
             'phone' => "bail|required|max:15",
             'address' => "bail|required|max:100",
-            'image' => 'bail|required|',
-            'description' => "bail|required|max:800",
+//            'image' => 'bail|required|',
+//            'description' => "bail|required|max:800",
             'total'=>'integer|min:0',
         ];
     }

@@ -41,6 +41,37 @@ class ApplicantInfoController extends Controller
             return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $data]);
         }
     }
+    public function list()
+    {
+        $voteID = request()->voteID;
+        $voteInfo = Info::find($voteID);
+        $all = Applicant::where('vote_id', $voteID)->withCount('fans')->orderBy('num')->get();
+        $isCheck = $voteInfo['is_check'];
+        $unaudited = []; //未审核
+        $audited = [];   //审核通过
+        foreach ($all as $item) {
+            $fansCount = $item->fans_count;
+            if ($item->total < $fansCount) {
+                $item->total = $fansCount;
+            }
+            unset($item->fans_count);
+            if ($isCheck == 1) {
+                if ($item->is_pass == 0) {
+                    array_push($unaudited, $item);
+                } else {
+                    array_push($audited, $item);
+                }
+            }
+        }
+        $data['all'] = $all;
+        if ($isCheck == 1) {
+            $data['unaudited'] = $unaudited;
+            $data['audited'] = $audited;
+            return response()->json(['status' => 'success', 'isCheck' => 1, 'data' => $data]);
+        } else {
+            return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $data]);
+        }
+    }
 
     public function store(ApplicantStoreRequest $request)
     {
