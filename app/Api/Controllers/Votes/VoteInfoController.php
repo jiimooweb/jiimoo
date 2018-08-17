@@ -319,12 +319,7 @@ class VoteInfoController extends Controller
         $voteID = request()->voteID;
         $today = Carbon::today();
         if($cycle==0){
-
             //唯一
-
-//            $vote = Info::find($voteID)->withCount('fans',function ($query) use($uid){
-//                $query->where('fan_id',$uid);
-//            })->get();
                 $vote = Info::where('id',$voteID)->withCount(
                   [ 'fans' => function($query) use($uid) {
                       $query->where('fan_id',$uid);
@@ -339,22 +334,26 @@ class VoteInfoController extends Controller
 //                $query->where('fan_id',$uid)->where('created_at','>=',$today);
 //            })->get();
         }
-        $count = $vote->fans_count;
-        $num = $vote->num -$count;
-        $type = $vote->type;
-        DB::beginTransaction();
-        try {
-            Fan::create(['fan_id'=>$uid,'vote_id'=>$voteID,'opt'=>$opt]);
-            if ($type == 0) {
-                Applicant::where(['vote_id'=>$voteID], ['id'=>$opt])->increment('total');
-            } else {
-                Option::where(['vote_id'=>$voteID], ['id'=>$opt])->increment('total');
+        $count = $vote[0]->fans_count;
+        $num = $vote[0]->num -$count;
+        if($num>0){
+            $type = $vote[0]->type;
+            DB::beginTransaction();
+            try {
+                Fan::create(['fan_id'=>$uid,'vote_id'=>$voteID,'opt'=>$opt]);
+                if ($type == 0) {
+                    Applicant::where(['vote_id'=>$voteID], ['id'=>$opt])->increment('total');
+                } else {
+                    Option::where(['vote_id'=>$voteID], ['id'=>$opt])->increment('total');
+                }
+                DB::commit();
+                return response()->json(['status' => 'success', 'data' => $num]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['status' => 'error', 'msg' => '投票失败:'.$e]);
             }
-            DB::commit();
-            return response()->json(['status' => 'success', 'data' => $num]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => '投票失败:'.$e]);
         }
+        return response()->json(['status' => 'success', 'data' => $num]);
+
     }
 }
