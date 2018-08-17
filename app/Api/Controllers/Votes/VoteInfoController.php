@@ -320,12 +320,12 @@ class VoteInfoController extends Controller
         $today = Carbon::today();
         if($cycle==0){
             //唯一
-            $vote = Info::find($voteID)->withCount('fans',function ($query){
+            $vote = Info::find($voteID)->withCount('fans',function ($query) use($uid){
                     $query->where('fan_id',$uid);
             })->get();
         }else{
             //  每日
-            $vote = Info::find($voteID)->withCount('fans',function ($query){
+            $vote = Info::find($voteID)->withCount('fans',function ($query) use($uid,$today){
                 $query->where('fan_id',$uid)->where('created_at','>=',$today);
             })->get();
         }
