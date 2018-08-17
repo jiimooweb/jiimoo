@@ -288,12 +288,12 @@ class VoteInfoController extends Controller
             }
             $uid = Token::getUid();
             if($data->cycle ==0){
-                $fan = Fan::where(['fan_id','vote_id'],[$uid,$voteID])->get();
+                $fan = Fan::where(['fan_id',$uid],['vote_id',$voteID])->get();
                 $countFan = count($fan);
                 $data->num = $data->num - $countFan;
             }else{
                 $today = Carbon::today();
-                $fan = Fan::where(['fan_id','vote_id'],[$uid,$voteID])->where('created_at','>=',$today)->get();
+                $fan = Fan::where(['fan_id',$uid],['vote_id',$voteID])->where('created_at','>=',$today)->get();
                 $countFan = count($fan);
                 $data->num = $data->num - $countFan;
             }
@@ -336,9 +336,9 @@ class VoteInfoController extends Controller
         try {
             Fan::create(['fan_id'=>$uid,'vote_id'=>$voteID,'opt'=>$opt]);
             if ($type == 0) {
-                Applicant::where(['vote_id','id'], [$voteID,$opt])->increment('total');
+                Applicant::where(['vote_id',$voteID], ['id',$opt])->increment('total');
             } else {
-                Option::where(['vote_id','id'], [$voteID,$opt])->increment('total');
+                Option::where(['vote_id',$voteID], ['id',$opt])->increment('total');
             }
             DB::commit();
             return response()->json(['status' => 'success', 'data' => $num]);
