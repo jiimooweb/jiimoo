@@ -2,6 +2,7 @@
 
 Route::group(['prefix'=>'votes'],function (){
 
+    Route::post('/{voteID}/vote', '\App\Api\Controllers\Votes\VoteInfoController@doVote');
     Route::get('/new','\App\Api\Controllers\Votes\VoteInfoController@getNweVote');
     //总投票基本信息
     Route::apiResource('/infos','\App\Api\Controllers\Votes\VoteInfoController');

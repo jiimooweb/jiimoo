@@ -3,11 +3,13 @@
 namespace App\Api\Controllers\Votes;
 
 use App\Models\Votes\Applicant;
+use App\Models\Votes\Fan;
 use App\Models\Votes\Option;
 use App\Models\Votes\Info;
 use App\Api\Controllers\Controller;
 use App\Http\Requests\Votes\VoteStoreRequest;
 use App\Http\Requests\Votes\VoteUpdateRequest;
+use App\Services\Token;
 use Carbon\Carbon;
 use Monolog\Handler\StreamHandler;
 use Illuminate\Support\Facades\DB;
@@ -284,6 +286,17 @@ class VoteInfoController extends Controller
             }else{
                 $data->applicants = $all;
             }
+            $uid = Token::getUid();
+            if($data->cycle ==0){
+                $fan = Fan::where(['fan_id','vote_id'],[$uid,$voteID])->get();
+                $countFan = count($fan);
+                $data->num = $data->num - $countFan;
+            }else{
+                $today = Carbon::today();
+                $fan = Fan::where(['fan_id','vote_id'],[$uid,$voteID])->where('created_at','>=',$today)->get();
+                $countFan = count($fan);
+                $data->num = $data->num - $countFan;
+            }
         }else{
             $options = Option::where('vote_id', $voteID)->withCount('fans')->get();
             foreach ($options as $item) {
@@ -296,5 +309,42 @@ class VoteInfoController extends Controller
             $data->options = $options;
         }
         return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function doVote()
+    {
+        $list =request(['id','cycle']);
+        $opt = $list['id'];
+        $cycle = $list['cycle'];
+        $uid = Token::getUid();
+        $voteID = request()->voteID;
+        $today = Carbon::today();
+        if($cycle==0){
+            //唯一
+            $vote = Info::find($voteID)->withCount('fans',function ($query){
+                    $query->where('fan_id',$uid);
+            })->get();
+        }else{
+            //  每日
+            $vote = Info::find($voteID)->withCount('fans',function ($query){
+                $query->where('fan_id',$uid)->where('created_at','>=',$today);
+            })->get();
+        }
+        $count = $vote->fans_count;
+        $num = $vote->num -$count;
+        $type = $vote->type;
+        DB::beginTransaction();
+        try {
+            Fan::create(['fan_id'=>$uid,'vote_id'=>$voteID,'opt'=>$opt]);
+            if ($type == 0) {
+                Applicant::where(['vote_id','id'], [$voteID,$opt])->increment('total');
+            } else {
+                Option::where(['vote_id','id'], [$voteID,$opt])->increment('total');
+            }
+            DB::commit();
+            return response()->json(['status' => 'success', 'data' => $num]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'msg' => '投票失败:'.$e]);
+        }
     }
 }
