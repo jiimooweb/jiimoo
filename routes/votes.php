@@ -4,6 +4,7 @@ Route::group(['prefix'=>'votes'],function (){
 
     Route::post('/{voteID}/vote', '\App\Api\Controllers\Votes\VoteInfoController@doVote');
     Route::get('/new','\App\Api\Controllers\Votes\VoteInfoController@getNweVote');
+    Route::post('/other','\App\Api\Controllers\Votes\VoteInfoController@getOther');
     //总投票基本信息
     Route::apiResource('/infos','\App\Api\Controllers\Votes\VoteInfoController');
     //选手信息
