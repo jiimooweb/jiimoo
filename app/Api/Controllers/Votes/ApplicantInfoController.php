@@ -6,6 +6,7 @@ use App\Http\Requests\Votes\ApplicantStoreRequest;
 use App\Models\Votes\Applicant;
 use App\Models\Votes\Info;
 use App\Api\Controllers\Controller;
+use App\Services\Token;
 use Illuminate\Support\Facades\DB;
 
 class ApplicantInfoController extends Controller
@@ -100,9 +101,14 @@ class ApplicantInfoController extends Controller
 
     public function show()
     {
-        $data = Applicant::find(request()->applicant);
-        $status = $data ? 'success' : 'error';
-        return response()->json(['status' => $status, 'data' => $data]);
+
+        $data = Applicant::withCount('fans')->find(request()->applicant);
+        $fansCount = $data->fans_count;
+        if($data->total <$fansCount){
+            $data->total = $fansCount;
+        }
+        unset($data->fans_count);
+        return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function update(ApplicantStoreRequest $request)
