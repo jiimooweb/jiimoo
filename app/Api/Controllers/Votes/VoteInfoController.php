@@ -356,4 +356,42 @@ class VoteInfoController extends Controller
         return response()->json(['status' => 'success', 'data' => $num]);
 
     }
+    public function getOther()
+    {
+        $id = request('id');
+        $data = Info::where('id','!=',$id)->withCount('fans')->with('applicants')->with('options')
+            ->orderBy('vote_state', 'desc')->orderBy('created_at', 'desc')->get();
+
+        // 总投票数
+        foreach ($data as $item) {
+            $item->image = json_decode($item->image,true);
+            $fansCount = $item->fans_count;
+            $applicants = $item->applicants;
+            $options = $item->options;
+            $countApplicant = count($applicants);
+            $countOption = count($options);
+            $item['applicants_counts'] = $countApplicant;
+            $item['options_counts'] = $countOption;
+            //总投票数：对比投票人数和选手（选项）总票数，取最大值
+            if ($countApplicant > 0) {
+                $total = 0;
+                foreach ($applicants as $applicant) {
+                    $total = $applicant->total + $total;
+                }
+                if ($fansCount < $total) {
+                    $item->fans_count = $total;
+                }
+            } else if ($countOption > 0) {
+                $total = 0;
+                foreach ($options as $option) {
+                    $total = $option->total + $total;
+                }
+                if ($fansCount < $total) {
+                    $item->fans_count = $total;
+                }
+            }
+            unset($item->applicants, $item->options);
+        }
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
 }
