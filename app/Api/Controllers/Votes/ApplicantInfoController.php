@@ -180,7 +180,7 @@ class ApplicantInfoController extends Controller
         $list = request(['vote_id', 'aNum']);
         $data = Applicant::where('vote_id',$list['vote_id'])->where('num',$list['aNum'])->get();
 //        return $data;
-        if($data!=''&$data!=null){
+        if(count($data)!=0){
             return response()->json(['status' => 'success', 'data' => $data[0]->id]);
         }else{
             return response()->json(['status' => 'success', 'data' =>'']);
