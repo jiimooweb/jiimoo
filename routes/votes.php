@@ -9,6 +9,7 @@ Route::group(['prefix'=>'votes'],function (){
     Route::apiResource('/infos','\App\Api\Controllers\Votes\VoteInfoController');
     //选手信息
     Route::get('/{voteID}/mine', '\App\Api\Controllers\Votes\ApplicantInfoController@getMine');
+    Route::post('/search', '\App\Api\Controllers\Votes\ApplicantInfoController@doSearch');
     Route::post('/{voteID}/applicants', '\App\Api\Controllers\Votes\ApplicantInfoController@index');
     Route::post('/{voteID}/list', '\App\Api\Controllers\Votes\ApplicantInfoController@list');
     Route::post('/applicants/audited', '\App\Api\Controllers\Votes\ApplicantInfoController@doAudited');

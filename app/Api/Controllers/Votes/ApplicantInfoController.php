@@ -174,6 +174,12 @@ class ApplicantInfoController extends Controller
             }
         }
         return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $data]);
-
+    }
+    public function doSearch()
+    {
+        $list = request(['vote_id', 'aNum']);
+        $data = Applicant::where('vote_id',$list['vote_id'])->where('num',$list['aNum'])->get();
+//        return $data;
+        return response()->json(['status' => 'success', 'data' => $data[0]->id]);
     }
 }
