@@ -161,4 +161,19 @@ class ApplicantInfoController extends Controller
         return response()->json(['status' => 'success', 'msg' => '审核成功！']);
     }
 
+    public function getMine()
+    {
+        $voteID = request()->voteID;
+        $user = Token::getUid();
+        $data = Applicant::withCount(['fans'=>function ($query) use($user,$voteID) {
+            $query->where('fan_id', $user)->where('vote_id',$voteID);
+        }])->get();
+        foreach ($data as $key=>$item){
+            if($item->fans_count==0){
+                unset($data[$key]);
+            }
+        }
+        return response()->json(['status' => 'success', 'isCheck' => 0, 'data' => $data]);
+
+    }
 }
