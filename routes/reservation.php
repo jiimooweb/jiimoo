@@ -2,8 +2,6 @@
 const resertvationController = '\App\Api\Controllers\Reservations\resertvationController';
 Route::group(['prefix'=>'reservation'],function (){
 
-    // Route::apiResource('/list','\App\Api\Controllers\Reservations\ReservationController');
-    // Route::resource('/list','\App\Api\Controllers\Reservations\ReservationController');
     Route::apiResource('/list','\App\Api\Controllers\Reservations\reservationController');
 
     //分类
