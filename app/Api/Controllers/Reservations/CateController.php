@@ -15,10 +15,13 @@ class CateController extends Controller
         $cates = Cate::withCount('products')->with('thumb')->get();
         //todo 丑陋的代码
         foreach ($cates as $key => $value) {
+            if($value->thumb){
             $thumb = $value->thumb->thumb;
             unset($value->thumb);
             $value->coverImage = $thumb;
+            }
         }
+        
         return response()->json(['status' => 'success', 'data' => $cates]);
     }
 

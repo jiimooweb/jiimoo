@@ -135,8 +135,8 @@
                      style="margin-bottom:20px;">新增</el-button>
           <el-table :data="productsTypeList"
                     border>
-            <el-table-column prop="id"
-                             label="分类ID"></el-table-column>
+            <!-- <el-table-column prop="id"
+                             label="分类ID"></el-table-column> -->
             <el-table-column prop="name"
                              label="分类名称"></el-table-column>
             <el-table-column prop="products_count"
