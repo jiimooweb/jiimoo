@@ -12,7 +12,7 @@ class CouponRecord extends Model
     {
         parent::boot();
         
-        static::addGlobalScope('data', function(Builder $builder) {
+        static::addGlobalScope('date', function(Builder $builder) {
             $builder->where('end_time', '>=', date('Y-m-d',time()));
         });
 

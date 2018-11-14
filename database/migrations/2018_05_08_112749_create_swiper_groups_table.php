@@ -16,7 +16,7 @@ class CreateSwiperGroupsTable extends Migration
         Schema::create('swiper_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('xcx_id')->default(0)->comment('小程序ID');            
-            $table->integer('name')->default(0)->comment('轮播图名');    
+            $table->string('name')->default(0)->comment('轮播图名');    
         });
     }
 
