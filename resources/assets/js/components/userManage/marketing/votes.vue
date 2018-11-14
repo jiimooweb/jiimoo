@@ -295,7 +295,7 @@
                     <el-input-number v-model="PlayersData.total" :min="0"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row style="margin:20px 0 0;">
+            <el-row style="margin:20px 0 0;" v-if="isNewPlayer">
                 <el-col :span='3'>
                     是否通过审核
                 </el-col>
@@ -660,6 +660,7 @@ export default {
                             {
                                 image:this.voteImage,
                                 type: this.GeneralData.type,
+                                cycle:this.GeneralData.cycle,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
                                 vote_start_date: this.formatDate(
@@ -697,6 +698,7 @@ export default {
                                 image:this.voteImage,
                                 type: this.GeneralData.type,
                                 title: this.GeneralData.title,
+                                cycle:this.GeneralData.cycle,
                                 description: this.GeneralData.description,
                                 vote_start_date: this.formatDate(
                                     this.GeneralData.vote_start_date
@@ -736,6 +738,7 @@ export default {
                             {
                                 image:this.voteImage,
                                 type: this.GeneralData.type,
+                                cycle:this.GeneralData.cycle,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
                                 vote_start_date: this.formatDate(
@@ -773,6 +776,7 @@ export default {
                             {
                                 image:this.voteImage,
                                 type: this.GeneralData.type,
+                                cycle:this.GeneralData.cycle,
                                 title: this.GeneralData.title,
                                 description: this.GeneralData.description,
                                 vote_start_date: this.formatDate(

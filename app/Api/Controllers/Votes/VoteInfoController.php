@@ -3,11 +3,13 @@
 namespace App\Api\Controllers\Votes;
 
 use App\Models\Votes\Applicant;
+use App\Models\Votes\Fan;
 use App\Models\Votes\Option;
 use App\Models\Votes\Info;
 use App\Api\Controllers\Controller;
 use App\Http\Requests\Votes\VoteStoreRequest;
 use App\Http\Requests\Votes\VoteUpdateRequest;
+use App\Services\Token;
 use Carbon\Carbon;
 use Monolog\Handler\StreamHandler;
 use Illuminate\Support\Facades\DB;
@@ -284,6 +286,17 @@ class VoteInfoController extends Controller
             }else{
                 $data->applicants = $all;
             }
+            $uid = Token::getUid();
+            if($data->cycle ==0){
+                $fan = Fan::where(['fan_id'=>$uid],['vote_id'=>$voteID])->get();
+                $countFan = count($fan);
+                $data->num = $data->num - $countFan;
+            }else{
+                $today = Carbon::today();
+                $fan = Fan::where(['fan_id'=>$uid],['vote_id'=>$voteID])->where('created_at','>=',$today)->get();
+                $countFan = count($fan);
+                $data->num = $data->num - $countFan;
+            }
         }else{
             $options = Option::where('vote_id', $voteID)->withCount('fans')->get();
             foreach ($options as $item) {
@@ -294,6 +307,90 @@ class VoteInfoController extends Controller
                 unset($item->fans_count);
             }
             $data->options = $options;
+        }
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function doVote()
+    {
+        $list =request(['id','cycle']);
+        $opt = $list['id'];
+        $cycle = $list['cycle'];
+        $uid = Token::getUid();
+        $voteID = request()->voteID;
+        $today = Carbon::today();
+        if($cycle==0){
+            //唯一
+                $vote = Info::where('id',$voteID)->withCount(
+                  [ 'fans' => function($query) use($uid) {
+                      $query->where('fan_id',$uid);
+            }])->get();
+        }else{
+            //  每日
+            $vote = Info::where('id',$voteID)->withCount(
+                [ 'fans' => function($query) use($uid,$today) {
+                    $query->where('fan_id',$uid)->where('created_at','>=',$today);
+                }])->get();
+//            $vote = Info::find($voteID)->withCount('fans'=>function ($query) use($uid,$today){
+//                $query->where('fan_id',$uid)->where('created_at','>=',$today);
+//            })->get();
+        }
+        $count = $vote[0]->fans_count;
+        $num = $vote[0]->num -$count;
+        if($num>0){
+            $type = $vote[0]->type;
+            DB::beginTransaction();
+            try {
+                Fan::create(['fan_id'=>$uid,'vote_id'=>$voteID,'opt'=>$opt]);
+                if ($type == 0) {
+                    Applicant::where(['vote_id'=>$voteID], ['id'=>$opt])->increment('total');
+                } else {
+                    Option::where(['vote_id'=>$voteID], ['id'=>$opt])->increment('total');
+                }
+                DB::commit();
+                return response()->json(['status' => 'success', 'data' => $num]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['status' => 'error', 'msg' => '投票失败:'.$e]);
+            }
+        }
+        return response()->json(['status' => 'success', 'data' => $num]);
+
+    }
+    public function getOther()
+    {
+        $id = request('id');
+        $data = Info::where('id','!=',$id)->withCount('fans')->with('applicants')->with('options')
+            ->orderBy('vote_state', 'desc')->orderBy('created_at', 'desc')->get();
+
+        // 总投票数
+        foreach ($data as $item) {
+            $item->image = json_decode($item->image,true);
+            $fansCount = $item->fans_count;
+            $applicants = $item->applicants;
+            $options = $item->options;
+            $countApplicant = count($applicants);
+            $countOption = count($options);
+            $item['applicants_counts'] = $countApplicant;
+            $item['options_counts'] = $countOption;
+            //总投票数：对比投票人数和选手（选项）总票数，取最大值
+            if ($countApplicant > 0) {
+                $total = 0;
+                foreach ($applicants as $applicant) {
+                    $total = $applicant->total + $total;
+                }
+                if ($fansCount < $total) {
+                    $item->fans_count = $total;
+                }
+            } else if ($countOption > 0) {
+                $total = 0;
+                foreach ($options as $option) {
+                    $total = $option->total + $total;
+                }
+                if ($fansCount < $total) {
+                    $item->fans_count = $total;
+                }
+            }
+            unset($item->applicants, $item->options);
         }
         return response()->json(['status' => 'success', 'data' => $data]);
     }

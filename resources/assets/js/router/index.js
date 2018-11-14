@@ -14,6 +14,7 @@ import Carousel from '@/components/userManage/content/Carousel'
 import marketing from '@/components/userManage/marketing/marketing'
 import queue from '@/components/userManage/marketing/queue'
 import vip from '@/components/userManage/marketing/vip'
+import reservation from '@/components/userManage/marketing/Reservation/reservation'
 import votes from '@/components/userManage/marketing/votes'
 import coupons from '@/components/userManage/marketing/coupons'
 import ECommerce from '@/components/userManage/ECommerce/ECommerce'
@@ -57,6 +58,7 @@ export default new Router({
 					{path:'queue',name: 'queue',meta: {CName: '排队管理'},component: queue},
 					{path:'vip',name: 'vip',meta: {CName: '会员管理'},component: vip},
 					{path:'coupons',name: 'coupons',meta: {CName: '优惠券'},component: coupons},
+					{path:'reservation',name: 'reservation',meta: {CName: '预约'},component: reservation},
 					{path:'votes',name: 'votes',meta: {CName: '投票'},component: votes}
 				]},
 				//电商管理

@@ -13,9 +13,13 @@
                                 <p style="font-size:14px;color:#999;">使用说明:</p>
                                 <p style="font-size:14px;color:#999;">小程序管理员：扫描上面的小程序码即可打开“小程序数据助手”，可以选择查看已绑定小程序的数据。其他微信用户：经管理员授权后可以查看已授权小程序的数据</p>
                             </div>
-                            <img src="img/a0test.png" width='700px'  style="display:block;margin:50px 0 0 80px;float:left;">
+                            <img src="img/a0test.png" width='700px' style="display:block;margin:50px 0 0 80px;float:left;">
                         </div>
-                        
+                        <!-- <el-upload class="upload-demo" ref="upload" action="/upload" :auto-upload="false">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                        </el-upload>
+                        <button type="submit" onclick="UpladFile()">123</button> -->
                     </el-card>
                 </el-col>
                 <el-col>
@@ -30,6 +34,11 @@
 <script>
 export default {
     name: "power1",
+    methods: {
+        submitUpload() {
+            this.$refs.upload.submit();
+      },
+    },
     data() {
         return {
             myBarOption: {
