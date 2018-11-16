@@ -24,7 +24,7 @@ class ArticleController extends Controller
     }
 
 
-    public function store(ArticleRequest $request) 
+    public function store() 
     {   
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content', 'thumb'
@@ -46,7 +46,7 @@ class ArticleController extends Controller
         return response()->json(['status' => $status, 'data' => $article]);
     }
 
-    public function update(ArticleRequest $request)
+    public function update()
     {
         $data = request([
             'title', 'cate_id', 'author', 'click', 'content', 'thumb'
