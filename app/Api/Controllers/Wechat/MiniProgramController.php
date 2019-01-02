@@ -21,7 +21,6 @@ class MiniProgramController extends Controller
         
         $user = $app->auth->session(request('code'));
 
-        dd($user);
         $miniToken = new MiniProgramToken();
         
         $token = $miniToken->getToken($user);
