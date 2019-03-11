@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Models\Pay;
-
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 class PayOrder extends Model
 {
