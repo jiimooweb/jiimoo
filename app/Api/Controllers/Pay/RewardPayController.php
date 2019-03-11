@@ -36,7 +36,7 @@ class RewardPayController extends Controller
             return response()->json(['status' => 'success', 'msg' => '新增成功!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'msg' => ['新增失败！']]);
+            return response()->json(['status' => 'error', 'msg' => ['新增失败！'.$e]]);
         }
     }
 
