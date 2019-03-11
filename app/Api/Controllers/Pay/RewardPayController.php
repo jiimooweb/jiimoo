@@ -20,7 +20,6 @@ class RewardPayController extends Controller
         $order = new PayOrder();
         $price = request('price');
         $notify_url = config('notify.wechat.reward') . '/' . session('xcx_id');
-        return $notify_url;
         DB::beginTransaction();
         try {
             $payOrder = PayOrder::create([
