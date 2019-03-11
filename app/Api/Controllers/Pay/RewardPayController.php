@@ -47,7 +47,6 @@ class RewardPayController extends Controller
 
         \Log::info($xcx_id);
         
-
         $notify_url = config('notify.wechat.reward') . '/' . $xcx_id;
 
         $wechatPay = new WechatPay($notify_url);
@@ -77,7 +76,6 @@ class RewardPayController extends Controller
                     $order->trans_no = $message['transaction_id']; // 更新支付时间为当前时间
                     $order->status = OrderStatus::PAID;
                     $order->save();
-                    WebSocket::sendOrderMsg('xcx_id_'.$xcx_id, $order);
                 }
             } else {
                 return $fail('通信失败，请稍后再通知我');
