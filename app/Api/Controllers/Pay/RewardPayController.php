@@ -19,7 +19,6 @@ class RewardPayController extends Controller
         $fan_id = Token::getUid();
         $order = new PayOrder();
         $price = request('price');
-        $notify_url = config('notify.wechat.reward') . '/' . session('xcx_id');
         DB::beginTransaction();
         try {
             $payOrder = PayOrder::create([
