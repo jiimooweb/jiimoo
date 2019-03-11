@@ -57,6 +57,8 @@ class RewardPayController extends Controller
 
             $order = PayOrder::where('order_no', $message['out_trade_no'])->withoutGlobalScopes()->first();
 
+            \Log::info($order);
+
             if (!$order || $order->pay_time) { // 如果订单不存在 或者 订单已经支付过了
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }

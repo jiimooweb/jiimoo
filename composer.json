@@ -15,6 +15,7 @@
         "overtrue/laravel-ueditor": "~1.0",
         "overtrue/laravel-wechat": "~4.0",
         "predis/predis": "^1.1",
+        "workerman/workerman": "^3.5",
         "zgldh/qiniu-laravel-storage": "^0.9.2"
     },
     "require-dev": {
