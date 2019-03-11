@@ -31,9 +31,9 @@ class RewardPayController extends Controller
             $wechatPay = new WechatPay($notify_url);
             $pay = $wechatPay->unify($payOrder);
             PayOrder::where('id', $payOrder->id)->update(['prepay_id' => $pay['prepay_id']]);
-            return array_merge($pay,['order_id' => $payOrder->id]);
+            $arrPay = array_merge($pay,['order_id' => $payOrder->id]);
             DB::commit();
-            return response()->json(['status' => 'success', 'msg' => '新增成功!']);
+            return response()->json(['status' => 'success', 'msg' => '新增成功!','data'=>$arrPay]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'msg' => ['新增失败！'.$e]]);
