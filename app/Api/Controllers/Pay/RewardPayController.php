@@ -45,8 +45,6 @@ class RewardPayController extends Controller
     public function notify()
     {
         $xcx_id = request()->xcx_id;
-
-        \Log::info($xcx_id);
         
         $notify_url = config('notify.wechat.reward') . '/' . $xcx_id;
 
@@ -58,7 +56,7 @@ class RewardPayController extends Controller
 
             $order = PayOrder::where('order_no', $message['out_trade_no'])->withoutGlobalScopes()->first();
 
-            \Log::info($order);
+            \Log::info($message);
 
             if (!$order || $order->pay_time) { // 如果订单不存在 或者 订单已经支付过了
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
