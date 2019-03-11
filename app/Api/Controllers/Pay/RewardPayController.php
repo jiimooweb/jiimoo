@@ -46,6 +46,9 @@ class RewardPayController extends Controller
     {
         $xcx_id = request()->xcx_id;
 
+        \Log::info($xcx_id);
+        
+
         $notify_url = config('notify.wechat.reward') . '/' . $xcx_id;
 
         $wechatPay = new WechatPay($notify_url);
