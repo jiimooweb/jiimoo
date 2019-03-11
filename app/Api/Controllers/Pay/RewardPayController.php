@@ -29,6 +29,7 @@ class RewardPayController extends Controller
             $payOrder->body = '任意门微信支付';
             $payOrder->openid = Token::getCurrentTokenVar('openid');
             $notify_url = config('notify.wechat.reward') . '/' . session('xcx_id');
+            \Log::info($notify_url);
             $wechatPay = new WechatPay($notify_url);
             $pay = $wechatPay->unify($payOrder);
             PayOrder::where('id', $payOrder->id)->update(['prepay_id' => $pay['prepay_id']]);
