@@ -4,7 +4,9 @@ namespace App\Api\Controllers\Pay;
 
 use App\Models\Pay\PayOrder;
 use App\Services\Token;
+use App\Services\WebSocket;
 use App\Services\WechatPay;
+use App\Utils\OrderStatus;
 use App\Utils\Wechat;
 use Illuminate\Http\Request;
 use App\Api\Controllers\Controller;
@@ -70,7 +72,6 @@ class RewardPayController extends Controller
             } else {
                 return $fail('通信失败，请稍后再通知我');
             }
-
             return true; // 返回处理完成
         });
 
