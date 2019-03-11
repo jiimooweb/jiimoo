@@ -17,7 +17,7 @@ class RewardPayController extends Controller
         $fan_id = Token::getUid();
         $order = new PayOrder();
         $price = request('price');
-
+       return $order->generateOrderNo();
         DB::beginTransaction();
         try {
             $payOrder = PayOrder::create([
