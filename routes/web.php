@@ -28,6 +28,7 @@ Route::group(['prefix' => '{client_type}/{xcx_flag}/api','middleware'=>['token',
     include_once('queues.php');
     include_once('lotteries.php');
     include_once('foods.php');
+    include_once('reward.php');
     include_once('booking.php');
 });
 
