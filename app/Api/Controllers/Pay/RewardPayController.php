@@ -44,6 +44,7 @@ class RewardPayController extends Controller
 
     public function notify()
     {
+        return 123;
         $xcx_id = request()->xcx_id;
 
         $notify_url = config('notify.wechat.reward') . '/' . $xcx_id;
