@@ -63,10 +63,16 @@ class RewardPayController extends Controller
             if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
                 // 用户是否支付成功
                 if ($message['result_code'] === 'SUCCESS') {
-                    $order->pay_time = date('Y-m-d H:i:s', time()); // 更新支付时间为当前时间
-                    $order->trans_no = $message['transaction_id']; // 更新支付时间为当前时间
-                    $order->status = OrderStatus::PAID;
-                    $order->save();
+
+                    PayOrder::where('id',$order->id)->update([
+                        'pay_time'=>date('Y-m-d H:i:s', time()),
+                        'trans_no'=> $message['transaction_id'],
+                        'status'=>OrderStatus::PAID
+                    ]);
+//                    $order->pay_time = date('Y-m-d H:i:s', time()); // 更新支付时间为当前时间
+//                    $order->trans_no = $message['transaction_id']; // 更新支付时间为当前时间
+//                    $order->status = OrderStatus::PAID;
+//                    $order->save();
                     WebSocket::sendOrderMsg('xcx_id_'.$xcx_id, $order);
                 }
             } else {
