@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class RewardPayController extends Controller
 {
+    public function getFanOrders()
+    {
+        $id = Token::getUid();
+        $data = PayOrder::where('fan_id',$id)->get();
+        return response()->json(['status' => 'error', 'data' => $data]);
+    }
+
     public function commit()
     {
         $fan_id = Token::getUid();
