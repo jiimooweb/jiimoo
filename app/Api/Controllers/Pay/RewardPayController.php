@@ -34,7 +34,7 @@ class RewardPayController extends Controller
                 'fan_id'=>$fan_id,
                 'price' => $price,
             ]);
-            $payOrder->body = '任意门微信支付';
+            $payOrder->body = '打赏支付';
             $payOrder->openid = Token::getCurrentTokenVar('openid');
             $notify_url = config('notify.wechat.reward') . '/' . session('xcx_id');
             $wechatPay = new WechatPay($notify_url);
