@@ -51,7 +51,7 @@ class RewardPayController extends Controller
     public function notify()
     {
         $xcx_id = request()->xcx_id;
-
+        
         $notify_url = config('notify.wechat.reward') . '/' . $xcx_id;
 
         $wechatPay = new WechatPay($notify_url);
@@ -61,8 +61,6 @@ class RewardPayController extends Controller
         $response = $app->handlePaidNotify(function($message, $fail) use ($xcx_id){
 
             $order = PayOrder::where('order_no', $message['out_trade_no'])->withoutGlobalScopes()->first();
-
-            \Log::info($order);
 
             if (!$order || $order->pay_time) { // 如果订单不存在 或者 订单已经支付过了
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
@@ -81,7 +79,6 @@ class RewardPayController extends Controller
                     $order->trans_no = $message['transaction_id']; // 更新支付时间为当前时间
                     $order->status = OrderStatus::PAID;
                     $order->save();
-                    WebSocket::sendOrderMsg('xcx_id_'.$xcx_id, $order);
                 }
             } else {
                 return $fail('通信失败，请稍后再通知我');
