@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>中山市朗行文化传播有限公司</title>
-<meta name="description" content="中山市朗行文化传播有限公司。广告业：会议、展览及相关服务">
-<meta name="keywords" content="朗行文化,中山市朗行文化传,广告业,会议,展览">
+<title>任意门网络工作室</title>
+<meta name="description" content="任意门网络工作室是华南网络开发的新锐品牌。任意门网络工作室专注于各类互联网产品开发，业务涉及门户网站、信息管理系统、公众号建设开发、小程序开发等。">
+<meta name="keywords" content="任意门网络工作室,小程序开发,中山小程序开发,微信公众号,系统定制">
 <script src="jquery-1.7.1.min.js"></script>
 <script>
 	$(function(){
@@ -21,30 +21,51 @@
 </script>
 </head>
 <body>
-    {{-- <div class="head">
+    <div class="head">
     	<div class="content">
     		<div class="logo"><img src="{{asset('rdoorweb/logo3.png')}}" height="100%" alt=""></div>
+    		<!-- <div class="login-box">
+    			<a href="login.html"  class="n2">登录</a>
+    			<a href="register.html" class="n1">注册</a>
+    		</div> -->
     		<div class="nav">
 	    		<ul>
 	    			<li>
 	    				<a href="/" class="current-nav">首页</a>
 	    			</li>
+	    			<!-- <li  style="position:relative;">
+	    				<a href="javascript:;" class="h-nav">平台特色</a>
+	    				<ul class="second-nav">
+	    					<li>
+	    						<a href="/">平台介绍</a>
+	    					</li>
+	    					<li>
+	    						<a href="/">开发流程</a>
+	    					</li>
+	    				</ul>
+	    			</li>
+	    			<li>
+	    				<a href="/">开发支持</a>
+	    			</li>
+	    			<li>
+	    				<a href="/">关于我们</a>
+					</li> -->
 					<li>
 						<a href="/backend" target="_blank">开发后台</a>
 					</li>
 	    		</ul>
     		</div>
     	</div>
-    </div> --}}
+    </div>
     <div class="banner">
-    	<img src="{{asset('rdoorweb/WX20200524-144904@2x.png')}}" height="668" width="1919" alt="">
+    	<img src="{{asset('rdoorweb/banner.jpg')}}" height="668" width="1919" alt="">
     </div>
     <div class="p-box">
     	<div class="content">
-    		<h1>中山市朗行文化传播有限公司</h1>
+    		<h1>任意门网络工作室</h1>
     		<h3>
-				中山市朗行文化传播有限公司是文化传播的新锐品牌。中山市朗行文化传播有限公司专注于广告业，会议、展览，企业管理,演出设备租赁等。
-				中山市朗行文化传播有限公司为各类商户企业提供智能商业服务整体解决方案，致力于通过产品和服务，用技术让商业变得更智慧，具备更多的商业价值。
+					任意门网络工作室是华南网络开发的新锐品牌。任意门网络工作室专注于各类互联网产品开发，业务涉及门户网站、信息管理系统、公众号建设开发、小程序开发等。
+					任意门网络工作室为各类商户企业提供智能商业服务整体解决方案，致力于通过产品和服务，用技术让商业变得更智慧，具备更多的商业价值。
     		</h3>
     	</div>
     </div>
@@ -56,8 +77,8 @@
     				<a href="">
     					<img src="{{asset('rdoorweb/img1.png')}}" height="215" width="198" alt="">
     					<span>
-    						<h2>广告业</h2>
-    						<p>为企业塑造品牌、展示形象，推动创新、促进发展，引导消费、拉动内需，传播企业文化。</p>
+    						<h2>小程序定制开发</h2>
+    						<p>根据客户门店实际运用情况，进行专业的符合客户实际需求的功能定制，满足并提高客户的工作效率。</p>
     					</span>
     				</a>
     			</li>
@@ -65,8 +86,8 @@
     				<a href="">
     					<img src="{{asset('rdoorweb/img2.png')}}" height="215" width="198" alt="">
     					<span>
-    						<h2>会议、展览</h2>
-    						<p>提供新产品示范的平台，为产品供给者提供展示产品性能的机会。</p>
+    						<h2>网站定制开发</h2>
+    						<p>给中小型公司提供多功能型网站开发，并在上线后进行维护。</p>
     					</span>
     				</a>
     			</li>
@@ -74,21 +95,76 @@
     				<a href="">
     					<img src="{{asset('rdoorweb/img3.png')}}" height="215" width="198" alt="">
     					<span>
-    						<h2>舞台美术设计</h2>
-    						<p>一场好看的舞台表演，离不开背后的重要性舞台的美术设计，它的价值可以很直观的感觉体验。</p>
+    						<h2>高端系统定制开发</h2>
+    						<p>基于web端技术实现客户的系统需求，如类ERP，OA系统。</p>
     					</span>
     				</a>
     			</li>
     		</ul>
     	</div>
     </div>
-    <div class="p-box bg-white" style="padding-bottom:0">
+    <div class="p-box">
+    	<div class="content">
+    		<h1>小程序场景化应用</h1>
+    		<ul style="margin-top:40px;display:inline-block">
+    			<li class="trangle scen">
+    				<img src="{{asset('rdoorweb/icon1.png')}}" height="68" width="68" alt="">
+    				<span>
+						<h2>商品展示</h2>
+						<p>丰富的模板快速套用，页面模版组件，灵活配置，支持多种商品形态，支持微信支付，安全可靠</p>
+    				</span>
+    			</li>
+    			<li class="trangle scen">
+    				<img src="{{asset('rdoorweb/icon2.png')}}" height="68" width="68" alt="">
+					<span>
+						<h2>活动营销</h2>
+						<p>会员卡、优惠券、拼团、秒杀等，高效获客，团购、返现等，转化率飙升</p>
+					</span>
+    			</li>
+    			<li class="trangle scen">
+    				<img src="{{asset('rdoorweb/icon3.png')}}" height="68" width="68" alt="">
+					<span>
+						<h2>推广需求</h2>
+						<p>依托微信10亿用户，共享流量分红，海量好货资源，快速、低门槛地在周边展示商家，吸引用户</p>
+					</span>
+    			</li>
+    			<li class="trangle scen">
+    				<img src="{{asset('rdoorweb/icon4.png')}}" height="68" width="68" alt="">
+					<span>
+						<h2>客户管理</h2>
+						<p>支付即会员，强大的积分体制，粘住老客户最佳途径，标签管理，精准分组</p>
+					</span>
+    			</li>
+    			<li class="trangle scen">
+    				<img src="{{asset('rdoorweb/icon5.png')}}" height="68" width="68" alt="">
+					<span>
+						<h2>数据分析</h2>
+						<p>多维度分析会员与分销商，商品流量实时统计，订单管理，一目了然，销量统计，提升转换</p>
+					</span>
+    			</li>
+    		</ul>
+    	</div>
+    </div>
+    <div class="p-box bg-grey" style="padding-bottom:0">
     	<div class="content">
     		<h1>专业的解决方案</h1>
     		<h3>
-    			针对不同行业，通过需求分析对不同的企业进行专业定制，给你最合适的解决方案，并且无需维护，没有后顾之忧
+    			针对不同行业的门店，通过需求分析对不同的店家进行专业定制，给你最合适的解决方案，并且无需维护，没有后顾之忧
     		</h3>
     		<img src="{{asset('rdoorweb/ban1.png')}}" height="271" width="410" alt="">
+    	</div>
+    </div>
+    <div class="p-box advantage">
+    	<div class="content">
+    		<span>我们的优势</span>
+    		<ul>
+    			<li>
+    				高度定制并且可扩展
+    			</li>
+    			<li>提供图片云服务</li>
+				<li>公有云/私有云服务器</li>
+				<li>价格实惠，周期短</li>
+    		</ul>
     	</div>
     </div>
     <div class="p-box footer">
